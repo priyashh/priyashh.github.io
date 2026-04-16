@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Name — Data Analyst Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #0A2342;
+      --teal:   #0D7377;
+      --teal2:  #14BDBD;
+      --gold:   #F5A623;
+      --white:  #FFFFFF;
+      --off:    #F0F5FA;
+      --text:   #1E293B;
+      --muted:  #64748B;
+      --card:   #FFFFFF;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--white);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1.1rem 4rem;
+      background: rgba(10,35,66,0.97);
+      backdrop-filter: blur(10px);
+    }
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800; font-size: 1.3rem;
+      color: var(--white);
+      letter-spacing: 0.05em;
+    }
+    .nav-logo span { color: var(--gold); }
+    nav ul { list-style: none; display: flex; gap: 2.2rem; }
+    nav ul a {
+      text-decoration: none; color: rgba(255,255,255,0.75);
+      font-size: 0.9rem; font-weight: 400; letter-spacing: 0.03em;
+      transition: color 0.2s;
+    }
+    nav ul a:hover { color: var(--gold); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      background: var(--navy);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 7rem 4rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    #hero::before {
+      content: '';
+      position: absolute; top: 0; right: 0;
+      width: 50%; height: 100%;
+      background: linear-gradient(135deg, transparent 0%, rgba(13,115,119,0.15) 100%);
+      pointer-events: none;
+    }
+    .hero-grid-bg {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(20,189,189,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(20,189,189,0.04) 1px, transparent 1px);
+      background-size: 50px 50px;
+      pointer-events: none;
+    }
+    .hero-left { position: relative; z-index: 2; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 0.6rem;
+      background: rgba(20,189,189,0.12);
+      border: 1px solid rgba(20,189,189,0.3);
+      border-radius: 2rem;
+      padding: 0.35rem 1rem;
+      font-size: 0.8rem; color: var(--teal2); font-weight: 500;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      margin-bottom: 1.8rem;
+    }
+    .hero-eyebrow::before { content: '●'; font-size: 0.5rem; color: var(--gold); }
+    .hero-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: clamp(2.8rem, 5vw, 4.2rem);
+      line-height: 1.1;
+      color: var(--white);
+      margin-bottom: 0.5rem;
+    }
+    .hero-title .accent { color: var(--teal2); }
+    .hero-sub {
+      font-size: 1.05rem; color: rgba(255,255,255,0.55);
+      line-height: 1.7; max-width: 420px;
+      margin: 1.4rem 0 2.4rem;
+      font-weight: 300;
+    }
+    .hero-cta-row { display: flex; gap: 1rem; flex-wrap: wrap; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1.8rem;
+      border-radius: 0.4rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem; font-weight: 500;
+      text-decoration: none; cursor: pointer;
+      transition: all 0.22s;
+      border: none;
+    }
+    .btn-primary { background: var(--gold); color: var(--navy); }
+    .btn-primary:hover { background: #e6941a; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(245,166,35,0.35); }
+    .btn-outline { background: transparent; color: var(--white); border: 1.5px solid rgba(255,255,255,0.3); }
+    .btn-outline:hover { border-color: var(--teal2); color: var(--teal2); transform: translateY(-2px); }
+
+    /* hero right: floating cards */
+    .hero-right {
+      position: relative; z-index: 2;
+      display: flex; justify-content: center; align-items: center;
+    }
+    .stats-cluster {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      max-width: 340px;
+    }
+    .stat-card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 1rem;
+      padding: 1.4rem 1.2rem;
+      backdrop-filter: blur(12px);
+      animation: float 5s ease-in-out infinite;
+    }
+    .stat-card:nth-child(2) { animation-delay: 1s; }
+    .stat-card:nth-child(3) { animation-delay: 2s; }
+    .stat-card:nth-child(4) { animation-delay: 3s; }
+    .stat-card .s-icon { font-size: 1.5rem; margin-bottom: 0.6rem; }
+    .stat-card .s-val { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.6rem; color: var(--white); }
+    .stat-card .s-label { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    /* ── SECTION BASE ── */
+    section { padding: 6rem 4rem; }
+    .section-label {
+      font-size: 0.8rem; font-weight: 600; letter-spacing: 0.12em;
+      text-transform: uppercase; color: var(--teal);
+      margin-bottom: 0.6rem;
+    }
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700; font-size: clamp(1.8rem, 3vw, 2.5rem);
+      color: var(--navy); line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+    .section-sub { color: var(--muted); max-width: 560px; line-height: 1.7; }
+
+    /* ── ABOUT ── */
+    #about { background: var(--off); }
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1.4fr;
+      gap: 5rem; align-items: center; margin-top: 3.5rem;
+    }
+    .about-photo-wrap {
+      position: relative;
+    }
+    .about-photo-placeholder {
+      width: 100%; aspect-ratio: 4/5;
+      background: linear-gradient(135deg, var(--navy) 0%, var(--teal) 100%);
+      border-radius: 1.5rem;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 1rem;
+      border: 3px solid rgba(20,189,189,0.2);
+    }
+    .about-photo-placeholder .avatar-icon { font-size: 5rem; }
+    .about-photo-placeholder p { color: rgba(255,255,255,0.5); font-size: 0.85rem; }
+    .about-photo-note {
+      position: absolute; bottom: -1.2rem; right: -1.2rem;
+      background: var(--gold); color: var(--navy);
+      padding: 0.6rem 1.2rem; border-radius: 0.5rem;
+      font-size: 0.8rem; font-weight: 600;
+    }
+    .about-text h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.6rem; font-weight: 700;
+      color: var(--navy); margin-bottom: 1rem;
+    }
+    .about-text p { color: var(--muted); line-height: 1.8; margin-bottom: 1rem; }
+    .skills-grid {
+      display: flex; flex-wrap: wrap; gap: 0.6rem;
+      margin-top: 1.6rem;
+    }
+    .skill-tag {
+      background: var(--white);
+      border: 1.5px solid rgba(13,115,119,0.2);
+      color: var(--teal);
+      padding: 0.35rem 0.9rem;
+      border-radius: 2rem;
+      font-size: 0.82rem; font-weight: 500;
+    }
+
+    /* ── PROJECTS ── */
+    #projects { background: var(--white); }
+    .projects-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; }
+    .projects-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
+      gap: 2rem;
+    }
+    .project-card {
+      background: var(--white);
+      border: 1.5px solid #E2EAF4;
+      border-radius: 1.2rem;
+      overflow: hidden;
+      transition: all 0.3s;
+      display: flex; flex-direction: column;
+      box-shadow: 0 2px 12px rgba(10,35,66,0.06);
+    }
+    .project-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 48px rgba(10,35,66,0.14);
+      border-color: var(--teal2);
+    }
+    .project-banner {
+      height: 200px;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .project-banner .banner-icon { font-size: 4rem; z-index: 2; }
+    .project-banner .banner-pattern {
+      position: absolute; inset: 0;
+      background-image:
+        radial-gradient(circle at 20% 50%, rgba(255,255,255,0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255,255,255,0.06) 0%, transparent 40%);
+    }
+    .banner-olist { background: linear-gradient(135deg, var(--navy) 0%, var(--teal) 100%); }
+    .banner-google { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
+    .project-content { padding: 1.8rem; flex: 1; display: flex; flex-direction: column; }
+    .project-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .tag {
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.7rem;
+      border-radius: 2rem;
+      background: rgba(13,115,119,0.08); color: var(--teal);
+    }
+    .tag.alt { background: rgba(245,166,35,0.1); color: #b8760a; }
+    .project-content h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.35rem; font-weight: 700;
+      color: var(--navy); margin-bottom: 0.7rem;
+    }
+    .project-content p { color: var(--muted); line-height: 1.7; font-size: 0.93rem; flex: 1; }
+    .project-stats {
+      display: flex; gap: 1.5rem;
+      padding: 1rem 0;
+      border-top: 1px solid #F0F5FA;
+      border-bottom: 1px solid #F0F5FA;
+      margin: 1.2rem 0;
+    }
+    .p-stat .val { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--navy); }
+    .p-stat .lbl { font-size: 0.75rem; color: var(--muted); }
+    .project-links { display: flex; gap: 0.8rem; margin-top: auto; }
+    .link-btn {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      padding: 0.6rem 1.2rem;
+      border-radius: 0.4rem;
+      font-size: 0.85rem; font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .link-btn-primary { background: var(--navy); color: var(--white); }
+    .link-btn-primary:hover { background: var(--teal); }
+    .link-btn-outline { border: 1.5px solid #CBD5E0; color: var(--muted); }
+    .link-btn-outline:hover { border-color: var(--teal); color: var(--teal); }
+
+    /* ── TOOLS ── */
+    #tools { background: var(--navy); }
+    #tools .section-title { color: var(--white); }
+    #tools .section-label { color: var(--teal2); }
+    #tools .section-sub { color: rgba(255,255,255,0.5); }
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem; margin-top: 3rem;
+    }
+    .tool-item {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 0.8rem;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      transition: all 0.25s;
+    }
+    .tool-item:hover {
+      background: rgba(20,189,189,0.1);
+      border-color: rgba(20,189,189,0.3);
+      transform: translateY(-3px);
+    }
+    .tool-item .t-icon { font-size: 2rem; margin-bottom: 0.6rem; }
+    .tool-item .t-name { font-size: 0.88rem; font-weight: 500; color: rgba(255,255,255,0.8); }
+    .tool-item .t-type { font-size: 0.72rem; color: var(--muted); margin-top: 0.2rem; }
+
+    /* ── CONTACT ── */
+    #contact { background: var(--off); }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; margin-top: 3rem; }
+    .contact-links { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem; }
+    .contact-link {
+      display: flex; align-items: center; gap: 1rem;
+      padding: 1.1rem 1.4rem;
+      background: var(--white);
+      border: 1.5px solid #E2EAF4;
+      border-radius: 0.8rem;
+      text-decoration: none;
+      transition: all 0.22s;
+    }
+    .contact-link:hover { border-color: var(--teal); transform: translateX(6px); }
+    .contact-link .cl-icon { font-size: 1.4rem; }
+    .contact-link .cl-text strong { display: block; font-size: 0.9rem; font-weight: 600; color: var(--navy); }
+    .contact-link .cl-text span { font-size: 0.8rem; color: var(--muted); }
+    .contact-cta {
+      background: var(--navy);
+      border-radius: 1.5rem;
+      padding: 3rem;
+      text-align: center;
+    }
+    .contact-cta h3 { font-family: 'Syne', sans-serif; font-size: 1.6rem; color: var(--white); margin-bottom: 0.8rem; }
+    .contact-cta p { color: rgba(255,255,255,0.55); margin-bottom: 2rem; line-height: 1.7; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--navy);
+      border-top: 1px solid rgba(255,255,255,0.07);
+      text-align: center;
+      padding: 2rem;
+      color: rgba(255,255,255,0.35);
+      font-size: 0.85rem;
+    }
+    footer span { color: var(--gold); }
+
+    /* ── SCROLL ANIMATIONS ── */
+    .reveal {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1rem 2rem; }
+      #hero { grid-template-columns: 1fr; padding: 6rem 2rem 3rem; }
+      .hero-right { display: none; }
+      section { padding: 4rem 2rem; }
+      .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .projects-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">YN<span>.</span></div>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#tools">Tools</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="hero-grid-bg"></div>
+    <div class="hero-left">
+      <div class="hero-eyebrow">Available for opportunities</div>
+      <h1 class="hero-title">
+        Data Analyst<br>
+        turning numbers<br>
+        into <span class="accent">decisions.</span>
+      </h1>
+      <p class="hero-sub">
+        I work at the intersection of data, storytelling, and business strategy —
+        translating raw datasets into dashboards and insights that actually get used.
+      </p>
+      <div class="hero-cta-row">
+        <a href="#projects" class="btn btn-primary">View Projects ↓</a>
+        <a href="#contact" class="btn btn-outline">Get In Touch</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="stats-cluster">
+        <div class="stat-card">
+          <div class="s-icon">📊</div>
+          <div class="s-val">2+</div>
+          <div class="s-label">End-to-End Projects</div>
+        </div>
+        <div class="stat-card">
+          <div class="s-icon">🛢️</div>
+          <div class="s-val">SQL</div>
+          <div class="s-label">Data Querying</div>
+        </div>
+        <div class="stat-card">
+          <div class="s-icon">📈</div>
+          <div class="s-val">BI</div>
+          <div class="s-label">Power BI Dashboards</div>
+        </div>
+        <div class="stat-card">
+          <div class="s-icon">🐍</div>
+          <div class="s-val">Py</div>
+          <div class="s-label">Python Analytics</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="section-label">Who I Am</div>
+    <div class="about-grid">
+      <div class="about-photo-wrap reveal">
+        <div class="about-photo-placeholder">
+          <div class="avatar-icon">🧑‍💻</div>
+          <!-- REPLACE: swap this div with an <img> tag pointing to your photo -->
+          <p>Replace with your photo</p>
+        </div>
+        <div class="about-photo-note">📍 Your City, India</div>
+      </div>
+      <div class="about-text reveal reveal-delay-1">
+        <h3>Hi, I'm <span style="color:var(--teal)">Your Name</span> 👋</h3>
+        <!-- EDIT: update this bio with your own story -->
+        <p>
+          I'm a data analyst passionate about uncovering the stories hiding inside messy datasets.
+          Whether it's 100,000 e-commerce orders or years of stock market data, I enjoy
+          the full journey — from raw data to a dashboard someone actually opens every morning.
+        </p>
+        <p>
+          I work with Python, SQL, and Power BI to explore, clean, model, and visualize data.
+          I believe the best analysis is one that non-technical stakeholders can understand and act on.
+        </p>
+        <div class="skills-grid">
+          <span class="skill-tag">Python</span>
+          <span class="skill-tag">SQL / PostgreSQL</span>
+          <span class="skill-tag">Power BI</span>
+          <span class="skill-tag">Pandas</span>
+          <span class="skill-tag">Data Cleaning</span>
+          <span class="skill-tag">EDA</span>
+          <span class="skill-tag">DAX</span>
+          <span class="skill-tag">Data Storytelling</span>
+          <span class="skill-tag">Excel</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="projects-header">
+      <div>
+        <div class="section-label">What I've Built</div>
+        <h2 class="section-title">Featured Projects</h2>
+        <p class="section-sub">End-to-end analyses — from raw data to dashboards and reports.</p>
+      </div>
+    </div>
+    <div class="projects-grid">
+
+      <!-- PROJECT 1: OLIST -->
+      <div class="project-card reveal">
+        <div class="project-banner banner-olist">
+          <div class="banner-pattern"></div>
+          <div class="banner-icon">🛒</div>
+        </div>
+        <div class="project-content">
+          <div class="project-tags">
+            <span class="tag">SQL</span>
+            <span class="tag">Power BI</span>
+            <span class="tag">Python</span>
+            <span class="tag alt">E-Commerce</span>
+          </div>
+          <h3>Brazilian E-Commerce Analysis</h3>
+          <p>
+            Analyzed 100,000+ orders from Olist — Brazil's largest marketplace — to uncover revenue
+            patterns, delivery performance gaps, and customer satisfaction drivers.
+            Built an interactive Power BI dashboard and produced data-backed recommendations
+            for geographic expansion and logistics improvement.
+          </p>
+          <div class="project-stats">
+            <div class="p-stat">
+              <div class="val">99.4K</div>
+              <div class="lbl">Orders Analyzed</div>
+            </div>
+            <div class="p-stat">
+              <div class="val">R$16M</div>
+              <div class="lbl">Revenue Covered</div>
+            </div>
+            <div class="p-stat">
+              <div class="val">91.9%</div>
+              <div class="lbl">On-Time Delivery</div>
+            </div>
+          </div>
+          <div class="project-links">
+            <a href="projects/olist/index.html" class="link-btn link-btn-primary">View Case Study →</a>
+            <a href="https://github.com/YOUR_USERNAME/olist-analysis" target="_blank" class="link-btn link-btn-outline">GitHub ↗</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROJECT 2: GOOGLE STOCK -->
+      <div class="project-card reveal reveal-delay-1">
+        <div class="project-banner banner-google">
+          <div class="banner-pattern"></div>
+          <div class="banner-icon">📈</div>
+        </div>
+        <div class="project-content">
+          <div class="project-tags">
+            <span class="tag">Python</span>
+            <span class="tag">Pandas</span>
+            <span class="tag">Matplotlib</span>
+            <span class="tag alt">Finance</span>
+          </div>
+          <h3>Google Stock Price Analysis</h3>
+          <p>
+            Explored Google's (GOOGL) historical stock data to identify trends, volatility periods,
+            and key price movements. Applied moving averages, rolling statistics, and correlation analysis
+            to surface actionable patterns across multi-year trading data.
+          </p>
+          <div class="project-stats">
+            <div class="p-stat">
+              <div class="val">20yr</div>
+              <div class="lbl">Data Range</div>
+            </div>
+            <div class="p-stat">
+              <div class="val">MA</div>
+              <div class="lbl">Moving Averages</div>
+            </div>
+            <div class="p-stat">
+              <div class="val">EDA</div>
+              <div class="lbl">Methodology</div>
+            </div>
+          </div>
+          <div class="project-links">
+            <a href="projects/google-stock/index.html" class="link-btn link-btn-primary">View Case Study →</a>
+            <a href="https://github.com/YOUR_USERNAME/google-stock-analysis" target="_blank" class="link-btn link-btn-outline">GitHub ↗</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- TOOLS -->
+  <section id="tools">
+    <div class="section-label">My Stack</div>
+    <h2 class="section-title">Tools & Technologies</h2>
+    <p class="section-sub">The tools I use to go from raw data to meaningful insights.</p>
+    <div class="tools-grid">
+      <div class="tool-item reveal">
+        <div class="t-icon">🐍</div>
+        <div class="t-name">Python</div>
+        <div class="t-type">Analysis & EDA</div>
+      </div>
+      <div class="tool-item reveal reveal-delay-1">
+        <div class="t-icon">🐼</div>
+        <div class="t-name">Pandas</div>
+        <div class="t-type">Data Wrangling</div>
+      </div>
+      <div class="tool-item reveal reveal-delay-2">
+        <div class="t-icon">🛢️</div>
+        <div class="t-name">SQL</div>
+        <div class="t-type">Querying & Joins</div>
+      </div>
+      <div class="tool-item reveal reveal-delay-3">
+        <div class="t-icon">📊</div>
+        <div class="t-name">Power BI</div>
+        <div class="t-type">Dashboards & DAX</div>
+      </div>
+      <div class="tool-item reveal">
+        <div class="t-icon">📓</div>
+        <div class="t-name">Jupyter</div>
+        <div class="t-type">Notebooks & EDA</div>
+      </div>
+      <div class="tool-item reveal reveal-delay-1">
+        <div class="t-icon">📉</div>
+        <div class="t-name">Matplotlib</div>
+        <div class="t-type">Visualization</div>
+      </div>
+      <div class="tool-item reveal reveal-delay-2">
+        <div class="t-icon">🐙</div>
+        <div class="t-name">GitHub</div>
+        <div class="t-type">Version Control</div>
+      </div>
+      <div class="tool-item reveal reveal-delay-3">
+        <div class="t-icon">📗</div>
+        <div class="t-name">Excel</div>
+        <div class="t-type">Analysis & Pivots</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <div class="section-label">Let's Talk</div>
+    <h2 class="section-title">Get In Touch</h2>
+    <div class="contact-grid">
+      <div>
+        <p class="section-sub">
+          I'm currently open to new opportunities — freelance projects,
+          full-time roles, or just a conversation about data.
+          Feel free to reach out on any of these platforms.
+        </p>
+        <div class="contact-links">
+          <a href="https://linkedin.com/in/YOUR_LINKEDIN" target="_blank" class="contact-link reveal">
+            <span class="cl-icon">💼</span>
+            <div class="cl-text">
+              <strong>LinkedIn</strong>
+              <span>linkedin.com/in/YOUR_LINKEDIN</span>
+            </div>
+          </a>
+          <a href="https://github.com/YOUR_USERNAME" target="_blank" class="contact-link reveal reveal-delay-1">
+            <span class="cl-icon">🐙</span>
+            <div class="cl-text">
+              <strong>GitHub</strong>
+              <span>github.com/YOUR_USERNAME</span>
+            </div>
+          </a>
+          <a href="mailto:your@email.com" class="contact-link reveal reveal-delay-2">
+            <span class="cl-icon">✉️</span>
+            <div class="cl-text">
+              <strong>Email</strong>
+              <span>your@email.com</span>
+            </div>
+          </a>
+        </div>
+      </div>
+      <div class="contact-cta reveal reveal-delay-1">
+        <h3>Looking for a data analyst?</h3>
+        <p>I'm passionate about turning complex data into clear, actionable insights. Let's see how I can help your team.</p>
+        <a href="mailto:your@email.com" class="btn btn-primary" style="margin: 0 auto; display: inline-flex;">Send a Message →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>Designed & built by <span>Your Name</span> · Hosted on GitHub Pages</p>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+    }, { threshold: 0.15 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  </script>
+
+</body>
+</html>
