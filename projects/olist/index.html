@@ -1,510 +1,147 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Olist E-Commerce Analysis — Case Study</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --navy:  #0A2342; --teal:  #0D7377; --teal2: #14BDBD;
-      --gold:  #F5A623; --white: #FFFFFF; --off:   #F0F5FA;
-      --text:  #1E293B; --muted: #64748B;
-    }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'DM Sans', sans-serif; color: var(--text); background: var(--white); }
+<meta charset="UTF-8">
+<title>Olist Analysis</title>
 
-    /* NAV */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 1.1rem 4rem;
-      background: rgba(10,35,66,0.97); backdrop-filter: blur(10px);
-    }
-    .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem; color: var(--white); text-decoration: none; }
-    .nav-logo span { color: var(--gold); }
-    .nav-back {
-      display: flex; align-items: center; gap: 0.5rem;
-      color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.88rem;
-      transition: color 0.2s;
-    }
-    .nav-back:hover { color: var(--gold); }
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-    /* HERO */
-    .project-hero {
-      background: var(--navy);
-      padding: 8rem 4rem 5rem;
-      position: relative; overflow: hidden;
-    }
-    .project-hero::before {
-      content: '';
-      position: absolute; inset: 0;
-      background-image:
-        linear-gradient(rgba(20,189,189,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(20,189,189,0.04) 1px, transparent 1px);
-      background-size: 50px 50px;
-    }
-    .project-hero::after {
-      content: '';
-      position: absolute; right: 0; top: 0; bottom: 0; width: 45%;
-      background: linear-gradient(135deg, transparent, rgba(13,115,119,0.2));
-    }
-    .hero-inner { position: relative; z-index: 2; max-width: 1100px; margin: 0 auto; }
-    .breadcrumb {
-      display: flex; align-items: center; gap: 0.5rem;
-      font-size: 0.8rem; color: rgba(255,255,255,0.45);
-      margin-bottom: 1.5rem;
-    }
-    .breadcrumb a { color: var(--teal2); text-decoration: none; }
-    .breadcrumb a:hover { color: var(--gold); }
-    .project-tags { display: flex; gap: 0.6rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
-    .tag {
-      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
-      padding: 0.28rem 0.8rem; border-radius: 2rem;
-      background: rgba(20,189,189,0.15); color: var(--teal2);
-      border: 1px solid rgba(20,189,189,0.25);
-    }
-    .tag.gold { background: rgba(245,166,35,0.15); color: var(--gold); border-color: rgba(245,166,35,0.25); }
-    .project-hero h1 {
-      font-family: 'Syne', sans-serif; font-weight: 800;
-      font-size: clamp(2rem, 4vw, 3.2rem);
-      color: var(--white); line-height: 1.15; margin-bottom: 1.2rem;
-    }
-    .project-hero h1 span { color: var(--teal2); }
-    .hero-desc {
-      color: rgba(255,255,255,0.6); max-width: 600px;
-      line-height: 1.8; font-size: 1rem; font-weight: 300;
-      margin-bottom: 2.5rem;
-    }
-    .hero-meta {
-      display: flex; gap: 3rem; flex-wrap: wrap;
-    }
-    .meta-item .m-label { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
-    .meta-item .m-val { font-size: 0.95rem; font-weight: 500; color: var(--white); }
+<style>
 
-    /* KPI STRIP */
-    .kpi-strip {
-      background: var(--teal);
-      padding: 2.5rem 4rem;
-    }
-    .kpi-inner {
-      max-width: 1100px; margin: 0 auto;
-      display: grid; grid-template-columns: repeat(4, 1fr);
-      gap: 2rem;
-    }
-    .kpi-item { text-align: center; }
-    .kpi-item .k-val {
-      font-family: 'Syne', sans-serif; font-weight: 800;
-      font-size: 2rem; color: var(--white);
-    }
-    .kpi-item .k-label { font-size: 0.82rem; color: rgba(255,255,255,0.7); margin-top: 0.25rem; }
+body{
+margin:0;
+font-family:Poppins;
+background:#f5f5f5;
+color:#111;
+}
 
-    /* MAIN CONTENT */
-    .case-body {
-      max-width: 1100px; margin: 0 auto;
-      padding: 5rem 4rem;
-      display: grid; grid-template-columns: 1fr 280px;
-      gap: 4rem; align-items: start;
-    }
-    .case-main > * + * { margin-top: 3.5rem; }
+.container{
+width:1000px;
+margin:auto;
+}
 
-    /* Sections */
-    .case-section h2 {
-      font-family: 'Syne', sans-serif; font-weight: 700;
-      font-size: 1.5rem; color: var(--navy);
-      margin-bottom: 1.2rem;
-      padding-bottom: 0.6rem;
-      border-bottom: 2px solid var(--off);
-    }
-    .case-section p { color: var(--muted); line-height: 1.8; margin-bottom: 1rem; }
-    .case-section ul { padding-left: 1.2rem; color: var(--muted); }
-    .case-section ul li { margin-bottom: 0.6rem; line-height: 1.7; }
-    .case-section ul li strong { color: var(--navy); }
+.hero{
+background:#111;
+color:white;
+padding:80px;
+}
 
-    /* Insight cards */
-    .insight-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
-    .insight-card {
-      background: var(--off); border-radius: 0.8rem;
-      padding: 1.3rem; border-left: 3px solid var(--teal);
-    }
-    .insight-card.gold { border-left-color: var(--gold); }
-    .insight-card.red  { border-left-color: #E74C3C; }
-    .insight-card.green { border-left-color: #2ECC71; }
-    .insight-card .ic-icon { font-size: 1.3rem; margin-bottom: 0.5rem; }
-    .insight-card .ic-title { font-weight: 600; font-size: 0.88rem; color: var(--navy); margin-bottom: 0.4rem; }
-    .insight-card .ic-text { font-size: 0.83rem; color: var(--muted); line-height: 1.6; }
+.highlight{
+background:#ffd400;
+display:inline-block;
+padding:8px 14px;
+margin-top:15px;
+font-weight:600;
+}
 
-    /* Chart placeholders */
-    .chart-placeholder {
-      background: var(--off);
-      border: 2px dashed #CBD5E0;
-      border-radius: 0.8rem;
-      padding: 2rem;
-      text-align: center;
-      margin: 1.5rem 0;
-    }
-    .chart-placeholder .cp-icon { font-size: 2.5rem; margin-bottom: 0.6rem; }
-    .chart-placeholder .cp-title { font-weight: 600; color: var(--navy); margin-bottom: 0.3rem; }
-    .chart-placeholder .cp-note { font-size: 0.8rem; color: var(--muted); }
+.section{
+background:white;
+margin-top:40px;
+padding:50px;
+box-shadow:0 10px 30px rgba(0,0,0,0.05);
+}
 
-    /* Image placeholder (for Power BI screenshot) */
-    .screenshot-placeholder {
-      background: linear-gradient(135deg, var(--navy), var(--teal));
-      border-radius: 1rem;
-      aspect-ratio: 16/9;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 0.8rem;
-      margin: 1.5rem 0;
-    }
-    .screenshot-placeholder .sp-icon { font-size: 3rem; }
-    .screenshot-placeholder p { color: rgba(255,255,255,0.6); font-size: 0.85rem; }
-    /* REAL IMAGE: replace .screenshot-placeholder with: <img src="../../assets/olist-dashboard.png" ...> */
+h2{
+margin-top:0;
+}
 
-    /* Findings list */
-    .findings-list { display: flex; flex-direction: column; gap: 0.8rem; margin-top: 1rem; }
-    .finding-item {
-      display: flex; align-items: flex-start; gap: 0.8rem;
-      background: var(--off); border-radius: 0.6rem; padding: 1rem 1.2rem;
-    }
-    .finding-item .fi-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.1rem; }
-    .finding-item .fi-text { font-size: 0.9rem; color: var(--muted); line-height: 1.6; }
-    .finding-item .fi-text strong { color: var(--navy); }
+</style>
 
-    /* Sidebar */
-    .case-sidebar { position: sticky; top: 7rem; }
-    .sidebar-card {
-      background: var(--off);
-      border-radius: 1rem; padding: 1.5rem;
-      margin-bottom: 1.5rem;
-    }
-    .sidebar-card h4 {
-      font-family: 'Syne', sans-serif; font-weight: 700;
-      font-size: 0.95rem; color: var(--navy);
-      margin-bottom: 1rem;
-      padding-bottom: 0.5rem;
-      border-bottom: 1px solid #E2EAF4;
-    }
-    .sidebar-link {
-      display: flex; align-items: center; gap: 0.6rem;
-      padding: 0.7rem 0.9rem;
-      background: var(--white);
-      border: 1.5px solid #E2EAF4;
-      border-radius: 0.5rem;
-      text-decoration: none; color: var(--navy);
-      font-size: 0.85rem; font-weight: 500;
-      margin-bottom: 0.6rem;
-      transition: all 0.2s;
-    }
-    .sidebar-link:hover { border-color: var(--teal); color: var(--teal); transform: translateX(3px); }
-    .sidebar-toc a {
-      display: block; font-size: 0.83rem; color: var(--muted);
-      text-decoration: none; padding: 0.4rem 0;
-      border-left: 2px solid transparent;
-      padding-left: 0.8rem;
-      transition: all 0.2s;
-    }
-    .sidebar-toc a:hover { color: var(--teal); border-left-color: var(--teal); }
-    .tech-badges { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-    .tech-badge {
-      font-size: 0.75rem; font-weight: 600;
-      padding: 0.25rem 0.6rem; border-radius: 2rem;
-      background: rgba(13,115,119,0.1); color: var(--teal);
-    }
-
-    /* Bottom CTA */
-    .case-footer {
-      background: var(--navy); padding: 4rem;
-      text-align: center;
-    }
-    .case-footer h3 { font-family: 'Syne', sans-serif; font-size: 1.5rem; color: var(--white); margin-bottom: 0.8rem; }
-    .case-footer p { color: rgba(255,255,255,0.55); margin-bottom: 2rem; }
-    .footer-links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-    .btn {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      padding: 0.7rem 1.6rem; border-radius: 0.4rem;
-      font-size: 0.9rem; font-weight: 500;
-      text-decoration: none; transition: all 0.22s;
-    }
-    .btn-gold { background: var(--gold); color: var(--navy); }
-    .btn-gold:hover { background: #e6941a; transform: translateY(-2px); }
-    .btn-outline { border: 1.5px solid rgba(255,255,255,0.3); color: var(--white); }
-    .btn-outline:hover { border-color: var(--teal2); color: var(--teal2); transform: translateY(-2px); }
-
-    @media (max-width: 900px) {
-      nav { padding: 1rem 1.5rem; }
-      .project-hero { padding: 7rem 1.5rem 3rem; }
-      .kpi-strip { padding: 2rem 1.5rem; }
-      .kpi-inner { grid-template-columns: repeat(2, 1fr); }
-      .case-body { grid-template-columns: 1fr; padding: 3rem 1.5rem; gap: 2rem; }
-      .case-sidebar { position: static; }
-      .insight-grid { grid-template-columns: 1fr; }
-      .hero-meta { gap: 1.5rem; }
-      .case-footer { padding: 3rem 1.5rem; }
-    }
-  </style>
 </head>
+
 <body>
 
-  <nav>
-    <a href="../../index.html" class="nav-logo">YN<span>.</span></a>
-    <a href="../../index.html" class="nav-back">← Back to Portfolio</a>
-  </nav>
+<div class="hero">
 
-  <!-- HERO -->
-  <div class="project-hero">
-    <div class="hero-inner">
-      <div class="breadcrumb">
-        <a href="../../index.html">Portfolio</a>
-        <span>/</span>
-        <span>Olist E-Commerce Analysis</span>
-      </div>
-      <div class="project-tags">
-        <span class="tag">SQL</span>
-        <span class="tag">Python</span>
-        <span class="tag">Power BI</span>
-        <span class="tag gold">E-Commerce</span>
-        <span class="tag gold">Case Study</span>
-      </div>
-      <h1>Brazilian E-Commerce<br><span>Performance Analysis</span></h1>
-      <p class="hero-desc">
-        A full end-to-end analysis of 100,000+ orders from Olist — Brazil's largest multi-seller
-        marketplace. This project uncovers revenue drivers, delivery performance, customer satisfaction
-        patterns, and geographic distribution, concluding with data-backed business recommendations.
-      </p>
-      <div class="hero-meta">
-        <div class="meta-item"><div class="m-label">Dataset</div><div class="m-val">Olist (Kaggle)</div></div>
-        <div class="meta-item"><div class="m-label">Tools</div><div class="m-val">Python · SQL · Power BI</div></div>
-        <div class="meta-item"><div class="m-label">Period</div><div class="m-val">2016 – 2018</div></div>
-        <div class="meta-item"><div class="m-label">Type</div><div class="m-val">EDA + Dashboard</div></div>
-      </div>
-    </div>
-  </div>
+<h1>OLIST E-COMMERCE ANALYSIS</h1>
 
-  <!-- KPI STRIP -->
-  <div class="kpi-strip">
-    <div class="kpi-inner">
-      <div class="kpi-item"><div class="k-val">99.4K</div><div class="k-label">Orders Analyzed</div></div>
-      <div class="kpi-item"><div class="k-val">R$16M+</div><div class="k-label">Total Revenue Covered</div></div>
-      <div class="kpi-item"><div class="k-val">91.9%</div><div class="k-label">On-Time Delivery Rate</div></div>
-      <div class="kpi-item"><div class="k-val">4.09 ★</div><div class="k-label">Average Review Score</div></div>
-    </div>
-  </div>
+<div class="highlight">
+Excel | SQL | Power BI
+</div>
 
-  <!-- BODY -->
-  <div class="case-body">
-    <main class="case-main">
+</div>
 
-      <!-- OVERVIEW -->
-      <div class="case-section" id="overview">
-        <h2>Project Overview</h2>
-        <p>
-          Olist is Brazil's largest department store marketplace, connecting small businesses across the country
-          to major e-commerce channels through a single contract. This dataset — publicly available on Kaggle —
-          contains real anonymized commercial data from 2016 to 2018, spanning orders, payments, products, sellers,
-          customers, and reviews across 8 relational tables.
-        </p>
-        <p>
-          The goal of this project was to perform a comprehensive exploratory data analysis (EDA) to understand
-          the business: what's driving revenue, where delivery is falling short, which regions dominate,
-          and what customers actually think.
-        </p>
-      </div>
+<div class="container">
 
-      <!-- PROBLEM STATEMENT -->
-      <div class="case-section" id="problem">
-        <h2>Problem Statement</h2>
-        <p>
-          Olist operates a distributed multi-seller model across a geographically vast country.
-          Key business questions for this analysis:
-        </p>
-        <ul>
-          <li>Which product categories and states drive the most revenue?</li>
-          <li>How does delivery performance vary across regions, and what's the impact on customer satisfaction?</li>
-          <li>What are the dominant payment methods and order patterns?</li>
-          <li>Where are the concentration risks — among sellers, geographies, and categories?</li>
-        </ul>
-      </div>
+<div class="section">
 
-      <!-- METHODOLOGY -->
-      <div class="case-section" id="methodology">
-        <h2>Methodology</h2>
-        <p>
-          The project followed a structured data analysis pipeline — from raw data ingestion through
-          to visualisation and insight generation.
-        </p>
-        <ul>
-          <li><strong>Data Loading & Merging:</strong> Eight CSV tables joined using Pandas on order_id, product_id, customer_id, and seller_id keys.</li>
-          <li><strong>Cleaning & Validation:</strong> Handled null values in delivery dates, standardised category names using the translation table, parsed timestamps.</li>
-          <li><strong>SQL Queries:</strong> Used SQL to segment orders by status, compute on-time delivery rates, aggregate revenue by state and category.</li>
-          <li><strong>EDA:</strong> Distribution analysis for review scores, delivery days, payment types, and geographic concentration.</li>
-          <li><strong>Power BI Dashboard:</strong> Built an interactive multi-page dashboard with slicers for state, category, time period, and order status.</li>
-          <li><strong>Presentation:</strong> Synthesised findings into a 10-slide report with actionable recommendations.</li>
-        </ul>
-      </div>
+<h2>OVERVIEW</h2>
 
-      <!-- DASHBOARD -->
-      <div class="case-section" id="dashboard">
-        <h2>Power BI Dashboard</h2>
-        <p>
-          The interactive dashboard provides a real-time view of Olist's key metrics across four pages:
-          Revenue Overview, Delivery Performance, Customer Satisfaction, and Seller Ecosystem.
-        </p>
+<p>
 
-        <!-- REPLACE THIS with an actual screenshot of your Power BI dashboard -->
-        <!-- <img src="../../assets/olist-dashboard.png" alt="Olist Power BI Dashboard" style="width:100%; border-radius:0.8rem; border:1px solid #E2EAF4;"> -->
-        <div class="screenshot-placeholder">
-          <div class="sp-icon">📊</div>
-          <p>Replace this block with a screenshot of your Power BI dashboard</p>
-          <p style="font-size:0.75rem; opacity:0.5">Save the image as: assets/olist-dashboard.png</p>
-        </div>
+Analyzed 100k+ e-commerce orders dataset to understand revenue trends,
+customer behaviour, delivery performance, and seller contribution.
 
-        <p style="font-size:0.85rem; color:var(--muted); margin-top:0.5rem;">
-          <!-- If you've published the dashboard online, add a link here: -->
-          <!-- <a href="YOUR_POWERBI_LINK" target="_blank" style="color:var(--teal)">→ View live dashboard on Power BI Service</a> -->
-          Dashboard built in Power BI Desktop with DAX measures for YoY comparison, rolling averages, and delivery rate calculations.
-        </p>
-      </div>
+</p>
 
-      <!-- KEY FINDINGS -->
-      <div class="case-section" id="findings">
-        <h2>Key Findings</h2>
+</div>
 
-        <div class="insight-grid">
-          <div class="insight-card green">
-            <div class="ic-icon">💰</div>
-            <div class="ic-title">Revenue: R$16M+ across 2 years</div>
-            <div class="ic-text">Bed/Bath/Table leads at R$1.71M. Top 5 categories account for ~50% of total revenue, indicating healthy diversification.</div>
-          </div>
-          <div class="insight-card">
-            <div class="ic-icon">🗺️</div>
-            <div class="ic-title">SP dominates with 47.5% of revenue</div>
-            <div class="ic-text">Southeast Brazil (SP+RJ+MG) contributes ~79% of all revenue. Northern and Central-West regions remain largely untapped.</div>
-          </div>
-          <div class="insight-card green">
-            <div class="ic-icon">🚚</div>
-            <div class="ic-title">91.9% on-time delivery rate</div>
-            <div class="ic-text">Average delivery is 12.1 days. Most orders (55%) arrive within 6–15 days. Late deliveries correlate directly with 1-star reviews.</div>
-          </div>
-          <div class="insight-card gold">
-            <div class="ic-icon">⭐</div>
-            <div class="ic-title">4.09/5 average review score</div>
-            <div class="ic-text">57% of reviews are 5-star. The 11.4% 1-star rate is almost entirely tied to late or missing deliveries — a directly addressable problem.</div>
-          </div>
-          <div class="insight-card">
-            <div class="ic-icon">💳</div>
-            <div class="ic-title">Credit card = 78% of revenue</div>
-            <div class="ic-text">Boleto (Brazilian bank slip) handles 18%. Strong installment-plan culture influences purchase decisions and cart sizes.</div>
-          </div>
-          <div class="insight-card red">
-            <div class="ic-icon">⚠️</div>
-            <div class="ic-title">Seller concentration risk</div>
-            <div class="ic-text">Top 10% of sellers drive ~65% of order volume. SP holds 22% of all sellers. Platform is overly dependent on a small seller group.</div>
-          </div>
-        </div>
 
-        <div class="findings-list" style="margin-top:2rem;">
-          <div class="finding-item">
-            <span class="fi-icon">📌</span>
-            <div class="fi-text"><strong>Late deliveries are the #1 driver of negative reviews.</strong> Orders delivered more than 5 days past the estimated date had a review score average below 2.5, versus 4.5+ for on-time deliveries.</div>
-          </div>
-          <div class="finding-item">
-            <span class="fi-icon">📌</span>
-            <div class="fi-text"><strong>~4,577 orders took 30+ days to deliver</strong> — these represent the highest-risk segment for customer churn and are concentrated in Northern states (AM, PA).</div>
-          </div>
-          <div class="finding-item">
-            <span class="fi-icon">📌</span>
-            <div class="fi-text"><strong>South/Southeast holds 85% of sellers.</strong> Onboarding sellers in the North would directly reduce delivery times for those regions, improving both logistics performance and review scores simultaneously.</div>
-          </div>
-        </div>
-      </div>
+<div class="section">
 
-      <!-- RECOMMENDATIONS -->
-      <div class="case-section" id="recommendations">
-        <h2>Recommendations</h2>
-        <ul>
-          <li><strong>Logistics partnerships in Northern Brazil:</strong> Partner with regional carriers to cut delivery times in AM, PA, MA — the primary late-delivery states.</li>
-          <li><strong>Proactive delivery alerts:</strong> Implement SMS/email notifications when orders are at risk of being late. This reduces negative reviews even when delays occur.</li>
-          <li><strong>Seller diversification programme:</strong> Incentivise new sellers in underrepresented states to reduce concentration risk and improve regional logistics.</li>
-          <li><strong>Category expansion campaigns:</strong> Sports, toys, and electronics show strong growth potential and currently under-index vs. their market size.</li>
-          <li><strong>Instalment-optimised promotions:</strong> With 78% credit card usage, promotional campaigns around 0% instalment plans during off-peak months could drive volume.</li>
-        </ul>
-      </div>
+<h2>BUSINESS QUESTIONS</h2>
 
-      <!-- WHAT I LEARNED -->
-      <div class="case-section" id="learnings">
-        <h2>What I Learned</h2>
-        <ul>
-          <li>Working with <strong>relational multi-table datasets</strong> — managing joins across 8 tables without losing data integrity was the core technical challenge.</li>
-          <li>How to build <strong>DAX measures in Power BI</strong> for dynamic filtering across slicers (state, category, time period).</li>
-          <li>The importance of <strong>geographic analysis</strong> in any marketplace business — regional patterns often explain anomalies that aggregate stats hide.</li>
-          <li>How to translate EDA findings into a <strong>structured business narrative</strong> that non-technical stakeholders can act on.</li>
-        </ul>
-      </div>
+<ul>
 
-    </main>
+<li>Which categories generate most revenue?</li>
 
-    <!-- SIDEBAR -->
-    <aside class="case-sidebar">
-      <div class="sidebar-card">
-        <h4>Project Links</h4>
-        <!-- UPDATE these links with your actual GitHub repo and Power BI link -->
-        <a href="https://github.com/YOUR_USERNAME/olist-analysis" target="_blank" class="sidebar-link">🐙 View on GitHub</a>
-        <a href="#dashboard" class="sidebar-link">📊 Power BI Dashboard</a>
-        <!-- If you have the PPTX hosted, add: -->
-        <!-- <a href="../../assets/Olist_Analysis.pptx" class="sidebar-link" download>📥 Download Report (.pptx)</a> -->
-        <a href="../../assets/Olist_Analysis.pptx" class="sidebar-link" download>📥 Download Report (.pptx)</a>
-      </div>
+<li>How delivery delay impacts review score?</li>
 
-      <div class="sidebar-card">
-        <h4>Jump To</h4>
-        <nav class="sidebar-toc">
-          <a href="#overview">Overview</a>
-          <a href="#problem">Problem Statement</a>
-          <a href="#methodology">Methodology</a>
-          <a href="#dashboard">Dashboard</a>
-          <a href="#findings">Key Findings</a>
-          <a href="#recommendations">Recommendations</a>
-          <a href="#learnings">What I Learned</a>
-        </nav>
-      </div>
+<li>Which states have highest customers?</li>
 
-      <div class="sidebar-card">
-        <h4>Tech Stack</h4>
-        <div class="tech-badges">
-          <span class="tech-badge">Python</span>
-          <span class="tech-badge">Pandas</span>
-          <span class="tech-badge">PostgreSQL</span>
-          <span class="tech-badge">Power BI</span>
-          <span class="tech-badge">DAX</span>
-          <span class="tech-badge">Matplotlib</span>
-          <span class="tech-badge">Jupyter</span>
-        </div>
-      </div>
+<li>Which sellers contribute most revenue?</li>
 
-      <div class="sidebar-card" style="background: var(--navy); border: none;">
-        <h4 style="color:var(--white); border-bottom-color: rgba(255,255,255,0.1);">Dataset</h4>
-        <p style="font-size:0.82rem; color:rgba(255,255,255,0.55); line-height:1.6; margin-bottom:0.8rem;">
-          Olist Store Dataset — 8 tables, ~100K orders, publicly available on Kaggle.
-        </p>
-        <a href="https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce" target="_blank" class="sidebar-link" style="background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.15); color: var(--teal2);">
-          🔗 View on Kaggle
-        </a>
-      </div>
-    </aside>
-  </div>
+<li>What affects average order value?</li>
 
-  <!-- FOOTER CTA -->
-  <div class="case-footer">
-    <h3>Interested in this project?</h3>
-    <p>Check out the full code on GitHub, or explore my other projects.</p>
-    <div class="footer-links">
-      <a href="https://github.com/YOUR_USERNAME/olist-analysis" target="_blank" class="btn btn-gold">View Code on GitHub →</a>
-      <a href="../../index.html#projects" class="btn btn-outline">← Back to Projects</a>
-    </div>
-  </div>
+</ul>
+
+</div>
+
+
+<div class="section">
+
+<h2>ANALYSIS PERFORMED</h2>
+
+<ul>
+
+<li>SQL joins across 8 tables</li>
+
+<li>Revenue trend analysis</li>
+
+<li>Delivery performance analysis</li>
+
+<li>Customer distribution by state</li>
+
+<li>Payment behaviour insights</li>
+
+<li>Seller performance comparison</li>
+
+</ul>
+
+</div>
+
+
+<div class="section">
+
+<h2>KEY INSIGHTS</h2>
+
+<ul>
+
+<li>Few sellers contribute major share of revenue</li>
+
+<li>Delivery delays reduce review scores</li>
+
+<li>Customers prefer credit card installments</li>
+
+<li>Revenue concentrated in few categories</li>
+
+</ul>
+
+</div>
+
+
+</div>
 
 </body>
+
 </html>
