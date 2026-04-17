@@ -9,7 +9,6 @@
 <body>
   <header class="nav">
     <div class="nav-left">
-      <!-- PV -> Home -->
       <a href="#top" class="logo">Home</a>
     </div>
     <nav class="nav-links">
@@ -18,51 +17,57 @@
       <a href="#tools">Tools</a>
       <a href="#contact">Connect</a>
     </nav>
-    <!-- Removed "Available for opportunities" block -->
-    <div class="nav-right">
-      <!-- empty for now, we can later add a small CTA or nothing -->
-    </div>
+    <div class="nav-right"></div>
   </header>
 
   <main id="top">
     <!-- HERO -->
     <section class="hero">
       <div class="hero-left">
-        <!-- Replace intro with "Featured" + sliding projects -->
         <p class="hero-kicker">Featured</p>
-        <h1 class="hero-title">
-          Recent work:
-          <span class="hero-slider">
-            <span class="slide active">
-              Olist e‑commerce customer behavior analysis
-            </span>
-            <span class="slide">
-              Google stock price analysis and volatility
-            </span>
-            <span class="slide">
-              Dashboards that turn raw data into decisions
-            </span>
-          </span>
-        </h1>
+
+        <!-- Sliding projects block -->
+        <div class="hero-slider-block">
+          <div class="hero-slider-track">
+            <article class="hero-slide">
+              <h1 class="hero-slide-title">Olist e‑commerce customer behavior analysis</h1>
+              <p class="hero-slide-text">
+                Understanding one‑time vs repeat customers and building a Power BI dashboard
+                for marketplace decisions.
+              </p>
+            </article>
+
+            <article class="hero-slide">
+              <h1 class="hero-slide-title">Google stock price analysis</h1>
+              <p class="hero-slide-text">
+                Time‑series SQL analysis of daily returns, volatility, and monthly patterns
+                for GOOG stock.
+              </p>
+            </article>
+
+            <article class="hero-slide">
+              <h1 class="hero-slide-title">From raw CSVs to decisions</h1>
+              <p class="hero-slide-text">
+                Cleaning, modeling, and visualizing data so stakeholders can see what matters
+                in one glance.
+              </p>
+            </article>
+          </div>
+        </div>
+
         <p class="hero-subtitle">
-          End‑to‑end projects from raw data and SQL queries to dashboards,
-          presentations, and clear narratives you can act on.
+          End‑to‑end projects from raw data and SQL queries to dashboards, presentations,
+          and clear narratives you can act on.
         </p>
+
         <div class="hero-actions">
           <a href="#projects" class="btn primary">View work ↓</a>
           <a href="#contact" class="btn ghost">Get in touch</a>
         </div>
       </div>
-
-      <!-- Removed mid‑right hero card entirely -->
-      <!--
-      <div class="hero-right">
-        ...
-      </div>
-      -->
     </section>
 
-    <!-- METRICS (unchanged) -->
+    <!-- METRICS -->
     <section class="metrics">
       <div class="metric">
         <p class="metric-label">End‑to‑end dashboards</p>
@@ -98,7 +103,6 @@
             unstructured business data into clear dashboards and straightforward narratives
             that stay focused on what matters.
           </p>
-          <!-- Removed second paragraph as requested -->
           <div class="tags">
             <span>SQL</span>
             <span>Power BI</span>
@@ -117,9 +121,7 @@
     <section id="projects" class="section">
       <div class="section-label">Projects & Case Studies</div>
       <div class="section-header">
-        <!-- Featured work -> Work -->
         <h2>Work</h2>
-        <!-- Change subtitle text -->
         <p>Selected projects that move from raw data to dashboards and decisions.</p>
       </div>
 
@@ -146,8 +148,6 @@
             <li>Power BI dashboard and stakeholder slide deck.</li>
           </ul>
           <div class="card-actions">
-            <!-- Remove "coming soon" text -->
-            <!-- Placeholder link kept but no text about coming soon -->
             <a href="#" class="card-link">Case study</a>
             <a href="https://github.com/priyashh" target="_blank" class="card-link">
               GitHub profile ↗
@@ -176,7 +176,6 @@
             <li>Monthly seasonality and “unusual day” analysis.</li>
           </ul>
           <div class="card-actions">
-            <!-- Remove "coming soon" text -->
             <a href="#" class="card-link">Case study</a>
             <a href="https://github.com/priyashh" target="_blank" class="card-link">
               GitHub profile ↗
@@ -186,7 +185,7 @@
       </div>
     </section>
 
-    <!-- TOOLS (unchanged) -->
+    <!-- TOOLS -->
     <section id="tools" class="section">
       <div class="section-label">My Stack</div>
       <div class="section-header">
@@ -223,7 +222,7 @@
       </div>
     </section>
 
-    <!-- CONTACT (unchanged) -->
+    <!-- CONTACT -->
     <section id="contact" class="section contact">
       <div class="section-label">Connect with me</div>
       <div class="contact-inner">
@@ -251,17 +250,4 @@
         <h3>Looking for a data analyst?</h3>
         <p>
           I’m focused on turning complex, messy data into simple visuals and narratives
-          that make the next decision obvious. If that’s what you need, I’d love to connect.
-        </p>
-        <a href="mailto:Priyashvasava@outlook.com" class="btn primary">
-          Send a message →
-        </a>
-      </div>
-    </section>
-  </main>
-
-  <footer class="footer">
-    <p>Designed &amp; built by <span class="accent">Priyash Vasava</span> · Hosted on GitHub Pages</p>
-  </footer>
-</body>
-</html>
+          that make the 
