@@ -50,6 +50,9 @@ main {
   margin: 0 0 8px;
   font-size: 28px;
 }
+.projects-title {
+  font-size: 38px;
+}
 
 .section-header p {
   margin: 0;
