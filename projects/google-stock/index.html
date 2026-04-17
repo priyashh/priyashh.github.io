@@ -1,324 +1,116 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Google Stock Analysis — Case Study</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --navy:  #0A2342; --teal:  #0D7377; --teal2: #14BDBD;
-      --gold:  #F5A623; --white: #FFFFFF; --off:   #F0F5FA;
-      --text:  #1E293B; --muted: #64748B;
-      --google-blue: #1a73e8; --google-dark: #1a1a2e;
-    }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'DM Sans', sans-serif; color: var(--text); background: var(--white); }
 
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 1.1rem 4rem;
-      background: rgba(10,35,66,0.97); backdrop-filter: blur(10px);
-    }
-    .nav-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.2rem; color: var(--white); text-decoration: none; }
-    .nav-logo span { color: var(--gold); }
-    .nav-back { display: flex; align-items: center; gap: 0.5rem; color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.88rem; transition: color 0.2s; }
-    .nav-back:hover { color: var(--gold); }
+<meta charset="UTF-8">
 
-    .project-hero {
-      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-      padding: 8rem 4rem 5rem; position: relative; overflow: hidden;
-    }
-    .project-hero::before {
-      content: ''; position: absolute; inset: 0;
-      background-image: linear-gradient(rgba(26,115,232,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(26,115,232,0.05) 1px, transparent 1px);
-      background-size: 50px 50px;
-    }
-    .hero-inner { position: relative; z-index: 2; max-width: 1100px; margin: 0 auto; }
-    .breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: rgba(255,255,255,0.45); margin-bottom: 1.5rem; }
-    .breadcrumb a { color: #7eb3f5; text-decoration: none; }
-    .breadcrumb a:hover { color: var(--gold); }
-    .project-tags { display: flex; gap: 0.6rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
-    .tag {
-      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
-      padding: 0.28rem 0.8rem; border-radius: 2rem;
-      background: rgba(26,115,232,0.2); color: #7eb3f5;
-      border: 1px solid rgba(26,115,232,0.3);
-    }
-    .tag.gold { background: rgba(245,166,35,0.15); color: var(--gold); border-color: rgba(245,166,35,0.25); }
-    .project-hero h1 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(2rem, 4vw, 3.2rem); color: var(--white); line-height: 1.15; margin-bottom: 1.2rem; }
-    .project-hero h1 span { color: #7eb3f5; }
-    .hero-desc { color: rgba(255,255,255,0.6); max-width: 600px; line-height: 1.8; font-size: 1rem; font-weight: 300; margin-bottom: 2.5rem; }
-    .hero-meta { display: flex; gap: 3rem; flex-wrap: wrap; }
-    .meta-item .m-label { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.3rem; }
-    .meta-item .m-val { font-size: 0.95rem; font-weight: 500; color: var(--white); }
+<title>Google Stock Analysis</title>
 
-    .kpi-strip { background: #0f3460; padding: 2.5rem 4rem; border-bottom: 1px solid rgba(26,115,232,0.2); }
-    .kpi-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); gap: 2rem; }
-    .kpi-item { text-align: center; }
-    .kpi-item .k-val { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 2rem; color: var(--white); }
-    .kpi-item .k-label { font-size: 0.82rem; color: rgba(255,255,255,0.55); margin-top: 0.25rem; }
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-    .case-body { max-width: 1100px; margin: 0 auto; padding: 5rem 4rem; display: grid; grid-template-columns: 1fr 280px; gap: 4rem; align-items: start; }
-    .case-main > * + * { margin-top: 3.5rem; }
-    .case-section h2 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.5rem; color: var(--navy); margin-bottom: 1.2rem; padding-bottom: 0.6rem; border-bottom: 2px solid var(--off); }
-    .case-section p { color: var(--muted); line-height: 1.8; margin-bottom: 1rem; }
-    .case-section ul { padding-left: 1.2rem; color: var(--muted); }
-    .case-section ul li { margin-bottom: 0.6rem; line-height: 1.7; }
-    .case-section ul li strong { color: var(--navy); }
+<style>
 
-    .insight-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
-    .insight-card { background: var(--off); border-radius: 0.8rem; padding: 1.3rem; border-left: 3px solid var(--teal); }
-    .insight-card.blue { border-left-color: var(--google-blue); }
-    .insight-card.gold { border-left-color: var(--gold); }
-    .insight-card.red  { border-left-color: #E74C3C; }
-    .insight-card.green { border-left-color: #2ECC71; }
-    .ic-icon { font-size: 1.3rem; margin-bottom: 0.5rem; }
-    .ic-title { font-weight: 600; font-size: 0.88rem; color: var(--navy); margin-bottom: 0.4rem; }
-    .ic-text { font-size: 0.83rem; color: var(--muted); line-height: 1.6; }
+body{
+margin:0;
+font-family:Poppins;
+background:#f5f5f5;
+color:#111;
+}
 
-    .screenshot-placeholder { background: linear-gradient(135deg, #1a1a2e, #0f3460); border-radius: 1rem; aspect-ratio: 16/9; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.8rem; margin: 1.5rem 0; }
-    .screenshot-placeholder .sp-icon { font-size: 3rem; }
-    .screenshot-placeholder p { color: rgba(255,255,255,0.6); font-size: 0.85rem; }
+.container{
+width:1000px;
+margin:auto;
+}
 
-    .findings-list { display: flex; flex-direction: column; gap: 0.8rem; margin-top: 1rem; }
-    .finding-item { display: flex; align-items: flex-start; gap: 0.8rem; background: var(--off); border-radius: 0.6rem; padding: 1rem 1.2rem; }
-    .fi-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.1rem; }
-    .fi-text { font-size: 0.9rem; color: var(--muted); line-height: 1.6; }
-    .fi-text strong { color: var(--navy); }
+.hero{
+background:#111;
+color:white;
+padding:80px;
+}
 
-    .case-sidebar { position: sticky; top: 7rem; }
-    .sidebar-card { background: var(--off); border-radius: 1rem; padding: 1.5rem; margin-bottom: 1.5rem; }
-    .sidebar-card h4 { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 0.95rem; color: var(--navy); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #E2EAF4; }
-    .sidebar-link { display: flex; align-items: center; gap: 0.6rem; padding: 0.7rem 0.9rem; background: var(--white); border: 1.5px solid #E2EAF4; border-radius: 0.5rem; text-decoration: none; color: var(--navy); font-size: 0.85rem; font-weight: 500; margin-bottom: 0.6rem; transition: all 0.2s; }
-    .sidebar-link:hover { border-color: var(--teal); color: var(--teal); transform: translateX(3px); }
-    .sidebar-toc a { display: block; font-size: 0.83rem; color: var(--muted); text-decoration: none; padding: 0.4rem 0; border-left: 2px solid transparent; padding-left: 0.8rem; transition: all 0.2s; }
-    .sidebar-toc a:hover { color: var(--teal); border-left-color: var(--teal); }
-    .tech-badges { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-    .tech-badge { font-size: 0.75rem; font-weight: 600; padding: 0.25rem 0.6rem; border-radius: 2rem; background: rgba(13,115,119,0.1); color: var(--teal); }
+.highlight{
+background:#ffd400;
+display:inline-block;
+padding:8px 14px;
+margin-top:15px;
+font-weight:600;
+}
 
-    .case-footer { background: var(--navy); padding: 4rem; text-align: center; }
-    .case-footer h3 { font-family: 'Syne', sans-serif; font-size: 1.5rem; color: var(--white); margin-bottom: 0.8rem; }
-    .case-footer p { color: rgba(255,255,255,0.55); margin-bottom: 2rem; }
-    .footer-links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
-    .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.6rem; border-radius: 0.4rem; font-size: 0.9rem; font-weight: 500; text-decoration: none; transition: all 0.22s; }
-    .btn-gold { background: var(--gold); color: var(--navy); }
-    .btn-gold:hover { background: #e6941a; transform: translateY(-2px); }
-    .btn-outline { border: 1.5px solid rgba(255,255,255,0.3); color: var(--white); }
-    .btn-outline:hover { border-color: var(--teal2); color: var(--teal2); transform: translateY(-2px); }
+.section{
+background:white;
+margin-top:40px;
+padding:50px;
+box-shadow:0 10px 30px rgba(0,0,0,0.05);
+}
 
-    @media (max-width: 900px) {
-      nav { padding: 1rem 1.5rem; }
-      .project-hero { padding: 7rem 1.5rem 3rem; }
-      .kpi-strip { padding: 2rem 1.5rem; }
-      .kpi-inner { grid-template-columns: repeat(2, 1fr); }
-      .case-body { grid-template-columns: 1fr; padding: 3rem 1.5rem; gap: 2rem; }
-      .case-sidebar { position: static; }
-      .insight-grid { grid-template-columns: 1fr; }
-      .hero-meta { gap: 1.5rem; }
-      .case-footer { padding: 3rem 1.5rem; }
-    }
-  </style>
+</style>
+
 </head>
+
 <body>
 
-  <nav>
-    <a href="../../index.html" class="nav-logo">YN<span>.</span></a>
-    <a href="../../index.html" class="nav-back">← Back to Portfolio</a>
-  </nav>
+<div class="hero">
 
-  <div class="project-hero">
-    <div class="hero-inner">
-      <div class="breadcrumb">
-        <a href="../../index.html">Portfolio</a>
-        <span>/</span>
-        <span>Google Stock Analysis</span>
-      </div>
-      <div class="project-tags">
-        <span class="tag">Python</span>
-        <span class="tag">Pandas</span>
-        <span class="tag">Matplotlib</span>
-        <span class="tag gold">Finance</span>
-        <span class="tag gold">Time Series</span>
-      </div>
-      <h1>Google Stock Price<br><span>Analysis & Trends</span></h1>
-      <p class="hero-desc">
-        A deep-dive exploratory analysis of Google's (GOOGL) historical stock data — identifying
-        long-term trends, volatility cycles, moving average patterns, and key price movements
-        using Python's data science stack.
-      </p>
-      <div class="hero-meta">
-        <div class="meta-item"><div class="m-label">Ticker</div><div class="m-val">GOOGL (Alphabet)</div></div>
-        <div class="meta-item"><div class="m-label">Tools</div><div class="m-val">Python · Pandas · Matplotlib</div></div>
-        <div class="meta-item"><div class="m-label">Method</div><div class="m-val">EDA + Time Series</div></div>
-        <div class="meta-item"><div class="m-label">Type</div><div class="m-val">Python Notebook</div></div>
-      </div>
-    </div>
-  </div>
+<h1>GOOGLE STOCK ANALYSIS</h1>
 
-  <div class="kpi-strip">
-    <div class="kpi-inner">
-      <div class="kpi-item"><div class="k-val">20yr</div><div class="k-label">Data Range Analyzed</div></div>
-      <div class="kpi-item"><div class="k-val">MA</div><div class="k-label">Moving Average Analysis</div></div>
-      <div class="kpi-item"><div class="k-val">EDA</div><div class="k-label">Exploratory Approach</div></div>
-      <div class="kpi-item"><div class="k-val">Python</div><div class="k-label">Full Python Stack</div></div>
-    </div>
-  </div>
+<div class="highlight">
+Excel
+</div>
 
-  <div class="case-body">
-    <main class="case-main">
+</div>
 
-      <div class="case-section" id="overview">
-        <h2>Project Overview</h2>
-        <p>
-          This project explores the historical stock price data for Alphabet Inc. (Google, ticker: GOOGL)
-          using Python's data science ecosystem. The goal was to practice time-series analysis techniques —
-          identifying trends, computing rolling statistics, and visualising price movement patterns
-          that are meaningful to both technical and non-technical audiences.
-        </p>
-        <p>
-          Rather than predicting future prices, this is a descriptive and exploratory analysis:
-          understanding what happened, when, and why it matters for analysts working with financial data.
-        </p>
-      </div>
+<div class="container">
 
-      <div class="case-section" id="problem">
-        <h2>Problem Statement</h2>
-        <p>Key questions explored in this project:</p>
-        <ul>
-          <li>What does Google's long-term price trajectory look like, and when were the major inflection points?</li>
-          <li>How do 50-day and 200-day moving averages signal trend shifts (Golden Cross / Death Cross)?</li>
-          <li>How has daily return volatility changed across different periods?</li>
-          <li>What does the distribution of daily returns reveal about the stock's risk profile?</li>
-        </ul>
-      </div>
+<div class="section">
 
-      <div class="case-section" id="methodology">
-        <h2>Methodology</h2>
-        <ul>
-          <li><strong>Data Source:</strong> Yahoo Finance historical data via yfinance or a pre-downloaded CSV covering multi-year GOOGL price history.</li>
-          <li><strong>Pandas:</strong> Loaded, cleaned, and indexed the time series. Computed daily returns, rolling means, and standard deviations.</li>
-          <li><strong>Moving Averages:</strong> Computed 50-day and 200-day simple moving averages to identify trend direction and crossover signals.</li>
-          <li><strong>Volatility Analysis:</strong> Plotted rolling standard deviation of returns to identify periods of market turbulence (COVID crash, 2022 selloff).</li>
-          <li><strong>Return Distribution:</strong> Plotted histogram of daily percentage returns to assess normality and tail risk.</li>
-          <li><strong>Matplotlib / Seaborn:</strong> Created multi-panel visualisations showing price, volume, moving averages, and volatility together.</li>
-        </ul>
-      </div>
+<h2>OVERVIEW</h2>
 
-      <div class="case-section" id="visuals">
-        <h2>Key Visualisations</h2>
+<p>
 
-        <!-- Replace with actual chart screenshots from your notebook -->
-        <div class="screenshot-placeholder">
-          <div class="sp-icon">📈</div>
-          <p>Replace with screenshot: GOOGL price + 50/200-day MA chart</p>
-          <p style="font-size:0.75rem; opacity:0.5">Save as: assets/google-ma-chart.png</p>
-        </div>
+Analyzed Google stock price dataset to understand trend movement
+and price behaviour over time using Excel charts.
 
-        <div class="screenshot-placeholder">
-          <div class="sp-icon">📉</div>
-          <p>Replace with screenshot: Daily returns distribution / volatility chart</p>
-          <p style="font-size:0.75rem; opacity:0.5">Save as: assets/google-volatility.png</p>
-        </div>
-      </div>
+</p>
 
-      <div class="case-section" id="findings">
-        <h2>Key Findings</h2>
-        <div class="insight-grid">
-          <div class="insight-card blue">
-            <div class="ic-icon">📈</div>
-            <div class="ic-title">Long-term uptrend is clear</div>
-            <div class="ic-text">GOOGL's price has grown dramatically over 20 years, with major acceleration phases post-2012 and post-2020.</div>
-          </div>
-          <div class="insight-card gold">
-            <div class="ic-icon">⚡</div>
-            <div class="ic-title">COVID crash & recovery</div>
-            <div class="ic-text">March 2020 saw a sharp volatility spike followed by one of the fastest recoveries in the stock's history.</div>
-          </div>
-          <div class="insight-card red">
-            <div class="ic-icon">📉</div>
-            <div class="ic-title">2022 selloff was significant</div>
-            <div class="ic-text">Rising interest rates triggered a prolonged downtrend. The 200-day MA acted as a reliable resistance level.</div>
-          </div>
-          <div class="insight-card green">
-            <div class="ic-icon">🎯</div>
-            <div class="ic-title">Moving averages worked well</div>
-            <div class="ic-text">Golden Cross (50MA crossing above 200MA) consistently preceded multi-month rallies. Death Cross preceded corrections.</div>
-          </div>
-        </div>
+</div>
 
-        <div class="findings-list" style="margin-top:2rem;">
-          <div class="finding-item">
-            <span class="fi-icon">📌</span>
-            <div class="fi-text"><strong>Daily return distribution is approximately normal</strong> with slight negative skew — consistent with most large-cap stocks. Fat tails (outlier days) represent significant events (earnings, macro news).</div>
-          </div>
-          <div class="finding-item">
-            <span class="fi-icon">📌</span>
-            <div class="fi-text"><strong>Volume spikes reliably precede price movement.</strong> High volume days often mark trend reversals or breakouts — a useful signal for further analysis.</div>
-          </div>
-          <div class="finding-item">
-            <span class="fi-icon">📌</span>
-            <div class="fi-text"><strong>Rolling 30-day volatility clustered</strong> around major events — COVID (March 2020), Fed rate decisions (2022-23), and earnings releases. This aligns with the GARCH volatility clustering hypothesis.</div>
-          </div>
-        </div>
-      </div>
 
-      <div class="case-section" id="learnings">
-        <h2>What I Learned</h2>
-        <ul>
-          <li>How to work with <strong>datetime-indexed DataFrames</strong> in Pandas — resampling, rolling windows, and period-based filtering.</li>
-          <li>The mechanics of <strong>moving average crossover signals</strong> and why they matter in practice for trend identification.</li>
-          <li>How to build <strong>multi-panel financial charts</strong> in Matplotlib that tell a coherent visual story.</li>
-          <li>How volatility clustering works empirically — and why standard deviation of returns changes dramatically across market regimes.</li>
-        </ul>
-      </div>
+<div class="section">
 
-    </main>
+<h2>ANALYSIS</h2>
 
-    <aside class="case-sidebar">
-      <div class="sidebar-card">
-        <h4>Project Links</h4>
-        <a href="https://github.com/YOUR_USERNAME/google-stock-analysis" target="_blank" class="sidebar-link">🐙 View on GitHub</a>
-        <!-- Add Jupyter nbviewer or Colab link if available -->
-        <!-- <a href="YOUR_NOTEBOOK_LINK" target="_blank" class="sidebar-link">📓 View Notebook</a> -->
-      </div>
-      <div class="sidebar-card">
-        <h4>Jump To</h4>
-        <nav class="sidebar-toc">
-          <a href="#overview">Overview</a>
-          <a href="#problem">Problem Statement</a>
-          <a href="#methodology">Methodology</a>
-          <a href="#visuals">Visualisations</a>
-          <a href="#findings">Key Findings</a>
-          <a href="#learnings">What I Learned</a>
-        </nav>
-      </div>
-      <div class="sidebar-card">
-        <h4>Tech Stack</h4>
-        <div class="tech-badges">
-          <span class="tech-badge">Python</span>
-          <span class="tech-badge">Pandas</span>
-          <span class="tech-badge">Matplotlib</span>
-          <span class="tech-badge">Seaborn</span>
-          <span class="tech-badge">Jupyter</span>
-          <span class="tech-badge">yfinance</span>
-          <span class="tech-badge">NumPy</span>
-        </div>
-      </div>
-    </aside>
-  </div>
+<ul>
 
-  <div class="case-footer">
-    <h3>Like what you see?</h3>
-    <p>View the full code on GitHub or explore my other projects.</p>
-    <div class="footer-links">
-      <a href="https://github.com/YOUR_USERNAME/google-stock-analysis" target="_blank" class="btn btn-gold">View Code on GitHub →</a>
-      <a href="../../index.html#projects" class="btn btn-outline">← Back to Projects</a>
-    </div>
-  </div>
+<li>Price trend over time</li>
+
+<li>Average price movement</li>
+
+<li>Understanding volatility patterns</li>
+
+</ul>
+
+</div>
+
+
+<div class="section">
+
+<h2>KEY LEARNING</h2>
+
+<ul>
+
+<li>Understanding time based data</li>
+
+<li>Creating trend charts</li>
+
+<li>Interpreting price movement patterns</li>
+
+</ul>
+
+</div>
+
+
+</div>
 
 </body>
+
 </html>
