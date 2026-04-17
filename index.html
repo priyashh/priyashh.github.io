@@ -3,647 +3,255 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Priyash Vasava — Data Analyst Portfolio</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --navy:   #0A2342;
-      --teal:   #0D7377;
-      --teal2:  #14BDBD;
-      --gold:   #F5A623;
-      --white:  #FFFFFF;
-      --off:    #F0F5FA;
-      --text:   #1E293B;
-      --muted:  #64748B;
-      --card:   #FFFFFF;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--white);
-      color: var(--text);
-      overflow-x: hidden;
-    }
-
-    /* ── NAV ── */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 1.1rem 4rem;
-      background: rgba(10,35,66,0.97);
-      backdrop-filter: blur(10px);
-    }
-    .nav-logo {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800; font-size: 1.3rem;
-      color: var(--white);
-      letter-spacing: 0.05em;
-    }
-    .nav-logo span { color: var(--gold); }
-    nav ul { list-style: none; display: flex; gap: 2.2rem; }
-    nav ul a {
-      text-decoration: none; color: rgba(255,255,255,0.75);
-      font-size: 0.9rem; font-weight: 400; letter-spacing: 0.03em;
-      transition: color 0.2s;
-    }
-    nav ul a:hover { color: var(--gold); }
-
-    /* ── HERO ── */
-    #hero {
-      min-height: 100vh;
-      background: var(--navy);
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      align-items: center;
-      padding: 7rem 4rem 4rem;
-      position: relative;
-      overflow: hidden;
-    }
-    #hero::before {
-      content: '';
-      position: absolute; top: 0; right: 0;
-      width: 50%; height: 100%;
-      background: linear-gradient(135deg, transparent 0%, rgba(13,115,119,0.15) 100%);
-      pointer-events: none;
-    }
-    .hero-grid-bg {
-      position: absolute; inset: 0;
-      background-image:
-        linear-gradient(rgba(20,189,189,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(20,189,189,0.04) 1px, transparent 1px);
-      background-size: 50px 50px;
-      pointer-events: none;
-    }
-    .hero-left { position: relative; z-index: 2; }
-    .hero-eyebrow {
-      display: inline-flex; align-items: center; gap: 0.6rem;
-      background: rgba(20,189,189,0.12);
-      border: 1px solid rgba(20,189,189,0.3);
-      border-radius: 2rem;
-      padding: 0.35rem 1rem;
-      font-size: 0.8rem; color: var(--teal2); font-weight: 500;
-      letter-spacing: 0.08em; text-transform: uppercase;
-      margin-bottom: 1.8rem;
-    }
-    .hero-eyebrow::before { content: '●'; font-size: 0.5rem; color: var(--gold); }
-    .hero-title {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800;
-      font-size: clamp(2.8rem, 5vw, 4.2rem);
-      line-height: 1.1;
-      color: var(--white);
-      margin-bottom: 0.5rem;
-    }
-    .hero-title .accent { color: var(--teal2); }
-    .hero-sub {
-      font-size: 1.05rem; color: rgba(255,255,255,0.55);
-      line-height: 1.7; max-width: 420px;
-      margin: 1.4rem 0 2.4rem;
-      font-weight: 300;
-    }
-    .hero-cta-row { display: flex; gap: 1rem; flex-wrap: wrap; }
-    .btn {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      padding: 0.75rem 1.8rem;
-      border-radius: 0.4rem;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.9rem; font-weight: 500;
-      text-decoration: none; cursor: pointer;
-      transition: all 0.22s;
-      border: none;
-    }
-    .btn-primary { background: var(--gold); color: var(--navy); }
-    .btn-primary:hover { background: #e6941a; transform: translateY(-2px); box-shadow: 0 8px 24px rgba(245,166,35,0.35); }
-    .btn-outline { background: transparent; color: var(--white); border: 1.5px solid rgba(255,255,255,0.3); }
-    .btn-outline:hover { border-color: var(--teal2); color: var(--teal2); transform: translateY(-2px); }
-
-    /* hero right: floating cards */
-    .hero-right {
-      position: relative; z-index: 2;
-      display: flex; justify-content: center; align-items: center;
-    }
-    .stats-cluster {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      max-width: 340px;
-    }
-    .stat-card {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 1rem;
-      padding: 1.4rem 1.2rem;
-      backdrop-filter: blur(12px);
-      animation: float 5s ease-in-out infinite;
-    }
-    .stat-card:nth-child(2) { animation-delay: 1s; }
-    .stat-card:nth-child(3) { animation-delay: 2s; }
-    .stat-card:nth-child(4) { animation-delay: 3s; }
-    .stat-card .s-icon { font-size: 1.5rem; margin-bottom: 0.6rem; }
-    .stat-card .s-val { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.6rem; color: var(--white); }
-    .stat-card .s-label { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; }
-    @keyframes float {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
-    }
-
-    /* ── SECTION BASE ── */
-    section { padding: 6rem 4rem; }
-    .section-label {
-      font-size: 0.8rem; font-weight: 600; letter-spacing: 0.12em;
-      text-transform: uppercase; color: var(--teal);
-      margin-bottom: 0.6rem;
-    }
-    .section-title {
-      font-family: 'Syne', sans-serif;
-      font-weight: 700; font-size: clamp(1.8rem, 3vw, 2.5rem);
-      color: var(--navy); line-height: 1.2;
-      margin-bottom: 1rem;
-    }
-    .section-sub { color: var(--muted); max-width: 560px; line-height: 1.7; }
-
-    /* ── ABOUT / WHO AM I ── */
-    #about { background: var(--off); }
-    .about-grid {
-      display: grid; grid-template-columns: 1fr 1.4fr;
-      gap: 5rem; align-items: center; margin-top: 3.5rem;
-    }
-    .about-photo-wrap {
-      position: relative;
-    }
-    .about-photo-placeholder {
-      width: 100%; aspect-ratio: 4/5;
-      background: linear-gradient(135deg, var(--navy) 0%, var(--teal) 100%);
-      border-radius: 1.5rem;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 1rem;
-      border: 3px solid rgba(20,189,189,0.2);
-    }
-    .about-photo-placeholder .avatar-icon { font-size: 5rem; }
-    .about-photo-placeholder p { color: rgba(255,255,255,0.5); font-size: 0.85rem; }
-    .about-photo-note {
-      position: absolute; bottom: -1.2rem; right: -1.2rem;
-      background: var(--gold); color: var(--navy);
-      padding: 0.6rem 1.2rem; border-radius: 0.5rem;
-      font-size: 0.8rem; font-weight: 600;
-    }
-    .about-text h3 {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.6rem; font-weight: 700;
-      color: var(--navy); margin-bottom: 1rem;
-    }
-    .about-text p { color: var(--muted); line-height: 1.8; margin-bottom: 1rem; }
-    .skills-grid {
-      display: flex; flex-wrap: wrap; gap: 0.6rem;
-      margin-top: 1.6rem;
-    }
-    .skill-tag {
-      background: var(--white);
-      border: 1.5px solid rgba(13,115,119,0.2);
-      color: var(--teal);
-      padding: 0.35rem 0.9rem;
-      border-radius: 2rem;
-      font-size: 0.82rem; font-weight: 500;
-    }
-
-    /* ── PROJECTS ── */
-    #projects { background: var(--white); }
-    .projects-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; }
-    .projects-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(440px, 1fr));
-      gap: 2rem;
-    }
-    .project-card {
-      background: var(--white);
-      border: 1.5px solid #E2EAF4;
-      border-radius: 1.2rem;
-      overflow: hidden;
-      transition: all 0.3s;
-      display: flex; flex-direction: column;
-      box-shadow: 0 2px 12px rgba(10,35,66,0.06);
-    }
-    .project-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 20px 48px rgba(10,35,66,0.14);
-      border-color: var(--teal2);
-    }
-    .project-banner {
-      height: 200px;
-      display: flex; align-items: center; justify-content: center;
-      position: relative; overflow: hidden;
-    }
-    .project-banner .banner-icon { font-size: 4rem; z-index: 2; }
-    .project-banner .banner-pattern {
-      position: absolute; inset: 0;
-      background-image:
-        radial-gradient(circle at 20% 50%, rgba(255,255,255,0.08) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(255,255,255,0.06) 0%, transparent 40%);
-    }
-    .banner-olist { background: linear-gradient(135deg, var(--navy) 0%, var(--teal) 100%); }
-    .banner-google { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); }
-    .project-content { padding: 1.8rem; flex: 1; display: flex; flex-direction: column; }
-    .project-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
-    .tag {
-      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.05em;
-      text-transform: uppercase;
-      padding: 0.25rem 0.7rem;
-      border-radius: 2rem;
-      background: rgba(13,115,119,0.08); color: var(--teal);
-    }
-    .tag.alt { background: rgba(245,166,35,0.1); color: #b8760a; }
-    .project-content h3 {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.35rem; font-weight: 700;
-      color: var(--navy); margin-bottom: 0.7rem;
-    }
-    .project-content p { color: var(--muted); line-height: 1.7; font-size: 0.93rem; flex: 1; }
-    .project-stats {
-      display: flex; gap: 1.5rem;
-      padding: 1rem 0;
-      border-top: 1px solid #F0F5FA;
-      border-bottom: 1px solid #F0F5FA;
-      margin: 1.2rem 0;
-    }
-    .p-stat .val { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--navy); }
-    .p-stat .lbl { font-size: 0.75rem; color: var(--muted); }
-    .project-links { display: flex; gap: 0.8rem; margin-top: auto; }
-    .link-btn {
-      display: inline-flex; align-items: center; gap: 0.45rem;
-      padding: 0.6rem 1.2rem;
-      border-radius: 0.4rem;
-      font-size: 0.85rem; font-weight: 500;
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-    .link-btn-primary { background: var(--navy); color: var(--white); }
-    .link-btn-primary:hover { background: var(--teal); }
-    .link-btn-outline { border: 1.5px solid #CBD5E0; color: var(--muted); }
-    .link-btn-outline:hover { border-color: var(--teal); color: var(--teal); }
-
-    /* ── TOOLS ── */
-    #tools { background: var(--navy); }
-    #tools .section-title { color: var(--white); }
-    #tools .section-label { color: var(--teal2); }
-    #tools .section-sub { color: rgba(255,255,255,0.5); }
-    .tools-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-      gap: 1rem; margin-top: 3rem;
-    }
-    .tool-item {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 0.8rem;
-      padding: 1.5rem 1rem;
-      text-align: center;
-      transition: all 0.25s;
-    }
-    .tool-item:hover {
-      background: rgba(20,189,189,0.1);
-      border-color: rgba(20,189,189,0.3);
-      transform: translateY(-3px);
-    }
-    .tool-item .t-icon { font-size: 2rem; margin-bottom: 0.6rem; }
-    .tool-item .t-name { font-size: 0.88rem; font-weight: 500; color: rgba(255,255,255,0.8); }
-    .tool-item .t-type { font-size: 0.72rem; color: var(--muted); margin-top: 0.2rem; }
-
-    /* ── CONTACT ── */
-    #contact { background: var(--off); }
-    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; margin-top: 3rem; }
-    .contact-links { display: flex; flex-direction: column; gap: 1rem; margin-top: 1.5rem; }
-    .contact-link {
-      display: flex; align-items: center; gap: 1rem;
-      padding: 1.1rem 1.4rem;
-      background: var(--white);
-      border: 1.5px solid #E2EAF4;
-      border-radius: 0.8rem;
-      text-decoration: none;
-      transition: all 0.22s;
-    }
-    .contact-link:hover { border-color: var(--teal); transform: translateX(6px); }
-    .contact-link .cl-icon { font-size: 1.4rem; }
-    .contact-link .cl-text strong { display: block; font-size: 0.9rem; font-weight: 600; color: var(--navy); }
-    .contact-link .cl-text span { font-size: 0.8rem; color: var(--muted); }
-    .contact-cta {
-      background: var(--navy);
-      border-radius: 1.5rem;
-      padding: 3rem;
-      text-align: center;
-    }
-    .contact-cta h3 { font-family: 'Syne', sans-serif; font-size: 1.6rem; color: var(--white); margin-bottom: 0.8rem; }
-    .contact-cta p { color: rgba(255,255,255,0.55); margin-bottom: 2rem; line-height: 1.7; }
-
-    /* ── FOOTER ── */
-    footer {
-      background: var(--navy);
-      border-top: 1px solid rgba(255,255,255,0.07);
-      text-align: center;
-      padding: 2rem;
-      color: rgba(255,255,255,0.35);
-      font-size: 0.85rem;
-    }
-    footer span { color: var(--gold); }
-
-    /* ── SCROLL ANIMATIONS ── */
-    .reveal {
-      opacity: 0; transform: translateY(30px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-    .reveal-delay-1 { transition-delay: 0.1s; }
-    .reveal-delay-2 { transition-delay: 0.2s; }
-    .reveal-delay-3 { transition-delay: 0.3s; }
-
-    /* ── RESPONSIVE ── */
-    @media (max-width: 900px) {
-      nav { padding: 1rem 2rem; }
-      #hero { grid-template-columns: 1fr; padding: 6rem 2rem 3rem; }
-      .hero-right { display: none; }
-      section { padding: 4rem 2rem; }
-      .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
-      .projects-grid { grid-template-columns: 1fr; }
-      .projects-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
-    }
-  </style>
+  <title>Priyash Vasava — Data Analyst</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-  <!-- NAV -->
-  <nav>
-    <div class="nav-logo">PV<span>.</span></div>
-    <ul>
-      <li><a href="#about">About</a></li>
-      <li><a href="#projects">Works</a></li>
-      <li><a href="#tools">Tools</a></li>
-      <li><a href="#contact">Connect</a></li>
-    </ul>
-  </nav>
-
-  <!-- HERO -->
-  <section id="hero">
-    <div class="hero-grid-bg"></div>
-    <div class="hero-left">
-      <div class="hero-eyebrow">Available for opportunities</div>
-      <h1 class="hero-title">
-        Hi, I'm <span class="accent">Priyash Vasava</span><br>
-        a data analyst<br>
-        turning numbers into decisions.
-      </h1>
-      <p class="hero-sub">
-        I work at the intersection of data and decisions, transforming messy business numbers into visual stories leaders can act on.
-      </p>
-      <div class="hero-cta-row">
-        <a href="#projects" class="btn btn-primary">View Projects ↓</a>
-        <a href="#contact" class="btn btn-outline">Connect with me</a>
-      </div>
+  <header class="nav">
+    <div class="nav-left">
+      <a href="#top" class="logo">PV</a>
     </div>
-    <div class="hero-right">
-      <div class="stats-cluster">
-        <div class="stat-card">
-          <div class="s-icon">📊</div>
-          <div class="s-val">2</div>
-          <div class="s-label">End-to-end dashboards</div>
-        </div>
-        <div class="stat-card">
-          <div class="s-icon">🧮</div>
-          <div class="s-val">550K+</div>
-          <div class="s-label">Rows of real-world data analyzed</div>
-        </div>
-        <div class="stat-card">
-          <div class="s-icon">🛢️</div>
-          <div class="s-val">SQL</div>
-          <div class="s-label">E-commerce & market data</div>
-        </div>
-        <div class="stat-card">
-          <div class="s-icon">📈</div>
-          <div class="s-val">BI</div>
-          <div class="s-label">Power BI, Excel, PowerPoint</div>
-        </div>
-      </div>
+    <nav class="nav-links">
+      <a href="#about">About</a>
+      <a href="#projects">Works</a>
+      <a href="#tools">Tools</a>
+      <a href="#contact">Connect</a>
+    </nav>
+    <div class="nav-right">
+      <span class="status-dot"></span>
+      <span class="status-text">Available for opportunities</span>
     </div>
-  </section>
+  </header>
 
-  <!-- ABOUT / WHO AM I -->
-  <section id="about">
-    <div class="section-label">Who am I</div>
-    <div class="about-grid">
-      <div class="about-photo-wrap reveal">
-        <div class="about-photo-placeholder">
-          <div class="avatar-icon">🧑‍💻</div>
-          <p>Replace with your photo later</p>
-        </div>
-        <div class="about-photo-note">📍 Vadodara, India</div>
-      </div>
-      <div class="about-text reveal reveal-delay-1">
-        <h3>Data, clarity, and practical stories.</h3>
-        <p>
-          Data analyst with a hands-on mindset, using SQL, Power BI, and Excel to turn unstructured business data into clear dashboards and straightforward narratives that stay focused on what matters.
+  <main id="top">
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-left">
+        <p class="hero-kicker">Data Analyst · Vadodara, India</p>
+        <h1 class="hero-title">
+          Hi, I'm <span class="accent">Priyash Vasava</span><br />
+          a data analyst turning numbers<br />
+          into clear decisions.
+        </h1>
+        <p class="hero-subtitle">
+          I work at the intersection of data and decisions, transforming messy business numbers
+          into visual stories leaders can act on.
         </p>
-        <p>
-          I enjoy working with real-world datasets, especially from e-commerce and financial markets, and building analysis that non-technical stakeholders can actually use to make decisions.
-        </p>
-        <div class="skills-grid">
-          <span class="skill-tag">SQL</span>
-          <span class="skill-tag">Power BI</span>
-          <span class="skill-tag">Excel</span>
-          <span class="skill-tag">PowerPoint</span>
-          <span class="skill-tag">Google Docs</span>
-          <span class="skill-tag">Data Storytelling</span>
-          <span class="skill-tag">Dashboard Design</span>
-          <span class="skill-tag">Business Analysis</span>
+        <div class="hero-actions">
+          <a href="#projects" class="btn primary">View projects ↓</a>
+          <a href="#contact" class="btn ghost">Connect with me</a>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- PROJECTS / WORKS -->
-  <section id="projects">
-    <div class="projects-header">
-      <div>
-        <div class="section-label">Projects & Case Studies</div>
-        <h2 class="section-title">Featured Work</h2>
-        <p class="section-sub">End-to-end analyses from raw data to dashboards and presentations.</p>
-      </div>
-    </div>
-    <div class="projects-grid">
-
-      <!-- PROJECT 1: OLIST -->
-      <div class="project-card reveal">
-        <div class="project-banner banner-olist">
-          <div class="banner-pattern"></div>
-          <div class="banner-icon">🛒</div>
-        </div>
-        <div class="project-content">
-          <div class="project-tags">
-            <span class="tag">SQL</span>
-            <span class="tag">Power BI</span>
-            <span class="tag">Excel</span>
-            <span class="tag alt">E-commerce</span>
-          </div>
-          <h3>Olist E-commerce Customer Behavior Analysis</h3>
-          <p>
-            Analyzed transactional data from an online marketplace to understand customer behavior, repeat purchases, and value. 
-            Built measures for total customers, one-time vs repeat customers, and key order metrics, then turned them into a Power BI dashboard and executive-ready slides.
+      <div class="hero-right">
+        <div class="hero-card">
+          <div class="hero-avatar">PV</div>
+          <p class="hero-role">Data Analyst</p>
+          <p class="hero-note">
+            Focused on SQL, Power BI, and data storytelling for e‑commerce and finance.
           </p>
-          <div class="project-stats">
-            <div class="p-stat">
-              <div class="val">Customers</div>
-              <div class="lbl">One-time vs repeat segments</div>
-            </div>
-            <div class="p-stat">
-              <div class="val">SQL</div>
-              <div class="lbl">Modeled orders & customers</div>
-            </div>
-            <div class="p-stat">
-              <div class="val">PPTX</div>
-              <div class="lbl">Storytelling for stakeholders</div>
-            </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- METRICS -->
+    <section class="metrics">
+      <div class="metric">
+        <p class="metric-label">End‑to‑end dashboards</p>
+        <p class="metric-value">2</p>
+      </div>
+      <div class="metric">
+        <p class="metric-label">Rows of real‑world data analyzed</p>
+        <p class="metric-value">550K+</p>
+      </div>
+      <div class="metric">
+        <p class="metric-label">Domains</p>
+        <p class="metric-value">E‑commerce · Stocks</p>
+      </div>
+      <div class="metric">
+        <p class="metric-label">Core tools</p>
+        <p class="metric-value">SQL · Power BI · Excel</p>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="section two-col">
+      <div class="section-label">Who am I</div>
+      <div class="two-col-grid">
+        <div class="about-left">
+          <div class="about-photo-placeholder">
+            <span>Photo coming soon</span>
           </div>
-          <div class="project-links">
-            <a href="#" class="link-btn link-btn-primary">View case study (coming soon)</a>
-            <a href="https://github.com/priyashh" target="_blank" class="link-btn link-btn-outline">GitHub Profile ↗</a>
+        </div>
+        <div class="about-right">
+          <h2>Data, clarity, and practical stories.</h2>
+          <p>
+            Data analyst with a hands-on mindset, using SQL, Power BI, and Excel to turn
+            unstructured business data into clear dashboards and straightforward narratives
+            that stay focused on what matters.
+          </p>
+          <p>
+            I enjoy working with real-world datasets, especially from e‑commerce and financial
+            markets, and building analysis that non‑technical stakeholders can actually use
+            to make decisions.
+          </p>
+          <div class="tags">
+            <span>SQL</span>
+            <span>Power BI</span>
+            <span>Excel</span>
+            <span>PowerPoint</span>
+            <span>Google Docs</span>
+            <span>Data storytelling</span>
+            <span>Dashboard design</span>
+            <span>Business analysis</span>
           </div>
         </div>
       </div>
+    </section>
 
-      <!-- PROJECT 2: GOOGLE STOCK -->
-      <div class="project-card reveal reveal-delay-1">
-        <div class="project-banner banner-google">
-          <div class="banner-pattern"></div>
-          <div class="banner-icon">📈</div>
-        </div>
-        <div class="project-content">
-          <div class="project-tags">
-            <span class="tag">SQL</span>
-            <span class="tag">Time-series</span>
-            <span class="tag">Excel</span>
-            <span class="tag alt">Finance</span>
+    <!-- PROJECTS -->
+    <section id="projects" class="section">
+      <div class="section-label">Projects & Case Studies</div>
+      <div class="section-header">
+        <h2>Featured work</h2>
+        <p>End‑to‑end analyses from raw data to dashboards and presentations.</p>
+      </div>
+
+      <div class="cards-grid">
+        <!-- Olist Project -->
+        <article class="card">
+          <div class="card-pill-row">
+            <span class="pill icon">🛒</span>
+            <span class="pill">SQL</span>
+            <span class="pill">Power BI</span>
+            <span class="pill">Excel</span>
+            <span class="pill">E‑commerce</span>
+          </div>
+          <h3>Olist E‑commerce Customer Behavior Analysis</h3>
+          <p class="card-text">
+            Analyzed transactional marketplace data to understand customer behavior, repeat
+            purchases, and value. Built measures for total customers, one‑time vs repeat
+            customers, and key order metrics, then turned them into a Power BI dashboard and
+            executive‑ready slides.
+          </p>
+          <ul class="card-bullets">
+            <li>Segmentation: one‑time vs repeat customers.</li>
+            <li>SQL modeling for orders, customers, and cohorts.</li>
+            <li>Power BI dashboard and stakeholder slide deck.</li>
+          </ul>
+          <div class="card-actions">
+            <a href="#" class="card-link disabled">Case study (coming soon)</a>
+            <a href="https://github.com/priyashh" target="_blank" class="card-link">
+              GitHub profile ↗
+            </a>
+          </div>
+        </article>
+
+        <!-- Google Stock Project -->
+        <article class="card">
+          <div class="card-pill-row">
+            <span class="pill icon">📈</span>
+            <span class="pill">SQL</span>
+            <span class="pill">Time‑series</span>
+            <span class="pill">Excel</span>
+            <span class="pill">Finance</span>
           </div>
           <h3>Google Stock Price Analysis</h3>
-          <p>
-            Explored historical Google stock data using SQL to calculate daily returns, identify best and worst days, and analyze monthly seasonality. 
-            Summarized the patterns into simple visuals and interpretations focused on volatility, trends, and how often “unusual” days occur.
+          <p class="card-text">
+            Explored historical Google stock data using SQL to calculate daily returns, identify
+            best and worst days, and analyze monthly seasonality. Summarized patterns into
+            simple visuals and interpretations focused on volatility and trend behavior.
           </p>
-          <div class="project-stats">
-            <div class="p-stat">
-              <div class="val">Daily</div>
-              <div class="lbl">Return & volatility analysis</div>
-            </div>
-            <div class="p-stat">
-              <div class="val">SQL</div>
-              <div class="lbl">Window functions & aggregations</div>
-            </div>
-            <div class="p-stat">
-              <div class="val">Seasons</div>
-              <div class="lbl">Monthly patterns checked</div>
-            </div>
+          <ul class="card-bullets">
+            <li>Daily return and volatility calculations.</li>
+            <li>SQL window functions and aggregations.</li>
+            <li>Monthly seasonality and “unusual day” analysis.</li>
+          </ul>
+          <div class="card-actions">
+            <a href="#" class="card-link disabled">Case study (coming soon)</a>
+            <a href="https://github.com/priyashh" target="_blank" class="card-link">
+              GitHub profile ↗
+            </a>
           </div>
-          <div class="project-links">
-            <a href="#" class="link-btn link-btn-primary">View case study (coming soon)</a>
-            <a href="https://github.com/priyashh" target="_blank" class="link-btn link-btn-outline">GitHub Profile ↗</a>
-          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- TOOLS -->
+    <section id="tools" class="section">
+      <div class="section-label">My Stack</div>
+      <div class="section-header">
+        <h2>Tools & Technologies</h2>
+        <p>The tools I use to go from raw data to clear, actionable insights.</p>
+      </div>
+
+      <div class="tools-grid">
+        <div class="tool-card">
+          <span class="tool-icon">🛢️</span>
+          <h3>SQL</h3>
+          <p>Querying, modeling, joins, and window functions.</p>
+        </div>
+        <div class="tool-card">
+          <span class="tool-icon">📊</span>
+          <h3>Power BI</h3>
+          <p>Dashboards, DAX measures, and interactive reporting.</p>
+        </div>
+        <div class="tool-card">
+          <span class="tool-icon">📗</span>
+          <h3>Excel</h3>
+          <p>Analysis, pivots, and quick exploration.</p>
+        </div>
+        <div class="tool-card">
+          <span class="tool-icon">📽️</span>
+          <h3>PowerPoint</h3>
+          <p>Presentations and data storytelling.</p>
+        </div>
+        <div class="tool-card">
+          <span class="tool-icon">📄</span>
+          <h3>Google Docs</h3>
+          <p>Write‑ups, documentation, and summaries.</p>
         </div>
       </div>
+    </section>
 
-    </div>
-  </section>
-
-  <!-- TOOLS -->
-  <section id="tools">
-    <div class="section-label">My Stack</div>
-    <h2 class="section-title">Tools & Technologies</h2>
-    <p class="section-sub">The tools I use to go from raw data to clear, actionable insights.</p>
-    <div class="tools-grid">
-      <div class="tool-item reveal">
-        <div class="t-icon">🛢️</div>
-        <div class="t-name">SQL</div>
-        <div class="t-type">Querying & modeling</div>
-      </div>
-      <div class="tool-item reveal reveal-delay-1">
-        <div class="t-icon">📊</div>
-        <div class="t-name">Power BI</div>
-        <div class="t-type">Dashboards & DAX</div>
-      </div>
-      <div class="tool-item reveal reveal-delay-2">
-        <div class="t-icon">📗</div>
-        <div class="t-name">Excel</div>
-        <div class="t-type">Analysis & pivots</div>
-      </div>
-      <div class="tool-item reveal reveal-delay-3">
-        <div class="t-icon">📽️</div>
-        <div class="t-name">PowerPoint</div>
-        <div class="t-type">Presentations & storytelling</div>
-      </div>
-      <div class="tool-item reveal">
-        <div class="t-icon">📄</div>
-        <div class="t-name">Google Docs</div>
-        <div class="t-type">Write-ups & documentation</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONTACT / CONNECT -->
-  <section id="contact">
-    <div class="section-label">Connect with me</div>
-    <h2 class="section-title">Let’s talk data.</h2>
-    <div class="contact-grid">
-      <div>
-        <p class="section-sub">
-          If you want to explore a dataset, improve a dashboard, or discuss a potential role, feel free to reach out on any of these platforms.
-        </p>
+    <!-- CONTACT -->
+    <section id="contact" class="section contact">
+      <div class="section-label">Connect with me</div>
+      <div class="contact-inner">
+        <div>
+          <h2>Let’s talk data.</h2>
+          <p>
+            If you want to explore a dataset, improve a dashboard, or discuss a potential role,
+            feel free to reach out.
+          </p>
+        </div>
         <div class="contact-links">
-          <a href="https://www.linkedin.com/in/priyashvasava" target="_blank" class="contact-link reveal">
-            <span class="cl-icon">💼</span>
-            <div class="cl-text">
-              <strong>LinkedIn</strong>
-              <span>linkedin.com/in/priyashvasava</span>
-            </div>
+          <a href="https://www.linkedin.com/in/priyashvasava" target="_blank">
+            💼 LinkedIn
           </a>
-          <a href="https://github.com/priyashh" target="_blank" class="contact-link reveal reveal-delay-1">
-            <span class="cl-icon">🐙</span>
-            <div class="cl-text">
-              <strong>GitHub</strong>
-              <span>github.com/priyashh</span>
-            </div>
+          <a href="https://github.com/priyashh" target="_blank">
+            🐙 GitHub
           </a>
-          <a href="mailto:Priyashvasava@outlook.com" class="contact-link reveal reveal-delay-2">
-            <span class="cl-icon">✉️</span>
-            <div class="cl-text">
-              <strong>Email</strong>
-              <span>Priyashvasava@outlook.com</span>
-            </div>
+          <a href="mailto:Priyashvasava@outlook.com">
+            ✉️ Email
           </a>
         </div>
       </div>
-      <div class="contact-cta reveal reveal-delay-1">
+
+      <div class="contact-cta">
         <h3>Looking for a data analyst?</h3>
         <p>
-          I’m focused on turning complex, messy data into simple visuals and narratives that make the next decision obvious. 
-          If that’s what you need, I’d love to connect.
+          I’m focused on turning complex, messy data into simple visuals and narratives
+          that make the next decision obvious. If that’s what you need, I’d love to connect.
         </p>
-        <a href="mailto:Priyashvasava@outlook.com" class="btn btn-primary" style="margin: 0 auto; display: inline-flex;">Send a message →</a>
+        <a href="mailto:Priyashvasava@outlook.com" class="btn primary">
+          Send a message →
+        </a>
       </div>
-    </div>
-  </section>
+    </section>
+  </main>
 
-  <!-- FOOTER -->
-  <footer>
-    <p>Designed & built by <span>Priyash Vasava</span> · Hosted on GitHub Pages</p>
+  <footer class="footer">
+    <p>Designed &amp; built by <span class="accent">Priyash Vasava</span> · Hosted on GitHub Pages</p>
   </footer>
-
-  <script>
-    // Scroll reveal
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-    }, { threshold: 0.15 });
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-  </script>
-
 </body>
 </html>
