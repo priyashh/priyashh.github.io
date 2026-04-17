@@ -250,4 +250,34 @@
         <h3>Looking for a data analyst?</h3>
         <p>
           I’m focused on turning complex, messy data into simple visuals and narratives
-          that make the 
+          that make the next decision obvious. If that’s what you need, I’d love to connect.
+        </p>
+        <a href="mailto:Priyashvasava@outlook.com" class="btn primary">
+          Send a message →
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Designed &amp; built by <span class="accent">Priyash Vasava</span> · Hosted on GitHub Pages</p>
+  </footer>
+
+  <!-- Slider script -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const slides = document.querySelectorAll(".hero-slide");
+      if (!slides.length) return;
+
+      let index = 0;
+      slides[index].classList.add("active");
+
+      setInterval(() => {
+        slides[index].classList.remove("active");
+        index = (index + 1) % slides.length;
+        slides[index].classList.add("active");
+      }, 3000); // 3 seconds
+    });
+  </script>
+</body>
+</html>
