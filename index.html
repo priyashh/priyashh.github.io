@@ -7,17 +7,35 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+  <!-- NAV -->
   <header class="nav">
     <div class="nav-left">
-      <a href="#top" class="logo">Home</a>
+      <a href="#top" class="logo">Priyash</a>
     </div>
+
     <nav class="nav-links">
       <a href="#about">About</a>
-      <a href="#projects">Work</a>
+      <a href="#projects">Projects</a>
       <a href="blog.html">Blog</a>
       <a href="#contact">Connect</a>
     </nav>
-    <div class="nav-right"></div>
+
+    <!-- Hamburger button -->
+    <button class="nav-toggle" aria-label="Toggle menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <!-- Slide-down panel -->
+    <div class="nav-panel">
+      <nav class="nav-panel-links">
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="blog.html">Blog</a>
+        <a href="#contact">Connect</a>
+      </nav>
+    </div>
   </header>
 
   <main id="top">
@@ -32,45 +50,41 @@
             <article class="hero-slide">
               <h1 class="hero-slide-title">Olist e‑commerce customer behavior analysis</h1>
               <p class="hero-slide-text">
-                Understanding one‑time vs repeat customers and building a Power BI dashboard
-                for marketplace decisions.
+                Marketplace data in SQL and Power BI to understand repeat customers and revenue drivers.
               </p>
             </article>
 
             <article class="hero-slide">
               <h1 class="hero-slide-title">Google stock price analysis</h1>
               <p class="hero-slide-text">
-                Time‑series SQL analysis of daily returns, volatility, and monthly patterns
-                for GOOG stock.
+                Daily SQL analysis of Google’s stock to spot returns, volatility, and unusual days.
               </p>
             </article>
 
             <article class="hero-slide">
               <h1 class="hero-slide-title">From raw CSVs to decisions</h1>
               <p class="hero-slide-text">
-                Cleaning, modeling, and visualizing data so stakeholders can see what matters
-                in one glance.
+                Cleaning, modeling, and visualizing data so stakeholders can see what matters quickly.
               </p>
             </article>
           </div>
         </div>
 
-        <p class="hero-subtitle">
-          Check out what I was working on recently !
+        <p id="hero-subtitle" class="hero-subtitle">
+          Check out what I was working on recently.
         </p>
-        
+      </div>
     </section>
-
 
     <!-- PROJECTS -->
     <section id="projects" class="section">
       <div class="section-label">Projects & Case Studies</div>
       <div class="section-header">
-        <h2>
-        <p>Selected projects that move from raw data to dashboards and decisions.</p>
+        <h2 class="projects-title">Projects & Case Studies</h2>
+        <p>From raw data to dashboards and clear next steps.</p>
       </div>
-      
-        
+
+      <div class="cards-grid">
         <!-- Olist Project -->
         <article class="card">
           <div class="card-pill-row">
@@ -82,15 +96,13 @@
           </div>
           <h3>Olist E‑commerce Customer Behavior Analysis</h3>
           <p class="card-text">
-            Analyzed transactional marketplace data to understand customer behavior, repeat
-            purchases, and value. Built measures for total customers, one‑time vs repeat
-            customers, and key order metrics, then turned them into a Power BI dashboard and
-            executive‑ready slides.
+            Analyzed marketplace orders to understand customer behavior, repeat purchases, and value,
+            then built a Power BI dashboard and slides for stakeholders.
           </p>
           <ul class="card-bullets">
-            <li>Segmentation: one‑time vs repeat customers.</li>
+            <li>One‑time vs repeat customer segmentation.</li>
             <li>SQL modeling for orders, customers, and cohorts.</li>
-            <li>Power BI dashboard and stakeholder slide deck.</li>
+            <li>Dashboard and presentation focused on key decisions.</li>
           </ul>
           <div class="card-actions">
             <a href="#" class="card-link">Case study</a>
@@ -111,9 +123,8 @@
           </div>
           <h3>Google Stock Price Analysis</h3>
           <p class="card-text">
-            Explored historical Google stock data using SQL to calculate daily returns, identify
-            best and worst days, and analyze monthly seasonality. Summarized patterns into
-            simple visuals and interpretations focused on volatility and trend behavior.
+            Used SQL on historical stock data to calculate returns, volatility, and seasonality,
+            summarizing patterns into simple visuals and commentary.
           </p>
           <ul class="card-bullets">
             <li>Daily return and volatility calculations.</li>
@@ -129,24 +140,24 @@
         </article>
       </div>
     </section>
-    
-<!-- METRICS -->
-    <section class="metrics">
-      <div class="metric">
-        <p class="metric-label">End‑to‑end dashboards</p>
-        <p class="metric-value">2 (more on the way!)</p>
-      </div>
-      <div class="metric">
-        <p class="metric-label">Total Rows analysed</p>
-        <p class="metric-value">550K+</p>
-      </div>
-      <div class="metric">
-        <p class="metric-label">Core tools</p>
-        <p class="metric-value">SQL · Power BI · Excel</p>
+
+    <!-- METRICS -->
+    <section class="section metrics-section">
+      <div class="metrics">
+        <div class="metric">
+          <p class="metric-label">End‑to‑end dashboards</p>
+          <p class="metric-value">2 <span class="metric-note">(more on the way)</span></p>
+        </div>
+        <div class="metric">
+          <p class="metric-label">Total rows analysed</p>
+          <p class="metric-value">550K+</p>
+        </div>
+        <div class="metric">
+          <p class="metric-label">Core tools</p>
+          <p class="metric-value">SQL · Power BI · Excel</p>
+        </div>
       </div>
     </section>
-      
-      <div class="cards-grid">
 
     <!-- ABOUT -->
     <section id="about" class="section two-col">
@@ -160,9 +171,8 @@
         <div class="about-right">
           <h2>Data, clarity, and practical stories.</h2>
           <p>
-            Data analyst with a hands-on mindset, using SQL, Power BI, and Excel to turn
-            unstructured business data into clear dashboards and straightforward narratives
-            that stay focused on what matters.
+            I use SQL, Power BI, and Excel to turn messy tables into dashboards and narratives
+            that stay focused on decisions, not jargon.
           </p>
           <div class="tags">
             <span>SQL</span>
@@ -177,16 +187,16 @@
         </div>
       </div>
     </section>
- 
+
     <!-- CONTACT -->
     <section id="contact" class="section contact">
       <div class="section-label">Connect with me</div>
       <div class="contact-inner">
         <div>
-          <h2>Let’s talk .</h2>
+          <h2>Let’s talk data.</h2>
           <p>
             If you want to explore a dataset, improve a dashboard, or discuss a potential role,
-            feel free to reach out on Email or LinkedIn.
+            feel free to reach out on email or LinkedIn.
           </p>
         </div>
         <div class="contact-links">
@@ -205,8 +215,8 @@
       <div class="contact-cta">
         <h3>Looking for a data analyst?</h3>
         <p>
-          I’m focused on turning complex, messy data into simple visuals and narratives
-          that make the next decision obvious. If that’s what you need, I’d love to connect.
+          I focus on turning complex, messy data into simple visuals and narratives
+          that make the next step obvious.
         </p>
         <a href="mailto:Priyashvasava@outlook.com" class="btn primary">
           Send a message →
@@ -219,20 +229,38 @@
     <p>Designed &amp; built by <span class="accent">Priyash Vasava</span> · Hosted on GitHub Pages</p>
   </footer>
 
-  <!-- Slider script -->
+  <!-- Slider + nav script -->
   <script>
     document.addEventListener("DOMContentLoaded", function () {
+      // Hero slider
       const slides = document.querySelectorAll(".hero-slide");
-      if (!slides.length) return;
-
-      let index = 0;
-      slides[index].classList.add("active");
-
-      setInterval(() => {
-        slides[index].classList.remove("active");
-        index = (index + 1) % slides.length;
+      if (slides.length) {
+        let index = 0;
         slides[index].classList.add("active");
-      }, 3000); // 3 seconds
+
+        setInterval(() => {
+          slides[index].classList.remove("active");
+          index = (index + 1) % slides.length;
+          slides[index].classList.add("active");
+        }, 3500);
+      }
+
+      // Nav toggle
+      const toggle = document.querySelector(".nav-toggle");
+      const panel = document.querySelector(".nav-panel");
+      const panelLinks = document.querySelectorAll(".nav-panel-links a");
+
+      if (toggle && panel) {
+        toggle.addEventListener("click", () => {
+          panel.classList.toggle("open");
+        });
+
+        panelLinks.forEach(link => {
+          link.addEventListener("click", () => {
+            panel.classList.remove("open");
+          });
+        });
+      }
     });
   </script>
 </body>
