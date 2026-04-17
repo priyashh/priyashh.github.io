@@ -149,8 +149,23 @@ main {
 
 .hero-title {
   margin: 0 0 16px;
-  font-size: 36px;
-  line-height: 1.15;
+  font-size: 32px; /* slightly smaller to fit slider */
+  line-height: 1.25;
+}
+
+.hero-slider {
+  display: block;
+  margin-top: 8px;
+  font-size: 18px;
+  color: var(--muted);
+}
+
+.hero-slider .slide {
+  display: none;
+}
+
+.hero-slider .slide.active {
+  display: inline;
 }
 
 .hero-subtitle {
