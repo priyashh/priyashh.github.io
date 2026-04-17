@@ -101,11 +101,16 @@ main {
 .nav a {
   text-decoration: none;
   color: var(--muted);
-  font-size: 14px;
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: 5px;
+  border: 1px solid var(--border-subtle);
+  background: transparent;
 }
 
 .nav a:hover {
   color: var(--text);
+  border-color: rgba(148, 163, 184, 0.7);
 }
 
 .logo {
