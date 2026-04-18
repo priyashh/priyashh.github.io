@@ -1,460 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Google stock trend analysis | Priyash Vasava</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <!-- Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="../project-starfield.css" />
-
-  <style>
-    :root {
-      --bg-main: #f6f4e8;
-      --bg-card: #ffffff;
-      --accent-soft: #c0e1d2;
-      --accent-strong: #dc9b9b;
-      --text-main: #222222;
-      --text-muted: #666666;
-      --border-subtle: rgba(0, 0, 0, 0.04);
-    }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    body {
-      margin: 0;
-      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg-main);
-      color: var(--text-main);
-      line-height: 1.6;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .page {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* Top bar */
-
-    .top-bar {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      backdrop-filter: blur(12px);
-      background: linear-gradient(
-        to bottom,
-        rgba(246, 244, 232, 0.94),
-        rgba(246, 244, 232, 0.88)
-      );
-      border-bottom: 1px solid var(--border-subtle);
-    }
-
-    .top-bar-inner {
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 14px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-    }
-
-    .brand {
-      display: flex;
-      align-items: baseline;
-      gap: 6px;
-      font-size: 14px;
-    }
-
-    .brand-name {
-      font-weight: 600;
-      letter-spacing: 0.03em;
-      font-size: 15px;
-      text-transform: uppercase;
-    }
-
-    .brand-tag {
-      font-size: 13px;
-      color: var(--text-muted);
-    }
-
-    .back-link {
-      font-size: 13px;
-      padding: 6px 12px;
-      border-radius: 999px;
-      border: 1px solid var(--border-subtle);
-      background: rgba(255, 255, 255, 0.9);
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      color: var(--text-muted);
-      cursor: pointer;
-      transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.15s ease;
-    }
-
-    .back-link:hover {
-      background: #ffffff;
-      transform: translateY(-1px);
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-      color: var(--text-main);
-    }
-
-    /* Main content */
-
-    .content {
-      flex: 1;
-      max-width: 960px;
-      margin: 0 auto;
-      padding: 32px 20px 48px;
-    }
-
-    .hero {
-      background: radial-gradient(circle at top left, var(--accent-soft), var(--bg-main));
-      border-radius: 24px;
-      padding: 32px 28px 28px;
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
-      border: 1px solid rgba(0, 0, 0, 0.02);
-      margin-bottom: 28px;
-    }
-
-    .hero-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.7);
-      border: 1px solid rgba(0, 0, 0, 0.03);
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.09em;
-      color: var(--text-muted);
-      margin-bottom: 10px;
-    }
-
-    .hero-title {
-      font-size: clamp(26px, 3vw, 30px);
-      margin: 0 0 8px;
-      letter-spacing: -0.02em;
-    }
-
-    .hero-subtitle {
-      margin: 0 0 14px;
-      font-size: 14px;
-      color: var(--text-muted);
-      max-width: 520px;
-    }
-
-    .hero-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 6px;
-    }
-
-    .meta-pill {
-      font-size: 12px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.85);
-      border: 1px solid rgba(0, 0, 0, 0.03);
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .meta-label {
-      font-weight: 500;
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-muted);
-    }
-
-    .meta-value {
-      font-size: 12px;
-    }
-
-    /* Layout: content + sidebar */
-
-    .layout {
-      display: grid;
-      grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr);
-      gap: 20px;
-      align-items: flex-start;
-    }
-
-    .card {
-      background: var(--bg-card);
-      border-radius: 18px;
-      padding: 22px 22px 20px;
-      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.06);
-      border: 1px solid rgba(0, 0, 0, 0.03);
-    }
-
-    .card + .card {
-      margin-top: 16px;
-    }
-
-    .card-heading {
-      font-size: 15px;
-      margin: 0 0 6px;
-    }
-
-    .card-tagline {
-      font-size: 13px;
-      margin: 0 0 10px;
-      color: var(--text-muted);
-    }
-
-    .card ul {
-      margin: 0;
-      padding-left: 20px;
-      font-size: 14px;
-    }
-
-    .card li + li {
-      margin-top: 4px;
-    }
-
-    .muted-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.11em;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-    }
-
-    .sidebar-card {
-      background: linear-gradient(135deg, #ffffff, #fdf8f8);
-      border-radius: 18px;
-      padding: 18px 18px 16px;
-      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.05);
-      border: 1px solid rgba(0, 0, 0, 0.03);
-      font-size: 13px;
-    }
-
-    .sidebar-card + .sidebar-card {
-      margin-top: 12px;
-    }
-
-    .chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 6px;
-    }
-
-    .chip {
-      font-size: 12px;
-      padding: 4px 9px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.9);
-      border: 1px solid rgba(0, 0, 0, 0.04);
-    }
-
-    .insights-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      font-size: 14px;
-    }
-
-    .insights-list li {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
-      margin-bottom: 6px;
-    }
-
-    .bullet-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 999px;
-      background: var(--accent-strong);
-      margin-top: 7px;
-      flex-shrink: 0;
-    }
-
-    .footer-nav {
-      margin-top: 28px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 13px;
-      color: var(--text-muted);
-    }
-
-    .footer-nav a {
-      font-weight: 500;
-    }
-
-    .footer-nav a:hover {
-      color: var(--text-main);
-      text-decoration: underline;
-    }
-
-    @media (max-width: 820px) {
-      .top-bar-inner {
-        padding-inline: 16px;
-      }
-
-      .content {
-        padding-inline: 16px;
-      }
-
-      .hero {
-        padding: 24px 18px 20px;
-      }
-
-      .layout {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Stock Trend Analysis | Priyash Vasava</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        /* Project-specific layout adjustments */
+        .article-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 60px; margin-top: 40px; }
+        .article-block { margin-bottom: 50px; }
+        .article-block h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 600; margin-bottom: 20px; letter-spacing: -0.02em; }
+        .article-block p, .article-block ul { color: var(--text-muted); font-size: 1.1rem; line-height: 1.8; margin-bottom: 15px; }
+        .article-block ul { padding-left: 20px; }
+        .article-block li { margin-bottom: 10px; }
+        .article-block li strong { color: var(--text-main); }
+        .meta-tags { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 30px; }
+        .meta-tag { background: var(--accent); color: var(--text-main); padding: 8px 16px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+        .sidebar-box { border: 1px solid var(--border-color); padding: 30px; border-radius: 12px; margin-bottom: 20px; background: #fafafa; }
+        .sidebar-box h3 { font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 15px; letter-spacing: 0.05em; }
+        .sidebar-box p { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 15px; }
+        .back-link { display: inline-block; margin-top: 20px; font-weight: 500; border-bottom: 2px solid var(--text-main); padding-bottom: 2px; }
+        .back-link:hover { color: var(--accent); border-color: var(--accent); }
+        @media (max-width: 900px) { .article-grid { grid-template-columns: 1fr; gap: 40px; } }
+    </style>
 </head>
-
 <body>
-  <div class="page">
-    <!-- Top bar -->
-    <header class="top-bar">
-      <div class="top-bar-inner">
-        <div class="brand">
-          <span class="brand-name">Priyash Vasava</span>
-          <span class="brand-tag">Data analyst</span>
+
+    <nav class="navbar">
+        <a href="../../index.html" class="logo"><strong>Priyash Vasava</strong></a>
+        <div class="nav-links">
+            <a href="../../index.html#projects">← Back to Portfolio</a>
         </div>
-        <a href="index.html#projects" class="back-link">
-          <span>← Back to projects</span>
-        </a>
-      </div>
+    </nav>
+
+    <header class="section hero animate">
+        <span class="section-label">Case Study // Time-Series</span>
+        <h1>Google stock price trend analysis.</h1>
+        <p style="font-size: clamp(1.2rem, 2vw, 1.5rem); color: var(--text-muted); max-width: 700px;">
+            Exploring long-term trends, volatility, and price behavior using daily historical data.
+        </p>
+        <div class="meta-tags">
+            <span class="meta-tag">Excel</span>
+            <span class="meta-tag">Financial Data</span>
+            <span class="meta-tag">Volatility Analysis</span>
+        </div>
     </header>
 
-    <!-- Main content -->
-    <main class="content">
-      <!-- Hero / Summary -->
-      <section class="hero">
-        <div class="hero-pill">
-          <span>Case study</span>
-        </div>
-        <h1 class="hero-title">Google stock price trend analysis</h1>
-        <p class="hero-subtitle">
-          Used daily Google stock prices in Excel to explore long‑term trends, volatility, and
-          price behavior, and to practice building and interpreting time‑series charts.
-        </p>
+    <section class="section animate" style="animation-delay: 0.2s;">
+        <div class="article-grid">
+            
+            <div class="main-content">
+                <div class="article-block">
+                    <h2>Exploring Google’s stock behavior over time</h2>
+                    <p>The goal of this project was to practice working with time‑based financial data in Excel and understand how simple visuals can reveal trends and volatility.</p>
+                    <p>Starting from a historical price dataset, I cleaned and organized the columns (date, open, high, low, close, volume) and built charts that highlight overall movement, local swings, and periods of higher volatility.</p>
+                </div>
 
-        <div class="hero-meta">
-          <div class="meta-pill">
-            <span class="meta-label">Tools</span>
-            <span class="meta-value">Excel</span>
-          </div>
-          <div class="meta-pill">
-            <span class="meta-label">Focus</span>
-            <span class="meta-value">Price trends & volatility</span>
-          </div>
-          <div class="meta-pill">
-            <span class="meta-label">Data type</span>
-            <span class="meta-value">Time‑series (daily prices)</span>
-          </div>
-        </div>
-      </section>
+                <div class="article-block">
+                    <h2>What I analyzed</h2>
+                    <ul>
+                        <li><strong>Price trend over time</strong> using line charts on closing prices to identify macro trajectories.</li>
+                        <li><strong>Average price movement</strong> across selected periods to smooth out daily noise.</li>
+                        <li><strong>Volatility measurements</strong> to understand how much the price fluctuates day to day and identify high-risk market environments.</li>
+                    </ul>
+                </div>
 
-      <!-- Layout -->
-      <section class="layout">
-        <!-- Left: main story -->
-        <div>
-          <article class="card">
-            <div class="muted-label">Overview</div>
-            <h2 class="card-heading">Exploring Google’s stock behavior over time</h2>
-            <p class="card-tagline">
-              The goal of this project was to practice working with time‑based financial data in Excel
-              and understand how simple visuals can reveal trends and volatility.
-            </p>
-            <p>
-              Starting from a historical price dataset, I cleaned and organized the columns
-              (date, open, high, low, close, volume) and built charts that highlight overall
-              movement, local swings, and periods of higher volatility.
-            </p>
-          </article>
-
-          <article class="card">
-            <div class="muted-label">Analysis</div>
-            <h2 class="card-heading">What I analyzed in Excel</h2>
-            <ul>
-              <li>Price trend over time using line charts on closing prices.</li>
-              <li>Average price movement across selected periods.</li>
-              <li>Simple measures of volatility to understand how much price fluctuates day to day.</li>
-            </ul>
-          </article>
-
-          <article class="card">
-            <div class="muted-label">Key learning</div>
-            <h2 class="card-heading">What I learned from this project</h2>
-            <ul class="insights-list">
-              <li>
-                <span class="bullet-dot"></span>
-                <span>Working comfortably with time‑based data (sorting by date, handling gaps, choosing the right date granularity).</span>
-              </li>
-              <li>
-                <span class="bullet-dot"></span>
-                <span>Building clear trend charts that show long‑term direction and short‑term swings.</span>
-              </li>
-              <li>
-                <span class="bullet-dot"></span>
-                <span>Interpreting price movement patterns and relating spikes or drops to broader market context.</span>
-              </li>
-            </ul>
-          </article>
-        </div>
-
-        <!-- Right: sidebar -->
-        <aside>
-          <div class="sidebar-card">
-            <div class="muted-label">Role & focus</div>
-            <p>
-              Solo project focused on exploring stock data in Excel, building charts, and describing
-              what the visuals say in simple, non‑technical language.
-            </p>
-          </div>
-
-          <div class="sidebar-card">
-            <div class="muted-label">Dataset & stack</div>
-            <div class="chips">
-              <span class="chip">Google stock prices</span>
-              <span class="chip">Excel</span>
-              <span class="chip">Time‑series charts</span>
+                <div class="article-block">
+                    <h2>Key learnings</h2>
+                    <ul>
+                        <li>Working comfortably with time‑based data (sorting by date, handling gaps, choosing the right date granularity).</li>
+                        <li>Building clear trend charts that show long‑term direction while maintaining visibility on short‑term swings.</li>
+                        <li>Interpreting price movement patterns and relating spikes or drops to broader market context.</li>
+                    </ul>
+                </div>
             </div>
-          </div>
 
-          <div class="sidebar-card">
-            <div class="muted-label">Links</div>
-            <p>
-              You can return to the main portfolio and explore more projects:
-            </p>
-            <p>
-              <a href="index.html#projects">← Back to projects</a>
-            </p>
-            <p>
-              <a href="https://github.com/priyashh" target="_blank" rel="noreferrer">GitHub profile ↗</a>
-            </p>
-          </div>
-        </aside>
-      </section>
+            <aside class="sidebar">
+                <div class="sidebar-box">
+                    <h3>Role & Focus</h3>
+                    <p>Solo project focused on exploring stock data in Excel, building charts, and describing what the visuals say in simple, non‑technical language.</p>
+                </div>
+                
+                <div class="sidebar-box">
+                    <h3>Dataset Details</h3>
+                    <p><strong>Source:</strong> Historical Google stock prices.<br><strong>Type:</strong> Time-series (daily prices).</p>
+                </div>
 
-      <div class="footer-nav">
-        <span>Google stock trend analysis case study</span>
-        <a href="index.html#projects">Back to projects →</a>
-      </div>
-    </main>
-  </div>
-  <script src="../../starfield.js"></script>
+                <a href="../../index.html#projects" class="back-link">← Return to projects</a>
+            </aside>
+
+        </div>
+    </section>
+
 </body>
 </html>
