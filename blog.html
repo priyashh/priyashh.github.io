@@ -1,77 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Blog — Priyash Vasava</title>
-  <link rel="stylesheet" href="style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog | Priyash Vasava</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Same nav -->
-  <header class="nav">
-    <div class="nav-left">
-      <a href="index.html#top" class="logo">Home</a>
-    </div>
-    <nav class="nav-links">
-      <a href="index.html#about">About</a>
-      <a href="index.html#projects">Work</a>
-      <a href="blog.html">Blog</a>
-      <a href="index.html#contact">Connect</a>
-    </nav>
-    <div class="nav-right"></div>
-  </header>
 
-  <main id="top">
-    <!-- Centered message section -->
-    <section class="section" style="min-height: 60vh; display: flex; align-items: center; justify-content: center;">
-      <div style="
-        max-width: 600px;
-        text-align: center;
-        padding: 32px 24px;
-        border-radius: 18px;
-        border: 1px solid var(--border-subtle);
-        background: radial-gradient(circle at top left, #111827, #020617 60%);
-        box-shadow: var(--shadow-soft);
-      ">
-        <p class="section-label">Blog</p>
-        <h1 style="margin: 0 0 12px; font-size: 32px;">
-          Stay tuned, it's cooking!!
-        </h1>
-        <p style="margin: 0; color: var(--muted); font-size: 14px;">
-          I’ll be sharing write-ups on SQL, Power BI, and data storytelling here soon.
-          Come back later to see what’s fresh.
-        </p>
-        <div style="margin-top: 20px;">
-          <a href="index.html#projects" class="btn primary">View my projects →</a>
+    <nav class="navbar">
+        <a href="index.html" class="logo"><strong>Priyash Vasava</strong></a>
+        <div class="nav-links">
+            <a href="index.html#projects">Projects</a>
+            <a href="blog.html">Blog</a>
+            <a href="index.html#who-am-i">Who Am I?</a>
+            <a href="index.html#connect">Connect</a>
         </div>
-      </div>
+    </nav>
+
+    <section class="section">
+        <div class="blog-content">
+            <span class="section-label">Blog</span>
+            <h1 style="font-size: 4rem; margin-bottom: 20px;">Stay tuned, it's cooking!!</h1>
+            <p style="color: var(--text-muted);">I'll be sharing write-ups on SQL, Power BI, and data storytelling here soon.</p>
+        </div>
     </section>
-  </main>
 
-  <footer class="footer">
-    <p>Designed &amp; built by <span class="accent">Priyash Vasava</span> · Hosted on GitHub Pages</p>
-  </footer>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const root = document.documentElement;
-      let rafScheduled = false;
-
-      const updateStarOffset = () => {
-        const scrollY = window.scrollY || window.pageYOffset || 0;
-        root.style.setProperty("--star-offset-y", `${scrollY * -0.22}px`);
-        rafScheduled = false;
-      };
-
-      window.addEventListener("scroll", () => {
-        if (!rafScheduled) {
-          rafScheduled = true;
-          requestAnimationFrame(updateStarOffset);
-        }
-      }, { passive: true });
-
-      updateStarOffset();
-    });
-  </script>
 </body>
 </html>
