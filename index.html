@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Priyash Vasava</title>
+    <title>Portfolio | Priyash Vasava</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -18,38 +18,91 @@
         </div>
     </nav>
 
-    <header class="section">
+    <header class="section hero animate">
+        <span class="section-label">ID. PV-2024 // Data Analyst</span>
         <h1>I design clean analytics experiences.</h1>
+        <p style="font-size: clamp(1.2rem, 2vw, 1.5rem); color: var(--text-muted); max-width: 600px;">Exploring patterns in data through an industrial lens. Turning raw data into structured, actionable insights.</p>
     </header>
 
-    <section class="section" id="projects">
-        <span class="section-label">Projects</span>
-        <a href="projects/olist.html" class="project-row">
-            <div class="project-info"><h2>Olist E-Commerce</h2></div>
-            <p>Data Analysis & Visualization</p>
-        </a>
-        <a href="works/google-stock.html" class="project-row">
-            <div class="project-info"><h2>Google Stock</h2></div>
-            <p>Time Series Analysis</p>
-        </a>
-    </section>
-
-    <section class="section" id="who-am-i">
-        <span class="section-label">Who Am I?</span>
-        <h2>I am a data analyst focused on building clarity out of chaos.</h2>
-    </section>
-
-    <section class="section" id="connect">
-        <span class="section-label">Let's Connect</span>
-        <blockquote>"In God we trust. All others must bring data."</blockquote>
+    <section class="section animate" id="projects" style="animation-delay: 0.2s;">
+        <span class="section-label">Selected Works</span>
         
-        <div class="connect-container">
-            <span class="email-text">priyashvasava@email.com</span> <div class="social-links">
-                <a href="https://linkedin.com/in/yourprofile" target="_blank">LinkedIn</a>
+        <div class="slider-container">
+            <div class="slider-track" id="sliderTrack">
+                
+                <a href="projects/olist.html" class="slide">
+                    <h2>Olist E-Commerce</h2>
+                    <p>A full end-to-end analysis of 100,000+ orders from Olist. Uncovering revenue drivers, delivery performance, and geographic distribution through SQL and Power BI.</p>
+                    <div class="slide-tags">
+                        <span>SQL</span>
+                        <span>Power BI</span>
+                        <span>Python</span>
+                    </div>
+                </a>
+
+                <a href="works/google-stock.html" class="slide">
+                    <h2>Google Stock Analysis</h2>
+                    <p>A deep-dive exploratory analysis of GOOGL historical stock data. Identifying long-term trends, volatility cycles, and moving average patterns using Pandas and Matplotlib.</p>
+                    <div class="slide-tags">
+                        <span>Python</span>
+                        <span>Pandas</span>
+                        <span>Time Series</span>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 20px; font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">← Drag or wait to slide →</div>
+    </section>
+
+    <section class="section animate" id="who-am-i">
+        <span class="section-label">Who Am I ?</span>
+        <div style="max-width: 800px;">
+            <h2 style="font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 500; margin-bottom: 20px; letter-spacing: -0.02em;">
+                Data chaos meets structured thinking: that's where I thrive as an analyst.
+            </h2>
+            <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.6;">
+                Think of each dashboard as an industrial blueprint for decisions: stripped of clutter, rich in context, and built to be understood at a glance. Raw data becomes your strategic edge: patterns exposed, opportunities seized. When I'm not mastering SQL or Power BI, I'm experimenting with new AI features and tools across the internet.
+            </p>
+        </div>
+    </section>
+
+    <section class="section animate" id="connect">
+        <span class="section-label">Let's Connect</span>
+        
+        <blockquote>"In God we trust. All others must bring data."<br><span style="font-size: 1rem; color: var(--text-muted); font-weight: 400;">— W. Edwards Deming</span></blockquote>
+        
+        <div style="margin-top: 50px;">
+            <a href="mailto:Priyashvasava@outlook.com" class="email-link">Say Hello ↗</a>
+            
+            <p style="margin-top: 20px; font-size: 1rem; color: var(--text-muted);">
+                or Email me later at: <strong style="color: var(--text-main);">Priyashvasava@outlook.com</strong>
+            </p>
+            
+            <div class="social-links" style="margin-top: 40px; display: flex; gap: 25px; font-size: 1.1rem;">
+                <a href="https://www.linkedin.com/in/priyashvasava" target="_blank">LinkedIn</a>
                 <a href="https://github.com/priyashh" target="_blank">GitHub</a>
             </div>
         </div>
     </section>
 
+    <script>
+        const track = document.getElementById('sliderTrack');
+        const slides = Array.from(track.children);
+        let currentIndex = 0;
+
+        function moveToNextSlide() {
+            currentIndex++;
+            if (currentIndex >= slides.length) {
+                currentIndex = 0; // Loop back to the first slide
+            }
+            // Move the track by the width of one slide + the gap
+            const slideWidth = slides[0].getBoundingClientRect().width;
+            track.style.transform = `translateX(-${currentIndex * (slideWidth + 30)}px)`;
+        }
+
+        // Auto-slide every 3 seconds (3000 milliseconds)
+        setInterval(moveToNextSlide, 3000);
+    </script>
 </body>
 </html>
