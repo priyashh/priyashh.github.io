@@ -1,141 +1,100 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Priyash Vasava — Data Analyst</title>
-
-<link rel="stylesheet" href="style.css">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Priyash Vasava — Data Analyst Portfolio</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body class="fade-page">
+  <header class="site-header">
+    <a href="index.html" class="brand">Priyash Vasava</a>
+    <nav class="site-nav">
+      <a href="#work">Work</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
 
-<header class="nav">
+  <main>
+    <section class="hero">
+      <p class="eyebrow">Data Analyst · SQL · Power BI</p>
+      <h1>I design clean analytics experiences that help teams move from raw data to confident decisions.</h1>
+      <p class="hero-copy">
+        I work across SQL modeling, dashboard storytelling, and business analysis to make complex data readable,
+        actionable, and fast to use.
+      </p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#work">Explore projects</a>
+        <a class="btn btn-secondary" href="assets/Olist_Ecommerce_Analysis.pptx" target="_blank" rel="noopener noreferrer">View case deck <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
 
-<a href="index.html" class="logo">Priyash</a>
+    <section id="work" class="section">
+      <div class="section-head">
+        <h2>Selected Work</h2>
+        <p>Recent projects focused on e-commerce behavior and financial time-series analysis.</p>
+      </div>
 
-<nav>
-<a href="#projects">Projects</a>
-<a href="#about">About</a>
-<a href="#contact">Contact</a>
-</nav>
+      <article class="project-row">
+        <div class="project-meta">
+          <p>2026</p>
+          <p>E-commerce Intelligence</p>
+        </div>
+        <div class="project-main">
+          <h3>Olist customer behavior analysis</h3>
+          <p>
+            Built SQL-first customer segmentation and Power BI dashboards to surface repeat purchase behavior,
+            revenue concentration, and order lifecycle bottlenecks.
+          </p>
+          <div class="project-actions">
+            <a class="btn btn-tertiary" href="works/olist/index.html">Open project</a>
+            <a class="btn btn-ghost" href="assets/Olist_Ecommerce_Analysis.pptx" target="_blank" rel="noopener noreferrer">Open presentation <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
+      </article>
 
-</header>
+      <article class="project-row">
+        <div class="project-meta">
+          <p>2026</p>
+          <p>Financial Analytics</p>
+        </div>
+        <div class="project-main">
+          <h3>Google stock price analysis</h3>
+          <p>
+            Explored volatility, returns, and trend shifts through time-series SQL analysis to translate market noise
+            into practical decision signals.
+          </p>
+          <div class="project-actions">
+            <a class="btn btn-tertiary" href="works/google-stock/index.html">Open project</a>
+          </div>
+        </div>
+      </article>
+    </section>
 
+    <section id="about" class="section about">
+      <div class="section-head">
+        <h2>About</h2>
+      </div>
+      <p>
+        I enjoy turning messy business datasets into clear narratives. My process starts with asking the right
+        question, then building a model that reduces ambiguity so teams can choose the next step with confidence.
+      </p>
+    </section>
 
-<main>
+    <section id="contact" class="section contact">
+      <div class="section-head">
+        <h2>Contact</h2>
+        <p>Available for analytics roles, freelance dashboards, and data storytelling collaborations.</p>
+      </div>
+      <div class="contact-grid">
+        <a class="contact-link" href="mailto:Priyashvasava@outlook.com">Email</a>
+        <a class="contact-link" href="https://github.com/priyashh" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+        <a class="contact-link" href="https://linkedin.com/in/priyashvasava" target="_blank" rel="noopener noreferrer">LinkedIn <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>
+  </main>
 
-<section class="hero">
-
-<h1>
-Data analyst focused on clarity,
-decision making,
-and real business insight.
-</h1>
-
-<p class="hero-sub">
-SQL · Power BI · Excel
-</p>
-
-</section>
-
-
-
-<section id="projects" class="projects">
-
-<a href="projects/olist/index.html" class="project">
-
-<div class="project-meta">
-<span>2026</span>
-<span>E-commerce</span>
-</div>
-
-<h2>
-Olist customer behavior analysis
-</h2>
-
-<p>
-Understanding repeat customers,
-revenue concentration,
-and behavioral patterns
-through SQL modeling and Power BI dashboards.
-</p>
-
-</a>
-
-
-
-<a href="projects/google-stock/index.html" class="project">
-
-<div class="project-meta">
-<span>2026</span>
-<span>Finance</span>
-</div>
-
-<h2>
-Google stock price analysis
-</h2>
-
-<p>
-Time-series SQL analysis exploring
-volatility patterns,
-returns,
-and unusual market behaviour.
-</p>
-
-</a>
-
-
-</section>
-
-
-
-<section id="about" class="about">
-
-<h2>
-About
-</h2>
-
-<p>
-I work with messy datasets and transform them into
-structured models and clear visual outputs.
-
-My focus is always the same:
-what decision becomes easier after the analysis?
-</p>
-
-</section>
-
-
-
-<section id="contact" class="contact">
-
-<h2>
-Contact
-</h2>
-
-<div class="contact-links">
-
-<a href="mailto:Priyashvasava@outlook.com">Email</a>
-
-<a href="https://github.com/priyashh">GitHub</a>
-
-<a href="https://linkedin.com/in/priyashvasava">
-LinkedIn
-</a>
-
-</div>
-
-</section>
-
-</main>
-
-
-
-<script src="transition.js"></script>
-
+  <script src="transition.js"></script>
 </body>
-
 </html>

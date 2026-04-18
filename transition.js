@@ -1,24 +1,16 @@
+document.querySelectorAll("a").forEach((link) => {
+  const isSameHost = link.hostname === window.location.hostname;
+  const opensNewTab = link.target === "_blank";
+  const hasHash = link.getAttribute("href")?.startsWith("#");
 
-document.querySelectorAll("a").forEach(link=>{
+  if (isSameHost && !opensNewTab && !hasHash) {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      document.body.style.opacity = 0;
 
-if(link.hostname===window.location.hostname){
-
-link.addEventListener("click",e=>{
-
-if(link.href.includes("#")) return;
-
-e.preventDefault();
-
-document.body.style.opacity=0;
-
-setTimeout(()=>{
-
-window.location=link.href;
-
-},300);
-
-});
-
-}
-
+      setTimeout(() => {
+        window.location = link.href;
+      }, 300);
+    });
+  }
 });
