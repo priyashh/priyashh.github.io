@@ -8,34 +8,48 @@
 </head>
 <body>
 
+    <nav class="top-nav">
+        <a href="index.html" class="logo">Priyash Vasava</a>
+        <div class="nav-links">
+            <a href="#about">About</a>
+            <a href="#projects">Projects</a>
+            <a href="blog.html">Blog</a>
+        </div>
+    </nav>
+
     <div class="container">
-        <header>
-            <div class="metadata">ID. PV-2024 // DATA ANALYST</div>
-            <h1>Priyash Vasava</h1>
-            <p>Exploring patterns in data through an industrial lens.</p>
-        </header>
+        <main class="bento-grid">
+            
+            <div class="bento-card header-card" id="about">
+                <span class="meta">ID. PV-2024 // DATA ANALYST</span>
+                <h1>I design clean analytics experiences.</h1>
+                <p>Exploring patterns in data through an industrial lens. Turning raw data into structured, actionable insights.</p>
+            </div>
 
-        <main class="grid">
-            <a href="projects/olist.html" class="project-card">
-                <span class="project-id">NO. 001 — ANALYSIS</span>
-                <h2 class="project-title">Olist E-Commerce</h2>
-                <div class="project-tags">SQL / Power BI / Python</div>
+            <a href="projects/olist.html" class="bento-card project" id="projects">
+                <div class="card-top">
+                    <span>NO. 001</span>
+                    <span>SQL / POWER BI</span>
+                </div>
+                <div>
+                    <h2>Olist E-Commerce</h2>
+                    <p>Analyzing 100K+ orders to uncover business patterns and revenue growth opportunities.</p>
+                </div>
             </a>
 
-            <a href="works/google-stock.html" class="project-card">
-                <span class="project-id">NO. 002 — FINANCE</span>
-                <h2 class="project-title">Google Stock Analysis</h2>
-                <div class="project-tags">Time Series / Pandas</div>
+            <a href="works/google-stock.html" class="bento-card project">
+                <div class="card-top">
+                    <span>NO. 002</span>
+                    <span>PYTHON / PANDAS</span>
+                </div>
+                <div>
+                    <h2>Google Stock Analysis</h2>
+                    <p>Time series exploratory data analysis and visualization of financial trends.</p>
+                </div>
             </a>
 
-            <a href="#" class="project-card">
-                <span class="project-id">NO. 003 — UPCOMING</span>
-                <h2 class="project-title">New Project Alpha</h2>
-                <div class="project-tags">Data Engineering</div>
-            </a>
         </main>
     </div>
 
-    <script src="transition.js"></script>
 </body>
 </html>
