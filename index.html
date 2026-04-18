@@ -1,310 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Priyash Vasava — Data Analyst</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Priyash Vasava — Data Analyst</title>
+
+<link rel="stylesheet" href="style.css">
+
 </head>
-<body>
-  <!-- NAV -->
-  <header class="nav">
-    <div class="nav-left">
-      <a href="#top" class="logo">Home</a>
-    </div>
 
-    <nav class="nav-links">
-      <a href="#about">About</a>
-      <a href="#projects">Projects</a>
-      <a href="blog.html">Blog</a>
-      <a href="#contact">Connect</a>
-    </nav>
+<body class="fade-page">
 
-    <!-- Hamburger button -->
-    <button class="nav-toggle" aria-label="Toggle menu">
-      <span></span>
-      <span></span>
-      <span></span>
-    </button>
+<header class="nav">
 
-    <!-- Slide-down panel -->
-    <div class="nav-panel">
-      <nav class="nav-panel-links">
-        <a href="#about">About</a>
-        <a href="#projects">Projects</a>
-        <a href="blog.html">Blog</a>
-        <a href="#contact">Connect</a>
-      </nav>
-    </div>
-  </header>
+<a href="index.html" class="logo">Priyash</a>
 
-  <main id="top">
-    <!-- HERO -->
-    <section class="hero">
-      <div class="hero-left">
-        <p class="hero-kicker">Featured</p>
+<nav>
+<a href="#projects">Projects</a>
+<a href="#about">About</a>
+<a href="#contact">Contact</a>
+</nav>
 
-        <!-- Sliding projects block -->
-        <div class="hero-slider-block">
-          <div class="hero-slider-track">
-            <article class="hero-slide">
-              <h1 class="hero-slide-title">Olist e‑commerce customer behavior analysis</h1>
-              <p class="hero-slide-text">
-                Marketplace data in SQL and Power BI to understand repeat customers and revenue drivers.
-              </p>
-            </article>
+</header>
 
-            <article class="hero-slide">
-              <h1 class="hero-slide-title">Google stock price analysis</h1>
-              <p class="hero-slide-text">
-                Daily SQL analysis of Google’s stock to spot returns, volatility, and unusual days.
-              </p>
-            </article>
 
-            <article class="hero-slide">
-              <h1 class="hero-slide-title">From raw CSVs to decisions</h1>
-              <p class="hero-slide-text">
-                Cleaning, modeling, and visualizing data so stakeholders can see what matters quickly.
-              </p>
-            </article>
-          </div>
-        </div>
+<main>
 
-        <p id="hero-subtitle" class="hero-subtitle">
-          Check out what I was working on recently.
-        </p>
-      </div>
-    </section>
+<section class="hero">
 
-        <!-- PROJECTS -->
-    <section id="projects" class="section">
-      <div class="section-label">Projects & Case Studies</div>
-      <div class="section-header">
-        <h2 class="projects-title">Projects & Case Studies</h2>
-        <p>From raw data to dashboards and clear next steps.</p>
-      </div>
+<h1>
+Data analyst focused on clarity,
+decision making,
+and real business insight.
+</h1>
 
-      <div class="cards-grid">
-        <!-- Olist Project -->
-        <a href="projects/olist/index.html" class="card card-link-wrapper">
-          <div class="card-pill-row">
-            <span class="pill icon">🛒</span>
-            <span class="pill">SQL</span>
-            <span class="pill">Power BI</span>
-            <span class="pill">Excel</span>
-            <span class="pill">E‑commerce</span>
-          </div>
-          <h3>Olist E‑commerce Customer Behavior Analysis</h3>
-          <p class="card-text">
-            Analyzed marketplace orders to understand customer behavior, repeat purchases, and value,
-            then built a Power BI dashboard and slides for stakeholders.
-          </p>
-          <ul class="card-bullets">
-            <li>One‑time vs repeat customer segmentation.</li>
-            <li>SQL modeling for orders, customers, and cohorts.</li>
-            <li>Dashboard and presentation focused on key decisions.</li>
-          </ul>
-          <div class="card-actions">
-            <span class="btn-inline">View →</span>
-          </div>
-        </a>
+<p class="hero-sub">
+SQL · Power BI · Excel
+</p>
 
-        <!-- Google Stock Project -->
-        <a href="projects/google-stock/index.html" class="card card-link-wrapper">
-          <div class="card-pill-row">
-            <span class="pill icon">📈</span>
-            <span class="pill">SQL</span>
-            <span class="pill">Time‑series</span>
-            <span class="pill">Excel</span>
-            <span class="pill">Finance</span>
-          </div>
-          <h3>Google Stock Price Analysis</h3>
-          <p class="card-text">
-            Used SQL on historical stock data to calculate returns, volatility, and seasonality,
-            summarizing patterns into simple visuals and commentary.
-          </p>
-          <ul class="card-bullets">
-            <li>Daily return and volatility calculations.</li>
-            <li>SQL window functions and aggregations.</li>
-            <li>Monthly seasonality and “unusual day” analysis.</li>
-          </ul>
-          <div class="card-actions">
-            <span class="btn-inline">View →</span>
-          </div>
-        </a>
-      </div>
-    </section>
+</section>
 
-    <!-- METRICS -->
-    <section class="section metrics-section">
-      <div class="metrics">
-        <div class="metric">
-          <p class="metric-label">End‑to‑end dashboards</p>
-          <p class="metric-value">2 <span class="metric-note">(more on the way)</span></p>
-        </div>
-        <div class="metric">
-          <p class="metric-label">Total rows analysed</p>
-          <p class="metric-value">550K+</p>
-        </div>
-        <div class="metric">
-          <p class="metric-label">Core tools</p>
-          <p class="metric-value">SQL · Power BI · Excel</p>
-        </div>
-      </div>
-    </section>
 
-    <!-- ABOUT -->
-    <section id="about" class="section two-col">
-      <div class="section-label">Who am I</div>
-      <div class="two-col-grid">
-        <div class="about-left">
-          <div class="about-photo-placeholder">
-            <span>Photo coming soon</span>
-          </div>
-        </div>
-        <div class="about-right">
-          <h2>Data, clarity, and practical stories.</h2>
-          <p>
-            I use SQL, Power BI, and Excel to turn messy tables into dashboards and narratives
-            that stay focused on decisions, not jargon.
-          </p>
-          <div class="tags">
-            <span>SQL</span>
-            <span>Power BI</span>
-            <span>Excel</span>
-            <span>PowerPoint</span>
-            <span>Google Docs</span>
-            <span>Data storytelling</span>
-            <span>Dashboard design</span>
-            <span>Business analysis</span>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- CONTACT -->
-    <section id="contact" class="section contact">
-      <div class="section-label">Connect with me</div>
-      <div class="contact-inner">
-        <div>
-          <h2>Let’s talk data.</h2>
-          <p>
-            If you want to explore a dataset, improve a dashboard, or discuss a potential role,
-            feel free to reach out on email or LinkedIn.
-          </p>
-        </div>
-        <div class="contact-links">
-          <a href="https://www.linkedin.com/in/priyashvasava" target="_blank">
-            💼 LinkedIn
-          </a>
-          <a href="https://github.com/priyashh" target="_blank">
-            🐙 GitHub
-          </a>
-          <a href="mailto:Priyashvasava@outlook.com">
-            ✉️ Email
-          </a>
-        </div>
-      </div>
+<section id="projects" class="projects">
 
-      <div class="contact-cta">
-        <h3>Looking for a data analyst?</h3>
-        <p>
-          I focus on turning complex, messy data into simple visuals and narratives
-          that make the next step obvious.
-        </p>
-        <a href="mailto:Priyashvasava@outlook.com" class="btn primary">
-          Send a message →
-        </a>
-      </div>
-    </section>
-  </main>
+<a href="projects/olist/index.html" class="project">
 
-  <footer class="footer">
-    <p>Designed &amp; built by <span class="accent">Priyash Vasava</span> · Hosted on GitHub Pages</p>
-  </footer>
+<div class="project-meta">
+<span>2026</span>
+<span>E-commerce</span>
+</div>
 
-  <!-- Slider + nav script -->
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      // Starfield parallax on scroll
-      const root = document.documentElement;
-      let rafScheduled = false;
-      const updateStarOffset = () => {
-        const scrollY = window.scrollY || window.pageYOffset || 0;
-        root.style.setProperty("--star-offset-y", `${scrollY * -0.22}px`);
-        rafScheduled = false;
-      };
+<h2>
+Olist customer behavior analysis
+</h2>
 
-      const onScroll = () => {
-        if (!rafScheduled) {
-          rafScheduled = true;
-          requestAnimationFrame(updateStarOffset);
-        }
-      };
+<p>
+Understanding repeat customers,
+revenue concentration,
+and behavioral patterns
+through SQL modeling and Power BI dashboards.
+</p>
 
-      window.addEventListener("scroll", onScroll, { passive: true });
-      updateStarOffset();
+</a>
 
-      // Hero slider
-      const slides = document.querySelectorAll(".hero-slide");
-      if (slides.length) {
-        let index = 0;
-        slides[index].classList.add("active");
 
-        setInterval(() => {
-          slides[index].classList.remove("active");
-          index = (index + 1) % slides.length;
-          slides[index].classList.add("active");
-        }, 3500);
-      }
 
-      // Scroll reveal animation
-      const revealTargets = document.querySelectorAll(
-        ".section, .hero-slider-block, .hero-subtitle, .card, .metric, .contact-cta"
-      );
-      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+<a href="projects/google-stock/index.html" class="project">
 
-      revealTargets.forEach((item, i) => {
-        item.classList.add("reveal");
-        item.style.setProperty("--reveal-delay", `${Math.min(i * 50, 350)}ms`);
-      });
+<div class="project-meta">
+<span>2026</span>
+<span>Finance</span>
+</div>
 
-      if (prefersReducedMotion || !("IntersectionObserver" in window)) {
-        revealTargets.forEach(item => item.classList.add("is-visible"));
-      } else {
-        const observer = new IntersectionObserver(
-          entries => {
-            entries.forEach(entry => {
-              if (entry.isIntersecting) {
-                entry.target.classList.add("is-visible");
-                observer.unobserve(entry.target);
-              }
-            });
-          },
-          { threshold: 0.2, rootMargin: "0px 0px -8% 0px" }
-        );
+<h2>
+Google stock price analysis
+</h2>
 
-        revealTargets.forEach(item => observer.observe(item));
-      }
+<p>
+Time-series SQL analysis exploring
+volatility patterns,
+returns,
+and unusual market behaviour.
+</p>
 
-      // Nav toggle
-      const toggle = document.querySelector(".nav-toggle");
-      const panel = document.querySelector(".nav-panel");
-      const panelLinks = document.querySelectorAll(".nav-panel-links a");
+</a>
 
-      if (toggle && panel) {
-        toggle.addEventListener("click", () => {
-          panel.classList.toggle("open");
-        });
 
-        panelLinks.forEach(link => {
-          link.addEventListener("click", () => {
-            panel.classList.remove("open");
-          });
-        });
-      }
-    });
-  </script>
-  <script src="starfield.js"></script>
+</section>
+
+
+
+<section id="about" class="about">
+
+<h2>
+About
+</h2>
+
+<p>
+I work with messy datasets and transform them into
+structured models and clear visual outputs.
+
+My focus is always the same:
+what decision becomes easier after the analysis?
+</p>
+
+</section>
+
+
+
+<section id="contact" class="contact">
+
+<h2>
+Contact
+</h2>
+
+<div class="contact-links">
+
+<a href="mailto:Priyashvasava@outlook.com">Email</a>
+
+<a href="https://github.com/priyashh">GitHub</a>
+
+<a href="https://linkedin.com/in/priyashvasava">
+LinkedIn
+</a>
+
+</div>
+
+</section>
+
+</main>
+
+
+
+<script src="transition.js"></script>
+
 </body>
+
 </html>
