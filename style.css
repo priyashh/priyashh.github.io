@@ -547,3 +547,20 @@ main {
     grid-template-columns: minmax(0, 1fr);
   }
 }
+.card-link-wrapper {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.card-link-wrapper article {
+  height: 100%;
+}
+
+.btn-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 500;
+}
