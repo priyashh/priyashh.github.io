@@ -21,6 +21,7 @@
         .sidebar-box p { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 15px; }
         .back-link { display: inline-block; margin-top: 20px; font-weight: 500; border-bottom: 2px solid var(--text-main); padding-bottom: 2px; }
         .back-link:hover { color: var(--accent); border-color: var(--accent); }
+        .dashboard-img { width: 100%; border-radius: 12px; border: 1px solid var(--border-color); margin-top: 20px; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
         @media (max-width: 900px) { .article-grid { grid-template-columns: 1fr; gap: 40px; } }
     </style>
 </head>
@@ -29,19 +30,22 @@
     <nav class="navbar">
         <a href="../../index.html" class="logo"><strong>Priyash Vasava</strong></a>
         <div class="nav-links">
-            <a href="../../index.html#projects">← Back to Portfolio</a>
+            <a href="../../index.html#projects">Projects</a>
+            <a href="../../blog.html">Blog</a>
+            <a href="../../index.html#who-am-i">Who Am I?</a>
+            <a href="../../index.html#connect">Connect</a>
         </div>
     </nav>
 
     <header class="section hero animate">
-        <span class="section-label">Case Study // Time-Series</span>
+        <span class="section-label">Case Study // Finance</span>
         <h1>Google stock price trend analysis.</h1>
         <p style="font-size: clamp(1.2rem, 2vw, 1.5rem); color: var(--text-muted); max-width: 700px;">
-            Exploring long-term trends, volatility, and price behavior using daily historical data.
+            Exploring long-term trends, volatility, and price behavior using daily historical data in Excel.
         </p>
         <div class="meta-tags">
             <span class="meta-tag">Excel</span>
-            <span class="meta-tag">Financial Data</span>
+            <span class="meta-tag">Time-Series</span>
             <span class="meta-tag">Volatility Analysis</span>
         </div>
     </header>
@@ -50,26 +54,27 @@
         <div class="article-grid">
             
             <div class="main-content">
+                
                 <div class="article-block">
                     <h2>Exploring Google’s stock behavior over time</h2>
-                    <p>The goal of this project was to practice working with time‑based financial data in Excel and understand how simple visuals can reveal trends and volatility.</p>
+                    <p>The goal of this project was to practice working with time-based financial data in Excel and understand how simple visuals can reveal trends and volatility.</p>
                     <p>Starting from a historical price dataset, I cleaned and organized the columns (date, open, high, low, close, volume) and built charts that highlight overall movement, local swings, and periods of higher volatility.</p>
                 </div>
 
                 <div class="article-block">
                     <h2>What I analyzed</h2>
                     <ul>
-                        <li><strong>Price trend over time</strong> using line charts on closing prices to identify macro trajectories.</li>
-                        <li><strong>Average price movement</strong> across selected periods to smooth out daily noise.</li>
-                        <li><strong>Volatility measurements</strong> to understand how much the price fluctuates day to day and identify high-risk market environments.</li>
+                        <li><strong>Price trend over time</strong> using line charts on closing prices.</li>
+                        <li><strong>Average price movement</strong> across selected periods.</li>
+                        <li><strong>Simple measures of volatility</strong> to understand how much the price fluctuates day to day.</li>
                     </ul>
                 </div>
 
                 <div class="article-block">
                     <h2>Key learnings</h2>
                     <ul>
-                        <li>Working comfortably with time‑based data (sorting by date, handling gaps, choosing the right date granularity).</li>
-                        <li>Building clear trend charts that show long‑term direction while maintaining visibility on short‑term swings.</li>
+                        <li>Working comfortably with time-based data (sorting by date, handling gaps, choosing the right date granularity).</li>
+                        <li>Building clear trend charts that show long-term direction and short-term swings.</li>
                         <li>Interpreting price movement patterns and relating spikes or drops to broader market context.</li>
                     </ul>
                 </div>
@@ -78,7 +83,7 @@
             <aside class="sidebar">
                 <div class="sidebar-box">
                     <h3>Role & Focus</h3>
-                    <p>Solo project focused on exploring stock data in Excel, building charts, and describing what the visuals say in simple, non‑technical language.</p>
+                    <p>Solo project focused on exploring stock data in Excel, building charts, and describing what the visuals say in simple, non-technical language.</p>
                 </div>
                 
                 <div class="sidebar-box">
