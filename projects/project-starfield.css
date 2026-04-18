@@ -1,0 +1,63 @@
+:root {
+  --star-offset-y: 0px;
+}
+
+body {
+  background: #000 !important;
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  inset: -200px;
+  pointer-events: none;
+  will-change: transform;
+  background-repeat: repeat;
+}
+
+body::before {
+  z-index: -2;
+  transform: translate3d(0, var(--star-offset-y), 0);
+  background: #000 url("../assets/space-retro.svg") center / cover no-repeat;
+  opacity: 0.92;
+  animation: star-twinkle 9s ease-in-out infinite alternate;
+}
+
+body::after {
+  z-index: -1;
+  transform: translate3d(0, calc(var(--star-offset-y) * 0.48), 0);
+  background-image:
+    radial-gradient(circle at 20% 25%, rgba(255, 255, 255, 0.09), transparent 40%),
+    radial-gradient(circle at 75% 68%, rgba(170, 188, 255, 0.08), transparent 45%),
+    repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.03),
+      rgba(255, 255, 255, 0.03) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+  mix-blend-mode: screen;
+  opacity: 0.45;
+  animation: star-drift 18s linear infinite;
+}
+
+@keyframes star-twinkle {
+  0% { opacity: 0.84; }
+  100% { opacity: 1; }
+}
+
+@keyframes star-drift {
+  0% { transform: translate3d(0, calc(var(--star-offset-y) * 0.48), 0); }
+  100% { transform: translate3d(-14px, calc(var(--star-offset-y) * 0.48 + 20px), 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before,
+  body::after {
+    animation: none;
+    transform: none;
+  }
+}

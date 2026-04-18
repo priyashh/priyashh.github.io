@@ -1,6 +1,8 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap");
+
 :root {
   /* Palette */
-  --bg: #02030a;              /* deep space */
+  --bg: #000000;              /* pure black space */
   --bg-elevated: #111827;     /* panels / cards */
   --bg-subtle: #1e2436;       /* subtle alt */
   --accent: #dc9b9b;
@@ -13,8 +15,7 @@
   --radius-md: 12px;
   --radius-pill: 999px;
   --shadow-soft: 0 22px 60px rgba(0, 0, 0, 0.9);
-  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-    "Inter", sans-serif;
+  --font-sans: "Space Grotesk", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
 
   /* Parallax control */
   --star-offset-y: 0px;
@@ -36,7 +37,7 @@ body {
 
 body {
   min-height: 100vh;
-  background: #02030a;
+  background: var(--bg);
   color: var(--text);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -44,7 +45,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Dense retro starfield + film noise with parallax */
+/* Dense cinematic starfield with layered parallax */
 
 body::before {
   content: "";
@@ -54,31 +55,9 @@ body::before {
   pointer-events: none;
   transform: translate3d(0, var(--star-offset-y), 0);
   will-change: transform;
-  /* MANY small stars via tiled radial gradients */
-  background-image:
-    radial-gradient(1px 1px at 5% 10%, rgba(255, 255, 255, 0.9) 0, transparent 55%),
-    radial-gradient(1px 1px at 15% 35%, rgba(255, 255, 255, 0.7) 0, transparent 55%),
-    radial-gradient(1px 1px at 25% 80%, rgba(255, 255, 255, 0.85) 0, transparent 55%),
-    radial-gradient(1px 1px at 35% 50%, rgba(255, 255, 255, 0.8) 0, transparent 55%),
-    radial-gradient(1px 1px at 45% 20%, rgba(255, 255, 255, 0.9) 0, transparent 55%),
-    radial-gradient(1px 1px at 55% 70%, rgba(255, 255, 255, 0.75) 0, transparent 55%),
-    radial-gradient(1px 1px at 65% 30%, rgba(255, 255, 255, 0.9) 0, transparent 55%),
-    radial-gradient(1px 1px at 75% 85%, rgba(255, 255, 255, 0.78) 0, transparent 55%),
-    radial-gradient(1px 1px at 85% 40%, rgba(255, 255, 255, 0.88) 0, transparent 55%),
-    radial-gradient(1px 1px at 95% 15%, rgba(255, 255, 255, 0.8) 0, transparent 55%),
-    /* additional layer to increase density */
-    radial-gradient(1px 1px at 10% 60%, rgba(255, 255, 255, 0.8) 0, transparent 55%),
-    radial-gradient(1px 1px at 20% 15%, rgba(255, 255, 255, 0.85) 0, transparent 55%),
-    radial-gradient(1px 1px at 30% 55%, rgba(255, 255, 255, 0.78) 0, transparent 55%),
-    radial-gradient(1px 1px at 40% 90%, rgba(255, 255, 255, 0.9) 0, transparent 55%),
-    radial-gradient(1px 1px at 50% 35%, rgba(255, 255, 255, 0.8) 0, transparent 55%),
-    radial-gradient(1px 1px at 60% 5%, rgba(255, 255, 255, 0.88) 0, transparent 55%),
-    radial-gradient(1px 1px at 70% 55%, rgba(255, 255, 255, 0.82) 0, transparent 55%),
-    radial-gradient(1px 1px at 80% 95%, rgba(255, 255, 255, 0.9) 0, transparent 55%),
-    radial-gradient(1px 1px at 90% 45%, rgba(255, 255, 255, 0.8) 0, transparent 55%);
-  background-size: 500px 500px;
-  background-repeat: repeat;
-  opacity: 0.9;
+  background: #000 url("assets/space-retro.svg") center / cover no-repeat;
+  opacity: 0.92;
+  animation: star-twinkle 9s ease-in-out infinite alternate;
 }
 
 body::after {
@@ -87,32 +66,43 @@ body::after {
   inset: -200px;
   z-index: -1;
   pointer-events: none;
-  transform: translate3d(0, calc(var(--star-offset-y) * 0.5), 0);
+  transform: translate3d(0, calc(var(--star-offset-y) * 0.48), 0);
   will-change: transform;
-  /* film grain / scan lines */
   background-image:
+    radial-gradient(circle at 20% 25%, rgba(255, 255, 255, 0.09), transparent 40%),
+    radial-gradient(circle at 75% 68%, rgba(170, 188, 255, 0.08), transparent 45%),
     repeating-linear-gradient(
       0deg,
-      rgba(255, 255, 255, 0.06),
-      rgba(255, 255, 255, 0.06) 1px,
+      rgba(255, 255, 255, 0.03),
+      rgba(255, 255, 255, 0.03) 1px,
       transparent 1px,
       transparent 3px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.04),
-      rgba(255, 255, 255, 0.04) 1px,
-      transparent 1px,
-      transparent 4px
     );
-  mix-blend-mode: soft-light;
-  opacity: 0.28;
-  animation: noise-flicker 1.8s steps(2, end) infinite;
+  mix-blend-mode: screen;
+  opacity: 0.45;
+  animation: star-drift 18s linear infinite;
 }
 
-@keyframes noise-flicker {
-  0% { transform: translate3d(0, calc(var(--star-offset-y) * 0.5), 0); }
-  100% { transform: translate3d(-1px, calc(var(--star-offset-y) * 0.5 + 1px), 0); }
+@keyframes star-drift {
+  0% { transform: translate3d(0, calc(var(--star-offset-y) * 0.48), 0); }
+  100% { transform: translate3d(-14px, calc(var(--star-offset-y) * 0.48 + 20px), 0); }
+}
+
+@keyframes star-twinkle {
+  0% {
+    opacity: 0.84;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before,
+  body::after {
+    animation: none;
+    transform: none;
+  }
 }
 
 main {
@@ -129,7 +119,8 @@ main {
 
 .section-header h2 {
   margin: 0 0 8px;
-  font-size: 28px;
+  font-size: clamp(2rem, 3vw, 2.5rem);
+  letter-spacing: -0.02em;
 }
 
 .section-header p {
@@ -172,7 +163,7 @@ main {
 .nav a {
   text-decoration: none;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 14px;
   padding: 6px 12px;
   border-radius: 999px;
   border: 1px solid transparent;
@@ -189,9 +180,9 @@ main {
 }
 
 .logo {
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.08em;
-  font-size: 14px;
+  font-size: 15px;
   text-transform: uppercase;
 }
 
@@ -330,8 +321,9 @@ main {
 
 .hero-slide-title {
   margin: 0 0 6px;
-  font-size: 22px;
+  font-size: clamp(1.7rem, 3vw, 2.2rem);
   line-height: 1.3;
+  letter-spacing: -0.02em;
 }
 
 .hero-slide-text {
@@ -346,7 +338,7 @@ main {
   margin: 12px 0 0;
   color: var(--muted);
   max-width: 520px;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 /* Section labels */
@@ -362,7 +354,8 @@ main {
 /* Projects */
 
 .projects-title {
-  font-size: 28px;
+  font-size: clamp(2rem, 3vw, 2.5rem);
+  letter-spacing: -0.02em;
 }
 
 .cards-grid {
@@ -374,10 +367,11 @@ main {
 
 .card {
   border-radius: var(--radius-lg);
-  padding: 18px 18px 16px;
-  background: radial-gradient(circle at top, #111827, #020617);
-  border: 1px solid rgba(148, 163, 184, 0.35);
-  box-shadow: var(--shadow-soft);
+  padding: 22px 22px 20px;
+  background: rgba(10, 14, 24, 0.34);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(210, 220, 255, 0.24);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.55);
   transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
 }
 
@@ -410,20 +404,21 @@ main {
 
 .card h3 {
   margin: 0 0 6px;
-  font-size: 18px;
+  font-size: 24px;
+  letter-spacing: -0.02em;
 }
 
 .card-text {
   margin: 0 0 8px;
   color: var(--muted);
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .card-bullets {
   margin: 0 0 12px 18px;
   padding: 0;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 15px;
 }
 
 .card-bullets li {
@@ -448,8 +443,8 @@ main {
 .card-link-wrapper:hover .card,
 .card-link-wrapper:hover {
   transform: translateY(-4px);
-  box-shadow: 0 28px 70px rgba(0, 0, 0, 1);
-  border-color: rgba(220, 155, 155, 0.7);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.78);
+  border-color: rgba(220, 230, 255, 0.45);
 }
 
 /* Metrics */
@@ -467,9 +462,10 @@ main {
 .metric {
   padding: 16px 14px;
   border-radius: var(--radius-md);
-  background: rgba(15, 23, 42, 0.98);
-  border: 1px solid rgba(148, 163, 184, 0.5);
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.8);
+  background: rgba(10, 14, 24, 0.35);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(210, 220, 255, 0.24);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
 }
 
 .metric-label {
@@ -516,7 +512,8 @@ main {
 .about-right h2 {
   margin-top: 0;
   margin-bottom: 10px;
-  font-size: 24px;
+  font-size: clamp(1.8rem, 2.8vw, 2.3rem);
+  letter-spacing: -0.02em;
 }
 
 .about-right p {
@@ -573,9 +570,10 @@ main {
   margin-top: 24px;
   border-radius: var(--radius-lg);
   padding: 18px 16px;
-  background: rgba(15, 23, 42, 0.98);
-  border: 1px solid rgba(148, 163, 184, 0.6);
-  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.9);
+  background: rgba(10, 14, 24, 0.34);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(210, 220, 255, 0.24);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
 }
 
 .contact-cta h3 {
