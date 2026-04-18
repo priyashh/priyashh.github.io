@@ -1,6 +1,6 @@
 :root {
   /* Palette */
-  --bg: #02030a;              /* deep space */
+  --bg: #000000;              /* pure black space */
   --bg-elevated: #111827;     /* panels / cards */
   --bg-subtle: #1e2436;       /* subtle alt */
   --accent: #dc9b9b;
@@ -36,7 +36,7 @@ body {
 
 body {
   min-height: 100vh;
-  background: #02030a;
+  background: var(--bg);
   color: var(--text);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -78,7 +78,8 @@ body::before {
     radial-gradient(1px 1px at 90% 45%, rgba(255, 255, 255, 0.8) 0, transparent 55%);
   background-size: 500px 500px;
   background-repeat: repeat;
-  opacity: 0.9;
+  opacity: 0.95;
+  animation: star-twinkle 6s ease-in-out infinite alternate;
 }
 
 body::after {
@@ -113,6 +114,17 @@ body::after {
 @keyframes noise-flicker {
   0% { transform: translate3d(0, calc(var(--star-offset-y) * 0.5), 0); }
   100% { transform: translate3d(-1px, calc(var(--star-offset-y) * 0.5 + 1px), 0); }
+}
+
+@keyframes star-twinkle {
+  0% {
+    opacity: 0.82;
+    filter: brightness(0.9);
+  }
+  100% {
+    opacity: 1;
+    filter: brightness(1.15);
+  }
 }
 
 main {
