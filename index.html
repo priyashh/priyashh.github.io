@@ -226,6 +226,25 @@
   <!-- Slider + nav script -->
   <script>
     document.addEventListener("DOMContentLoaded", function () {
+      // Starfield parallax on scroll
+      const root = document.documentElement;
+      let rafScheduled = false;
+      const updateStarOffset = () => {
+        const scrollY = window.scrollY || window.pageYOffset || 0;
+        root.style.setProperty("--star-offset-y", `${scrollY * -0.22}px`);
+        rafScheduled = false;
+      };
+
+      const onScroll = () => {
+        if (!rafScheduled) {
+          rafScheduled = true;
+          requestAnimationFrame(updateStarOffset);
+        }
+      };
+
+      window.addEventListener("scroll", onScroll, { passive: true });
+      updateStarOffset();
+
       // Hero slider
       const slides = document.querySelectorAll(".hero-slide");
       if (slides.length) {

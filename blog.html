@@ -51,5 +51,27 @@
   <footer class="footer">
     <p>Designed &amp; built by <span class="accent">Priyash Vasava</span> · Hosted on GitHub Pages</p>
   </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const root = document.documentElement;
+      let rafScheduled = false;
+
+      const updateStarOffset = () => {
+        const scrollY = window.scrollY || window.pageYOffset || 0;
+        root.style.setProperty("--star-offset-y", `${scrollY * -0.22}px`);
+        rafScheduled = false;
+      };
+
+      window.addEventListener("scroll", () => {
+        if (!rafScheduled) {
+          rafScheduled = true;
+          requestAnimationFrame(updateStarOffset);
+        }
+      }, { passive: true });
+
+      updateStarOffset();
+    });
+  </script>
 </body>
 </html>
