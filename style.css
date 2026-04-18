@@ -63,7 +63,7 @@ body::before {
   background-size: 128px 128px, 96px 96px, 72px 72px, 56px 56px;
   background-position: 0 0, 31px 47px, 17px 23px, 9px 14px;
   background-repeat: repeat;
-  opacity: 0.92;
+  opacity: 0.95;
   animation: star-twinkle 6s ease-in-out infinite alternate;
 }
 
