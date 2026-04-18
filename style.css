@@ -1,88 +1,120 @@
-/* Industrial Minimalist Theme */
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;600&display=swap');
 
 :root {
-  --bg-color: #fcfaf7;       /* Off-white paper */
-  --text-primary: #1a1a1a;   /* Industrial black */
-  --accent-color: #ffdc00;   /* Signature yellow */
-  --border-color: #d1cfcc;   /* Thin grid lines */
-  --font-mono: 'IBM Plex Mono', monospace;
+    --bg-color: #f4f4f0;      /* Light warm gray (Paper) */
+    --card-bg: #ffffff;       /* Pure white for the boxes */
+    --text-main: #111111;     /* Deep black */
+    --text-muted: #666666;    /* Soft gray for descriptions */
+    --border-color: #d1d1cf;  /* Thin, crisp border lines */
+    --font-mono: 'IBM Plex Mono', monospace;
+    --font-sans: 'Inter', sans-serif;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  background-color: var(--bg-color);
-  color: var(--text-primary);
-  font-family: var(--font-mono);
-  line-height: 1.6;
-  padding: 40px 20px;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: var(--font-sans);
+    padding: 20px;
+    line-height: 1.6;
 }
 
-/* Container for the 'Bento' Grid */
+a { text-decoration: none; color: inherit; }
+
+/* Top Navigation Menu */
+.top-nav {
+    max-width: 1000px;
+    margin: 0 auto 20px auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+}
+
+.logo { font-weight: 600; }
+
+.nav-links a {
+    margin-left: 25px;
+    color: var(--text-muted);
+    transition: color 0.2s;
+}
+
+.nav-links a:hover { color: var(--text-main); }
+
+/* The Carl Hauser Bento Grid */
 .container {
-  max-width: 900px;
-  margin: 0 auto;
+    max-width: 1000px;
+    margin: 0 auto;
 }
 
-header {
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 40px;
-  margin-bottom: 40px;
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.bento-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.header-card {
+    grid-column: 1 / -1; /* Makes the "About" section span the whole width */
+}
+
+/* Hover effect for project links */
+a.bento-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.04);
+    border-color: var(--text-main);
+}
+
+.card-top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
 }
 
 h1 {
-  font-size: 1.5rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: -0.05em;
+    font-size: 2.5rem;
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    margin: 20px 0 10px 0;
 }
 
-.metadata {
-  font-size: 0.8rem;
-  color: #888;
-  margin-top: 5px;
+h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
 }
 
-/* Project Grid */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1px; /* Creates the thin line effect */
-  background-color: var(--border-color);
-  border: 1px solid var(--border-color);
+p {
+    color: var(--text-muted);
+    font-size: 1.05rem;
 }
 
-.project-card {
-  background-color: var(--bg-color);
-  padding: 30px;
-  transition: background-color 0.2s ease;
-  text-decoration: none;
-  color: inherit;
-  display: block;
-}
+.meta { font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); }
 
-.project-card:hover {
-  background-color: var(--accent-color);
-}
-
-.project-id {
-  font-size: 0.7rem;
-  margin-bottom: 20px;
-  display: block;
-}
-
-.project-title {
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-bottom: 10px;
-}
-
-.project-tags {
-  font-size: 0.75rem;
-  text-transform: uppercase;
+/* Mobile Formatting */
+@media (max-width: 768px) {
+    .bento-grid { grid-template-columns: 1fr; }
+    .top-nav { flex-direction: column; gap: 15px; text-align: center; }
+    .nav-links a { margin: 0 10px; }
 }
