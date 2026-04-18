@@ -10,6 +10,7 @@
 
   <style>
     :root {
+      --star-offset-y: 0px;
       --bg-main: #f6f4e8;
       --bg-card: #ffffff;
       --accent-soft: #c0e1d2;
@@ -26,9 +27,65 @@
     body {
       margin: 0;
       font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg-main);
+      background: #000;
       color: var(--text-main);
       line-height: 1.6;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: -200px;
+      pointer-events: none;
+      will-change: transform;
+      background-repeat: repeat;
+    }
+
+    body::before {
+      z-index: -2;
+      transform: translate3d(0, var(--star-offset-y), 0);
+      background-image:
+        radial-gradient(circle, rgba(255, 255, 255, 0.95) 0.8px, transparent 1.3px),
+        radial-gradient(circle, rgba(180, 198, 255, 0.8) 0.7px, transparent 1.2px),
+        radial-gradient(circle, rgba(255, 255, 255, 0.82) 0.6px, transparent 1.1px),
+        radial-gradient(circle, rgba(160, 182, 255, 0.6) 0.55px, transparent 1px);
+      background-size: 128px 128px, 96px 96px, 72px 72px, 56px 56px;
+      background-position: 0 0, 31px 47px, 17px 23px, 9px 14px;
+      opacity: 0.92;
+      animation: star-twinkle 6s ease-in-out infinite alternate;
+    }
+
+    body::after {
+      z-index: -1;
+      transform: translate3d(0, calc(var(--star-offset-y) * 0.48), 0);
+      background-image:
+        radial-gradient(circle, rgba(255, 255, 255, 0.95) 1.2px, transparent 1.8px),
+        radial-gradient(circle, rgba(176, 194, 255, 0.65) 1px, transparent 1.6px);
+      background-size: 220px 220px, 180px 180px;
+      background-position: 14px 21px, 70px 93px;
+      opacity: 0.85;
+      animation: star-drift 14s linear infinite;
+    }
+
+    @keyframes star-twinkle {
+      0% { opacity: 0.84; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes star-drift {
+      0% { transform: translate3d(0, calc(var(--star-offset-y) * 0.48), 0); }
+      100% { transform: translate3d(-14px, calc(var(--star-offset-y) * 0.48 + 20px), 0); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      body::before,
+      body::after {
+        animation: none;
+        transform: none;
+      }
     }
 
     a {
@@ -474,5 +531,6 @@
       </div>
     </main>
   </div>
+  <script src="../../starfield.js"></script>
 </body>
 </html>

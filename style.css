@@ -1,6 +1,6 @@
 :root {
   /* Palette */
-  --bg: #02030a;              /* deep space */
+  --bg: #000000;              /* pure black space */
   --bg-elevated: #111827;     /* panels / cards */
   --bg-subtle: #1e2436;       /* subtle alt */
   --accent: #dc9b9b;
@@ -36,7 +36,7 @@ body {
 
 body {
   min-height: 100vh;
-  background: #02030a;
+  background: var(--bg);
   color: var(--text);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
@@ -44,7 +44,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Dense retro starfield + film noise with parallax */
+/* Dense cinematic starfield with layered parallax */
 
 body::before {
   content: "";
@@ -54,31 +54,17 @@ body::before {
   pointer-events: none;
   transform: translate3d(0, var(--star-offset-y), 0);
   will-change: transform;
-  /* MANY small stars via tiled radial gradients */
+  /* bright + blue-white stars (dense, small points) */
   background-image:
-    radial-gradient(1px 1px at 5% 10%, rgba(255, 255, 255, 0.9) 0, transparent 55%),
-    radial-gradient(1px 1px at 15% 35%, rgba(255, 255, 255, 0.7) 0, transparent 55%),
-    radial-gradient(1px 1px at 25% 80%, rgba(255, 255, 255, 0.85) 0, transparent 55%),
-    radial-gradient(1px 1px at 35% 50%, rgba(255, 255, 255, 0.8) 0, transparent 55%),
-    radial-gradient(1px 1px at 45% 20%, rgba(255, 255, 255, 0.9) 0, transparent 55%),
-    radial-gradient(1px 1px at 55% 70%, rgba(255, 255, 255, 0.75) 0, transparent 55%),
-    radial-gradient(1px 1px at 65% 30%, rgba(255, 255, 255, 0.9) 0, transparent 55%),
-    radial-gradient(1px 1px at 75% 85%, rgba(255, 255, 255, 0.78) 0, transparent 55%),
-    radial-gradient(1px 1px at 85% 40%, rgba(255, 255, 255, 0.88) 0, transparent 55%),
-    radial-gradient(1px 1px at 95% 15%, rgba(255, 255, 255, 0.8) 0, transparent 55%),
-    /* additional layer to increase density */
-    radial-gradient(1px 1px at 10% 60%, rgba(255, 255, 255, 0.8) 0, transparent 55%),
-    radial-gradient(1px 1px at 20% 15%, rgba(255, 255, 255, 0.85) 0, transparent 55%),
-    radial-gradient(1px 1px at 30% 55%, rgba(255, 255, 255, 0.78) 0, transparent 55%),
-    radial-gradient(1px 1px at 40% 90%, rgba(255, 255, 255, 0.9) 0, transparent 55%),
-    radial-gradient(1px 1px at 50% 35%, rgba(255, 255, 255, 0.8) 0, transparent 55%),
-    radial-gradient(1px 1px at 60% 5%, rgba(255, 255, 255, 0.88) 0, transparent 55%),
-    radial-gradient(1px 1px at 70% 55%, rgba(255, 255, 255, 0.82) 0, transparent 55%),
-    radial-gradient(1px 1px at 80% 95%, rgba(255, 255, 255, 0.9) 0, transparent 55%),
-    radial-gradient(1px 1px at 90% 45%, rgba(255, 255, 255, 0.8) 0, transparent 55%);
-  background-size: 500px 500px;
+    radial-gradient(circle, rgba(255, 255, 255, 0.95) 0.8px, transparent 1.3px),
+    radial-gradient(circle, rgba(180, 198, 255, 0.8) 0.7px, transparent 1.2px),
+    radial-gradient(circle, rgba(255, 255, 255, 0.82) 0.6px, transparent 1.1px),
+    radial-gradient(circle, rgba(160, 182, 255, 0.6) 0.55px, transparent 1px);
+  background-size: 128px 128px, 96px 96px, 72px 72px, 56px 56px;
+  background-position: 0 0, 31px 47px, 17px 23px, 9px 14px;
   background-repeat: repeat;
-  opacity: 0.9;
+  opacity: 0.92;
+  animation: star-twinkle 6s ease-in-out infinite alternate;
 }
 
 body::after {
@@ -87,32 +73,38 @@ body::after {
   inset: -200px;
   z-index: -1;
   pointer-events: none;
-  transform: translate3d(0, calc(var(--star-offset-y) * 0.5), 0);
+  transform: translate3d(0, calc(var(--star-offset-y) * 0.48), 0);
   will-change: transform;
-  /* film grain / scan lines */
+  /* brighter sparse stars for depth */
   background-image:
-    repeating-linear-gradient(
-      0deg,
-      rgba(255, 255, 255, 0.06),
-      rgba(255, 255, 255, 0.06) 1px,
-      transparent 1px,
-      transparent 3px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.04),
-      rgba(255, 255, 255, 0.04) 1px,
-      transparent 1px,
-      transparent 4px
-    );
-  mix-blend-mode: soft-light;
-  opacity: 0.28;
-  animation: noise-flicker 1.8s steps(2, end) infinite;
+    radial-gradient(circle, rgba(255, 255, 255, 0.95) 1.2px, transparent 1.8px),
+    radial-gradient(circle, rgba(176, 194, 255, 0.65) 1px, transparent 1.6px);
+  background-size: 220px 220px, 180px 180px;
+  background-position: 14px 21px, 70px 93px;
+  opacity: 0.85;
+  animation: star-drift 14s linear infinite;
 }
 
-@keyframes noise-flicker {
-  0% { transform: translate3d(0, calc(var(--star-offset-y) * 0.5), 0); }
-  100% { transform: translate3d(-1px, calc(var(--star-offset-y) * 0.5 + 1px), 0); }
+@keyframes star-drift {
+  0% { transform: translate3d(0, calc(var(--star-offset-y) * 0.48), 0); }
+  100% { transform: translate3d(-14px, calc(var(--star-offset-y) * 0.48 + 20px), 0); }
+}
+
+@keyframes star-twinkle {
+  0% {
+    opacity: 0.84;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before,
+  body::after {
+    animation: none;
+    transform: none;
+  }
 }
 
 main {
