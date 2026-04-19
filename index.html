@@ -8,14 +8,14 @@
 </head>
 <body>
     
-    <div class="custom-cursor" id="customCursor"></div>
+    <canvas id="fxCanvas"></canvas>
 
     <nav class="navbar">
         <a href="index.html" class="logo">Priyash Vasava</a>
         <div class="nav-links">
             <a href="#projects">Projects</a>
             <a href="blog.html">Blog</a>
-            <a href="#who-am-i">Who am I?</a>
+            <a href="index.html#who-am-i">Who Am I?</a>
             <a href="#connect">Connect</a>
         </div>
     </nav>
@@ -27,7 +27,16 @@
         </div>
         
         <div class="hero-image-wrapper">
-            <img src="assets/hero-image.png" alt="Analytics Dashboard">
+            <div class="scene">
+                <div class="cube" id="scrollCube">
+                    <div class="cube-face front">SQL</div>
+                    <div class="cube-face back">DATA</div>
+                    <div class="cube-face right">LOGIC</div>
+                    <div class="cube-face left">BI</div>
+                    <div class="cube-face top"></div>
+                    <div class="cube-face bottom"></div>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -37,7 +46,7 @@
         <div class="projects-stack">
             <a href="projects/olist/index.html" class="sticky-card glass-card animate" style="top: 120px; animation-delay: 0.3s;">
                 <div class="card-content">
-                    <img src="assets/Olist.png" alt="Olist Dashboard" class="card-img">
+                    <img src="assets/project1-cover.jpg" alt="Olist Project Cover" class="card-img">
                     <div class="card-text">
                         <h2>Olist E-Commerce</h2>
                         <p>A full end-to-end analysis of 100,000+ orders from Olist. Uncovering revenue drivers, delivery performance, and geographic distribution.</p>
@@ -51,7 +60,7 @@
 
             <a href="projects/google-stock/index.html" class="sticky-card glass-card animate" style="top: 150px; animation-delay: 0.4s;">
                 <div class="card-content">
-                    <img src="assets/google.png" alt="Google Stock Dashboard" class="card-img">
+                    <img src="assets/project2-cover.jpg" alt="Google Stock Cover" class="card-img">
                     <div class="card-text">
                         <h2>Google Stock Analysis</h2>
                         <p>A deep-dive exploratory analysis of GOOGL historical stock data. Identifying long-term trends, volatility cycles, and moving average patterns.</p>
@@ -74,6 +83,11 @@
             <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.7; max-width: 800px;">
                 Think of each dashboard as an industrial blueprint for decisions: stripped of clutter, rich in context, and built to be understood at a glance. Raw data becomes your strategic edge: patterns exposed, opportunities seized. When I'm not mastering SQL or Power BI, I'm experimenting with new AI features and tools across the internet.
             </p>
+            <div style="margin-top: 40px;">
+                <a href="who-am-i.html" class="meta-tag" style="background: var(--glass-bg); color: var(--text-main); font-size: 0.9rem; font-weight: 500; padding: 12px 24px; text-transform: none; display: inline-flex; align-items: center; gap: 8px; border-radius: 50px; border: 1px solid var(--glass-border);">
+                    Know more of me ↗
+                </a>
+            </div>
         </div>
     </section>
 
@@ -102,40 +116,132 @@
     </section>
 
     <script>
-        const cursorEl = document.getElementById('customCursor');
-        let mouseX = window.innerWidth / 2;
-        let mouseY = window.innerHeight / 2;
-        let cursorX = window.innerWidth / 2;
-        let cursorY = window.innerHeight / 2;
-        let isMoving = false;
-
-        // Tracks the mouse and reveals the cursor once the user moves it
-        document.addEventListener('mousemove', (e) => {
-            if (!isMoving) {
-                cursorEl.style.opacity = '1';
-                isMoving = true;
-            }
-            mouseX = e.clientX;
-            mouseY = e.clientY;
+        /* =========================================
+           1. 3D Scroll-Reactive Data Cube
+        ========================================= */
+        const cube = document.getElementById('scrollCube');
+        window.addEventListener('scroll', () => {
+            let scrollY = window.scrollY;
+            // The cube rotates based on how far down the page you scroll
+            cube.style.transform = `rotateX(${scrollY * 0.15}deg) rotateY(${scrollY * 0.25}deg)`;
         });
 
-        // The physics engine for the "heavy" lag
-        function animateCursor() {
-            let easing = 0.15; 
-            cursorX += (mouseX - cursorX) * easing;
-            cursorY += (mouseY - cursorY) * easing;
-            
-            cursorEl.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%)`;
-            requestAnimationFrame(animateCursor);
+        /* =========================================
+           2. Lightning & Firecracker Engine
+        ========================================= */
+        const canvas = document.getElementById('fxCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height;
+        let isPointerDown = false;
+        let pointerX = 0, pointerY = 0;
+        let chargeLevel = 0; // Builds up as you hold the click
+        let particles = [];
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
         }
-        animateCursor();
+        window.addEventListener('resize', resize);
+        resize();
 
-        // Expands the cursor into the inversion spotlight on hover
-        const interactables = document.querySelectorAll('a, .glass-card, .email-link');
-        interactables.forEach(el => {
-            el.addEventListener('mouseenter', () => cursorEl.classList.add('hover-expand'));
-            el.addEventListener('mouseleave', () => cursorEl.classList.remove('hover-expand'));
-        });
+        // Pointer Events
+        window.addEventListener('mousedown', (e) => { isPointerDown = true; pointerX = e.clientX; pointerY = e.clientY; chargeLevel = 0; });
+        window.addEventListener('mousemove', (e) => { pointerX = e.clientX; pointerY = e.clientY; });
+        window.addEventListener('mouseup', () => { triggerFirecracker(); isPointerDown = false; });
+        
+        window.addEventListener('touchstart', (e) => { isPointerDown = true; pointerX = e.touches[0].clientX; pointerY = e.touches[0].clientY; chargeLevel = 0; });
+        window.addEventListener('touchmove', (e) => { pointerX = e.touches[0].clientX; pointerY = e.touches[0].clientY; });
+        window.addEventListener('touchend', () => { triggerFirecracker(); isPointerDown = false; });
+
+        // Firecracker Explosion
+        function triggerFirecracker() {
+            let burstCount = 30 + (chargeLevel * 2); // Bigger burst if held longer
+            for(let i=0; i<burstCount; i++) {
+                particles.push({
+                    x: pointerX,
+                    y: pointerY,
+                    vx: (Math.random() - 0.5) * (Math.random() * 15),
+                    vy: (Math.random() - 0.5) * (Math.random() * 15),
+                    life: 1,
+                    color: `hsl(${Math.random() * 60 + 180}, 100%, 70%)` // Blues and Cyans
+                });
+            }
+            chargeLevel = 0;
+        }
+
+        // Draw Jagged Lightning
+        function drawLightning(startX, startY, branches) {
+            ctx.lineWidth = 2 + (chargeLevel / 10);
+            ctx.strokeStyle = `rgba(59, 130, 246, ${Math.random() * 0.5 + 0.5})`;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = '#3b82f6';
+
+            for(let i=0; i<branches; i++) {
+                ctx.beginPath();
+                ctx.moveTo(startX, startY);
+                let cx = startX, cy = startY;
+                let segments = 5 + Math.floor(chargeLevel / 5);
+                
+                for(let j=0; j<segments; j++) {
+                    cx += (Math.random() - 0.5) * 60;
+                    cy += (Math.random() - 0.5) * 60;
+                    ctx.lineTo(cx, cy);
+                }
+                ctx.stroke();
+            }
+        }
+
+        // Main Animation Loop
+        function animate() {
+            // Fade out effect for trailing canvas
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+            ctx.fillRect(0, 0, width, height);
+            ctx.globalCompositeOperation = 'lighter';
+
+            // While holding click: Draw Lightning and Build Charge
+            if(isPointerDown) {
+                if(chargeLevel < 40) chargeLevel += 1; // Cap the charge
+                let branches = 2 + Math.floor(chargeLevel / 10);
+                drawLightning(pointerX, pointerY, branches);
+
+                // Add random sparks while charging
+                if(Math.random() > 0.5) {
+                    particles.push({
+                        x: pointerX + (Math.random() - 0.5) * 50,
+                        y: pointerY + (Math.random() - 0.5) * 50,
+                        vx: (Math.random() - 0.5) * 2,
+                        vy: Math.random() * -3,
+                        life: 1,
+                        color: '#10b981'
+                    });
+                }
+            }
+
+            // Update and Draw Particles (Firecracker)
+            for(let i = particles.length - 1; i >= 0; i--) {
+                let p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.2; // Gravity
+                p.life -= 0.02; // Fade out
+
+                if(p.life <= 0) {
+                    particles.splice(i, 1);
+                } else {
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, Math.random() * 3 + 1, 0, Math.PI * 2);
+                    ctx.fillStyle = p.color;
+                    ctx.shadowBlur = 10;
+                    ctx.shadowColor = p.color;
+                    ctx.fill();
+                }
+            }
+
+            requestAnimationFrame(animate);
+        }
+        animate();
     </script>
 </body>
 </html>
