@@ -8,6 +8,8 @@
 </head>
 <body>
     
+    <canvas id="physicsCanvas"></canvas>
+
     <nav class="navbar">
         <a href="index.html" class="logo">Priyash Vasava</a>
         <div class="nav-links">
@@ -15,6 +17,7 @@
             <a href="blog.html">Blog</a>
             <a href="#who-am-i">Who Am I?</a>
             <a href="#connect">Connect</a>
+            <button id="resetFx" class="reset-btn">Reset Chalk & Bubbles</button>
         </div>
     </nav>
 
@@ -23,19 +26,7 @@
             <h1>I design <br><span class="text-gradient">clean analytics</span><br>experiences.</h1>
             <p>Exploring patterns in data through an industrial lens. Turning raw data into structured, actionable insights.</p>
         </div>
-        
-        <div class="hero-image-wrapper">
-            <div class="scene">
-                <div class="cube" id="scrollCube">
-                    <div class="cube-face front">SQL</div>
-                    <div class="cube-face back">DATA</div>
-                    <div class="cube-face right">LOGIC</div>
-                    <div class="cube-face left">BI</div>
-                    <div class="cube-face top"></div>
-                    <div class="cube-face bottom"></div>
-                </div>
-            </div>
-        </div>
+        <div class="hero-spacer"></div>
     </header>
 
     <section class="content-section" id="projects">
@@ -110,13 +101,152 @@
     </section>
 
     <script>
-        // 3D Cube Logic
-        const cube = document.getElementById('scrollCube');
-        if(cube) {
-            window.addEventListener('scroll', () => {
-                cube.style.transform = `rotateX(${window.scrollY * 0.15}deg) rotateY(${window.scrollY * 0.25}deg)`;
-            });
+        const canvas = document.getElementById('physicsCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+
+        let chalkDust = [];
+        let chalkLines = [];
+        let bubbles = [];
+        let isDrawing = false;
+        let lastX = 0, lastY = 0;
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
         }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // 1. Initial Bubbles
+        function spawnInitialBubbles() {
+            bubbles = [];
+            for(let i = 0; i < 5; i++) {
+                bubbles.push({
+                    x: Math.random() * width, y: Math.random() * height,
+                    r: Math.random() * 40 + 40,
+                    vx: (Math.random() - 0.5) * 2, vy: (Math.random() - 0.5) * 2
+                });
+            }
+        }
+        spawnInitialBubbles();
+
+        // 2. Mouse Tracking for Chalk & Clicking Bubbles
+        window.addEventListener('mousedown', (e) => {
+            // Check if clicking on a bubble to pop it
+            let clickedBubble = false;
+            for(let i = bubbles.length - 1; i >= 0; i--) {
+                let dx = e.clientX - bubbles[i].x;
+                let dy = e.clientY - bubbles[i].y;
+                if(Math.sqrt(dx*dx + dy*dy) < bubbles[i].r) {
+                    let b = bubbles[i];
+                    bubbles.splice(i, 1); // Remove big bubble
+                    if(b.r > 20) { // Spawn smaller bubbles
+                        for(let j=0; j<3; j++) {
+                            bubbles.push({
+                                x: b.x + (Math.random()-0.5)*20, y: b.y + (Math.random()-0.5)*20,
+                                r: b.r * 0.5,
+                                vx: (Math.random() - 0.5) * 5, vy: (Math.random() - 0.5) * 5
+                            });
+                        }
+                    }
+                    clickedBubble = true;
+                    break;
+                }
+            }
+
+            if(!clickedBubble && e.target.tagName !== 'A' && e.target.tagName !== 'BUTTON') {
+                isDrawing = true;
+                lastX = e.clientX; lastY = e.clientY;
+            }
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if(isDrawing) {
+                // Draw Chalk Line
+                chalkLines.push({ x1: lastX, y1: lastY, x2: e.clientX, y2: e.clientY });
+                
+                // Spawn Chalk Dust realistically
+                if(Math.random() > 0.3) {
+                    chalkDust.push({
+                        x: e.clientX + (Math.random() - 0.5) * 10,
+                        y: e.clientY,
+                        vx: (Math.random() - 0.5),
+                        vy: Math.random() * 2, // Gravity starts pulling it down
+                        isSettled: false
+                    });
+                }
+                lastX = e.clientX; lastY = e.clientY;
+            }
+        });
+
+        window.addEventListener('mouseup', () => isDrawing = false);
+
+        // 3. Reset Button Logic
+        document.getElementById('resetFx').addEventListener('click', () => {
+            chalkLines = [];
+            chalkDust = [];
+            spawnInitialBubbles();
+        });
+
+        // 4. Main Physics Loop
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+
+            // Draw Chalk Lines (rough texture)
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.lineWidth = 4;
+            ctx.lineCap = 'round';
+            chalkLines.forEach(line => {
+                ctx.beginPath(); ctx.moveTo(line.x1, line.y1); ctx.lineTo(line.x2, line.y2); ctx.stroke();
+            });
+
+            // Update & Draw Chalk Dust
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+            chalkDust.forEach(dust => {
+                if(!dust.isSettled) {
+                    dust.x += dust.vx; dust.y += dust.vy; dust.vy += 0.1; // Gravity
+                    // Collect at the bottom of the window
+                    if(dust.y >= height - 5) {
+                        dust.y = height - 5 - (Math.random() * 5); // Pile up slightly
+                        dust.vx = 0; dust.vy = 0; dust.isSettled = true;
+                    }
+                }
+                ctx.beginPath(); ctx.arc(dust.x, dust.y, 1.5, 0, Math.PI * 2); ctx.fill();
+            });
+
+            // Update & Draw Bubbles
+            ctx.strokeStyle = 'rgba(59, 130, 246, 0.6)'; // Accent Blue Outline
+            ctx.fillStyle = 'rgba(16, 185, 129, 0.1)'; // Accent Green Fill
+            ctx.lineWidth = 2;
+
+            for(let i=0; i<bubbles.length; i++) {
+                let b = bubbles[i];
+                b.x += b.vx; b.y += b.vy;
+
+                // Wall Collision
+                if(b.x - b.r < 0 || b.x + b.r > width) b.vx *= -1;
+                if(b.y - b.r < 0 || b.y + b.r > height) b.vy *= -1;
+
+                // Simple Bubble-Bubble Collision (Bounce)
+                for(let j=i+1; j<bubbles.length; j++) {
+                    let b2 = bubbles[j];
+                    let dx = b2.x - b.x; let dy = b2.y - b.y;
+                    let dist = Math.sqrt(dx*dx + dy*dy);
+                    if(dist < b.r + b2.r) {
+                        b.vx *= -1; b.vy *= -1; b2.vx *= -1; b2.vy *= -1;
+                        // Nudge apart to prevent sticking
+                        b.x += b.vx; b.y += b.vy;
+                    }
+                }
+
+                ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+                ctx.fill(); ctx.stroke();
+            }
+
+            requestAnimationFrame(animate);
+        }
+        animate();
     </script>
 </body>
 </html>
