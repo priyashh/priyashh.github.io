@@ -78,7 +78,7 @@ a { text-decoration: none; color: inherit; transition: 0.3s; }
 
 .nav-links { display: flex; gap: 15px; }
 
-/* Pill-shaped navigation buttons from the image */
+/* Pill-shaped navigation buttons */
 .nav-links a {
     font-size: 0.85rem;
     font-weight: 500;
@@ -95,89 +95,154 @@ a { text-decoration: none; color: inherit; transition: 0.3s; }
     border-color: rgba(255, 255, 255, 0.15);
 }
 
-/* Hero Section */
+/* Hero Section (Side-by-Side Layout) */
 .hero {
     max-width: 1200px;
     margin: 4vw auto;
     padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+}
+
+.hero-content {
+    flex: 1;
 }
 
 .hero h1 {
-    font-size: clamp(3rem, 6vw, 5.5rem);
+    font-size: clamp(3rem, 5vw, 5.5rem);
     font-weight: 700;
     line-height: 1.1;
     letter-spacing: -0.03em;
     margin-bottom: 25px;
-    max-width: 900px;
 }
 
 .hero p {
     color: var(--text-muted);
     font-size: clamp(1.1rem, 2vw, 1.3rem);
-    max-width: 600px;
+    max-width: 500px;
 }
 
-/* Project Slider */
+/* Floating 3D Image Wrapper */
+.hero-image-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+
+.hero-image-wrapper img {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 16px;
+    border: 1px solid var(--glass-border);
+    /* Creates the tilted 3D floating effect */
+    transform: perspective(1000px) rotateY(-15deg) rotateX(5deg) scale(1.05);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(16, 185, 129, 0.15);
+    transition: transform 0.5s ease;
+}
+
+.hero-image-wrapper img:hover {
+    /* Flattens out when you hover over it */
+    transform: perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1);
+}
+
+/* Project Slider & Cards */
 .slider-container {
     max-width: 1200px;
-    margin: 0 auto;
-    overflow: hidden;
-    padding: 20px;
+    margin: 40px auto;
+    padding: 0 20px;
 }
 
 .slider-track {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 30px;
-    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .slide {
-    min-width: 48%; /* Shows two cards side-by-side on desktop */
     display: flex;
     flex-direction: column;
-    justify-content: center;
 }
 
-.slide h2 { font-size: clamp(1.8rem, 3vw, 2.2rem); font-weight: 600; margin-bottom: 15px; letter-spacing: -0.02em;}
+/* New Image styling inside cards */
+.card-img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    object-position: top;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.slide h2 { font-size: clamp(1.6rem, 2.5vw, 2rem); font-weight: 600; margin-bottom: 15px; letter-spacing: -0.02em;}
 .slide p { color: var(--text-muted); font-size: 1.05rem; margin-bottom: 25px; }
 
-.slide-tags { display: flex; gap: 10px; flex-wrap: wrap; }
+.slide-tags { display: flex; gap: 10px; flex-wrap: wrap; margin-top: auto; }
 .slide-tags span { 
     font-size: 0.75rem; 
-    color: var(--text-muted); 
-    background: rgba(255, 255, 255, 0.05); 
+    color: var(--text-main); 
+    background: rgba(255, 255, 255, 0.08); 
     border: 1px solid rgba(255,255,255,0.1);
     padding: 6px 14px; 
     border-radius: 50px; 
     font-weight: 500; 
 }
 
-/* Bio & Connect */
+/* Bio & Connect Sections */
 .content-section {
     max-width: 1200px;
-    margin: 60px auto;
+    margin: 40px auto;
     padding: 0 20px;
 }
 
-.section-label { font-size: 0.85rem; text-transform: uppercase; color: var(--accent-blue); letter-spacing: 0.05em; font-weight: 600; margin-bottom: 20px; display: block; }
+/* Fixed Aesthetic Section Headers */
+.section-label { 
+    font-size: 0.8rem; 
+    text-transform: uppercase; 
+    color: var(--accent-green); 
+    letter-spacing: 0.2em; /* Wide, high-end spacing */
+    font-weight: 600; 
+    margin-bottom: 30px; 
+    display: block; 
+}
+
+/* Restored Quote Style */
+blockquote {
+    font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin-bottom: 40px;
+    padding-left: 20px;
+    border-left: 4px solid var(--accent-green);
+    line-height: 1.4;
+}
 
 .email-link {
-    font-size: clamp(2rem, 5vw, 4rem);
+    font-size: clamp(2.5rem, 5vw, 4rem);
     font-weight: 700;
     letter-spacing: -0.03em;
     color: var(--text-main);
     display: inline-block;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+    border-bottom: 4px solid transparent;
     transition: 0.3s;
 }
 
-.email-link:hover { color: var(--accent-blue); }
+.email-link:hover { color: var(--accent-blue); border-color: var(--accent-blue); }
 .social-links { display: flex; gap: 20px; margin-top: 30px; }
-.social-links a { color: var(--text-muted); font-weight: 500; border-bottom: 1px solid transparent; }
+.social-links a { color: var(--text-muted); font-weight: 500; border-bottom: 1px solid transparent; padding-bottom: 2px;}
 .social-links a:hover { color: var(--text-main); border-color: var(--text-main); }
 
-@media (max-width: 768px) {
+/* Mobile Adjustments */
+@media (max-width: 900px) {
     .navbar { flex-direction: column; gap: 20px; }
     .nav-links { flex-wrap: wrap; justify-content: center; }
-    .slide { min-width: 100%; }
+    .hero { flex-direction: column; text-align: center; }
+    .hero p { margin: 0 auto; }
+    .hero-image-wrapper img { transform: none; margin-top: 40px; }
+    .hero-image-wrapper img:hover { transform: none; }
 }
