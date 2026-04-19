@@ -8,14 +8,14 @@
 </head>
 <body>
     
-    <canvas id="fxCanvas"></canvas>
+    <canvas id="sparkCanvas"></canvas>
 
     <nav class="navbar">
         <a href="index.html" class="logo">Priyash Vasava</a>
         <div class="nav-links">
             <a href="#projects">Projects</a>
             <a href="blog.html">Blog</a>
-            <a href="index.html#who-am-i">Who Am I?</a>
+            <a href="#who-am-i">Who Am I?</a>
             <a href="#connect">Connect</a>
         </div>
     </nav>
@@ -94,19 +94,15 @@
     <section class="content-section animate" id="connect">
         <div class="glass-card">
             <span class="section-label">Let's Connect</span>
-            
             <blockquote>
                 "In God we trust. All others must bring data." <br>
                 <span style="font-size: 1rem; color: var(--text-muted);">— W. Edwards Deming</span>
             </blockquote>
-            
             <div style="margin-top: 40px;">
                 <a href="mailto:Priyashvasava@outlook.com" class="email-link">Say Hello ↗</a>
-                
                 <p style="font-size: 1rem; color: var(--text-muted);">
                     or Email me later at: <strong style="color: var(--text-main);">Priyashvasava@outlook.com</strong>
                 </p>
-                
                 <div class="social-links">
                     <a href="https://www.linkedin.com/in/priyashvasava" target="_blank">LinkedIn</a>
                     <a href="https://github.com/priyashh" target="_blank">GitHub</a>
@@ -116,132 +112,62 @@
     </section>
 
     <script>
-        /* =========================================
-           1. 3D Scroll-Reactive Data Cube
-        ========================================= */
+        // 3D Cube Logic
         const cube = document.getElementById('scrollCube');
-        window.addEventListener('scroll', () => {
-            let scrollY = window.scrollY;
-            // The cube rotates based on how far down the page you scroll
-            cube.style.transform = `rotateX(${scrollY * 0.15}deg) rotateY(${scrollY * 0.25}deg)`;
-        });
-
-        /* =========================================
-           2. Lightning & Firecracker Engine
-        ========================================= */
-        const canvas = document.getElementById('fxCanvas');
-        const ctx = canvas.getContext('2d');
-        
-        let width, height;
-        let isPointerDown = false;
-        let pointerX = 0, pointerY = 0;
-        let chargeLevel = 0; // Builds up as you hold the click
-        let particles = [];
-
-        function resize() {
-            width = canvas.width = window.innerWidth;
-            height = canvas.height = window.innerHeight;
+        if(cube) {
+            window.addEventListener('scroll', () => {
+                cube.style.transform = `rotateX(${window.scrollY * 0.15}deg) rotateY(${window.scrollY * 0.25}deg)`;
+            });
         }
-        window.addEventListener('resize', resize);
-        resize();
 
-        // Pointer Events
-        window.addEventListener('mousedown', (e) => { isPointerDown = true; pointerX = e.clientX; pointerY = e.clientY; chargeLevel = 0; });
-        window.addEventListener('mousemove', (e) => { pointerX = e.clientX; pointerY = e.clientY; });
-        window.addEventListener('mouseup', () => { triggerFirecracker(); isPointerDown = false; });
-        
-        window.addEventListener('touchstart', (e) => { isPointerDown = true; pointerX = e.touches[0].clientX; pointerY = e.touches[0].clientY; chargeLevel = 0; });
-        window.addEventListener('touchmove', (e) => { pointerX = e.touches[0].clientX; pointerY = e.touches[0].clientY; });
-        window.addEventListener('touchend', () => { triggerFirecracker(); isPointerDown = false; });
+        // Highly Optimized Spark Engine
+        const canvas = document.getElementById('sparkCanvas');
+        const ctx = canvas.getContext('2d', { alpha: true });
+        let w = canvas.width = window.innerWidth;
+        let h = canvas.height = window.innerHeight;
+        let sparks = [];
+        let charge = 1; // Click multiplier
 
-        // Firecracker Explosion
-        function triggerFirecracker() {
-            let burstCount = 30 + (chargeLevel * 2); // Bigger burst if held longer
-            for(let i=0; i<burstCount; i++) {
-                particles.push({
-                    x: pointerX,
-                    y: pointerY,
-                    vx: (Math.random() - 0.5) * (Math.random() * 15),
-                    vy: (Math.random() - 0.5) * (Math.random() * 15),
+        window.addEventListener('resize', () => { w = canvas.width = window.innerWidth; h = canvas.height = window.innerHeight; });
+
+        function createSparks(x, y, count) {
+            for(let i=0; i<count * charge; i++) {
+                sparks.push({
+                    x: x, y: y,
+                    vx: (Math.random() - 0.5) * 6,
+                    vy: (Math.random() - 0.5) * 6,
                     life: 1,
-                    color: `hsl(${Math.random() * 60 + 180}, 100%, 70%)` // Blues and Cyans
+                    size: Math.random() * 2.5 + 0.5
                 });
             }
-            chargeLevel = 0;
         }
 
-        // Draw Jagged Lightning
-        function drawLightning(startX, startY, branches) {
-            ctx.lineWidth = 2 + (chargeLevel / 10);
-            ctx.strokeStyle = `rgba(59, 130, 246, ${Math.random() * 0.5 + 0.5})`;
-            ctx.shadowBlur = 15;
-            ctx.shadowColor = '#3b82f6';
+        window.addEventListener('mousemove', (e) => { createSparks(e.clientX, e.clientY, 1); });
+        
+        window.addEventListener('mousedown', (e) => { 
+            createSparks(e.clientX, e.clientY, 10);
+            charge = Math.min(charge + 0.5, 4); // Charge builds up to 4x on rapid clicks
+        });
 
-            for(let i=0; i<branches; i++) {
-                ctx.beginPath();
-                ctx.moveTo(startX, startY);
-                let cx = startX, cy = startY;
-                let segments = 5 + Math.floor(chargeLevel / 5);
-                
-                for(let j=0; j<segments; j++) {
-                    cx += (Math.random() - 0.5) * 60;
-                    cy += (Math.random() - 0.5) * 60;
-                    ctx.lineTo(cx, cy);
-                }
-                ctx.stroke();
-            }
-        }
+        function animateSparks() {
+            ctx.clearRect(0, 0, w, h); // Clear removes trailing lag
+            if(charge > 1) charge -= 0.02; // Charge decays over time
 
-        // Main Animation Loop
-        function animate() {
-            // Fade out effect for trailing canvas
-            ctx.globalCompositeOperation = 'destination-out';
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
-            ctx.fillRect(0, 0, width, height);
-            ctx.globalCompositeOperation = 'lighter';
+            for(let i = sparks.length - 1; i >= 0; i--) {
+                let s = sparks[i];
+                s.x += s.vx; s.y += s.vy; s.life -= 0.03;
 
-            // While holding click: Draw Lightning and Build Charge
-            if(isPointerDown) {
-                if(chargeLevel < 40) chargeLevel += 1; // Cap the charge
-                let branches = 2 + Math.floor(chargeLevel / 10);
-                drawLightning(pointerX, pointerY, branches);
-
-                // Add random sparks while charging
-                if(Math.random() > 0.5) {
-                    particles.push({
-                        x: pointerX + (Math.random() - 0.5) * 50,
-                        y: pointerY + (Math.random() - 0.5) * 50,
-                        vx: (Math.random() - 0.5) * 2,
-                        vy: Math.random() * -3,
-                        life: 1,
-                        color: '#10b981'
-                    });
-                }
-            }
-
-            // Update and Draw Particles (Firecracker)
-            for(let i = particles.length - 1; i >= 0; i--) {
-                let p = particles[i];
-                p.x += p.vx;
-                p.y += p.vy;
-                p.vy += 0.2; // Gravity
-                p.life -= 0.02; // Fade out
-
-                if(p.life <= 0) {
-                    particles.splice(i, 1);
-                } else {
+                if(s.life <= 0) { sparks.splice(i, 1); } 
+                else {
+                    ctx.fillStyle = `rgba(59, 130, 246, ${s.life})`; // Sleek Blue
                     ctx.beginPath();
-                    ctx.arc(p.x, p.y, Math.random() * 3 + 1, 0, Math.PI * 2);
-                    ctx.fillStyle = p.color;
-                    ctx.shadowBlur = 10;
-                    ctx.shadowColor = p.color;
+                    ctx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
                     ctx.fill();
                 }
             }
-
-            requestAnimationFrame(animate);
+            requestAnimationFrame(animateSparks);
         }
-        animate();
+        animateSparks();
     </script>
 </body>
 </html>
