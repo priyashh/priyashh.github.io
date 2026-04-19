@@ -31,48 +31,37 @@
         </div>
     </header>
 
-    <section class="slider-container animate" id="projects" style="animation-delay: 0.2s;">
-        <span class="section-label">Featured Works</span>
-        <div class="slider-track">
-            
-            <a href="projects/olist/index.html" class="slide glass-card">
-                <img src="assets/Olist.png" alt="Olist Dashboard" class="card-img">
-                <h2>Olist E-Commerce</h2>
-                <p>A full end-to-end analysis of 100,000+ orders from Olist. Uncovering revenue drivers, delivery performance, and geographic distribution.</p>
-                <div class="slide-tags">
-                    <span>SQL</span>
-                    <span>Power BI</span>
-                </div>
-            </a>
-            <a href="projects/google-stock/index.html" class="slide glass-card">
-                <img src="assets/google.png" alt="Google Stock Dashboard" class="card-img">
-                <h2>Google Stock Analysis</h2>
-                <p>A deep-dive exploratory analysis of GOOGL historical stock data. Identifying long-term trends, volatility cycles, and moving average patterns.</p>
-                <div class="slide-tags">
-                    <span>Excel</span>
-                    <span>Time Series</span>
+    <section class="content-section" id="projects">
+        <span class="section-label animate" style="animation-delay: 0.2s;">Featured Works</span>
+        
+        <div class="projects-stack">
+            <a href="projects/olist/index.html" class="sticky-card glass-card animate" style="top: 120px; animation-delay: 0.3s;">
+                <div class="card-content">
+                    <img src="assets/Olist.png" alt="Olist Dashboard" class="card-img">
+                    <div class="card-text">
+                        <h2>Olist E-Commerce</h2>
+                        <p>A full end-to-end analysis of 100,000+ orders from Olist. Uncovering revenue drivers, delivery performance, and geographic distribution.</p>
+                        <div class="slide-tags">
+                            <span>SQL</span>
+                            <span>Power BI</span>
+                        </div>
+                    </div>
                 </div>
             </a>
 
-            <a href="projects/olist/index.html" class="slide glass-card">
-                <img src="assets/Olist.png" alt="Olist Dashboard" class="card-img">
-                <h2>Olist E-Commerce</h2>
-                <p>A full end-to-end analysis of 100,000+ orders from Olist. Uncovering revenue drivers, delivery performance, and geographic distribution.</p>
-                <div class="slide-tags">
-                    <span>SQL</span>
-                    <span>Power BI</span>
+            <a href="projects/google-stock/index.html" class="sticky-card glass-card animate" style="top: 150px; animation-delay: 0.4s;">
+                <div class="card-content">
+                    <img src="assets/google.png" alt="Google Stock Dashboard" class="card-img">
+                    <div class="card-text">
+                        <h2>Google Stock Analysis</h2>
+                        <p>A deep-dive exploratory analysis of GOOGL historical stock data. Identifying long-term trends, volatility cycles, and moving average patterns.</p>
+                        <div class="slide-tags">
+                            <span>Excel</span>
+                            <span>Time Series</span>
+                        </div>
+                    </div>
                 </div>
             </a>
-            <a href="projects/google-stock/index.html" class="slide glass-card">
-                <img src="assets/google.png" alt="Google Stock Dashboard" class="card-img">
-                <h2>Google Stock Analysis</h2>
-                <p>A deep-dive exploratory analysis of GOOGL historical stock data. Identifying long-term trends, volatility cycles, and moving average patterns.</p>
-                <div class="slide-tags">
-                    <span>Excel</span>
-                    <span>Time Series</span>
-                </div>
-            </a>
-
         </div>
     </section>
 
@@ -113,20 +102,26 @@
     </section>
 
     <script>
-        // Premium Custom Cursor Physics
         const cursorEl = document.getElementById('customCursor');
-        let mouseX = 0, mouseY = 0;
-        let cursorX = 0, cursorY = 0;
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        let cursorX = window.innerWidth / 2;
+        let cursorY = window.innerHeight / 2;
+        let isMoving = false;
 
-        // 1. Track the physical mouse
+        // Tracks the mouse and reveals the cursor once the user moves it
         document.addEventListener('mousemove', (e) => {
+            if (!isMoving) {
+                cursorEl.style.opacity = '1';
+                isMoving = true;
+            }
             mouseX = e.clientX;
             mouseY = e.clientY;
         });
 
-        // 2. The Lerp (Linear Interpolation) Loop for smooth delay
+        // The physics engine for the "heavy" lag
         function animateCursor() {
-            let easing = 0.15; // Lower number = heavier lag, Higher number = faster
+            let easing = 0.15; 
             cursorX += (mouseX - cursorX) * easing;
             cursorY += (mouseY - cursorY) * easing;
             
@@ -135,8 +130,8 @@
         }
         animateCursor();
 
-        // 3. Hover Expansion Logic
-        const interactables = document.querySelectorAll('a, .glass-card');
+        // Expands the cursor into the inversion spotlight on hover
+        const interactables = document.querySelectorAll('a, .glass-card, .email-link');
         interactables.forEach(el => {
             el.addEventListener('mouseenter', () => cursorEl.classList.add('hover-expand'));
             el.addEventListener('mouseleave', () => cursorEl.classList.remove('hover-expand'));
