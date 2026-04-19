@@ -12,11 +12,6 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* Zero-Lag Lightning Cursor applied globally */
-html, body, a, button, .glass-card {
-    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"><path fill="%233b82f6" stroke="%23ffffff" stroke-width="1.5" stroke-linejoin="round" d="M13 2L3 14h7v8l10-12h-7z"/></svg>'), auto !important;
-}
-
 html { 
     scroll-behavior: smooth; 
     scroll-padding-top: 100px; 
@@ -35,6 +30,15 @@ body {
 }
 
 a { text-decoration: none; color: inherit; transition: 0.3s; }
+
+/* Physics Canvas Styling - Covers entire screen, allows clicking through to links */
+#physicsCanvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    pointer-events: none; 
+    z-index: 9999;
+}
 
 /* Frosted Glass Class */
 .glass-card {
@@ -65,40 +69,26 @@ a { text-decoration: none; color: inherit; transition: 0.3s; }
 /* Navbar */
 .navbar {
     max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between;
-    align-items: center; padding: 30px 20px; position: sticky; top: 0; z-index: 100;
+    align-items: center; padding: 30px 20px; position: sticky; top: 0; z-index: 10000;
 }
 
 .logo { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em; }
-.nav-links { display: flex; gap: 15px; }
-.nav-links a {
+.nav-links { display: flex; gap: 15px; align-items: center; }
+.nav-links a, .reset-btn {
     font-size: 0.85rem; font-weight: 500; color: var(--text-muted); background: rgba(255, 255, 255, 0.05);
     padding: 8px 18px; border-radius: 50px; border: 1px solid transparent; transition: all 0.2s ease;
+    cursor: pointer; font-family: inherit;
 }
-.nav-links a:hover { color: var(--text-main); background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.15); }
-.nav-links a:active { transform: scale(0.92); }
+.nav-links a:hover, .reset-btn:hover { color: var(--text-main); background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.15); }
+.nav-links a:active, .reset-btn:active { transform: scale(0.92); }
+.reset-btn { color: var(--accent-blue); border-color: rgba(59, 130, 246, 0.3); }
 
 /* Hero Section */
 .hero { max-width: 1200px; margin: 4vw auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; gap: 40px; }
 .hero-content { flex: 1; }
 .hero h1 { font-size: clamp(3rem, 5vw, 5.5rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 25px; }
 .hero p { color: var(--text-muted); font-size: clamp(1.1rem, 2vw, 1.3rem); max-width: 500px; }
-.hero-image-wrapper { flex: 1; display: flex; justify-content: center; position: relative; perspective: 1000px;}
-
-/* 3D Data Cube */
-.scene { width: 200px; height: 200px; perspective: 800px; }
-.cube { width: 100%; height: 100%; position: relative; transform-style: preserve-3d; transform: rotateX(-20deg) rotateY(-20deg); transition: transform 0.1s ease-out; }
-.cube-face {
-    position: absolute; width: 200px; height: 200px; background: rgba(59, 130, 246, 0.08); 
-    border: 1px solid rgba(59, 130, 246, 0.4); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
-    display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700;
-    color: rgba(255, 255, 255, 0.8); box-shadow: inset 0 0 30px rgba(59, 130, 246, 0.2);
-}
-.cube-face.front  { transform: rotateY(  0deg) translateZ(100px); }
-.cube-face.back   { transform: rotateY(180deg) translateZ(100px); }
-.cube-face.right  { transform: rotateY( 90deg) translateZ(100px); }
-.cube-face.left   { transform: rotateY(-90deg) translateZ(100px); }
-.cube-face.top    { transform: rotateX( 90deg) translateZ(100px); }
-.cube-face.bottom { transform: rotateX(-90deg) translateZ(100px); }
+.hero-spacer { flex: 1; min-height: 300px; } /* Empty space where the cube used to be, now filled with bubbles */
 
 /* Sticky Stacking Projects */
 .content-section { max-width: 1200px; margin: 60px auto; padding: 0 20px; }
@@ -148,7 +138,7 @@ blockquote { font-size: clamp(1.4rem, 2.5vw, 2.2rem); font-weight: 500; letter-s
     .nav-links { flex-wrap: wrap; justify-content: center; }
     .hero { flex-direction: column; text-align: center; }
     .hero p { margin: 0 auto; }
-    .hero-image-wrapper { margin-top: 40px; }
+    .hero-spacer { display: none; }
     .sticky-card { position: relative; top: 0 !important; } 
     .card-content { flex-direction: column; }
     .card-img { width: 100%; }
