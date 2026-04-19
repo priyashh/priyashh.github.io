@@ -239,6 +239,38 @@ blockquote {
 .social-links a { color: var(--text-muted); font-weight: 500; border-bottom: 1px solid transparent; padding-bottom: 2px;}
 .social-links a:hover { color: var(--text-main); border-color: var(--text-main); }
 
+
+/* Premium Custom Cursor Styling */
+@media (pointer: fine) {
+    /* Hides the default computer mouse */
+    body, a, .slide, .glass-card { cursor: none !important; }
+    .custom-cursor { display: block; }
+}
+
+.custom-cursor {
+    display: none; /* Hidden on mobile phones */
+    position: fixed;
+    top: 0; left: 0;
+    width: 15px; height: 15px;
+    background-color: var(--accent-green);
+    border-radius: 50%;
+    pointer-events: none; /* Stops the cursor from blocking clicks */
+    z-index: 9999;
+    box-shadow: 0 0 15px var(--accent-green);
+    transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
+                height 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
+                background-color 0.3s ease, 
+                mix-blend-mode 0.3s ease;
+}
+
+/* The Spotlight Inversion State */
+.custom-cursor.hover-expand {
+    width: 80px; 
+    height: 80px;
+    background-color: #ffffff;
+    mix-blend-mode: difference; /* This creates the color inversion effect */
+    box-shadow: none;
+}
 /* Mobile Adjustments */
 @media (max-width: 900px) {
     .navbar { flex-direction: column; gap: 20px; }
