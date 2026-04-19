@@ -8,54 +8,126 @@
 </head>
 <body>
 
+    <canvas id="physicsCanvas"></canvas>
+
     <nav class="navbar">
         <a href="index.html" class="logo">Priyash Vasava</a>
         <div class="nav-links">
             <a href="index.html#projects">Projects</a>
             <a href="blog.html">Blog</a>
-            <a href="index.html#who-am-i">Who Am I?</a>
+            <a href="who-am-i.html">Who Am I?</a>
             <a href="index.html#connect">Connect</a>
+            <button id="resetFx" class="reset-btn">Reset Chalk & Bubbles</button>
         </div>
     </nav>
 
-    <header class="section hero animate">
-        <span class="section-label">Detailed Profile // About Me</span>
-        <h1>Understanding my path.</h1>
-        <p style="font-size: clamp(1.2rem, 2vw, 1.5rem); color: var(--text-muted); max-width: 700px;">
-            A deeper look into how engineering precision meets data exploration to create elegant, clean analytic experiences.
-        </p>
+    <header class="story-top-section animate">
+        <div class="story-title-col">
+            <h1 class="story-title">Story of <br>my life.</h1>
+        </div>
+        
+        <div class="story-image-col">
+            <div class="story-img-wrapper">
+                <img src="assets/user-portrait.jpg" alt="Priyash Vasava" class="story-img">
+            </div>
+        </div>
+        
+        <div class="story-empty-col">
+            </div>
     </header>
 
-    <section class="section animate" style="animation-delay: 0.2s;">
-        <div class="bio-grid">
-            
-            <div class="bio-image-wrapper">
-                <img src="assets/my-picture.jpg" alt="Priyash Vasava" class="bio-img">
-                <div style="color: var(--text-muted); font-size: 0.9rem; text-align: center; margin-top: 10px;">
-                    An Industrial Lens on Data Patterns
-                </div>
-            </div>
-
-            <div class="main-content glass-card">
-                <span class="section-label" style="margin-bottom: 20px;">Structured Storytelling</span>
-                
-                <p style="font-size: 1.15rem; font-weight: 500; color: var(--text-main); margin-bottom: 30px; letter-spacing: -0.01em;">
-                    I am Priyash Vasava, an Analyst II based in Vadodara, Gujarat. With over two and a half years of experience, my focus is on removing the clutter of raw information to expose the core insights that drive industries forward.
-                </p>
-                
-                <p style="color: var(--text-muted); line-height: 1.8; margin-bottom: 20px;">
-                    My technical foundation was built at ITI Ankleshwar and expanded through a formative internship at the Indian Space Research Organisation (ISRO). I am currently further broadening my analytical perspective by pursuing a BA in Economics through Dr. Babasaheb Ambedkar Open University. This combination of strict engineering principles and economic theory allows me to build dashboards that are not just technically sound, but strategically valuable.
-                </p>
-                
-                <p style="color: var(--text-muted); line-height: 1.8; margin-bottom: 20px;">
-                    When I am not writing SQL queries or structuring Power BI models at Etech Global Services, my analytical mindset spills over into my personal pursuits. I am deeply engaged in 3D modeling and animation using Blender, currently developing a YouTube channel focused on data-driven storytelling and oddly satisfying visual loops. Off-screen, I am a huge fan of complex mystery and thriller narratives, and I have a growing interest in botany and local plant nurseries.
-                </p>
-                
-                <a href="index.html#who-am-i" class="back-link">← Return to the quick overview</a>
-            </div>
-
+    <section class="story-text-container">
+        <p class="fade-text">
+            I am Priyash Vasava, an Analyst II based in Vadodara, Gujarat. With over two and a half years of experience, my focus is on removing the clutter of raw information to expose the core insights that drive industries forward.
+        </p>
+        
+        <p class="fade-text">
+            My technical foundation was built at ITI Ankleshwar and expanded through a formative internship at the Indian Space Research Organisation (ISRO). I am currently further broadening my analytical perspective by pursuing a BA in Economics through Dr. Babasaheb Ambedkar Open University. This combination of strict engineering principles and economic theory allows me to build dashboards that are not just technically sound, but strategically valuable.
+        </p>
+        
+        <p class="fade-text">
+            When I am not mastering SQL or designing Power BI interactions at Etech Global Services, my analytical mindset spills over into my personal pursuits. I am deeply engaged in 3D modeling and animation using Blender, currently developing a YouTube channel focused on data-driven storytelling and oddly satisfying visual loops. Off-screen, I am a huge fan of complex mystery and thriller narratives, and I have a growing interest in botany and local plant nurseries.
+        </p>
+        
+        <div class="fade-text" style="margin-top: 60px;">
+            <a href="index.html" class="back-link">← Return to projects</a>
         </div>
     </section>
 
+    <script src="fade-on-scroll.js"></script>
+
+    <script>
+        const canvas = document.getElementById('physicsCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let chalkDust = []; let chalkLines = []; let bubbles = [];
+        let isDrawing = false; let lastX = 0, lastY = 0;
+
+        function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resize); resize();
+
+        function spawnInitialBubbles() {
+            bubbles = [];
+            for(let i = 0; i < 5; i++) {
+                bubbles.push({ x: Math.random() * width, y: Math.random() * height, r: Math.random() * 40 + 40, vx: (Math.random() - 0.5) * 2, vy: (Math.random() - 0.5) * 2 });
+            }
+        }
+        spawnInitialBubbles();
+
+        window.addEventListener('mousedown', (e) => {
+            let clickedBubble = false;
+            for(let i = bubbles.length - 1; i >= 0; i--) {
+                let dx = e.clientX - bubbles[i].x; let dy = e.clientY - bubbles[i].y;
+                if(Math.sqrt(dx*dx + dy*dy) < bubbles[i].r) {
+                    let b = bubbles[i]; bubbles.splice(i, 1);
+                    if(b.r > 20) {
+                        for(let j=0; j<3; j++) { bubbles.push({ x: b.x + (Math.random()-0.5)*20, y: b.y + (Math.random()-0.5)*20, r: b.r * 0.5, vx: (Math.random() - 0.5) * 5, vy: (Math.random() - 0.5) * 5 }); }
+                    }
+                    clickedBubble = true; break;
+                }
+            }
+            if(!clickedBubble && e.target.tagName !== 'A' && e.target.tagName !== 'BUTTON') { isDrawing = true; lastX = e.clientX; lastY = e.clientY; }
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if(isDrawing) {
+                chalkLines.push({ x1: lastX, y1: lastY, x2: e.clientX, y2: e.clientY });
+                if(Math.random() > 0.3) { chalkDust.push({ x: e.clientX + (Math.random() - 0.5) * 10, y: e.clientY, vx: (Math.random() - 0.5), vy: Math.random() * 2, isSettled: false }); }
+                lastX = e.clientX; lastY = e.clientY;
+            }
+        });
+
+        window.addEventListener('mouseup', () => isDrawing = false);
+        document.getElementById('resetFx').addEventListener('click', () => { chalkLines = []; chalkDust = []; spawnInitialBubbles(); });
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)'; ctx.lineWidth = 4; ctx.lineCap = 'round';
+            chalkLines.forEach(line => { ctx.beginPath(); ctx.moveTo(line.x1, line.y1); ctx.lineTo(line.x2, line.y2); ctx.stroke(); });
+            
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+            chalkDust.forEach(dust => {
+                if(!dust.isSettled) {
+                    dust.x += dust.vx; dust.y += dust.vy; dust.vy += 0.1;
+                    if(dust.y >= height - 5) { dust.y = height - 5 - (Math.random() * 5); dust.vx = 0; dust.vy = 0; dust.isSettled = true; }
+                }
+                ctx.beginPath(); ctx.arc(dust.x, dust.y, 1.5, 0, Math.PI * 2); ctx.fill();
+            });
+
+            ctx.strokeStyle = 'rgba(59, 130, 246, 0.6)'; ctx.fillStyle = 'rgba(16, 185, 129, 0.1)'; ctx.lineWidth = 2;
+            for(let i=0; i<bubbles.length; i++) {
+                let b = bubbles[i]; b.x += b.vx; b.y += b.vy;
+                if(b.x - b.r < 0 || b.x + b.r > width) b.vx *= -1;
+                if(b.y - b.r < 0 || b.y + b.r > height) b.vy *= -1;
+                for(let j=i+1; j<bubbles.length; j++) {
+                    let b2 = bubbles[j]; let dx = b2.x - b.x; let dy = b2.y - b.y; let dist = Math.sqrt(dx*dx + dy*dy);
+                    if(dist < b.r + b2.r) { b.vx *= -1; b.vy *= -1; b2.vx *= -1; b2.vy *= -1; b.x += b.vx; b.y += b.vy; }
+                }
+                ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
 </body>
 </html>
