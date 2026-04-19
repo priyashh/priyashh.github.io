@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="custom-cursor" id="customCursor"></div>
 
     <nav class="navbar">
         <a href="index.html" class="logo">Priyash Vasava</a>
@@ -106,6 +107,34 @@
             track.style.transform = `translateX(-${currentIndex * (slideWidth + 30)}px)`;
         }
         setInterval(moveToNextSlide, 4000);
+        // Premium Custom Cursor Physics
+        const cursorEl = document.getElementById('customCursor');
+        let mouseX = 0, mouseY = 0;
+        let cursorX = 0, cursorY = 0;
+
+        // 1. Track the physical mouse
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        // 2. The Lerp (Linear Interpolation) Loop for smooth delay
+        function animateCursor() {
+            let easing = 0.15; // Lower number = heavier lag, Higher number = faster
+            cursorX += (mouseX - cursorX) * easing;
+            cursorY += (mouseY - cursorY) * easing;
+            
+            cursorEl.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%)`;
+            requestAnimationFrame(animateCursor);
+        }
+        animateCursor();
+
+        // 3. Hover Expansion Logic
+        const interactables = document.querySelectorAll('a, .glass-card');
+        interactables.forEach(el => {
+            el.addEventListener('mouseenter', () => cursorEl.classList.add('hover-expand'));
+            el.addEventListener('mouseleave', () => cursorEl.classList.remove('hover-expand'));
+        });
     </script>
 </body>
 </html>
