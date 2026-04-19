@@ -32,7 +32,7 @@
 
     <section class="slider-container animate" id="projects" style="animation-delay: 0.2s;">
         <span class="section-label">Featured Works</span>
-        <div class="slider-track" id="sliderTrack">
+        <div class="slider-track">
             
             <a href="projects/olist/index.html" class="slide glass-card">
                 <img src="assets/Olist.png" alt="Olist Dashboard" class="card-img">
@@ -43,7 +43,25 @@
                     <span>Power BI</span>
                 </div>
             </a>
+            <a href="projects/google-stock/index.html" class="slide glass-card">
+                <img src="assets/google.png" alt="Google Stock Dashboard" class="card-img">
+                <h2>Google Stock Analysis</h2>
+                <p>A deep-dive exploratory analysis of GOOGL historical stock data. Identifying long-term trends, volatility cycles, and moving average patterns.</p>
+                <div class="slide-tags">
+                    <span>Excel</span>
+                    <span>Time Series</span>
+                </div>
+            </a>
 
+            <a href="projects/olist/index.html" class="slide glass-card">
+                <img src="assets/Olist.png" alt="Olist Dashboard" class="card-img">
+                <h2>Olist E-Commerce</h2>
+                <p>A full end-to-end analysis of 100,000+ orders from Olist. Uncovering revenue drivers, delivery performance, and geographic distribution.</p>
+                <div class="slide-tags">
+                    <span>SQL</span>
+                    <span>Power BI</span>
+                </div>
+            </a>
             <a href="projects/google-stock/index.html" class="slide glass-card">
                 <img src="assets/google.png" alt="Google Stock Dashboard" class="card-img">
                 <h2>Google Stock Analysis</h2>
@@ -93,21 +111,7 @@
         </div>
     </section>
 
-    <script>
-        const track = document.getElementById('sliderTrack');
-        const slides = Array.from(track.children);
-        let currentIndex = 0;
-
-        function moveToNextSlide() {
-            currentIndex++;
-            if (currentIndex >= slides.length) {
-                currentIndex = 0;
-            }
-            const slideWidth = slides[0].getBoundingClientRect().width;
-            track.style.transform = `translateX(-${currentIndex * (slideWidth + 30)}px)`;
-        }
-        setInterval(moveToNextSlide, 4000);
-        // Premium Custom Cursor Physics
+           // Premium Custom Cursor Physics
         const cursorEl = document.getElementById('customCursor');
         let mouseX = 0, mouseY = 0;
         let cursorX = 0, cursorY = 0;
