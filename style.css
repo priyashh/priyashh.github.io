@@ -1,192 +1,183 @@
-/* High-End Editorial Minimalist Theme */
-/* Imports Bebas Neue for the logo and Inter sans-serif for everything else */
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-    --bg-color: #ffffff;      /* Pure white paper */
-    --card-bg: #f9f9f9;       /* Light warm gray for the slider */
-    --text-main: #0a0a0a;     /* Deep black */
-    --text-muted: #737373;    /* Soft gray */
-    --border-color: #e5e5e5;  /* Clean separator lines */
-    
-    /* New fonts for the editorial look */
-    --font-logo: 'Bebas Neue', display;  /* Left-side unique font */
-    --font-main: 'Inter', sans-serif;   /* For everything else */
+    --bg-dark: #0a0b10;
+    --text-main: #ffffff;
+    --text-muted: #9ca3af;
+    --accent-blue: #3b82f6;
+    --accent-green: #10b981;
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-    background-color: var(--bg-color);
+    background-color: var(--bg-dark);
+    /* Creates the subtle blue/green glowing orbs in the background */
+    background-image: 
+        radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.12), transparent 25%),
+        radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.12), transparent 25%);
+    background-attachment: fixed;
     color: var(--text-main);
-    font-family: var(--font-main);
-    padding: 20px;
+    font-family: 'Inter', sans-serif;
     line-height: 1.6;
-    overflow-x: hidden; /* For smooth animations */
+    overflow-x: hidden;
 }
 
-a { text-decoration: none; color: inherit; }
+a { text-decoration: none; color: inherit; transition: 0.3s; }
 
-/* The Top Navbar with Two Different Fonts */
-.navbar {
-    max-width: 1000px;
-    margin: 0 auto 20px auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 30px; /* Reduced vertical padding */
-    background: var(--bg-color);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
+/* Frosted Glass Class (Used on all cards) */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 40px;
+    transition: transform 0.3s ease, border-color 0.3s ease;
 }
 
-/* LEFT SIDE: Large, unique display font */
-.logo {
-    font-family: var(--font-logo);
-    font-size: 3rem; /* Increased size significantly */
-    font-weight: 400;
-    color: var(--text-main);
-    letter-spacing: -0.01em;
+.glass-card:hover {
+    border-color: rgba(255, 255, 255, 0.2);
+    transform: translateY(-4px);
 }
 
-/* RIGHT SIDE: Small, muted sans-serif font */
-.nav-links a {
-    margin-left: 25px;
-    color: var(--text-muted);
-    transition: color 0.3s ease;
-    font-size: 0.8rem; /* Smaller than previous version */
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+/* Typography Gradients */
+.text-gradient {
+    background: linear-gradient(90deg, var(--accent-blue), var(--accent-green));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
 }
 
-.nav-links a:hover { color: var(--text-main); }
-
-/* Main layout container (Wider for the large typography) */
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-/* Universal Fade-In Animation (from inspiration image) */
+/* Animations */
 @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
 }
+.animate { animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
-.animate {
-    animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+/* Navbar */
+.navbar {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px 20px;
+    position: relative;
+    z-index: 100;
 }
 
-/* THE HERO SECTION (Massive Headline) */
+.logo {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}
+
+.nav-links { display: flex; gap: 15px; }
+
+/* Pill-shaped navigation buttons from the image */
+.nav-links a {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.05);
+    padding: 8px 18px;
+    border-radius: 50px;
+    border: 1px solid transparent;
+}
+
+.nav-links a:hover {
+    color: var(--text-main);
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* Hero Section */
 .hero {
-    padding: 8vw 5vw; /* Spacious vertical padding */
-    margin-bottom: 20px;
+    max-width: 1200px;
+    margin: 4vw auto;
+    padding: 0 20px;
 }
 
 .hero h1 {
-    font-size: clamp(3rem, 7vw, 6rem); /* Huge, responsive size */
+    font-size: clamp(3rem, 6vw, 5.5rem);
     font-weight: 700;
-    letter-spacing: -0.04em;
-    line-height: 1.05;
-    margin-bottom: 20px;
-    color: var(--text-main);
-    max-width: 1200px;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    margin-bottom: 25px;
+    max-width: 900px;
 }
 
 .hero p {
     color: var(--text-muted);
-    font-size: 1.2rem;
+    font-size: clamp(1.1rem, 2vw, 1.3rem);
     max-width: 600px;
 }
 
-/* THE SLIDER (Adapted for Editorial Look) */
-.slider {
-    margin-bottom: 20px;
+/* Project Slider */
+.slider-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 20px;
 }
 
 .slider-track {
     display: flex;
-    gap: 20px;
-    overflow-x: auto; /* Allows horizontal scrolling */
-    padding-bottom: 20px;
+    gap: 30px;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
-.slider-track::-webkit-scrollbar { display: none; } /* Hides scrollbar for clean look */
-
-a.bento-card {
-    background-color: var(--card-bg);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 40px;
-    min-width: 45%; /* Shows a peek of the next card */
+.slide {
+    min-width: 48%; /* Shows two cards side-by-side on desktop */
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    justify-content: center;
 }
 
-a.bento-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-    border-color: var(--text-main);
+.slide h2 { font-size: clamp(1.8rem, 3vw, 2.2rem); font-weight: 600; margin-bottom: 15px; letter-spacing: -0.02em;}
+.slide p { color: var(--text-muted); font-size: 1.05rem; margin-bottom: 25px; }
+
+.slide-tags { display: flex; gap: 10px; flex-wrap: wrap; }
+.slide-tags span { 
+    font-size: 0.75rem; 
+    color: var(--text-muted); 
+    background: rgba(255, 255, 255, 0.05); 
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 6px 14px; 
+    border-radius: 50px; 
+    font-weight: 500; 
 }
 
-.card-top {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 30px;
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    font-weight: 500;
+/* Bio & Connect */
+.content-section {
+    max-width: 1200px;
+    margin: 60px auto;
+    padding: 0 20px;
 }
 
-h2 {
-    font-size: clamp(1.5rem, 3vw, 2rem);
-    font-weight: 600;
-    letter-spacing: -0.02em;
-    margin-bottom: 10px;
-}
+.section-label { font-size: 0.85rem; text-transform: uppercase; color: var(--accent-blue); letter-spacing: 0.05em; font-weight: 600; margin-bottom: 20px; display: block; }
 
-/* THE BIO & CONNECT SECTIONS (Adapted) */
-.bio-card, .connect-card {
-    background-color: var(--bg-color);
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    padding: 60px;
-    margin-bottom: 20px;
-}
-
-p { color: var(--text-muted); font-size: 1.1rem; }
-
-.meta { font-size: 0.8rem; color: var(--text-muted); font-weight: 500; }
-
-blockquote {
-    font-size: clamp(1.5rem, 3vw, 2.5rem);
-    font-weight: 500;
-    letter-spacing: -0.02em;
-    margin-bottom: 40px;
-    line-height: 1.3;
-}
-
-/* The giant email link from the connect section */
 .email-link {
-    font-size: clamp(2rem, 5vw, 4.5rem);
+    font-size: clamp(2rem, 5vw, 4rem);
     font-weight: 700;
-    letter-spacing: -0.04em;
-    border-bottom: 4px solid var(--text-main);
+    letter-spacing: -0.03em;
+    color: var(--text-main);
     display: inline-block;
+    margin-bottom: 20px;
+    transition: 0.3s;
 }
 
-.email-link:hover {
-    color: var(--text-muted);
-    border-color: var(--text-muted);
-}
+.email-link:hover { color: var(--accent-blue); }
+.social-links { display: flex; gap: 20px; margin-top: 30px; }
+.social-links a { color: var(--text-muted); font-weight: 500; border-bottom: 1px solid transparent; }
+.social-links a:hover { color: var(--text-main); border-color: var(--text-main); }
 
-/* Mobile Adjustments */
 @media (max-width: 768px) {
-    .navbar { flex-direction: column; gap: 15px; text-align: center; }
-    .nav-links a { margin: 0 10px; }
-    a.bento-card { min-width: 90%; }
-    .bio-card, .connect-card { padding: 30px; }
+    .navbar { flex-direction: column; gap: 20px; }
+    .nav-links { flex-wrap: wrap; justify-content: center; }
+    .slide { min-width: 100%; }
 }
