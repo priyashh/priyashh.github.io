@@ -5,6 +5,109 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Story of my life | Priyash Vasava</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Specific Layout for the Parallax Scroll Effect */
+        body {
+            overflow-x: hidden; /* Stops the screen from scrolling horizontally */
+        }
+
+        .story-wrapper {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 50px;
+            min-height: 200vh; /* Gives you plenty of room to scroll down */
+        }
+
+        /* 1. The Sticky Image (Stays in the center of the screen) */
+        .portrait-container {
+            position: sticky;
+            top: 25vh; /* Locks it 25% down the screen */
+            display: flex;
+            justify-content: center;
+            z-index: 10; /* Z-INDEX 10: Keeps the image IN FRONT of the text */
+            pointer-events: none; /* Stops the image from blocking text selection */
+        }
+
+        .portrait-container img {
+            width: 100%;
+            max-width: 400px; /* Limits image size so text can stick out behind it */
+            border-radius: 16px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+            border: 1px solid var(--glass-border);
+        }
+
+        /* 2. The Text Layer (Scrolls up naturally) */
+        .text-layer {
+            position: relative;
+            z-index: 1; /* Z-INDEX 1: Puts the text BEHIND the image */
+            margin-top: -15vh; /* Pulls the text up so it overlaps the image */
+            display: flex;
+            flex-direction: column;
+            gap: 50vh; /* Huge gaps so each paragraph passes behind the image individually */
+            padding-bottom: 30vh;
+        }
+
+        /* 3. The Text Blocks */
+        .story-text {
+            width: 85%;
+            max-width: 750px;
+            transition: transform 0.1s ease-out; /* Smooths out the JS animation */
+        }
+
+        .story-text p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            line-height: 1.8;
+        }
+        
+        .story-text strong {
+            color: var(--text-main);
+        }
+
+        /* Alternate positioning so they stick out of opposite sides */
+        .float-left {
+            align-self: flex-start;
+            padding-right: 15%; /* Ensures it sticks out the left side of the image */
+        }
+
+        .float-right {
+            align-self: flex-end;
+            text-align: right;
+            padding-left: 15%; /* Ensures it sticks out the right side of the image */
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 20vh;
+            position: relative;
+            z-index: 11; /* Keeps title in front of everything */
+        }
+        
+        .back-link {
+            display: block;
+            text-align: center;
+            margin: 50px auto 100px auto;
+            position: relative;
+            z-index: 11;
+            font-weight: 500;
+            color: var(--text-muted);
+            text-decoration: underline;
+            transition: 0.3s;
+        }
+        
+        .back-link:hover { 
+            color: var(--accent-blue); 
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 900px) {
+            .portrait-container img { max-width: 300px; }
+            .story-text { width: 95%; text-align: center; }
+            .float-left { align-self: center; padding-right: 0; }
+            .float-right { align-self: center; padding-left: 0; text-align: center; }
+        }
+    </style>
 </head>
 <body>
 
@@ -18,34 +121,63 @@
         </div>
     </nav>
 
-    <main class="story-wrapper">
+    <div class="story-wrapper">
         
-        <h1 class="story-title">Story of<br>my life.</h1>
-
-        <div class="story-image-mask">
-            <img src="assets/user-portrait.jpg" alt="Portrait of Priyash Vasava">
+        <div class="page-title animate">
+            <h1 style="font-size: clamp(3rem, 6vw, 6rem); font-weight: 700; letter-spacing: -0.03em;">Story of <br><span class="text-gradient">my life.</span></h1>
         </div>
 
-        <div class="story-content">
-            <p class="fade-text">
-                I am Priyash Vasava, an Analyst II based in Vadodara, Gujarat. With over two and a half years of experience, my focus is on removing the clutter of raw information to expose the core insights that drive industries forward.
-            </p>
-            
-            <p class="fade-text">
-                My technical foundation was built at ITI Ankleshwar and expanded through a formative internship at the Indian Space Research Organisation (ISRO). I am currently further broadening my analytical perspective by pursuing a BA in Economics through Dr. Babasaheb Ambedkar Open University. This combination of strict engineering principles and economic theory allows me to build dashboards that are not just technically sound, but strategically valuable.
-            </p>
-            
-            <p class="fade-text">
-                When I am not mastering SQL or designing Power BI interactions at Etech Global Services, my analytical mindset spills over into my personal pursuits. I am deeply engaged in 3D modeling and animation using Blender, currently developing a YouTube channel focused on data-driven storytelling and oddly satisfying visual loops. Off-screen, I am a huge fan of complex mystery and thriller narratives, and I have a growing interest in botany and local plant nurseries.
-            </p>
+        <div class="portrait-container animate" style="animation-delay: 0.2s;">
+            <img src="assets/user-portrait.jpg" alt="Portrait of Priyash Vasava"> 
+        </div>
 
-            <div class="fade-text" style="margin-top: 40px; text-align: center;">
-                <a href="index.html#who-am-i" class="back-link">← Return to home</a>
+        <div class="text-layer">
+            
+            <div class="story-text float-left">
+                <p><strong>Hey what's up ! This is Priyash, an Analyst II based in Vadodara, Gujarat.</strong> With over two and a half years of experience, my focus is on removing the clutter of raw information to expose the core insights that drive industries forward.</p>
             </div>
+
+            <div class="story-text float-right">
+                <p><strong>My technical foundation expanded through a formative internship at the Indian Space Research Organisation (ISRO).</strong> About to complete my degree in Economics. I am vibe coder (that's how I made this site) and my curiosity has no limits (or that's what I like to think). From curiosity of knowing how the earth spins to understanding how the business runs (or anything at all), I can comfortably work with SQL, PowerBi, Excel (and other basic MS softwares), Looker Studio, Tableau. And not to forget Vibe Coding in this era of Artificial intelligence.</p>
+            </div>
+
+            <div class="story-text float-left">
+                <p><strong>When I am not mastering SQL or designing Power BI interactions,</strong> I'm probably thinking of different ways to make this site better and that's me !!</p>
+            </div>
+
         </div>
+        
+        <a href="index.html#who-am-i" class="back-link">← Return to home</a>
+    </div>
 
-    </main>
+    <script>
+        window.addEventListener('scroll', () => {
+            const leftBlocks = document.querySelectorAll('.float-left');
+            const rightBlocks = document.querySelectorAll('.float-right');
+            const windowHeight = window.innerHeight;
 
-    <script src="fade-on-scroll.js"></script>
+            // Move left blocks to the left based on scroll position
+            leftBlocks.forEach((block) => {
+                const rect = block.getBoundingClientRect();
+                let scrollDistance = windowHeight - rect.top; // Triggers when the block enters the screen
+                
+                if (scrollDistance > 0) {
+                    // Adjust 0.25 to make it float away faster or slower
+                    block.style.transform = `translateX(-${scrollDistance * 0.25}px)`; 
+                }
+            });
+
+            // Move right blocks to the right based on scroll position
+            rightBlocks.forEach((block) => {
+                const rect = block.getBoundingClientRect();
+                let scrollDistance = windowHeight - rect.top;
+                
+                if (scrollDistance > 0) {
+                    block.style.transform = `translateX(${scrollDistance * 0.25}px)`;
+                }
+            });
+        });
+    </script>
+
 </body>
 </html>
