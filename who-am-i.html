@@ -6,106 +6,91 @@
     <title>Story of my life | Priyash Vasava</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Specific Layout for the Parallax Scroll Effect */
-        body {
-            overflow-x: hidden; /* Stops the screen from scrolling horizontally */
-        }
-
+        /* Two-Column Sticky Layout */
         .story-wrapper {
-            position: relative;
             max-width: 1200px;
             margin: 0 auto;
-            padding-top: 50px;
-            min-height: 200vh; /* Gives you plenty of room to scroll down */
-        }
-
-        /* 1. The Sticky Image (Stays in the center of the screen) */
-        .portrait-container {
-            position: sticky;
-            top: 25vh; /* Locks it 25% down the screen */
-            display: flex;
-            justify-content: center;
-            z-index: 10; /* Z-INDEX 10: Keeps the image IN FRONT of the text */
-            pointer-events: none; /* Stops the image from blocking text selection */
-        }
-
-        .portrait-container img {
-            width: 100%;
-            max-width: 400px; /* Limits image size so text can stick out behind it */
-            border-radius: 16px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.6);
-            border: 1px solid var(--glass-border);
-        }
-
-        /* 2. The Text Layer (Scrolls up naturally) */
-        .text-layer {
-            position: relative;
-            z-index: 1; /* Z-INDEX 1: Puts the text BEHIND the image */
-            margin-top: -15vh; /* Pulls the text up so it overlaps the image */
-            display: flex;
-            flex-direction: column;
-            gap: 50vh; /* Huge gaps so each paragraph passes behind the image individually */
-            padding-bottom: 30vh;
-        }
-
-        /* 3. The Text Blocks */
-        .story-text {
-            width: 85%;
-            max-width: 750px;
-            transition: transform 0.1s ease-out; /* Smooths out the JS animation */
-        }
-
-        .story-text p {
-            color: var(--text-muted);
-            font-size: 1.1rem;
-            line-height: 1.8;
-        }
-        
-        .story-text strong {
-            color: var(--text-main);
-        }
-
-        /* Alternate positioning so they stick out of opposite sides */
-        .float-left {
-            align-self: flex-start;
-            padding-right: 15%; /* Ensures it sticks out the left side of the image */
-        }
-
-        .float-right {
-            align-self: flex-end;
-            text-align: right;
-            padding-left: 15%; /* Ensures it sticks out the right side of the image */
+            padding: 40px 20px 100px 20px;
         }
 
         .page-title {
-            text-align: center;
-            margin-bottom: 20vh;
+            margin-bottom: 50px; /* Greatly reduced distance */
+        }
+
+        .story-grid {
+            display: flex;
+            gap: 60px;
             position: relative;
-            z-index: 11; /* Keeps title in front of everything */
+        }
+
+        /* LEFT SIDE: The Image */
+        .image-column {
+            flex: 1;
+            /* Sticky keeps it on screen while the right side scrolls */
+            position: sticky;
+            top: 120px; 
+            height: fit-content;
+        }
+
+        #scrollImage {
+            width: 100%;
+            max-width: 450px;
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border: 1px solid var(--glass-border);
+            /* Sets the shrink anchor to the top-left */
+            transform-origin: top left; 
+            transition: transform 0.1s ease-out, opacity 0.1s ease-out;
+        }
+
+        /* RIGHT SIDE: The Text */
+        .text-column {
+            flex: 1.2;
+            padding-bottom: 30vh; /* Allows scrolling past the end */
+        }
+
+        /* Typography: Big and Modern lead-in */
+        .lead-text {
+            font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+            font-weight: 600;
+            color: var(--text-main);
+            line-height: 1.4;
+            letter-spacing: -0.02em;
+            margin-bottom: 40px;
+        }
+
+        /* Typography: Standard readable body text */
+        .normal-text {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin-bottom: 30px;
         }
         
+        .normal-text strong {
+            color: var(--text-main);
+        }
+
         .back-link {
-            display: block;
-            text-align: center;
-            margin: 50px auto 100px auto;
-            position: relative;
-            z-index: 11;
+            display: inline-block;
+            margin-top: 40px;
             font-weight: 500;
             color: var(--text-muted);
-            text-decoration: underline;
+            border-bottom: 2px solid var(--text-main);
+            padding-bottom: 2px;
             transition: 0.3s;
         }
         
         .back-link:hover { 
             color: var(--accent-blue); 
+            border-color: var(--accent-blue);
         }
 
         /* Mobile Adjustments */
         @media (max-width: 900px) {
-            .portrait-container img { max-width: 300px; }
-            .story-text { width: 95%; text-align: center; }
-            .float-left { align-self: center; padding-right: 0; }
-            .float-right { align-self: center; padding-left: 0; text-align: center; }
+            .story-grid { flex-direction: column; gap: 40px; }
+            .image-column { position: relative; top: 0; display: flex; justify-content: center; }
+            #scrollImage { max-width: 350px; transform: none !important; opacity: 1 !important; }
         }
     </style>
 </head>
@@ -124,58 +109,61 @@
     <div class="story-wrapper">
         
         <div class="page-title animate">
-            <h1 style="font-size: clamp(3rem, 6vw, 6rem); font-weight: 700; letter-spacing: -0.03em;">Story of <br><span class="text-gradient">my life.</span></h1>
+            <h1 style="font-size: clamp(3rem, 6vw, 5rem); font-weight: 700; letter-spacing: -0.03em;">Story of <span class="text-gradient">my life.</span></h1>
         </div>
 
-        <div class="portrait-container animate" style="animation-delay: 0.2s;">
-            <img src="assets/user-portrait.jpg" alt="Portrait of Priyash Vasava"> 
-        </div>
-
-        <div class="text-layer">
+        <div class="story-grid">
             
-            <div class="story-text float-left">
-                <p><strong>Hey what's up ! This is Priyash, an Analyst II based in Vadodara, Gujarat.</strong> With over two and a half years of experience, my focus is on removing the clutter of raw information to expose the core insights that drive industries forward.</p>
+            <div class="image-column animate" style="animation-delay: 0.2s;">
+                <img src="assets/user-portrait.jpg" alt="Portrait of Priyash Vasava" id="scrollImage"> 
             </div>
 
-            <div class="story-text float-right">
-                <p><strong>My technical foundation expanded through a formative internship at the Indian Space Research Organisation (ISRO).</strong> About to complete my degree in Economics. I am vibe coder (that's how I made this site) and my curiosity has no limits (or that's what I like to think). From curiosity of knowing how the earth spins to understanding how the business runs (or anything at all), I can comfortably work with SQL, PowerBi, Excel (and other basic MS softwares), Looker Studio, Tableau. And not to forget Vibe Coding in this era of Artificial intelligence.</p>
-            </div>
+            <div class="text-column animate" style="animation-delay: 0.3s;">
+                
+                <p class="lead-text">
+                    Hey what's up ! This is Priyash, an Analyst II based in Vadodara, Gujarat. With over two and a half years of experience, my focus is on removing the clutter of raw information to expose the core insights that drive industries forward.
+                </p>
 
-            <div class="story-text float-left">
-                <p><strong>When I am not mastering SQL or designing Power BI interactions,</strong> I'm probably thinking of different ways to make this site better and that's me !!</p>
+                <p class="normal-text">
+                    <strong>My technical foundation expanded through a formative internship at the Indian Space Research Organisation (ISRO).</strong> About to complete my degree in Economics. I am vibe coder (that's how I made this site) and my curiosity has no limits (or that's what I like to think).
+                </p>
+
+                <p class="normal-text">
+                    From curiosity of knowing how the earth spins to understanding how the business runs (or anything at all), I can comfortably work with SQL, PowerBi, Excel, Looker Studio, and Tableau. And not to forget Vibe Coding in this era of Artificial intelligence.
+                </p>
+
+                <p class="normal-text">
+                    When I am not mastering SQL or designing Power BI interactions, I'm probably thinking of different ways to make this site better and that's me !!
+                </p>
+
+                <a href="index.html#who-am-i" class="back-link">← Return to home</a>
             </div>
 
         </div>
-        
-        <a href="index.html#who-am-i" class="back-link">← Return to home</a>
     </div>
 
     <script>
         window.addEventListener('scroll', () => {
-            const leftBlocks = document.querySelectorAll('.float-left');
-            const rightBlocks = document.querySelectorAll('.float-right');
-            const windowHeight = window.innerHeight;
-
-            // Move left blocks to the left based on scroll position
-            leftBlocks.forEach((block) => {
-                const rect = block.getBoundingClientRect();
-                let scrollDistance = windowHeight - rect.top; // Triggers when the block enters the screen
+            const image = document.getElementById('scrollImage');
+            const wrapper = document.querySelector('.story-grid');
+            
+            // Check if we are on a desktop (disable effect on mobile)
+            if (window.innerWidth > 900) {
+                const rect = wrapper.getBoundingClientRect();
                 
-                if (scrollDistance > 0) {
-                    // Adjust 0.25 to make it float away faster or slower
-                    block.style.transform = `translateX(-${scrollDistance * 0.25}px)`; 
-                }
-            });
+                // Calculate how far we've scrolled down the grid
+                let scrollProgress = -rect.top + 100; // Offset slightly so it doesn't start instantly
+                if (scrollProgress < 0) scrollProgress = 0;
 
-            // Move right blocks to the right based on scroll position
-            rightBlocks.forEach((block) => {
-                const rect = block.getBoundingClientRect();
-                let scrollDistance = windowHeight - rect.top;
+                // Shrink the image (minimum size 40%)
+                let scale = Math.max(0.4, 1 - (scrollProgress * 0.001));
                 
-                if (scrollDistance > 0) {
-                    block.style.transform = `translateX(${scrollDistance * 0.25}px)`;
-                }
-            });
+                // Fade out the image (fades to 0 completely)
+                let opacity = Math.max(0, 1 - (scrollProgress * 0.0015));
+
+                image.style.transform = `scale(${scale})`;
+                image.style.opacity = opacity;
+            }
         });
     </script>
 
