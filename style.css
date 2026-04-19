@@ -12,6 +12,8 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+html { scroll-behavior: smooth; }
+
 body {
     background-color: var(--bg-dark);
     /* Creates the subtle blue/green glowing orbs in the background */
