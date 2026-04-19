@@ -12,7 +12,11 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+/* Perfect smooth scrolling with a buffer for the navbar */
+html { 
+    scroll-behavior: smooth; 
+    scroll-padding-top: 120px; 
+}
 
 body {
     background-color: var(--bg-dark);
@@ -29,7 +33,7 @@ body {
 
 a { text-decoration: none; color: inherit; transition: 0.3s; }
 
-/* Frosted Glass Class (Used on all cards) */
+/* Frosted Glass Class */
 .glass-card {
     background: var(--glass-bg);
     backdrop-filter: blur(16px);
@@ -68,7 +72,8 @@ a { text-decoration: none; color: inherit; transition: 0.3s; }
     justify-content: space-between;
     align-items: center;
     padding: 30px 20px;
-    position: relative;
+    position: sticky; /* Makes the navbar stay at the top */
+    top: 0;
     z-index: 100;
 }
 
@@ -89,12 +94,18 @@ a { text-decoration: none; color: inherit; transition: 0.3s; }
     padding: 8px 18px;
     border-radius: 50px;
     border: 1px solid transparent;
+    transition: all 0.2s ease;
 }
 
 .nav-links a:hover {
     color: var(--text-main);
     background: rgba(255, 255, 255, 0.1);
     border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* The satisfying squish animation when clicking */
+.nav-links a:active {
+    transform: scale(0.92);
 }
 
 /* Hero Section (Side-by-Side Layout) */
@@ -146,7 +157,6 @@ a { text-decoration: none; color: inherit; transition: 0.3s; }
 }
 
 .hero-image-wrapper img:hover {
-    /* Flattens out when you hover over it */
     transform: perspective(1000px) rotateY(0deg) rotateX(0deg) scale(1);
 }
 
@@ -162,8 +172,8 @@ a { text-decoration: none; color: inherit; transition: 0.3s; }
     display: flex;
     gap: 30px;
     width: max-content;
-    /* The animation: scrolls left for 25s, seamlessly repeats */
-    animation: scrollLoop 25s linear infinite;
+    /* Faster animation: 15s */
+    animation: scrollLoop 15s linear infinite;
 }
 
 /* Pauses the entire slider when the user hovers to click */
@@ -172,24 +182,13 @@ a { text-decoration: none; color: inherit; transition: 0.3s; }
 }
 
 .slide {
-    width: 450px; /* Fixed width prevents shrinking during animation */
+    width: 450px;
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
 }
 
-/* On mobile, shrink the cards to fit the screen */
-@media (max-width: 768px) {
-    .slide { width: 85vw; }
-}
-
-@keyframes scrollLoop {
-    0% { transform: translateX(0); }
-    /* Shifts exactly half the track + half the gap to perfectly reset */
-    100% { transform: translateX(calc(-50% - 15px)); }
-}
-
-/* New Image styling inside cards */
+/* Image styling inside cards */
 .card-img {
     width: 100%;
     height: 220px;
@@ -215,6 +214,11 @@ a { text-decoration: none; color: inherit; transition: 0.3s; }
     font-weight: 500; 
 }
 
+@keyframes scrollLoop {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(calc(-50% - 15px)); }
+}
+
 /* Bio & Connect Sections */
 .content-section {
     max-width: 1200px;
@@ -222,18 +226,16 @@ a { text-decoration: none; color: inherit; transition: 0.3s; }
     padding: 0 20px;
 }
 
-/* Fixed Aesthetic Section Headers */
 .section-label { 
     font-size: 0.8rem; 
     text-transform: uppercase; 
     color: var(--accent-green); 
-    letter-spacing: 0.2em; /* Wide, high-end spacing */
+    letter-spacing: 0.2em; 
     font-weight: 600; 
     margin-bottom: 30px; 
     display: block; 
 }
 
-/* Restored Quote Style */
 blockquote {
     font-size: clamp(1.4rem, 2.5vw, 2.2rem);
     font-weight: 500;
@@ -260,7 +262,6 @@ blockquote {
 .social-links a { color: var(--text-muted); font-weight: 500; border-bottom: 1px solid transparent; padding-bottom: 2px;}
 .social-links a:hover { color: var(--text-main); border-color: var(--text-main); }
 
-
 /* Premium Custom Cursor Styling */
 @media (pointer: fine) {
     /* Hides the default computer mouse */
@@ -269,13 +270,13 @@ blockquote {
 }
 
 .custom-cursor {
-    display: none; /* Hidden on mobile phones */
+    display: none;
     position: fixed;
     top: 0; left: 0;
     width: 15px; height: 15px;
     background-color: var(--accent-green);
     border-radius: 50%;
-    pointer-events: none; /* Stops the cursor from blocking clicks */
+    pointer-events: none;
     z-index: 9999;
     box-shadow: 0 0 15px var(--accent-green);
     transition: width 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
@@ -284,14 +285,14 @@ blockquote {
                 mix-blend-mode 0.3s ease;
 }
 
-/* The Spotlight Inversion State */
 .custom-cursor.hover-expand {
     width: 80px; 
     height: 80px;
     background-color: #ffffff;
-    mix-blend-mode: difference; /* This creates the color inversion effect */
+    mix-blend-mode: difference;
     box-shadow: none;
 }
+
 /* Mobile Adjustments */
 @media (max-width: 900px) {
     .navbar { flex-direction: column; gap: 20px; }
@@ -300,4 +301,5 @@ blockquote {
     .hero p { margin: 0 auto; }
     .hero-image-wrapper img { transform: none; margin-top: 40px; }
     .hero-image-wrapper img:hover { transform: none; }
+    .slide { width: 85vw; }
 }
