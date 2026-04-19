@@ -3,139 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio | Priyash Vasava</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Olist E-Commerce Analysis | Priyash Vasava</title>
+    <link rel="stylesheet" href="../../style.css">
+    <style>
+        /* Project-specific layout adjustments */
+        .article-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 60px; margin-top: 40px; }
+        .article-block { margin-bottom: 50px; }
+        .article-block h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 600; margin-bottom: 20px; letter-spacing: -0.02em; }
+        .article-block p, .article-block ul { color: var(--text-muted); font-size: 1.1rem; line-height: 1.8; margin-bottom: 15px; }
+        .article-block ul { padding-left: 20px; }
+        .article-block li { margin-bottom: 10px; }
+        .article-block li strong { color: var(--text-main); }
+        .meta-tags { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 30px; }
+        .meta-tag { background: var(--accent); color: var(--text-main); padding: 8px 16px; border-radius: 50px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+        .sidebar-box { border: 1px solid var(--border-color); padding: 30px; border-radius: 12px; margin-bottom: 20px; background: #fafafa; }
+        .sidebar-box h3 { font-size: 0.85rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 15px; letter-spacing: 0.05em; }
+        .sidebar-box p { font-size: 0.95rem; color: var(--text-muted); margin-bottom: 15px; }
+        .back-link { display: inline-block; margin-top: 20px; font-weight: 500; border-bottom: 2px solid var(--text-main); padding-bottom: 2px; }
+        .back-link:hover { color: var(--accent); border-color: var(--accent); }
+        .dashboard-img { width: 100%; border-radius: 12px; border: 1px solid var(--border-color); margin-top: 20px; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        @media (max-width: 900px) { .article-grid { grid-template-columns: 1fr; gap: 40px; } }
+    </style>
 </head>
 <body>
-    
-    <div class="custom-cursor" id="customCursor"></div>
 
     <nav class="navbar">
-        <a href="index.html" class="logo">Priyash Vasava</a>
+        <a href="../../index.html" class="logo"><strong>Priyash Vasava</strong></a>
         <div class="nav-links">
-            <a href="#projects">Projects</a>
-            <a href="blog.html">Blog</a>
-            <a href="#who-am-i">Who am I?</a>
-            <a href="#connect">Connect</a>
+            <a href="../../index.html#projects">Projects</a>
+            <a href="../../blog.html">Blog</a>
+            <a href="../../index.html#who-am-i">Who Am I?</a>
+            <a href="../../index.html#connect">Connect</a>
         </div>
     </nav>
 
-    <header class="hero animate">
-        <div class="hero-content">
-            <h1>I design <br><span class="text-gradient">clean analytics</span><br>experiences.</h1>
-            <p>Exploring patterns in data through an industrial lens. Turning raw data into structured, actionable insights.</p>
-        </div>
-        
-        <div class="hero-image-wrapper">
-            <img src="assets/hero-image.png" alt="Analytics Dashboard">
+    <header class="section hero animate">
+        <span class="section-label">Case Study // E-Commerce</span>
+        <h1>Olist customer behavior analysis.</h1>
+        <p style="font-size: clamp(1.2rem, 2vw, 1.5rem); color: var(--text-muted); max-width: 700px;">
+            From 100,000+ raw Brazilian e-commerce orders to a decision-ready Power BI dashboard.
+        </p>
+        <div class="meta-tags">
+            <span class="meta-tag">SQL</span>
+            <span class="meta-tag">Power BI</span>
+            <span class="meta-tag">Excel</span>
         </div>
     </header>
 
-    <section class="content-section" id="projects">
-        <span class="section-label animate" style="animation-delay: 0.2s;">Featured Works</span>
-        
-        <div class="projects-stack">
-            <a href="projects/olist/index.html" class="sticky-card glass-card animate" style="top: 120px; animation-delay: 0.3s;">
-                <div class="card-content">
-                    <img src="assets/Olist.png" alt="Olist Dashboard" class="card-img">
-                    <div class="card-text">
-                        <h2>Olist E-Commerce</h2>
-                        <p>A full end-to-end analysis of 100,000+ orders from Olist. Uncovering revenue drivers, delivery performance, and geographic distribution.</p>
-                        <div class="slide-tags">
-                            <span>SQL</span>
-                            <span>Power BI</span>
-                        </div>
-                    </div>
-                </div>
-            </a>
-
-            <a href="projects/google-stock/index.html" class="sticky-card glass-card animate" style="top: 150px; animation-delay: 0.4s;">
-                <div class="card-content">
-                    <img src="assets/google.png" alt="Google Stock Dashboard" class="card-img">
-                    <div class="card-text">
-                        <h2>Google Stock Analysis</h2>
-                        <p>A deep-dive exploratory analysis of GOOGL historical stock data. Identifying long-term trends, volatility cycles, and moving average patterns.</p>
-                        <div class="slide-tags">
-                            <span>Excel</span>
-                            <span>Time Series</span>
-                        </div>
-                    </div>
-                </div>
-            </a>
-        </div>
-    </section>
-
-    <section class="content-section animate" id="who-am-i">
-        <div class="glass-card">
-            <span class="section-label">Who Am I ?</span>
-            <h2 style="font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 600; margin-bottom: 20px; letter-spacing: -0.02em;">
-                Data chaos meets structured thinking: that's where I thrive as an analyst.
-            </h2>
-            <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.7; max-width: 800px;">
-                Think of each dashboard as an industrial blueprint for decisions: stripped of clutter, rich in context, and built to be understood at a glance. Raw data becomes your strategic edge: patterns exposed, opportunities seized. When I'm not mastering SQL or Power BI, I'm experimenting with new AI features and tools across the internet.
-            </p>
-        </div>
-    </section>
-
-    <section class="content-section animate" id="connect">
-        <div class="glass-card">
-            <span class="section-label">Let's Connect</span>
+    <section class="section animate" style="animation-delay: 0.2s;">
+        <div class="article-grid">
             
-            <blockquote>
-                "In God we trust. All others must bring data." <br>
-                <span style="font-size: 1rem; color: var(--text-muted);">— W. Edwards Deming</span>
-            </blockquote>
-            
-            <div style="margin-top: 40px;">
-                <a href="mailto:Priyashvasava@outlook.com" class="email-link">Say Hello ↗</a>
+            <div class="main-content">
                 
-                <p style="font-size: 1rem; color: var(--text-muted);">
-                    or Email me later at: <strong style="color: var(--text-main);">Priyashvasava@outlook.com</strong>
-                </p>
-                
-                <div class="social-links">
-                    <a href="https://www.linkedin.com/in/priyashvasava" target="_blank">LinkedIn</a>
-                    <a href="https://github.com/priyashh" target="_blank">GitHub</a>
+                <div class="article-block">
+                    <h2>Creating a clear picture of Olist's revenue</h2>
+                    <p>The goal was to move beyond a "big table of transactions" and build a clear picture of which customers, categories, and sellers actually drive revenue and satisfaction.</p>
+                    <p>I combined multiple Olist tables (orders, items, products, customers, sellers, payments, reviews, and geolocation) to create a single view across the customer journey: purchase, payment, shipment, delivery, and review.</p>
+                </div>
+
+                <div class="article-block">
+                    <h2>The business questions</h2>
+                    <ul>
+                        <li>Which product categories generate the most revenue?</li>
+                        <li>How do delivery delays impact review scores and customer satisfaction?</li>
+                        <li>Which states concentrate the highest number of customers?</li>
+                        <li>Which sellers contribute the largest share of overall revenue?</li>
+                    </ul>
+                </div>
+
+                <div class="article-block">
+                    <h2>Key insights revealed</h2>
+                    <ul>
+                        <li><strong>Seller Concentration:</strong> A significantly small group of sellers contributes a disproportionate share of total revenue.</li>
+                        <li><strong>Logistics impact:</strong> Orders with late deliveries show noticeably lower review scores, proving shipping speed is tied directly to brand perception.</li>
+                        <li><strong>Payment Preferences:</strong> Customers strongly prefer credit card installments as their primary payment method.</li>
+                    </ul>
                 </div>
             </div>
+
+            <aside class="sidebar">
+                <div class="sidebar-box">
+                    <h3>Role & Responsibilities</h3>
+                    <p>End-to-end project execution: data cleaning, SQL modeling, exploratory analysis, and Power BI dashboard design. Summarized findings for non-technical stakeholders.</p>
+                </div>
+                
+                <div class="sidebar-box">
+                    <h3>Dataset Details</h3>
+                    <p><strong>Source:</strong> Olist Public Dataset.<br><strong>Size:</strong> 100,000+ orders.<br><strong>Scope:</strong> Orders, customers, sellers & delivery data.</p>
+                </div>
+
+                <a href="../../index.html#projects" class="back-link">← Return to projects</a>
+            </aside>
+
         </div>
     </section>
 
-    <script>
-        const cursorEl = document.getElementById('customCursor');
-        let mouseX = window.innerWidth / 2;
-        let mouseY = window.innerHeight / 2;
-        let cursorX = window.innerWidth / 2;
-        let cursorY = window.innerHeight / 2;
-        let isMoving = false;
-
-        // Tracks the mouse and reveals the cursor once the user moves it
-        document.addEventListener('mousemove', (e) => {
-            if (!isMoving) {
-                cursorEl.style.opacity = '1';
-                isMoving = true;
-            }
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-        });
-
-        // The physics engine for the "heavy" lag
-        function animateCursor() {
-            let easing = 0.15; 
-            cursorX += (mouseX - cursorX) * easing;
-            cursorY += (mouseY - cursorY) * easing;
-            
-            cursorEl.style.transform = `translate(${cursorX}px, ${cursorY}px) translate(-50%, -50%)`;
-            requestAnimationFrame(animateCursor);
-        }
-        animateCursor();
-
-        // Expands the cursor into the inversion spotlight on hover
-        const interactables = document.querySelectorAll('a, .glass-card, .email-link');
-        interactables.forEach(el => {
-            el.addEventListener('mouseenter', () => cursorEl.classList.add('hover-expand'));
-            el.addEventListener('mouseleave', () => cursorEl.classList.remove('hover-expand'));
-        });
-    </script>
 </body>
 </html>
