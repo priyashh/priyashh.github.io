@@ -1,20 +1,17 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Select all paragraphs that have the 'fade-text' class
     const fadeElements = document.querySelectorAll('.fade-text');
     
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-            // When the text enters the bottom 15% of the screen
+            // When the element comes into the viewport
             if (entry.isIntersecting) {
                 entry.target.classList.add('visible');
-                
-                // Optional: Stop observing once it's visible so it stays visible
-                observer.unobserve(entry.target);
+                observer.unobserve(entry.target); // Stop observing once faded in
             }
         });
     }, {
-        threshold: 0.15, // Triggers when 15% of the text is visible
-        rootMargin: "0px 0px -50px 0px"
+        threshold: 0.1, // Triggers when 10% of the text is visible
+        rootMargin: "0px 0px -10% 0px" // Triggers slightly before the very bottom of the screen
     });
 
     fadeElements.forEach(el => observer.observe(el));
