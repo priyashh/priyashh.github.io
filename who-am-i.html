@@ -14,7 +14,7 @@
         }
 
         .page-title {
-            margin-bottom: 50px; /* Greatly reduced distance */
+            margin-bottom: 50px;
         }
 
         .story-grid {
@@ -26,7 +26,6 @@
         /* LEFT SIDE: The Image */
         .image-column {
             flex: 1;
-            /* Sticky keeps it on screen while the right side scrolls */
             position: sticky;
             top: 120px; 
             height: fit-content;
@@ -38,7 +37,6 @@
             border-radius: 16px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
             border: 1px solid var(--glass-border);
-            /* Sets the shrink anchor to the top-left */
             transform-origin: top left; 
             transition: transform 0.1s ease-out, opacity 0.1s ease-out;
         }
@@ -46,10 +44,9 @@
         /* RIGHT SIDE: The Text */
         .text-column {
             flex: 1.2;
-            padding-bottom: 30vh; /* Allows scrolling past the end */
+            padding-bottom: 30vh;
         }
 
-        /* Typography: Big and Modern lead-in */
         .lead-text {
             font-size: clamp(1.5rem, 2.5vw, 2.2rem);
             font-weight: 600;
@@ -59,7 +56,6 @@
             margin-bottom: 40px;
         }
 
-        /* Typography: Standard readable body text */
         .normal-text {
             font-size: 1.15rem;
             color: var(--text-muted);
@@ -69,6 +65,56 @@
         
         .normal-text strong {
             color: var(--text-main);
+        }
+
+        /* Tools & Skills Section */
+        .skills-section {
+            margin-top: 50px;
+            padding-top: 40px;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .skills-section h3 {
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 28px;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .skill-pill {
+            background: var(--glass-bg, rgba(255,255,255,0.04));
+            border: 1px solid var(--glass-border, rgba(255,255,255,0.1));
+            border-radius: 10px;
+            padding: 14px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            transition: border-color 0.25s, transform 0.25s;
+        }
+
+        .skill-pill:hover {
+            border-color: var(--accent-blue, #4f8ef7);
+            transform: translateY(-2px);
+        }
+
+        .skill-pill .skill-name {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+
+        .skill-pill .skill-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            letter-spacing: 0.04em;
         }
 
         .back-link {
@@ -91,6 +137,7 @@
             .story-grid { flex-direction: column; gap: 40px; }
             .image-column { position: relative; top: 0; display: flex; justify-content: center; }
             #scrollImage { max-width: 350px; transform: none !important; opacity: 1 !important; }
+            .skills-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
         }
     </style>
 </head>
@@ -136,6 +183,37 @@
                     When I am not mastering SQL or designing Power BI interactions, I'm probably thinking of different ways to make this site better and that's me !!
                 </p>
 
+                <!-- Tools & Skills -->
+                <div class="skills-section">
+                    <h3>Tools &amp; Skills</h3>
+                    <div class="skills-grid">
+                        <div class="skill-pill">
+                            <span class="skill-name">SQL</span>
+                            <span class="skill-label">Data Modeling</span>
+                        </div>
+                        <div class="skill-pill">
+                            <span class="skill-name">Power BI</span>
+                            <span class="skill-label">Dashboards</span>
+                        </div>
+                        <div class="skill-pill">
+                            <span class="skill-name">Excel</span>
+                            <span class="skill-label">Analysis</span>
+                        </div>
+                        <div class="skill-pill">
+                            <span class="skill-name">Looker Studio</span>
+                            <span class="skill-label">Reporting</span>
+                        </div>
+                        <div class="skill-pill">
+                            <span class="skill-name">Tableau</span>
+                            <span class="skill-label">Visualization</span>
+                        </div>
+                        <div class="skill-pill">
+                            <span class="skill-name">AI Tools</span>
+                            <span class="skill-label">Vibe Coding</span>
+                        </div>
+                    </div>
+                </div>
+
                 <a href="index.html#who-am-i" class="back-link">← Return to home</a>
             </div>
 
@@ -147,18 +225,12 @@
             const image = document.getElementById('scrollImage');
             const wrapper = document.querySelector('.story-grid');
             
-            // Check if we are on a desktop (disable effect on mobile)
             if (window.innerWidth > 900) {
                 const rect = wrapper.getBoundingClientRect();
-                
-                // Calculate how far we've scrolled down the grid
-                let scrollProgress = -rect.top + 100; // Offset slightly so it doesn't start instantly
+                let scrollProgress = -rect.top + 100;
                 if (scrollProgress < 0) scrollProgress = 0;
 
-                // Shrink the image (minimum size 40%)
                 let scale = Math.max(0.4, 1 - (scrollProgress * 0.001));
-                
-                // Fade out the image (fades to 0 completely)
                 let opacity = Math.max(0, 1 - (scrollProgress * 0.0015));
 
                 image.style.transform = `scale(${scale})`;
