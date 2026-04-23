@@ -1,172 +1,458 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
-
+/* --- Global Variables & Noir Palette --- */
 :root {
-    --bg-dark: #0a0b10;
-    --text-main: #ffffff;
-    --text-muted: #a1a1aa; /* Softer, highly readable gray */
-    --accent-blue: #3b82f6;
-    --accent-green: #10b981;
-    --glass-bg: rgba(255, 255, 255, 0.03);
-    --glass-border: rgba(255, 255, 255, 0.08);
+    --bg-dark: #000000; /* Deepest black void */
+    --bg-void: #0d0d0d; /* Subtle charcoal void for contrast */
+    --bg-monolith: #141414; /* Monolithic object color */
+    
+    --text-main: #f0f0f0; /* Crisp white for headings */
+    --text-muted: #a3a3a3; /* Muted grey for body paragraphs */
+    
+    --border-subtle: rgba(255, 255, 255, 0.05); /* Invisible compact border */
+    
+    --font-heading: 'Inter', sans-serif; /* Clean sans-serif like the image */
+    --font-body: 'Inter', sans-serif; 
 }
 
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-html { 
-    scroll-behavior: smooth; 
-    scroll-padding-top: 100px; 
+/* --- Clean Up & Reset --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-    background-color: var(--bg-dark);
-    background-image: 
-        radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.08), transparent 25%),
-        radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.08), transparent 25%);
-    background-attachment: fixed;
-    color: var(--text-main);
-    font-family: 'Inter', sans-serif;
-    line-height: 1.6;
+    background: var(--bg-dark);
+    color: var(--text-muted);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.7;
     overflow-x: hidden;
 }
 
-a { text-decoration: none; color: inherit; transition: 0.3s; }
-
-/* Navbar - Cleaned up */
-.navbar {
-    max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between;
-    align-items: center; padding: 30px 20px; position: sticky; top: 0; z-index: 1000;
-    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
-}
-
-.logo { font-size: 1.5rem; font-weight: 600; letter-spacing: -0.02em; }
-.nav-links { display: flex; gap: 15px; }
-.nav-links a {
-    font-size: 0.85rem; font-weight: 500; color: var(--text-muted); background: rgba(255, 255, 255, 0.05);
-    padding: 8px 18px; border-radius: 50px; border: 1px solid transparent; transition: all 0.2s ease;
-}
-.nav-links a:hover { color: var(--text-main); background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.15); }
-.nav-links a:active { transform: scale(0.92); }
-
-/* Main Page Elements */
-.hero { max-width: 1200px; margin: 4vw auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; gap: 40px; }
-.hero-content { flex: 1; }
-.hero h1 { font-family: 'Inter', sans-serif; font-size: clamp(3rem, 5vw, 5.5rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 25px; }
-.hero p { color: var(--text-muted); font-size: clamp(1.1rem, 2vw, 1.3rem); max-width: 500px; }
-.text-gradient { background: linear-gradient(90deg, var(--accent-blue), var(--accent-green)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; display: inline-block; }
-
-.glass-card { background: var(--glass-bg); backdrop-filter: blur(16px); border: 1px solid var(--glass-border); border-radius: 16px; padding: 40px; transition: transform 0.3s ease, border-color 0.3s ease; }
-.glass-card:hover { border-color: rgba(255, 255, 255, 0.2); }
-.content-section { max-width: 1200px; margin: 60px auto; padding: 0 20px; }
-.projects-stack { display: flex; flex-direction: column; gap: 40px; margin-bottom: 60px; }
-.sticky-card { position: sticky; display: block; box-shadow: 0 -10px 40px rgba(0,0,0,0.4); }
-.card-content { display: flex; align-items: center; gap: 40px; }
-.card-img { width: 45%; border-radius: 8px; border: 1px solid var(--glass-border); }
-.card-text { flex: 1; }
-.card-text h2 { font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 600; margin-bottom: 15px; letter-spacing: -0.02em; }
-.card-text p { color: var(--text-muted); font-size: 1.1rem; margin-bottom: 25px; line-height: 1.6;}
-.slide-tags { display: flex; gap: 10px; flex-wrap: wrap; }
-.slide-tags span { font-size: 0.75rem; color: var(--text-main); background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255,255,255,0.1); padding: 6px 14px; border-radius: 50px; font-weight: 500; }
-.section-label { font-size: 0.8rem; text-transform: uppercase; color: var(--accent-green); letter-spacing: 0.2em; font-weight: 600; margin-bottom: 30px; display: block; }
-blockquote { font-family: 'Playfair Display', serif; font-size: clamp(1.4rem, 2.5vw, 2.2rem); font-style: italic; letter-spacing: -0.02em; margin-bottom: 40px; padding-left: 20px; border-left: 4px solid var(--accent-green); line-height: 1.4; }
-.email-link { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700; letter-spacing: -0.03em; color: var(--text-main); display: inline-block; margin-bottom: 15px; border-bottom: 4px solid transparent; transition: 0.3s; }
-.email-link:hover { color: var(--accent-blue); border-color: var(--accent-blue); }
-.social-links { display: flex; gap: 20px; margin-top: 30px; }
-.social-links a { color: var(--text-muted); font-weight: 500; border-bottom: 1px solid transparent; padding-bottom: 2px;}
-.social-links a:hover { color: var(--text-main); border-color: var(--text-main); }
-
-
-/* ==================================================
-   Story of My Life Page - High-End Editorial Layout
-================================================== */
-
-.story-wrapper {
-    max-width: 1400px;
-    margin: 40px auto 100px;
-    padding: 0 20px;
-    position: relative;
-}
-
-/* The massive, elegant title locked to the left */
-.story-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(4rem, 8vw, 7.5rem);
-    font-weight: 600;
-    line-height: 1;
-    letter-spacing: -0.03em;
+h1, h2, h3, h4 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    text-transform: uppercase; /* The large centered headers */
+    letter-spacing: 0.08em;
     color: var(--text-main);
-    position: absolute;
-    left: 40px;
-    top: 50px;
-    z-index: 10;
+    line-height: 1.1;
 }
 
-/* Center Image with bottom fade */
-.story-image-mask {
+p {
+    margin-bottom: 1rem;
+}
+
+strong {
+    color: var(--text-main);
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: 0.3s ease;
+}
+
+/* --- The Fade-on-Scroll Effect (Preserved) --- */
+.animate {
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+}
+
+.animate.is-visible {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+}
+
+/* --- Navigation Bar (Compact & Symmetrical) --- */
+.navbar {
+    position: fixed;
+    top: 0;
     width: 100%;
-    max-width: 550px;
+    padding: 24px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(5px);
+    z-index: 1000;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.navbar .logo {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-main);
+    letter-spacing: 0.1em;
+    font-size: 1.1rem;
+}
+
+.navbar .nav-links {
+    display: flex;
+    gap: 24px;
+}
+
+.navbar .nav-links a {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+}
+
+.navbar .nav-links a:hover {
+    color: var(--text-main);
+}
+
+/* --- The Main Central Container (The Void) --- */
+.case-wrapper, .story-wrapper {
+    max-width: 1200px; /* A little wider for columns */
     margin: 0 auto;
-    /* This makes the bottom of the image literally dissolve into the background */
-    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%);
-    mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 100%);
+    padding: 120px 20px 200px 20px; /* Compact top/bottom padding */
+    display: grid;
+    grid-template-columns: 100px 1fr 100px; /* Define vertical columns flanking text */
+    gap: 40px;
+    align-items: flex-start;
 }
 
-.story-image-mask img {
+.case-wrapper > *, .story-wrapper > * {
+    grid-column: 2; /* Content goes into the middle column by default */
+}
+
+/* --- Symmetrical Flanking Elements ("Selected Works", "About") --- */
+.vertical-line {
+    font-family: var(--font-heading);
+    writing-mode: vertical-rl;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.14em;
+    line-height: 1;
+    position: sticky;
+    top: 150px;
+    height: fit-content;
+}
+
+/* Make sure the main headers are centered and massive on scroll */
+.animate.intro-heading.fade-on-scroll {
+    grid-column: 2;
+    text-align: center;
+}
+
+/* --- Monolithic Project Columns (Adapting all pages) --- */
+.case-hero, .page-title, .section-block {
+    text-align: center;
+    margin-bottom: 80px;
+}
+
+.animate.case-hero, .animate.page-title {
+    opacity: 0.15; /* Start dimmed */
+}
+
+/* "The Goal" style as a massive central monolith image-block-with-text */
+.central-monolith-block {
+    grid-column: 2;
+    background: var(--bg-monolith);
+    padding: 100px 60px;
+    border-radius: 8px; /* Subtle architectural corners */
+    text-align: center;
+    border: 1px solid var(--border-subtle);
+    box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+}
+
+/* --- Project Cards (Redesigned Site-wide as Compact Monoliths) --- */
+.section-divider {
+    grid-column: 2;
+    border: none;
+    border-top: 1px solid var(--border-subtle);
+    margin: 60px 0;
+}
+
+.section-block h2 {
+    font-size: clamp(2.5rem, 4vw, 3.5rem);
+    font-weight: 700;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.section-block p {
+    font-size: 1.15rem;
+    margin-bottom: 32px;
+    max-width: 780px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Re-layout Dashboard blocks to be clean vertical columns flanking images */
+.section-block > *:not(.dashboard-img) {
+    grid-column: 2;
+}
+
+.section-block .dashboard-img {
+    grid-column: 2;
     width: 100%;
-    height: auto;
-    max-height: 80vh;
-    object-fit: cover;
-    border-radius: 12px 12px 0 0;
+    border-radius: 12px;
+    border: 1px solid var(--border-subtle);
+    box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+    margin: 40px 0;
     display: block;
 }
 
-/* Typography for the biography text */
-.story-content {
-    max-width: 700px;
-    margin: -100px auto 0; /* Pulls the text up under the faded image */
-    position: relative;
-    z-index: 20;
-    padding: 0 20px;
+/* --- Key Findings (Redesign into a stunning vertical column of compact bands) --- */
+.findings-grid {
+    grid-column: 2;
+    display: grid;
+    grid-template-columns: 1fr; /* Single compact column */
+    gap: 16px; /* Super compact gap */
 }
 
-/* The starting state for the fade-on-scroll animation */
-.fade-text {
-    font-size: 1.2rem;
-    line-height: 1.85;
-    font-weight: 300;
+.finding-card {
+    background: var(--bg-void);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 24px 20px;
+    transition: transform 0.2s, border-color 0.2s;
+    text-align: left;
+    display: grid;
+    grid-template-columns: auto 1fr; /* Number on left, text on right */
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.finding-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--text-muted); /* Dark subtle hover effect */
+}
+
+.finding-card .finding-number {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.75rem;
     color: var(--text-muted);
-    margin-bottom: 2.5rem;
-    opacity: 0;
-    transform: translateY(50px);
-    transition: opacity 1s cubic-bezier(0.25, 1, 0.5, 1), transform 1s cubic-bezier(0.25, 1, 0.5, 1);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    padding-top: 4px;
 }
 
-/* First letter drop-cap for elegance */
-.fade-text:first-of-type::first-letter {
-    font-family: 'Playfair Display', serif;
-    font-size: 3.5rem;
-    float: left;
-    line-height: 0.8;
-    margin-right: 8px;
+.finding-card h3 {
+    grid-column: 2;
+    font-size: 1.05rem;
+    text-transform: none; /* Keep natural reading style */
+    letter-spacing: normal;
+    font-family: var(--font-body); /* Body font for findings h3 */
+    margin-bottom: 6px;
+}
+
+.finding-card p {
+    grid-column: 2;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+}
+
+/* --- Methodology Steps (Minimalist Lines) --- */
+.method-steps {
+    grid-column: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+.method-step {
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: 24px;
+    padding: 30px 0;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.step-num {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    padding-top: 4px;
+    text-align: center;
+}
+
+.step-content h4 {
+    font-size: 1rem;
+    text-transform: none; /* Keep natural reading */
+    font-family: var(--font-body);
+}
+
+/* --- "Who Am I?" Page Adaptation (The Bio and Skill layout from image) --- */
+.story-grid {
+    grid-column: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Image left, text columns right */
+    gap: 60px;
+    align-items: flex-start;
+}
+
+/* LEFT SIDE: Image is not sticky, but part of a clean column */
+.image-column {
+    grid-column: 1;
+    position: sticky;
+    top: 150px;
+    height: fit-content;
+}
+
+#scrollImage {
+    width: 100%;
+    border-radius: 12px;
+    object-fit: cover;
+    border: 1px solid var(--border-subtle);
+    box-shadow: 0 40px 100px rgba(0,0,0,0.6);
+}
+
+/* RIGHT SIDE: Compact bio text column from image_0.png */
+.text-column {
+    grid-column: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Ensure fade-on-scroll elements start dimmed in this design */
+.fade-on-scroll {
+    opacity: 0.15;
+    transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+.tools-section {
+    margin-top: 40px;
+}
+
+.tools-eyebrow {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    letter-spacing: 0.14em;
+    margin-bottom: 16px;
+}
+
+.slide-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.slide-tags span {
+    padding: 6px 12px;
+    background: var(--bg-void);
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    font-size: 0.85rem;
     color: var(--text-main);
 }
 
-.fade-text.visible {
-    opacity: 1;
-    transform: translateY(0);
+/* Add flanking vertical lines to the bio on the sides */
+.story-wrapper .vertical-line:nth-child(1) { grid-column: 1; grid-row: 2 / span 2; }
+.story-wrapper .vertical-line:nth-child(3) { grid-column: 3; grid-row: 2 / span 2; }
+
+/* --- Action Buttons (Minimalist Lines and Compact) --- */
+.case-hero .action-buttons, .section-block .action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 40px;
 }
 
-.back-link { font-weight: 500; color: var(--accent-blue); transition: 0.3s; display: inline-block; margin-top: 20px; }
-.back-link:hover { color: var(--accent-green); }
+.case-hero a, .section-block a:not(.logo):not(.back-link) {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    padding: 10px 20px;
+    border-radius: 6px;
+    transition: transform 0.2s, border-color 0.2s, color 0.2s;
+    background: var(--bg-void);
+    color: var(--text-main);
+    border: 1px solid var(--border-subtle);
+}
 
-/* Mobile Adjustments */
-@media (max-width: 1024px) {
-    .story-title { position: relative; left: 0; top: 0; text-align: center; margin-bottom: 30px; font-size: clamp(3.5rem, 10vw, 5rem); }
-    .story-image-mask { max-width: 90%; }
-    .navbar { flex-direction: column; gap: 20px; }
-    .nav-links { flex-wrap: wrap; justify-content: center; }
-    .hero { flex-direction: column; text-align: center; }
-    .hero p { margin: 0 auto; }
-    .sticky-card { position: relative; top: 0 !important; } 
-    .card-content { flex-direction: column; }
-    .card-img { width: 100%; }
+/* Keep the primary color subtly in hover lines but make the overall look monochrome */
+.case-hero a:hover, .section-block a:not(.logo):not(.back-link):hover {
+    transform: translateY(-2px);
+    border-color: var(--text-muted); /* Noir hover effect */
+}
+
+/* --- Back Link (Minimalist) --- */
+.back-link {
+    grid-column: 2;
+    text-align: center;
+    margin-top: 60px;
+}
+
+.back-link a {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-bottom: 1px solid var(--text-muted);
+    padding-bottom: 2px;
+}
+
+.back-link a:hover {
+    color: var(--text-main);
+    border-color: var(--text-main);
+}
+
+/* --- Responsive Adaptations (Compact & Stunning) --- */
+@media (max-width: 950px) {
+    .case-wrapper, .story-wrapper {
+        grid-template-columns: 1fr; /* Single column on mobile */
+        padding-top: 100px;
+    }
+
+    .case-wrapper > *, .story-wrapper > * {
+        grid-column: 1;
+    }
+
+    .vertical-line {
+        display: none; /* Hide vertical lines on small screens */
+    }
+
+    .case-hero, .page-title, .section-block {
+        margin-bottom: 50px;
+    }
+
+    .case-hero a, .section-block a:not(.logo):not(.back-link) {
+        font-size: 0.8rem;
+    }
+
+    .finding-card, .method-step {
+        grid-template-columns: 1fr;
+        text-align: left;
+    }
+
+    /* "Who Am I?" adaptation */
+    .story-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .image-column {
+        position: relative;
+        top: 0;
+        grid-column: 1;
+        grid-row: 1;
+        width: 100%;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .text-column {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    .navbar {
+        padding: 16px;
+    }
 }
