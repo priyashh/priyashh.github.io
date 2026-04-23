@@ -3,105 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio | Priyash Vasava</title>
+    <title>Priyash Vasava | Data Analyst</title>
     <link rel="stylesheet" href="style.css">
+    
+    <style>
+        /* Center text above the monolith */
+        .hero-statement {
+            grid-column: 2;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .hero-statement h1 {
+            font-size: 1rem;
+            letter-spacing: 0.15em;
+            color: var(--text-muted);
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        /* The 3D Monolith Container */
+        .monolith-container {
+            grid-column: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 80px;
+        }
+
+        .monolith-img {
+            max-width: 400px;
+            width: 100%;
+            /* Fallback style in case you don't have a 3D image yet */
+            background: linear-gradient(135deg, #2a2a2a 0%, #000000 100%);
+            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+            border-radius: 4px;
+        }
+
+        /* Right Sidebar Bio */
+        .sidebar-bio {
+            grid-column: 3;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding-top: 20px;
+        }
+
+        .sidebar-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 4px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.2);
+        }
+
+        .sidebar-bio p {
+            font-size: 0.75rem;
+            line-height: 1.6;
+            color: var(--text-muted);
+            margin: 0;
+        }
+
+        .sidebar-bio a {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+            color: var(--text-main);
+        }
+
+        .sidebar-tools {
+            display: flex;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 8px;
+        }
+
+        /* Compact Project List */
+        .projects-container {
+            grid-column: 2;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .project-row {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 30px;
+            padding: 30px 0;
+            border-top: 1px solid var(--border-subtle);
+            align-items: center;
+            transition: opacity 0.3s ease;
+        }
+
+        .project-row:hover {
+            opacity: 0.7;
+        }
+
+        .project-row img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .project-info h2 {
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .project-info p {
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 950px) {
+            .project-row {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .sidebar-bio {
+                grid-column: 1;
+                align-items: center;
+                text-align: center;
+                border-top: 1px solid var(--border-subtle);
+                margin-top: 40px;
+            }
+        }
+    </style>
 </head>
 <body>
 
     <nav class="navbar">
-        <a href="/" class="logo">Priyash Vasava</a>
+        <a href="index.html" class="logo">Priyash Vasava</a>
         <div class="nav-links">
             <a href="#projects">Projects</a>
-            <a href="blog.html">Blog</a>
-            <a href="who-am-i.html">Who Am I?</a>
-            <a href="#connect">Connect</a>
+            <a href="who-am-i.html">About</a>
+            <a href="#connect">Contact</a>
         </div>
     </nav>
 
-    <header class="hero">
-        <div class="hero-content">
-            <h1>Analyst by day <br><span class="text-gradient">Vibe coder</span><br>by night</h1>
-            <p>Exploring patterns in data using SQL for quering, Power Bi for powerful visualization and advanced features of Excel. with the help of these powerful tools combined with soft skills like problem solving and critical thinking to end up with smart decisions</p>
-        </div>
-        <div style="flex: 1;"></div>
-    </header>
-
-    <section class="content-section" id="projects">
-        <span class="section-label">Featured Works</span>
+    <div class="case-wrapper">
         
-        <div class="projects-stack">
-            <a href="projects/olist/index.html" class="sticky-card glass-card" style="top: 120px;">
-                <div class="card-content">
-                    <img src="assets/olist-cover.png" alt="Olist Project Cover" class="card-img">
-                    <div class="card-text">
-                        <h2>Olist E-Commerce</h2>
-                        <p>Olist is a Brazilian SaaS technology company that acts as a unified marketplace integrator, connecting small and medium-sized businesses to major e-commerce channels through a single platform.
-                            The goal of this data analysis was to uncover hidden customer behaviour patterns from 550K rows across 8 relational dataset. from exploring in excel to advanced visuals in Power bi. Come check it out !</p>
-                        <div class="slide-tags">
-                            <span>Excel</span>
-                            <span>SQL</span>
-                            <span>Power BI</span>
-                        </div>
-                    </div>
-                </div>
-            </a>
-
-            <a href="projects/google-stock/index.html" class="sticky-card glass-card" style="top: 150px;">
-                <div class="card-content">
-                    <img src="assets/google-cover.png" alt="Google Stock Cover" class="card-img">
-                    <div class="card-text">
-                        <h2>Google Stock Analysis</h2>
-                            <p> The aim of this project was to  understand and find meaningful patterns in the journey of Google(Alphabet Inc.) stock market performmance using Excel, SQL, Power Bi. 
-                                This project was heavily relied on Power Bi's DAX formula which helped turning numbers into crystal clear picture of long journey that google's stock has come through. .</p>
-                        <div class="slide-tags">
-                            <span>Excel</span>
-                             <span>PowerBi</span>
-                            <span>SQL</span>
-                        </div>
-                    </div>
-                </div>
-            </a>
+        <div class="hero-statement">
+            <h1>DECIPHERING COMPLEXITY.<br>DRIVING CLARITY.</h1>
         </div>
-    </section>
 
-    <section class="content-section" id="who-am-i">
-        <div class="glass-card">
-            <span class="section-label">Who Am I ?</span>
-            <h2 style="font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 600; margin-bottom: 20px; letter-spacing: -0.02em;">
-                A curious mind feeding curiousity through data analysis
-            </h2>
-            <p style="color: var(--text-muted); font-size: 1.1rem; line-height: 1.7; max-width: 800px;">
-                I like to think of myself as an observer.  Observing different kinds of system, from the system of Nature to the system of Metropolitan city and much more. fascinated by how they function, why they break, and how they can be optimized. be it problem solving project or just a curiosity (mostly curiosity), 
-                I was able to quickly get my hands on SQL and Power BI as my core tools to uncover the facts. 
-                In my free time When I'm not mastering SQL or Power BI, I'm  probably experimenting with new AI features and tools across the internet.
+        <div class="vertical-line">
+            SELECTED WORKS &nbsp; | &nbsp; PRECISION IN INSIGHT
+        </div>
+
+        <div class="monolith-container">
+            <img src="assets/black_cube_render.jpg" alt="3D Monolith" class="monolith-img" style="height: 400px; width: 400px;">
+        </div>
+
+        <div class="sidebar-bio">
+            <img src="assets/portrait.jpg" alt="Priyash" class="sidebar-img">
+            <p>
+                Priyash Vasava is a data analyst unraveling hidden patterns in complex datasets. Utilizing minimalist visual storytelling and structural logic to expose core business insights.
             </p>
-            <div style="margin-top: 40px;">
-                <a href="who-am-i.html" class="slide-tags" style="display: inline-block;">
-                    <span style="font-size: 0.9rem; padding: 12px 24px;">Know more of me ↗</span>
-                </a>
+            <a href="who-am-i.html">Learn More</a>
+            <div class="sidebar-tools">
+                <span>SQL</span> • <span>Power BI</span> • <span>Excel</span>
             </div>
         </div>
-    </section>
 
-    <section class="content-section" id="connect">
-        <div class="glass-card">
-            <span class="section-label">Let's Connect</span>
-            <blockquote>
-                "In God we trust. All others must bring data." <br>
-                <span style="font-family: 'Inter', sans-serif; font-size: 1rem; font-style: normal; color: var(--text-muted);">— W. Edwards Deming</span>
-            </blockquote>
-            <div style="margin-top: 40px;">
-                <a href="mailto:Priyashvasava@outlook.com" class="email-link">Say Hello ↗</a>
-                <p style="font-size: 1rem; color: var(--text-muted);">
-                    or Email me later at: <strong style="color: var(--text-main);">Priyashvasava@outlook.com</strong>
-                </p>
-                <div class="social-links">
-                    <a href="https://www.linkedin.com/in/priyashvasava" target="_blank">LinkedIn</a>
-                    <a href="https://github.com/priyashh" target="_blank">GitHub</a>
+        <div id="projects" class="projects-container">
+            
+            <a href="projects/olist/index.html" class="project-row">
+                <img src="assets/olist Revenue dive.png" alt="Olist Project Thumbnail">
+                <div class="project-info">
+                    <h2>Olist E-Commerce | Platform Analytics</h2>
+                    <p>Decoding over 100,000 Brazilian e-commerce transactions to uncover the real drivers of revenue, the cost of bad logistics, and platform retention.</p>
                 </div>
-            </div>
+            </a>
+
+            <a href="projects/google-stock/index.html" class="project-row">
+                <img src="assets/google_executive_summary.png" alt="Google Stock Project Thumbnail">
+                <div class="project-info">
+                    <h2>Alphabet Inc. | 21-Year Financial History</h2>
+                    <p>Structuring two decades of raw market data to visualize how Google evolved from a search engine into a $385 billion diversified tech empire.</p>
+                </div>
+            </a>
+
         </div>
-    </section>
+
+    </div>
 
 </body>
 </html>
