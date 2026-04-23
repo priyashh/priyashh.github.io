@@ -100,100 +100,6 @@
             display: block;
         }
 
-        .img-caption {
-            font-size: 0.82rem;
-            color: var(--text-muted);
-            text-align: center;
-            margin-top: -16px;
-            margin-bottom: 32px;
-            letter-spacing: 0.03em;
-        }
-
-        /* Finding cards */
-        .findings-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-
-        .finding-card {
-            background: var(--glass-bg, rgba(255,255,255,0.04));
-            border: 1px solid var(--glass-border, rgba(255,255,255,0.1));
-            border-radius: 14px;
-            padding: 26px 24px;
-            transition: border-color 0.25s, transform 0.25s;
-        }
-
-        .finding-card:hover {
-            border-color: var(--accent-blue, #4f8ef7);
-            transform: translateY(-3px);
-        }
-
-        .finding-card .finding-number {
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--accent-blue, #4f8ef7);
-            margin-bottom: 12px;
-        }
-
-        .finding-card h3 {
-            font-size: 1.05rem;
-            font-weight: 700;
-            color: var(--text-main);
-            margin-bottom: 10px;
-            line-height: 1.3;
-        }
-
-        .finding-card p {
-            font-size: 0.92rem;
-            color: var(--text-muted);
-            line-height: 1.7;
-        }
-
-        /* Methodology steps */
-        .method-steps {
-            display: flex;
-            flex-direction: column;
-            gap: 0;
-            margin-top: 30px;
-        }
-
-        .method-step {
-            display: flex;
-            gap: 24px;
-            padding: 28px 0;
-            border-bottom: 1px solid var(--glass-border, rgba(255,255,255,0.07));
-        }
-
-        .method-step:last-child {
-            border-bottom: none;
-        }
-
-        .step-num {
-            font-size: 0.75rem;
-            font-weight: 700;
-            color: var(--accent-blue, #4f8ef7);
-            letter-spacing: 0.1em;
-            min-width: 36px;
-            padding-top: 3px;
-        }
-
-        .step-content h4 {
-            font-size: 1rem;
-            font-weight: 700;
-            color: var(--text-main);
-            margin-bottom: 8px;
-        }
-
-        .step-content p {
-            font-size: 0.92rem;
-            color: var(--text-muted);
-            line-height: 1.7;
-        }
-
         /* Back link */
         .back-link {
             display: inline-block;
@@ -219,7 +125,6 @@
 
         @media (max-width: 700px) {
             .stat-bar { grid-template-columns: repeat(2, 1fr); }
-            .findings-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -237,17 +142,12 @@
 
     <div class="case-wrapper">
 
-        <!-- Hero -->
         <div class="case-hero animate">
-            <div class="meta-tags">
-                <span class="slide-tags"><span>Case Study</span></span>
-                <span class="slide-tags"><span>E-Commerce</span></span>
-            </div>
             <h1 style="font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 24px;">
                 Olist <span class="text-gradient">customer behavior</span> analysis.
             </h1>
             <p style="font-size: 1.15rem; color: var(--text-muted); line-height: 1.7; max-width: 680px;">
-                From 100,000+ raw Brazilian e-commerce orders to a 4-page decision-ready Power BI dashboard — uncovering what drives revenue, where delivery breaks down, and who the platform's real sellers are.
+                From over 100,000 raw Brazilian e-commerce orders to a clear interactive dashboard showing exactly where the money comes from and why customers refuse to come back.
             </p>
             <div style="margin-top: 24px;">
                 <div class="slide-tags" style="display: inline-flex;">
@@ -258,7 +158,6 @@
             </div>
         </div>
 
-        <!-- Stat Bar -->
         <div class="stat-bar animate" style="animation-delay: 0.15s;">
             <div class="stat-card">
                 <div class="stat-value">99K+</div>
@@ -284,170 +183,103 @@
 
         <hr class="section-divider">
 
-        <!-- The Goal -->
         <div class="section-block animate" style="animation-delay: 0.2s;">
             <div class="section-eyebrow">The Goal</div>
-            <h2>Move beyond a big table of transactions.</h2>
+            <h2>Finding the real story in a mountain of e-commerce data</h2>
             <p>
-                Olist's raw dataset is 8 relational tables — orders, items, payments, reviews, customers, sellers, products, and geolocation. The goal was to join and model this data into a structured analytical layer, then build a Power BI dashboard that answers the questions a business leader would actually ask: <strong>Where is revenue coming from? Why do customers leave bad reviews? Who are the top-performing sellers?</strong>
+                I started this project with eight massive datasets filled with over a hundred thousand raw e-commerce orders from Brazil. The first step was using SQL to connect everything together so I could actually see how customers sellers and payments all interacted with each other. Once the data was cleaned up and actually made sense I brought it all into Power BI. I wanted to build something that could answer the real questions a business owner cares about like <strong>where the money is actually coming from why customers leave bad reviews and who the best sellers really are.</strong>
             </p>
             <p>
-                The output is a 4-page interactive dashboard — Revenue Deep Dive, Delivery & Operations, Customer & Geography, and Seller Intelligence — each telling a distinct part of the business story.
+                The final result is a four part visual dashboard that breaks down the entire business into clear categories like revenue delivery operations customer behavior and seller intelligence.
             </p>
         </div>
 
         <hr class="section-divider">
 
-        <!-- Revenue Deep Dive -->
-        <div class="section-block animate">
-            <div class="section-eyebrow">Dashboard 01 — Revenue Deep Dive</div>
-            <h2>Health & Beauty leads. Credit cards dominate. São Paulo is the engine.</h2>
+        <div class="section-block animate" style="margin-bottom: 50px;">
+            <div class="section-eyebrow">Dashboard 01</div>
+            <h2>Following the money across categories and states</h2>
             <p>
-                The treemap immediately reveals the revenue hierarchy: <strong>Health & Beauty</strong> is the single largest category, followed by Bed, Bath & Table and Watches & Gifts. These three categories alone represent the core of Olist's product economy. The remaining long-tail of categories is significant but fragmented.
+                This first dashboard breaks down exactly where the revenue comes from. It turns out Health and Beauty is the single biggest money maker on the platform followed closely by home goods and watches. When it comes to how people actually pay for these things credit cards absolutely dominate the platform handling almost eighty percent of all the money spent.
             </p>
             <p>
-                On the payment side, <strong>78.3% of all revenue flows through credit cards</strong>, with boleto (Brazil's bank slip payment) at 17.9%. The installments chart tells a behaviorally interesting story — average order value climbs sharply with installment count, peaking at 10-installment orders. This signals that high-ticket items are the primary driver of installment usage, not impulse buys.
-            </p>
-            <p>
-                Geographically, <strong>São Paulo state generates over R$1M in revenue</strong> — more than the next four states combined. Rio de Janeiro and Minas Gerais follow at a significant distance.
+                We also found something really interesting about how people use installment plans because the more expensive an item is the more likely a customer is to stretch their payments out over ten months. Geographically the state of São Paulo is the absolute powerhouse of the business generating more money than the next four states combined.
             </p>
             <img src="../../assets/olist Revenue dive.png" alt="Olist Revenue Deep Dive Dashboard" class="dashboard-img">
-            <p class="img-caption">Revenue Deep Dive — category treemap, payment type split, state-level revenue, and installment behavior.</p>
         </div>
 
-        <hr class="section-divider">
-
-        <!-- Delivery & Operations -->
-        <div class="section-block animate">
-            <div class="section-eyebrow">Dashboard 02 — Delivery & Operations</div>
-            <h2>Deliver early, earn a 4+ score. Deliver late, watch it crater.</h2>
+        <div class="section-block animate" style="margin-bottom: 50px;">
+            <div class="section-eyebrow">Dashboard 02</div>
+            <h2>How late deliveries instantly ruin customer trust</h2>
             <p>
-                The scatter plot of review score vs. delivery delay days is the most analytically striking visual in the dashboard. <strong>The curve is brutal and asymmetric:</strong> orders delivered 10–30 days early average a score of ~4.1, on-time orders hover around 4.0, but orders just 0–10 days late drop to ~2.7, and orders delayed 30+ days bottom out near 1.5.
+                The most revealing part of this entire project is the chart showing how delivery times impact customer reviews. The pattern is absolutely brutal. If an order arrives even just a few days early customers consistently leave glowing four or five star reviews. But the exact moment a package becomes even one day late the average review score completely falls off a cliff and drops into the twos.
             </p>
             <p>
-                The delivery bucket bar chart reinforces this: early delivery consistently earns 4+ scores across both "Early" and "Very Early" buckets. The cliff happens the moment an order crosses zero — any lateness is penalized disproportionately by customers.
-            </p>
-            <p>
-                The platform's overall <strong>on-time rate is 93.4%</strong>, with an average delivery time of 12.5 days. At the state level, AM and RO lead with 97%+ on-time rates, while RS and MT trail. The year slider (2016–2018) allows trend analysis — useful for spotting whether operational performance improved over time.
+                This shows that customers do not forgive lateness no matter how good the actual product is. Overall the platform does a pretty good job with a 93 percent on time delivery rate but that late delivery penalty is a massive risk for the business.
             </p>
             <img src="../../assets/olist operation & delivery.png" alt="Olist Delivery and Operations Dashboard" class="dashboard-img">
-            <p class="img-caption">Delivery & Operations — on-time rate gauge, avg delivery days, delay vs. review score scatter, and per-state performance breakdown.</p>
         </div>
 
-        <hr class="section-divider">
-
-        <!-- Customer & Geography -->
-        <div class="section-block animate">
-            <div class="section-eyebrow">Dashboard 03 — Customer & Geography</div>
-            <h2>96.9% one-time buyers. São Paulo carries almost half the platform.</h2>
+        <div class="section-block animate" style="margin-bottom: 50px;">
+            <div class="section-eyebrow">Dashboard 03</div>
+            <h2>The massive challenge of getting customers to come back</h2>
             <p>
-                The most striking finding on this page is the one-time vs. repeat customer split: <strong>96.88% of customers placed only one order</strong>. This is a critical retention signal — Olist's growth model is almost entirely acquisition-driven, not loyalty-driven. The cancellation map shows cancellation clusters concentrated in the southeast, mirroring where order density is highest.
+                This page looks at who is actually buying all these products and it uncovers the biggest problem the business faces. Almost 97 percent of all customers place exactly one order and never come back. This means the company is constantly forced to spend money finding brand new customers because they have almost zero loyalty or repeat buyers.
             </p>
             <p>
-                São Paulo state alone accounts for <strong>40,302 unique customers</strong> and ~42,000 orders — more than the next three states combined. Rio de Janeiro (12,384) and Minas Gerais (11,259) are the only other states with meaningful scale. The revenue map confirms the same southeast concentration pattern.
-            </p>
-            <p>
-                For a business, this geographic skew is both an asset and a risk — Olist's performance is heavily tied to SP's economic conditions and logistics infrastructure.
+                Just like with the revenue São Paulo is carrying the entire platform with over 40 thousand unique customers while most other states barely make a dent. Relying so heavily on just one state makes the whole business incredibly vulnerable to local economic problems.
             </p>
             <img src="../../assets/olist customer geography.png" alt="Olist Customer Geography Dashboard" class="dashboard-img">
-            <p class="img-caption">Customer & Geography — total customers, one-time vs. repeat split, state-level customer counts, cancellation map, and order distribution map.</p>
         </div>
 
-        <hr class="section-divider">
-
-        <!-- Seller Intelligence -->
-        <div class="section-block animate">
-            <div class="section-eyebrow">Dashboard 04 — Seller Intelligence</div>
-            <h2>São Paulo sellers generate R$1.75M. The top performer handles 1,800 orders solo.</h2>
+        <div class="section-block animate" style="margin-bottom: 60px;">
+            <div class="section-eyebrow">Dashboard 04</div>
+            <h2>Finding the true top performers on the platform</h2>
             <p>
-                The seller intelligence page surfaces the supply-side dynamics. <strong>SP-based sellers contribute R$1.75M in total revenue</strong> — more than all other states combined. PR and MG follow at R$0.25M and R$0.20M respectively, showing a sharp concentration at the top.
+                The final piece of the puzzle is looking at the people actually selling the products. Out of three thousand different sellers on the platform just a handful are doing the heavy lifting. The absolute best seller handled over eighteen hundred individual orders all by themselves while another top seller made even more money by focusing on expensive premium items instead of just selling a high volume of cheap things.
             </p>
             <p>
-                Across 3,000 active sellers, the average order count per seller is 32 — but the seller performance table tells a more nuanced story. The top seller processed <strong>1,806 orders for R$40,094 in revenue</strong>, while the highest-grossing single seller earned R$45,894 from 1,132 orders — a higher revenue-per-order ratio that suggests premium product positioning.
-            </p>
-            <p>
-                The state-level review chart shows RS and MG sellers consistently outscoring SP sellers — interesting given SP's volume dominance. High volume doesn't automatically mean high satisfaction on the seller side, which creates a quality vs. scale tension worth monitoring.
+                We also noticed that while sellers in São Paulo push out the most volume the sellers in other states actually get much better customer reviews. It proves that selling the most items does not always mean you are providing the best service.
             </p>
             <img src="../../assets/olist seller intelligence.png" alt="Olist Seller Intelligence Dashboard" class="dashboard-img">
-            <p class="img-caption">Seller Intelligence — state-level revenue, active sellers KPI, avg review score, top seller performance table, and order distribution map.</p>
         </div>
 
-        <hr class="section-divider">
-
-        <!-- Key Findings -->
-        <div class="section-block animate">
+        <div class="section-block animate" style="margin-bottom: 60px;">
             <div class="section-eyebrow">Key Findings</div>
-            <h2>What the data actually said.</h2>
-            <div class="findings-grid">
-                <div class="finding-card">
-                    <div class="finding-number">Finding 01</div>
-                    <h3>Late delivery tanks reviews — fast</h3>
-                    <p>Even 0–10 days late drops average review scores from 4.0+ to ~2.7. The damage is immediate and steep. Early delivery, on the other hand, earns consistent 4+ scores.</p>
+            <h2>The biggest takeaways from the data</h2>
+            <div style="display: grid; gap: 24px; margin-top: 24px; padding: 20px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+                <div>
+                    <h3 style="margin-bottom: 6px; font-size: 1.1rem; color: #fff;">Late delivery is a death sentence</h3>
+                    <p style="margin: 0; font-size: 0.95rem; color: #a3a3a3; line-height: 1.5;">Even just a few days late destroys review scores. Early delivery is the only way to guarantee happy customers on this platform.</p>
                 </div>
-                <div class="finding-card">
-                    <div class="finding-number">Finding 02</div>
-                    <h3>97% of customers never come back</h3>
-                    <p>96.88% of all customers are one-time buyers. The platform's growth is almost entirely dependent on new customer acquisition, not retention or repeat purchase.</p>
+                <div>
+                    <h3 style="margin-bottom: 6px; font-size: 1.1rem; color: #fff;">Zero customer loyalty</h3>
+                    <p style="margin: 0; font-size: 0.95rem; color: #a3a3a3; line-height: 1.5;">With 97 percent of people buying only once the platform is basically surviving on a constant treadmill of finding new buyers.</p>
                 </div>
-                <div class="finding-card">
-                    <div class="finding-number">Finding 03</div>
-                    <h3>São Paulo is the platform</h3>
-                    <p>SP generates 42K+ orders, 40K+ customers, and R$1.75M in seller revenue — more than all other states combined. Geographic concentration is extreme.</p>
+                <div>
+                    <h3 style="margin-bottom: 6px; font-size: 1.1rem; color: #fff;">São Paulo carries the team</h3>
+                    <p style="margin: 0; font-size: 0.95rem; color: #a3a3a3; line-height: 1.5;">Whether it is total customers sellers or pure revenue this single state completely dominates the entire e-commerce business.</p>
                 </div>
-                <div class="finding-card">
-                    <div class="finding-number">Finding 04</div>
-                    <h3>High installments = high order value</h3>
-                    <p>Average order value peaks at 10-installment payments (~R$420). Customers using more installments are buying higher-ticket items, not just spreading smaller purchases.</p>
+                <div>
+                    <h3 style="margin-bottom: 6px; font-size: 1.1rem; color: #fff;">Installments are for big purchases</h3>
+                    <p style="margin: 0; font-size: 0.95rem; color: #a3a3a3; line-height: 1.5;">People are not using payment plans for small impulse buys. They save the ten month payment plans for expensive high ticket items.</p>
                 </div>
-                <div class="finding-card">
-                    <div class="finding-number">Finding 05</div>
-                    <h3>Health & Beauty leads revenue</h3>
-                    <p>Health & Beauty is the single largest revenue category, with Bed, Bath & Table and Watches & Gifts rounding out the top 3. These categories anchor Olist's product economy.</p>
-                </div>
-                <div class="finding-card">
-                    <div class="finding-number">Finding 06</div>
-                    <h3>Volume sellers ≠ best reviewed sellers</h3>
-                    <p>SP sellers dominate volume but score lower on reviews than RS and MG sellers. Scale and satisfaction don't automatically align — a quality vs. growth tension worth tracking.</p>
+                <div>
+                    <h3 style="margin-bottom: 6px; font-size: 1.1rem; color: #fff;">High volume does not mean high quality</h3>
+                    <p style="margin: 0; font-size: 0.95rem; color: #a3a3a3; line-height: 1.5;">The sellers moving the most products actually have worse customer satisfaction scores than smaller sellers in other states.</p>
                 </div>
             </div>
         </div>
 
-        <hr class="section-divider">
-
-        <!-- Methodology -->
-        <div class="section-block animate">
+        <div class="section-block animate" style="margin-bottom: 40px;">
             <div class="section-eyebrow">Methodology</div>
-            <h2>How it was built.</h2>
-            <div class="method-steps">
-                <div class="method-step">
-                    <div class="step-num">01</div>
-                    <div class="step-content">
-                        <h4>Data Acquisition & Schema Mapping</h4>
-                        <p>Ingested 8 relational CSV tables from the Olist public dataset (99K+ orders). Mapped foreign key relationships across orders, items, payments, customers, sellers, products, reviews, and geolocation tables before writing any queries.</p>
-                    </div>
-                </div>
-                <div class="method-step">
-                    <div class="step-num">02</div>
-                    <div class="step-content">
-                        <h4>SQL Data Modeling & Cleaning</h4>
-                        <p>Wrote SQL queries to join tables, calculate delivery delay days, assign delivery buckets (Early/On-Time/Late), aggregate revenue by category and state, and derive seller-level KPIs. Handled nulls in delivery dates and filtered incomplete records before analysis.</p>
-                    </div>
-                </div>
-                <div class="method-step">
-                    <div class="step-num">03</div>
-                    <div class="step-content">
-                        <h4>Exploratory Analysis in Excel</h4>
-                        <p>Used Excel for preliminary distributions — review score histograms, category revenue shares, and installment behavior patterns — to validate SQL output and identify the most analytically interesting angles before building the final dashboard.</p>
-                    </div>
-                </div>
-                <div class="method-step">
-                    <div class="step-num">04</div>
-                    <div class="step-content">
-                        <h4>Power BI Dashboard Design</h4>
-                        <p>Built a 4-page interactive Power BI report with cross-page filters, map visuals for geographic analysis, a scatter plot for delivery-vs-satisfaction correlation, treemaps for category revenue, and KPI cards for executive-level summary metrics.</p>
-                    </div>
-                </div>
-            </div>
+            <h2>How I actually built this</h2>
+            <p>
+                I started by downloading eight different raw data files containing details on nearly a hundred thousand orders. I used SQL to clean up the messy data connect the customers to their payments and calculate exactly how long each delivery took. 
+            </p>
+            <p>
+                Once I had everything linked together I exported the numbers into Excel to double check the math and look for early trends. Finally I loaded the clean data directly into Power BI where I designed all the interactive charts and built the complete four page dashboard.
+            </p>
         </div>
 
         <a href="../../index.html#projects" class="back-link">← Return to projects</a>
