@@ -6,138 +6,134 @@
     <title>Story of my life | Priyash Vasava</title>
     <link rel="stylesheet" href="style.css">
     <style>
-        /* Two-Column Sticky Layout */
         .story-wrapper {
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 0 auto;
-            padding: 40px 20px 100px 20px;
+            padding: 40px 20px 120px 20px;
         }
 
         .page-title {
-            margin-bottom: 50px;
+            margin-bottom: 70px;
+        }
+        
+        .page-title h1 {
+            font-size: clamp(2.4rem, 5vw, 4rem); 
+            font-weight: 700; 
+            letter-spacing: -0.03em; 
+            line-height: 1.1;
+            color: var(--text-main, #fff);
         }
 
         .story-grid {
             display: flex;
             gap: 60px;
             position: relative;
+            align-items: flex-start;
         }
 
         /* LEFT SIDE: The Image */
         .image-column {
-            flex: 1;
+            flex: 0 0 400px;
             position: sticky;
-            top: 120px; 
+            top: 120px; /* Sticks to the screen when scrolling */
             height: fit-content;
         }
 
         #scrollImage {
             width: 100%;
-            max-width: 450px;
-            border-radius: 16px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            border: 1px solid var(--glass-border);
-            transform-origin: top left; 
-            transition: transform 0.1s ease-out, opacity 0.1s ease-out;
+            border-radius: 14px;
+            border: 1px solid var(--glass-border, rgba(255,255,255,0.1));
+            box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+            object-fit: cover;
         }
 
         /* RIGHT SIDE: The Text */
         .text-column {
-            flex: 1.2;
-            padding-bottom: 30vh;
+            flex: 1;
+            padding-bottom: 250px; /* Extra space to allow scrolling past the last item */
         }
 
-        .lead-text {
-            font-size: clamp(1.5rem, 2.5vw, 2.2rem);
-            font-weight: 600;
-            color: var(--text-main);
-            line-height: 1.4;
-            letter-spacing: -0.02em;
+        .intro-heading {
+            font-size: clamp(2.5rem, 4vw, 3.5rem);
+            font-weight: 700;
+            color: var(--text-main, #fff);
+            line-height: 1.1;
             margin-bottom: 40px;
+            letter-spacing: -0.03em;
         }
 
-        .normal-text {
+        .text-column p {
             font-size: 1.15rem;
-            color: var(--text-muted);
+            color: var(--text-muted, #a3a3a3);
             line-height: 1.8;
-            margin-bottom: 30px;
-        }
-        
-        .normal-text strong {
-            color: var(--text-main);
+            margin-bottom: 32px;
         }
 
-        /* Tools & Skills Section */
-        .skills-section {
-            margin-top: 50px;
-            padding-top: 40px;
-            border-top: 1px solid var(--glass-border);
+        /* Tool tags */
+        .tools-section {
+            margin-top: 60px;
         }
 
-        .skills-section h3 {
-            font-size: 0.85rem;
+        .tools-eyebrow {
+            font-size: 0.78rem;
             font-weight: 600;
-            letter-spacing: 0.12em;
+            letter-spacing: 0.14em;
             text-transform: uppercase;
-            color: var(--text-muted);
-            margin-bottom: 28px;
+            color: var(--text-muted, #a3a3a3);
+            margin-bottom: 20px;
         }
 
-        .skills-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 12px;
+        .slide-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
-        .skill-pill {
+        .slide-tags span {
+            padding: 8px 16px;
             background: var(--glass-bg, rgba(255,255,255,0.04));
             border: 1px solid var(--glass-border, rgba(255,255,255,0.1));
-            border-radius: 10px;
-            padding: 14px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            transition: border-color 0.25s, transform 0.25s;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            color: var(--text-main, #fff);
         }
 
-        .skill-pill:hover {
-            border-color: var(--accent-blue, #4f8ef7);
-            transform: translateY(-2px);
+        /* The fading animation class */
+        .fade-on-scroll {
+            transition: opacity 0.1s ease-out, transform 0.1s ease-out;
+            opacity: 0.15; /* Default state for items not in center */
+            will-change: opacity, transform;
         }
-
-        .skill-pill .skill-name {
-            font-size: 0.95rem;
-            font-weight: 600;
-            color: var(--text-main);
-        }
-
-        .skill-pill .skill-label {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            letter-spacing: 0.04em;
-        }
-
+        
+        /* Back link */
         .back-link {
             display: inline-block;
-            margin-top: 40px;
+            margin-top: 60px;
             font-weight: 500;
             color: var(--text-muted);
             border-bottom: 2px solid var(--text-main);
             padding-bottom: 2px;
             transition: 0.3s;
-        }
-        
-        .back-link:hover { 
-            color: var(--accent-blue); 
-            border-color: var(--accent-blue);
+            text-decoration: none;
         }
 
-        /* Mobile Adjustments */
-        @media (max-width: 900px) {
-            .story-grid { flex-direction: column; gap: 40px; }
-            .image-column { position: relative; top: 0; display: flex; justify-content: center; }
-            #scrollImage { max-width: 350px; transform: none !important; opacity: 1 !important; }
-            .skills-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+        .back-link:hover {
+            color: var(--accent-blue, #4f8ef7);
+            border-color: var(--accent-blue, #4f8ef7);
+        }
+
+        @media (max-width: 850px) {
+            .story-grid {
+                flex-direction: column;
+            }
+            .image-column {
+                position: relative;
+                top: 0;
+                flex: auto;
+                width: 100%;
+                max-width: 400px;
+                margin-bottom: 40px;
+            }
         }
     </style>
 </head>
@@ -155,95 +151,109 @@
 
     <div class="story-wrapper">
         
-        <div class="page-title animate">
-            <h1 style="font-size: clamp(3rem, 6vw, 5rem); font-weight: 700; letter-spacing: -0.03em;">Story of <span class="text-gradient">my life.</span></h1>
+        <div class="page-title">
+            <h1>Story of my life.</h1>
         </div>
 
         <div class="story-grid">
             
-            <div class="image-column animate" style="animation-delay: 0.2s;">
-                <img src="assets/user-portrait.jpg" alt="Portrait of Priyash Vasava" id="scrollImage"> 
+            <div class="image-column">
+                <img id="scrollImage" src=""assets/user-portrait.jpg"" alt="Portrait of Priyash Vasava">
             </div>
 
-            <div class="text-column animate" style="animation-delay: 0.3s;">
+            <div class="text-column">
                 
-                <p class="lead-text">
-                    Hey!  Hows it hangin? 
-                    <strong>This is Priyash Vasava, an Analyst II based in Vadodara, Gujarat. With over two and a half years of experience(and an internship of a year if that count), my focus is on removing the clutter of raw information to expose the core insights that drive industries forward.
+                <h2 class="intro-heading fade-on-scroll">Hey! Hows it hangin?</h2>
+                
+                <p class="fade-on-scroll">
+                    This is <strong style="color: #fff;">Priyash Vasava</strong>, an Analyst II based in Vadodara, Gujarat. With over two and a half years of experience (and a formative year-long internship), my focus is on removing the clutter of raw information to expose the core insights that drive industries forward.
                 </p>
 
-                <p class="normal-text">
-                    <strong>My technical foundation expanded through a formative internship at the Indian Space Research Organisation (ISRO), i was introdued to advanced uses of Excel and reporting and </strong> About to complete my degree in Economics. I am also vibe coder (directing AI to bridge gap between intent & code) and my curiosity has no limits (or that's what I like to think).
+                <p class="fade-on-scroll">
+                    My technical foundation expanded through an internship at the Indian Space Research Organisation (ISRO), where I was introduced to advanced uses of Excel and reporting. I am also currently completing my degree in Economics. I am a <em>vibe coder</em> (directing AI to bridge the gap between intent and code) and my curiosity has no limits (or that's what I like to think).
                 </p>
 
-                <p class="normal-text">
-                    From curiosity of knowing how the earth spins to understanding how anything functions at all(even life), I was always interested in computers and the science behind it but sadly many things didnt work out for me in my early careers(just like many of us)
-                    and i barely had any mentors to guide me until the Era of Artificial intelligence took place. now there are many folks who learned all the technical stuff throughout their Academia but if i speak for myself i feel no shame
-                    in saying that I learned SQL mostly using AI models, Youtube Tutorials and Reddit(sometimes) but ultimately its all about how much i practice writing any code. After SQL I introduced myself to Power BI & Tableau, turns out both of these tools are intuitive and requires practice to master it and i did. 
-                    i worked on countless unfinished personal project that nobody will ever hear about but for me it was learning that i took with me. 
-                    
+                <p class="fade-on-scroll">
+                    From a young age wondering how the earth spins, to understanding how anything functions at all, I was always drawn to computers and the science behind them. Like many of us, things didn't perfectly align for me early in my career, and I had very few mentors to guide me—until the era of Artificial Intelligence took place.
                 </p>
 
-                <p class="normal-text">
-                    I m a forever learner, and using the project highlighted here, i am just trying to be part of that big competition and find that problems(s) that i can solve using what i have learned so far and keep on learning, 
-                    Ciao.
+                <p class="fade-on-scroll">
+                    Now, there are many folks who learned all the technical stuff through traditional academia. But if I speak for myself, I feel no shame in saying that I learned SQL mostly using AI models, YouTube tutorials, and Reddit, knowing that ultimately it's all about how much I practice writing the code.
                 </p>
 
-                <!-- Tools & Skills -->
-                <div class="skills-section">
-                    <h3>Tools &amp; Skills</h3>
-                    <div class="skills-grid">
-                        <div class="skill-pill">
-                            <span class="skill-name">SQL</span>
-                            <span class="skill-label">Data Modeling</span>
-                        </div>
-                        <div class="skill-pill">
-                            <span class="skill-name">Power BI</span>
-                            <span class="skill-label">Dashboards</span>
-                        </div>
-                        <div class="skill-pill">
-                            <span class="skill-name">Excel</span>
-                            <span class="skill-label">Analysis</span>
-                        </div>
-                        <div class="skill-pill">
-                            <span class="skill-name">Looker Studio</span>
-                            <span class="skill-label">Reporting</span>
-                        </div>
-                        <div class="skill-pill">
-                            <span class="skill-name">Tableau</span>
-                            <span class="skill-label">Visualization</span>
-                        </div>
-                        <div class="skill-pill">
-                            <span class="skill-name">AI Tools</span>
-                            <span class="skill-label">Vibe Coding</span>
-                        </div>
+                <p class="fade-on-scroll">
+                    After SQL, I introduced myself to Power BI and Tableau. It turns out both of these tools are intuitive and require immense practice to master—and I did exactly that. I worked on countless unfinished personal projects that nobody will ever hear about, but for me, it was the learning that I took away.
+                </p>
+
+                <p class="fade-on-scroll">
+                    I am a forever learner. By building the projects highlighted here, I am just trying to step into the arena, find the problems I can solve using what I have learned so far, and keep on growing. <br><br>Ciao.
+                </p>
+
+                <div class="tools-section fade-on-scroll">
+                    <div class="tools-eyebrow">Tools & Skills</div>
+                    <div class="slide-tags">
+                        <span>SQL</span>
+                        <span>Data Modeling</span>
+                        <span>Power BI</span>
+                        <span>Dashboards</span>
+                        <span>Excel</span>
+                        <span>Analysis</span>
+                        <span>Looker Studio</span>
+                        <span>Reporting</span>
+                        <span>Tableau</span>
+                        <span>Visualization</span>
+                        <span>AI Tools</span>
+                        <span>Vibe Coding</span>
                     </div>
                 </div>
 
-                <a href="index.html#who-am-i" class="back-link">← Return to home</a>
-            </div>
+                <a href="index.html" class="back-link fade-on-scroll">← Return to home</a>
 
+            </div>
         </div>
     </div>
 
     <script>
-        window.addEventListener('scroll', () => {
-            const image = document.getElementById('scrollImage');
-            const wrapper = document.querySelector('.story-grid');
+        document.addEventListener("DOMContentLoaded", () => {
+            const elements = document.querySelectorAll('.fade-on-scroll');
             
-            if (window.innerWidth > 900) {
-                const rect = wrapper.getBoundingClientRect();
-                let scrollProgress = -rect.top + 100;
-                if (scrollProgress < 0) scrollProgress = 0;
-
-                let scale = Math.max(0.4, 1 - (scrollProgress * 0.001));
-                let opacity = Math.max(0, 1 - (scrollProgress * 0.0015));
-
-                image.style.transform = `scale(${scale})`;
-                image.style.opacity = opacity;
+            function checkFade() {
+                const windowHeight = window.innerHeight;
+                
+                elements.forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    // Get the center point of the element
+                    const elementCenter = rect.top + (rect.height / 2);
+                    // Get the center point of the viewport
+                    const screenCenter = windowHeight / 2;
+                    
+                    // Calculate how far the element's center is from the viewport's center
+                    const distance = Math.abs(screenCenter - elementCenter);
+                    
+                    // The distance at which the text starts aggressively fading out
+                    const maxDistance = windowHeight / 2.5; 
+                    
+                    // Calculate opacity (1 when centered, approaching 0.15 as it moves away)
+                    let opacity = 1 - (distance / maxDistance);
+                    
+                    // Keep a minimum opacity so it doesn't entirely vanish, and cap at 1
+                    if(opacity < 0.15) opacity = 0.15;
+                    if(opacity > 1) opacity = 1;
+                    
+                    // Add a slight translation effect based on distance to make it 'float'
+                    let translateY = (elementCenter - screenCenter) * 0.05;
+                    
+                    el.style.opacity = opacity;
+                    el.style.transform = `translateY(${translateY}px)`;
+                });
             }
+
+            // Run once on load to establish the starting brightness
+            checkFade();
+            
+            // Re-calculate the brightness every time the user scrolls
+            window.addEventListener('scroll', checkFade);
         });
     </script>
-
 </body>
 </html>
