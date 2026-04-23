@@ -147,7 +147,7 @@
                 Olist <span class="text-gradient">customer behavior</span> analysis.
             </h1>
             <p style="font-size: 1.15rem; color: var(--text-muted); line-height: 1.7; max-width: 680px;">
-                From over 100,000 raw Brazilian e-commerce orders to a clear interactive dashboard showing exactly where the money comes from and why customers refuse to come back.
+                Decoding over 100,000 Brazilian e-commerce transactions to uncover the real drivers of revenue, the true cost of bad logistics, and the platform's hidden retention crisis.
             </p>
             <div style="margin-top: 24px;">
                 <div class="slide-tags" style="display: inline-flex;">
@@ -184,13 +184,13 @@
         <hr class="section-divider">
 
         <div class="section-block animate" style="animation-delay: 0.2s;">
-            <div class="section-eyebrow">The Goal</div>
-            <h2>Finding the real story in a mountain of e-commerce data</h2>
+            <div class="section-eyebrow">The Objective</div>
+            <h2>Piecing together a fragmented e-commerce ecosystem</h2>
             <p>
-                I started this project with eight massive datasets filled with over a hundred thousand raw e-commerce orders from Brazil. The first step was using SQL to connect everything together so I could actually see how customers sellers and payments all interacted with each other. Once the data was cleaned up and actually made sense I brought it all into Power BI. I wanted to build something that could answer the real questions a business owner cares about like <strong>where the money is actually coming from why customers leave bad reviews and who the best sellers really are.</strong>
+                Olist provided a massive incredibly messy database scattered across eight different tables. My objective wasn't just to clean the raw numbers but to extract the underlying business reality. I needed to map out the entire customer journey from the moment a credit card is swiped to the final delivery review to understand what makes the platform tick and where it is bleeding money.
             </p>
             <p>
-                The final result is a four part visual dashboard that breaks down the entire business into clear categories like revenue delivery operations customer behavior and seller intelligence.
+                By joining these datasets in SQL and modeling them visually I created an interactive narrative focused on four key pillars: revenue generation logistics geographic risks and supplier health.
             </p>
         </div>
 
@@ -198,87 +198,87 @@
 
         <div class="section-block animate" style="margin-bottom: 50px;">
             <div class="section-eyebrow">Dashboard 01</div>
-            <h2>Following the money across categories and states</h2>
+            <h2>Where the money flows and how people pay</h2>
             <p>
-                This first dashboard breaks down exactly where the revenue comes from. It turns out Health and Beauty is the single biggest money maker on the platform followed closely by home goods and watches. When it comes to how people actually pay for these things credit cards absolutely dominate the platform handling almost eighty percent of all the money spent.
+                Mapping out the sales data reveals a very clear hierarchy. Health and Beauty dominates the marketplace as the undeniable top earner with home goods and watches trailing behind. But the way Brazilians pay for these items is just as fascinating because credit cards power almost 80 percent of the entire economy.
             </p>
             <p>
-                We also found something really interesting about how people use installment plans because the more expensive an item is the more likely a customer is to stretch their payments out over ten months. Geographically the state of São Paulo is the absolute powerhouse of the business generating more money than the next four states combined.
+                When we look closely at installment plans a distinct behavioral trend emerges. Shoppers aren't using ten month payment plans for everyday items. They are specifically leveraging them to finance high ticket premium purchases. Meanwhile the state of São Paulo acts as the platform's economic engine single-handedly generating more cash than the next four states combined.
             </p>
             <img src="../../assets/olist Revenue dive.png" alt="Olist Revenue Deep Dive Dashboard" class="dashboard-img">
         </div>
 
         <div class="section-block animate" style="margin-bottom: 50px;">
             <div class="section-eyebrow">Dashboard 02</div>
-            <h2>How late deliveries instantly ruin customer trust</h2>
+            <h2>The unforgiving reality of shipping delays</h2>
             <p>
-                The most revealing part of this entire project is the chart showing how delivery times impact customer reviews. The pattern is absolutely brutal. If an order arrives even just a few days early customers consistently leave glowing four or five star reviews. But the exact moment a package becomes even one day late the average review score completely falls off a cliff and drops into the twos.
+                If there is one chart that defines the success or failure of a transaction it is the relationship between delivery times and customer satisfaction. The data shows absolute zero forgiveness for bad logistics. When packages arrive even a day early shoppers happily award four or five stars. But the exact moment an order misses its deadline the feedback immediately tanks.
             </p>
             <p>
-                This shows that customers do not forgive lateness no matter how good the actual product is. Overall the platform does a pretty good job with a 93 percent on time delivery rate but that late delivery penalty is a massive risk for the business.
+                While Olist maintains a respectable 93 percent on time delivery rate overall this sharp penalty for lateness highlights how fragile customer trust really is. One logistical hiccup is all it takes to ruin the relationship forever.
             </p>
             <img src="../../assets/olist operation & delivery.png" alt="Olist Delivery and Operations Dashboard" class="dashboard-img">
         </div>
 
         <div class="section-block animate" style="margin-bottom: 50px;">
             <div class="section-eyebrow">Dashboard 03</div>
-            <h2>The massive challenge of getting customers to come back</h2>
+            <h2>A massive platform-wide retention crisis</h2>
             <p>
-                This page looks at who is actually buying all these products and it uncovers the biggest problem the business faces. Almost 97 percent of all customers place exactly one order and never come back. This means the company is constantly forced to spend money finding brand new customers because they have almost zero loyalty or repeat buyers.
+                Diving into the user demographics exposes a glaring vulnerability in the business model. An alarming 96.8 percent of people buy something once and then completely disappear. There is virtually no repeat buyer loyalty meaning Olist's growth relies entirely on the incredibly expensive process of constantly acquiring brand new shoppers.
             </p>
             <p>
-                Just like with the revenue São Paulo is carrying the entire platform with over 40 thousand unique customers while most other states barely make a dent. Relying so heavily on just one state makes the whole business incredibly vulnerable to local economic problems.
+                Furthermore the platform's geographic footprint is incredibly unbalanced. São Paulo alone houses over 40 thousand unique buyers. While that massive volume is great having your entire customer base concentrated in one single state makes the company dangerously exposed to regional economic shifts.
             </p>
             <img src="../../assets/olist customer geography.png" alt="Olist Customer Geography Dashboard" class="dashboard-img">
         </div>
 
         <div class="section-block animate" style="margin-bottom: 60px;">
             <div class="section-eyebrow">Dashboard 04</div>
-            <h2>Finding the true top performers on the platform</h2>
+            <h2>Identifying the merchants doing the heavy lifting</h2>
             <p>
-                The final piece of the puzzle is looking at the people actually selling the products. Out of three thousand different sellers on the platform just a handful are doing the heavy lifting. The absolute best seller handled over eighteen hundred individual orders all by themselves while another top seller made even more money by focusing on expensive premium items instead of just selling a high volume of cheap things.
+                Looking closely at the supply side the platform is essentially carried by a tiny fraction of elite sellers. While thousands of merchants are registered the highest grossing individual pulled in nearly 46 thousand Reais by strategically selling premium items rather than pushing cheap volume. Another merchant managed to ship over eighteen hundred individual orders entirely on their own.
             </p>
             <p>
-                We also noticed that while sellers in São Paulo push out the most volume the sellers in other states actually get much better customer reviews. It proves that selling the most items does not always mean you are providing the best service.
+                Interestingly the data proves that biggest doesn't always mean best. The merchants pushing the absolute highest volumes out of São Paulo actually suffer from significantly worse customer satisfaction ratings compared to smaller more focused sellers in neighboring states.
             </p>
             <img src="../../assets/olist seller intelligence.png" alt="Olist Seller Intelligence Dashboard" class="dashboard-img">
         </div>
 
         <div class="section-block animate" style="margin-bottom: 60px;">
-            <div class="section-eyebrow">Key Findings</div>
-            <h2>The biggest takeaways from the data</h2>
+            <div class="section-eyebrow">Core Insights</div>
+            <h2>The undeniable truths hidden in the dataset</h2>
             <div style="display: grid; gap: 24px; margin-top: 24px; padding: 20px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
                 <div>
-                    <h3 style="margin-bottom: 6px; font-size: 1.1rem; color: #fff;">Late delivery is a death sentence</h3>
-                    <p style="margin: 0; font-size: 0.95rem; color: #a3a3a3; line-height: 1.5;">Even just a few days late destroys review scores. Early delivery is the only way to guarantee happy customers on this platform.</p>
+                    <h3 style="margin-bottom: 6px; font-size: 1.1rem; color: #fff;">Logistics dictate reputation</h3>
+                    <p style="margin: 0; font-size: 0.95rem; color: #a3a3a3; line-height: 1.5;">The correlation is absolute. Early arrivals guarantee praise but missing a delivery date by even 24 hours permanently destroys the seller's rating.</p>
                 </div>
                 <div>
-                    <h3 style="margin-bottom: 6px; font-size: 1.1rem; color: #fff;">Zero customer loyalty</h3>
-                    <p style="margin: 0; font-size: 0.95rem; color: #a3a3a3; line-height: 1.5;">With 97 percent of people buying only once the platform is basically surviving on a constant treadmill of finding new buyers.</p>
+                    <h3 style="margin-bottom: 6px; font-size: 1.1rem; color: #fff;">An endless acquisition treadmill</h3>
+                    <p style="margin: 0; font-size: 0.95rem; color: #a3a3a3; line-height: 1.5;">With a 97 percent churn rate there is no built in loyalty. The platform survives purely by replacing lost buyers with new ones.</p>
                 </div>
                 <div>
-                    <h3 style="margin-bottom: 6px; font-size: 1.1rem; color: #fff;">São Paulo carries the team</h3>
-                    <p style="margin: 0; font-size: 0.95rem; color: #a3a3a3; line-height: 1.5;">Whether it is total customers sellers or pure revenue this single state completely dominates the entire e-commerce business.</p>
+                    <h3 style="margin-bottom: 6px; font-size: 1.1rem; color: #fff;">The São Paulo dependency</h3>
+                    <p style="margin: 0; font-size: 0.95rem; color: #a3a3a3; line-height: 1.5;">Whether you measure by active users merchants or gross revenue this one specific region completely controls the platform's fate.</p>
                 </div>
                 <div>
-                    <h3 style="margin-bottom: 6px; font-size: 1.1rem; color: #fff;">Installments are for big purchases</h3>
-                    <p style="margin: 0; font-size: 0.95rem; color: #a3a3a3; line-height: 1.5;">People are not using payment plans for small impulse buys. They save the ten month payment plans for expensive high ticket items.</p>
+                    <h3 style="margin-bottom: 6px; font-size: 1.1rem; color: #fff;">Financing premium goods</h3>
+                    <p style="margin: 0; font-size: 0.95rem; color: #a3a3a3; line-height: 1.5;">Installment plans are a strategic tool for the buyer. Maxing out a ten month payment plan is directly tied to the most expensive items in the catalog.</p>
                 </div>
                 <div>
-                    <h3 style="margin-bottom: 6px; font-size: 1.1rem; color: #fff;">High volume does not mean high quality</h3>
-                    <p style="margin: 0; font-size: 0.95rem; color: #a3a3a3; line-height: 1.5;">The sellers moving the most products actually have worse customer satisfaction scores than smaller sellers in other states.</p>
+                    <h3 style="margin-bottom: 6px; font-size: 1.1rem; color: #fff;">Volume vs quality</h3>
+                    <p style="margin: 0; font-size: 0.95rem; color: #a3a3a3; line-height: 1.5;">Scaling up orders often degrades the buyer experience. The most prolific shippers frequently have lower satisfaction scores than smaller regional competitors.</p>
                 </div>
             </div>
         </div>
 
         <div class="section-block animate" style="margin-bottom: 40px;">
-            <div class="section-eyebrow">Methodology</div>
-            <h2>How I actually built this</h2>
+            <div class="section-eyebrow">The Technical Pipeline</div>
+            <h2>How the analysis was executed</h2>
             <p>
-                I started by downloading eight different raw data files containing details on nearly a hundred thousand orders. I used SQL to clean up the messy data connect the customers to their payments and calculate exactly how long each delivery took. 
+                The raw information was split across eight isolated CSV files covering nearly 100 thousand transactions. I designed a relational schema and wrote custom SQL queries to unify the order history calculate precise delivery delays and aggregate geographic performance metrics. 
             </p>
             <p>
-                Once I had everything linked together I exported the numbers into Excel to double check the math and look for early trends. Finally I loaded the clean data directly into Power BI where I designed all the interactive charts and built the complete four page dashboard.
+                After validating the mathematical logic and identifying the strongest narrative angles in Excel I imported the refined dataset into Power BI. From there I engineered the cross filtering mechanics and designed the final layout to present a clear executive level story.
             </p>
         </div>
 
