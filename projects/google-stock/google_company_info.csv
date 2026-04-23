@@ -1,0 +1,36 @@
+Category,Item,Value,Date,Description
+Company Info,Sector,Technology,,Primary sector
+Company Info,Founded,9/4/1998,,Company founding date
+Company Info,Restructuring Date,10/2/2015,,Became Alphabet Inc.
+Share Classes,Class B Shares,Not Publicly Traded,,10 votes per share - held by founders/insiders
+Company Info,Exchange,NASDAQ,,Primary stock exchange
+Milestones,Chrome Browser Launch,Launched Chrome web browser,9/3/2008,Entered browser market
+Company Info,Industry,Internet Content & Information,,Industry classification
+Milestones,First Dividend Payment,Initiated quarterly dividend $0.20/share,4/1/2024,First dividend in company history
+Milestones,IPO,Initial Public Offering at $85/share,8/19/2004,$23 billion valuation
+Milestones,Alphabet Restructuring,Google became Alphabet Inc.,10/2/2015,Corporate restructuring with subsidiaries
+Company Info,Ticker Symbol - Class A,GOOGL,,1 vote per share - publicly traded
+Share Classes,Class A Shares,GOOGL,,1 vote per share - publicly traded
+Company Info,Ticker Symbol - Class C,GOOG,,0 votes per share - publicly traded
+Share Classes,Class C Shares,GOOG,,0 votes per share - publicly traded
+Milestones,$1 Trillion Market Cap,First time reaching $1 trillion,4/1/2018,Market capitalization milestone
+Company Info,IPO Date,8/19/2004,,Initial Public Offering
+Company Info,Company Name,Alphabet Inc. (formerly Google Inc.),,Technology conglomerate
+Milestones,YouTube Acquisition,Acquired YouTube for $1.65 billion,10/9/2006,Entered video streaming market
+Milestones,Motorola Mobility Acquisition,Acquired for $12.5 billion,8/15/2011,Largest acquisition at the time
+Market Data,Average Daily Volume,"$2,450,000,000,000.00 ",2/16/2026,30-day average volume
+Stock Splits,Total Split Adjustment,40-for-1,,Combined effect of both splits
+Stock Splits,First Stock Split,2-for-1,4/3/2014,Created Class C non-voting shares (GOOG)
+Stock Splits,Second Stock Split,20-for-1,7/15/2022,Applied to all share classes
+Milestones,Second Stock Split,20:1 stock split,7/15/2022,Improved stock accessibility
+Milestones,First Stock Split,2:1 stock split - created Class C,4/3/2014,Stock dividend creating non-voting shares
+Company Info,IPO Price,$85.00 per share,8/19/2004,Original offering price
+Milestones,All-Time High Price,$344.90 (GOOG) / $343.69 (GOOGL),2/2/2026,Record high stock prices
+Market Data,Market Cap,"$45,200,000.00 ",2/16/2026,Approximate market capitalization
+Market Data,Current Price (as of Feb 16 2026),$359.24 ,,Latest closing price
+Market Data,52-Week High,$359.24 ,2/16/2026,Recent high
+Market Data,52-Week Low,$140.16 ,12/29/2023,Recent low
+Market Data,P/E Ratio,28.5,2/16/2026,Price-to-earnings ratio
+Company Info,Split-Adjusted IPO Price,$2.13 ,8/19/2004,After 2014 and 2022 splits (40x adjustment)
+Market Data,Beta,1.05,2/16/2026,Volatility measure vs market
+Market Data,Dividend Yield,0.22%,2/16/2026,Annual dividend yield
