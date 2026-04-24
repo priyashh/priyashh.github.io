@@ -10,7 +10,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@300;500;600;700;800&family=Montserrat:wght@300;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@300;700;900&display=swap" rel="stylesheet">
     
     <style>
         /* --- GLOBAL --- */
@@ -32,6 +32,14 @@
             pointer-events: none; 
         }
 
+        #cursor-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 9999; 
+            pointer-events: none; 
+        }
+
         /* --- NAVBAR --- */
         .navbar {
             position: relative;
@@ -41,6 +49,9 @@
             align-items: center;
             padding: 40px 50px;
             box-sizing: border-box;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
         }
 
         .navbar .logo {
@@ -56,7 +67,7 @@
         .navbar .nav-links a {
             font-family: 'Courier Prime', monospace;
             color: #00f3ff;
-            font-size: 14px; /* Increased for readability */
+            font-size: 14px; 
             letter-spacing: 4px;
             text-transform: uppercase;
             text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
@@ -69,35 +80,31 @@
         /* --- HERO TEXT OVERLAY --- */
         #hero-text-overlay {
             position: absolute;
-            top: 10%; /* MOVED UP to avoid Oracle overlap */
+            top: 13%; /* Sits cleanly at the top */
             left: 50%;
-            /* Starts Dead Center */
             transform: translate(-50%, 0) scale(1);
             text-align: center;
             z-index: 15;
             pointer-events: none; 
-            /* Cinematic smooth glide to the corner */
+            /* Cinematic glide down into the right-side void */
             transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* The Animation Class triggered on Explosion */
         #hero-text-overlay.exploded {
-            /* Glides Right, doesn't go too far up since it's already high */
-            transform: translate(25vw, 2vh) scale(0.7);
+            /* Drops right and down, anchoring above the bio */
+            transform: translate(25vw, 24vh) scale(0.65);
         }
 
         #hero-text-overlay h1 {
             font-family: 'Inter', sans-serif;
             font-size: 1.1rem;
             letter-spacing: 0.2em;
-            color: #888;
-            font-weight: 400;
             line-height: 1.8;
-            text-transform: uppercase;
             margin: 0;
+            text-transform: uppercase;
         }
 
-        #hero-text-overlay span {
+        #hero-text-overlay .highlight {
             font-family: 'Montserrat', sans-serif;
             color: #fff;
             font-size: 2rem;
@@ -106,9 +113,15 @@
             text-shadow: 0 0 20px rgba(255,255,255,0.3);
         }
 
+        #hero-text-overlay .muted {
+            color: #888;
+            font-weight: 400;
+        }
+
+        /* The Cyan Hint */
         .hero-hint {
             position: absolute;
-            top: 85%; /* MOVED DOWN to give Oracle space */
+            top: 32%; /* Positioned above the Oracle, below the Hero text */
             left: 50%;
             transform: translateX(-50%);
             color: #00f3ff;
@@ -122,46 +135,46 @@
             z-index: 15;
         }
 
-        /* --- NEW, FLAWLESS GRID LAYOUT --- */
+        /* --- NEW FLAWLESS GRID LAYOUT --- */
         .case-wrapper {
             position: relative;
             z-index: 10;
             display: grid;
-            /* 1: VertLine, 2: Oracle & Projects, 3: Sidebar Bio */
-            grid-template-columns: 80px minmax(500px, 1fr) 300px;
+            /* Wider right column to push bio towards the edge */
+            grid-template-columns: 80px minmax(500px, 1fr) 340px;
             padding-top: 40px;
-            max-width: 1200px;
+            max-width: 1250px; /* Slightly wider boundaries */
             margin: 0 auto;
-            column-gap: 40px;
+            column-gap: 50px;
         }
 
-        /* R1 C2: Reserves physical blank space for the Atom */
+        /* Reserved Space for Oracle */
         .oracle-spacer {
             grid-column: 2;
             grid-row: 1;
-            height: 750px; /* INCREASED to push Projects down further */
+            height: 800px; /* Massive stage for atomic explosion */
         }
 
-        /* R1 C3: "Know more of me" starts to the right of the Oracle */
+        /* Sidebar Bio (Pushed right and down) */
         .sidebar-bio {
             grid-column: 3;
             grid-row: 1;
             display: flex;
             flex-direction: column;
             gap: 16px;
-            padding-top: 300px;  /* INCREASED to move Bio down */
+            padding-top: 380px;  /* Deep down, carving out that empty space above */
         }
 
         .sidebar-img {
-            width: 100px; height: 100px; 
+            width: 120px; height: 120px; /* Increased Size */
             border-radius: 4px; object-fit: cover;
             filter: grayscale(100%) contrast(1.2);
         }
 
-        .sidebar-bio p { font-size: 0.8rem; line-height: 1.8; color: #888; margin: 0; }
+        .sidebar-bio p { font-size: 0.85rem; line-height: 1.8; color: #888; margin: 0; }
         .sidebar-bio a { font-size: 0.75rem; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; color: #fff; text-transform: uppercase; letter-spacing: 0.05em; }
 
-        /* R2 C1: Features Work Line */
+        /* Featured Works Axis */
         .vertical-line {
             grid-column: 1;
             grid-row: 2; 
@@ -171,10 +184,10 @@
             letter-spacing: 4px;
             color: #666;
             text-align: right;
-            padding-top: 0px;
+            padding-top: 20px;
         }
 
-        /* R2 C2+3: Projects stretching across the void */
+        /* Projects Section (Spans Col 2 & 3) */
         .projects-container { 
             grid-column: 2 / 4; 
             grid-row: 2;
@@ -189,7 +202,7 @@
         .slide-tags { display: flex; gap: 8px; }
         .slide-tags span { font-size: 0.7rem; color: #fff; background: #111; padding: 4px 8px; border: 1px solid #333; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
         
-        /* R3 C2+3: Connect section */
+        /* Connect Section */
         .connect-section { 
             grid-column: 2 / 4; 
             grid-row: 3;
@@ -206,13 +219,14 @@
             .oracle-spacer { height: 400px; }
             .project-row { grid-template-columns: 1fr; gap: 16px; }
             #hero-text-overlay.exploded { transform: translate(-50%, -12vh) scale(0.7); } 
-            .hero-hint { top: 65%; }
+            .hero-hint { top: 25%; }
         }
     </style>
 </head>
 <body>
 
     <canvas id="bg-canvas"></canvas>
+    <canvas id="cursor-canvas"></canvas>
 
     <nav class="navbar">
         <a href="/" class="logo">PRIYASH VASAVA</a>
@@ -224,26 +238,32 @@
         </div>
     </nav>
 
-    <!-- Overlay Text & Hint -->
+    <!-- Interactive Hero Text Overlay -->
     <div id="hero-text-overlay">
-        <h1>Analyst by day<br><span>VIBE CODER</span><br>by night</h1>
+        <h1>
+            <span class="highlight">ANALYST</span> <span class="muted">BY DAY</span><br>
+            <span class="highlight">VIBE CODER</span><br>
+            <span class="muted">BY NIGHT</span>
+        </h1>
     </div>
+    
     <div class="hero-hint" id="hint">CLICK AND HOLD TO BLOW YOUR MIND</div>
 
     <div class="case-wrapper">
         
-        <!-- Row 1: Spacer & Bio -->
+        <!-- Oracle Anchor -->
         <div class="oracle-spacer" id="oracle-anchor"></div>
 
+        <!-- Bio sidebar pushed deeply down / right -->
         <div class="sidebar-bio">
-            <img src="assets/user-portrait.jpg" alt="Priyash" class="sidebar-img" onerror="this.src='https://via.placeholder.com/100/111/444?text=PV'">
+            <img src="assets/user-portrait.jpg" alt="Priyash" class="sidebar-img" onerror="this.src='https://via.placeholder.com/120/111/444?text=PV'">
             <p>
                 I like to think of myself as an observer. Observing different kinds of systems, from the system of Nature to the system of Metropolitan city and much more. Fascinated by how they function, why they break, and how they can be optimized. Be it a problem-solving project or just curiosity, I rely on SQL and Power BI as my core tools to uncover facts.
             </p>
             <a href="who-am-i.html">Know more of me ↗</a>
         </div>
 
-        <!-- Row 2: Vertical Line & Projects -->
+        <!-- Featured Works Axis -->
         <div class="vertical-line">FEATURED WORKS</div>
         
         <div id="projects" class="projects-container">
@@ -266,7 +286,6 @@
             </a>
         </div>
 
-        <!-- Row 3: Connect -->
         <div id="connect" class="connect-section">
             <blockquote>
                 "In God we trust. All others must bring data."<br>
@@ -284,15 +303,18 @@
 
     <!-- MAIN SCRIPT -->
     <script>
-        const canvas = document.getElementById('bg-canvas');
-        const ctx = canvas.getContext('2d');
+        const bgCanvas = document.getElementById('bg-canvas');
+        const bgCtx = bgCanvas.getContext('2d');
+        const cursorCanvas = document.getElementById('cursor-canvas');
+        const cursorCtx = cursorCanvas.getContext('2d');
+
         const hintEl = document.getElementById('hint');
         const heroText = document.getElementById('hero-text-overlay');
         const oracleAnchor = document.getElementById('oracle-anchor');
         
         let W, H, cx, cy; 
         
-        const N = 4000; // GREATLY INCREASED for mass particle density
+        const N = 4000; // MASSIVE PARTICLE DENSITY
         let particles =[];
         let stars = [];
         let mouseTrail =[];
@@ -305,10 +327,14 @@
         let chargeLevel = 0;
         let answerTimer = 0;
 
+        // 15 BRAND NEW CREATIVE / TECH / EXISTENTIAL GEN-Z ANSWERS
         const answers =[
-            "IT IS CERTAIN", "WITHOUT\nA DOUBT", "YES\nDEFINITELY", "OUTLOOK\nGOOD", "SIGNS POINT\nTO YES",
-            "DON'T COUNT\nON IT", "MY REPLY\nIS NO", "SOURCES\nSAY NO", "OUTLOOK\nPOOR", "VERY\nDOUBTFUL",
-            "VIBE CHECK:\nPASSED", "ERROR 404:\nNOT FOUND", "DEPLOY ON\nFRIDAY", "SKILL\nISSUE", "CTRL + Z"
+            // 5 Positive
+            "THE UNIVERSE\nALIGNS", "GREEN LIGHT", "TRUST YOUR\nGUT", "IT IS\nWRITTEN", "ABSOLUTELY",
+            // 5 Negative
+            "NOT IN THIS\nTIMELINE", "THE VIBES\nARE OFF", "RETHINK\nEVERYTHING", "HARD NO", "ABORT\nMISSION",
+            // 5 Wildcard / Tech
+            "PLOT TWIST\nIMMINENT", "RECALIBRATING...", "ASK THE\nSIMULATION", "MAIN CHARACTER\nENERGY", "GLITCH IN\nTHE MATRIX"
         ];
 
         const colors =['#00f3ff', '#b026ff', '#ffffff'];
@@ -334,13 +360,13 @@
                 let alpha = Math.min(1, W / this.z);
                 if (state === 'charging') alpha = Math.max(0.1, 1 - chargeLevel);
                 
-                ctx.fillStyle = this.color;
-                ctx.globalAlpha = alpha;
-                ctx.beginPath(); ctx.arc(this.x, screenY, this.size, 0, Math.PI * 2); ctx.fill();
+                bgCtx.fillStyle = this.color;
+                bgCtx.globalAlpha = alpha;
+                bgCtx.beginPath(); bgCtx.arc(this.x, screenY, this.size, 0, Math.PI * 2); bgCtx.fill();
             }
         }
 
-        // --- THE QUANTUM ATOM ---
+        // --- QUANTUM ATOM PARTICLES ---
         class Particle {
             constructor() {
                 let type = Math.random();
@@ -351,7 +377,7 @@
                     this.ox = Math.sin(phi) * Math.cos(theta) * r;
                     this.oy = Math.sin(phi) * Math.sin(theta) * r;
                     this.oz = Math.cos(phi) * r;
-                } else { // Rings
+                } else { // 3 Orbital Rings
                     let angle = Math.random() * Math.PI * 2;
                     let ring = Math.floor(Math.random() * 3);
                     let r = 0.9 + Math.random() * 0.2; 
@@ -389,7 +415,6 @@
                     this.vx += (this.tx - this.x) * spring;
                     this.vy += (this.ty - this.y) * spring;
 
-                    // Hover Repel
                     if (state === 'idle') {
                         let mx = mouse.x - this.x, my = mouse.y - this.y;
                         let mDist = Math.hypot(mx, my);
@@ -404,6 +429,7 @@
                         this.vx += (this.tx - this.x) * 0.08;
                         this.vy += (this.ty - this.y) * 0.08;
                     } else if (this.isDebris) {
+                        // Explosion logic: Blast out, hit drag, drift left!
                         this.vx *= 0.95; 
                         this.vy *= 0.95;
                         this.vx -= 0.08 * (W / Math.max(this.z, 1));
@@ -426,33 +452,36 @@
                         depthAlpha = 0; 
                     }
                 } else {
-                    // Improved alpha math, so back of atom is clearly visible
                     depthAlpha = Math.max(0.1, (this.z + baseRadius) / (baseRadius * 2.2));
                 }
 
                 if (depthAlpha <= 0) return; 
                 
-                ctx.globalAlpha = depthAlpha;
-                ctx.fillStyle = this.color; 
+                bgCtx.globalAlpha = depthAlpha;
+                bgCtx.fillStyle = this.color; 
                 let renderSize = (state === 'answering' && this.isText) ? this.size * 1.5 : this.size * (depthAlpha + 0.5);
-                ctx.beginPath(); ctx.arc(this.x, this.y, renderSize, 0, Math.PI * 2); ctx.fill();
+                bgCtx.beginPath(); bgCtx.arc(this.x, this.y, renderSize, 0, Math.PI * 2); bgCtx.fill();
             }
         }
 
-        // --- MATH & LOGIC ---
+        // --- LOGIC ---
 
         function updateOraclePosition() {
             const rect = oracleAnchor.getBoundingClientRect();
             cx = rect.left + (rect.width / 2);
-            cy = rect.top + (rect.height / 2) + window.scrollY; 
+            // Oracle visually sits slightly higher in its huge container
+            cy = rect.top + (rect.height / 2.2) + window.scrollY; 
         }
 
         function init() {
-            W = canvas.width = window.innerWidth;
-            H = canvas.height = window.innerHeight;
+            W = window.innerWidth;
+            H = window.innerHeight;
             
-            baseRadius = Math.min(W, H) * 0.32;
-            if(baseRadius > 250) baseRadius = 250;
+            bgCanvas.width = cursorCanvas.width = W;
+            bgCanvas.height = cursorCanvas.height = H;
+            
+            baseRadius = Math.min(W, H) * 0.28; // Tightly controlled core size
+            if(baseRadius > 230) baseRadius = 230;
             
             updateOraclePosition();
 
@@ -466,15 +495,17 @@
             tCanvas.width = W; tCanvas.height = H;
             tCtx.fillStyle = 'white'; tCtx.textAlign = 'center'; tCtx.textBaseline = 'middle';
             
-            let size = Math.min(W/12, 65); if(W < 500) size = 35;
+            let size = Math.min(W/14, 55); if(W < 500) size = 32;
             tCtx.font = `900 ${size}px "Montserrat", sans-serif`;
             let lines = answerText.split("\n");
             
+            // Calculates height so 8-Ball Text sits exactly where the "Analyst..." text used to be!
             let screenCy = cy - window.scrollY;
-            let startY = screenCy - ((size * 1.1 * (lines.length - 1)) / 2) - 15;
+            let startY = Math.max(H * 0.18, screenCy - baseRadius - 160);
+            
             lines.forEach((line, i) => { tCtx.fillText(line, W/2, startY + (i * size * 1.1)); });
 
-            let subSize = Math.min(W/35, 14); if (subSize < 10) subSize = 10;
+            let subSize = Math.min(W/35, 12); if (subSize < 10) subSize = 10;
             tCtx.font = `400 ${subSize}px "Courier Prime", monospace`;
             tCtx.letterSpacing = "2px";
             let subY = startY + (lines.length * size * 1.1) + 15;
@@ -482,7 +513,7 @@
 
             const d = tCtx.getImageData(0, 0, W, H).data;
             const pts =[];
-            const step = Math.min(W, H) > 800 ? 5 : 4; 
+            const step = Math.min(W, H) > 800 ? 4 : 3; // Dense text rendering
             for (let y = 0; y < H; y += step) {
                 for (let x = 0; x < W; x += step) {
                     if (d[(y * W + x) * 4 + 3] > 128) pts.push({ x, y: y + window.scrollY }); 
@@ -494,7 +525,7 @@
         function triggerAnswer() {
             state = 'answering';
             hintEl.style.opacity = 0;
-            heroText.classList.add('exploded');
+            heroText.classList.add('exploded'); // Triggers elegant text glide
             
             const pts = getTextPoints(answers[Math.floor(Math.random() * answers.length)]);
             
@@ -503,6 +534,7 @@
                     p.tx = pts[i].x; p.ty = pts[i].y; p.isText = true; p.isDebris = false;
                 } else {
                     p.isText = false; p.isDebris = true;
+                    // Violent Outward Blast
                     let angle = Math.random() * Math.PI * 2;
                     let force = Math.random() * 80 + 20; 
                     p.vx = Math.cos(angle) * force;
@@ -517,6 +549,7 @@
                 hintEl.style.opacity = 0.8;
                 heroText.classList.remove('exploded'); 
                 
+                // Infinite Loop Physics: Rebuild instantly inside core
                 particles.forEach(p => {
                     if (p.isDebris) { p.x = cx; p.y = cy; p.vx = 0; p.vy = 0; }
                     p.isText = false; p.isDebris = false;
@@ -552,64 +585,67 @@
         // --- RENDER LOOP ---
 
         function loop() {
-            ctx.clearRect(0, 0, W, H);
-            ctx.globalCompositeOperation = 'lighter';
+            // Draw on Back Canvas
+            bgCtx.clearRect(0, 0, W, H);
+            bgCtx.globalCompositeOperation = 'lighter';
 
             stars.forEach(s => { s.update(); s.draw(); });
 
             if (state === 'idle') {
-                rotationY += 0.0025; rotationX += 0.001;
+                rotationY += 0.0025; rotationX += 0.0015;
                 baseRadius += (Math.min(W, H) * 0.32 - baseRadius) * 0.1; 
-                if(baseRadius > 250) baseRadius = 250;
+                if(baseRadius > 230) baseRadius = 230;
             } else if (state === 'charging') {
-                chargeLevel += 0.01;
+                chargeLevel += 0.008; // Slower buildup for suspense
                 rotationY += 0.02 + (chargeLevel * 0.06); rotationX += 0.01 + (chargeLevel * 0.06);
                 baseRadius -= chargeLevel * 2; 
-                ctx.save(); ctx.translate(Math.random() * 4 - 2, Math.random() * 4 - 2);
+                bgCtx.save(); bgCtx.translate(Math.random() * 4 - 2, Math.random() * 4 - 2);
             }
 
-            ctx.save();
-            ctx.translate(0, -window.scrollY);
+            bgCtx.save();
+            bgCtx.translate(0, -window.scrollY);
 
             if (state !== 'answering') {
-                ctx.lineWidth = 0.4;
+                bgCtx.lineWidth = 0.4;
                 for (let i = 0; i < N; i += 12) { 
                     for (let j = i + 1; j < N; j += 12) {
                         let dx = particles[i].x - particles[j].x; let dy = particles[i].y - particles[j].y;
                         let distSq = dx * dx + dy * dy;
                         if (distSq < 4000) {
-                            ctx.strokeStyle = `rgba(0, 243, 255, ${0.15 * (1 - distSq/4000)})`;
-                            ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
+                            bgCtx.strokeStyle = `rgba(0, 243, 255, ${0.15 * (1 - distSq/4000)})`;
+                            bgCtx.beginPath(); bgCtx.moveTo(particles[i].x, particles[i].y); bgCtx.lineTo(particles[j].x, particles[j].y); bgCtx.stroke();
                         }
                     }
                 }
             }
 
             particles.forEach(p => { p.update(); p.draw(); });
-            ctx.restore(); 
+            bgCtx.restore(); // Undo scroll translation for mouse overlay
 
-            if (state === 'charging') ctx.restore(); 
+            if (state === 'charging') bgCtx.restore(); // Undo shake
 
+            // Draw on Top Cursor Canvas
+            cursorCtx.clearRect(0, 0, W, H);
             if (mouse.x > 0 && mouse.y > 0) {
                 mouseTrail.push({x: mouse.x, y: mouse.y});
                 if (mouseTrail.length > 20) mouseTrail.shift();
                 
-                ctx.globalCompositeOperation = 'lighter';
+                cursorCtx.globalCompositeOperation = 'lighter';
                 for (let i = 0; i < mouseTrail.length; i++) {
                     let pt = mouseTrail[i]; let ratio = i / mouseTrail.length;
-                    ctx.beginPath(); ctx.arc(pt.x, pt.y, ratio * 3.5, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(0, 243, 255, ${ratio})`; ctx.fill();
+                    cursorCtx.beginPath(); cursorCtx.arc(pt.x, pt.y, ratio * 3.5, 0, Math.PI * 2);
+                    cursorCtx.fillStyle = `rgba(0, 243, 255, ${ratio})`; cursorCtx.fill();
                 }
                 
                 let head = mouseTrail[mouseTrail.length - 1];
                 if(head) {
-                    ctx.beginPath(); ctx.arc(head.x, head.y, 4, 0, Math.PI * 2);
-                    ctx.fillStyle = '#ffffff'; ctx.fill();
+                    cursorCtx.beginPath(); cursorCtx.arc(head.x, head.y, 4, 0, Math.PI * 2);
+                    cursorCtx.fillStyle = '#ffffff'; cursorCtx.fill();
                 }
-                ctx.globalCompositeOperation = 'source-over';
+                cursorCtx.globalCompositeOperation = 'source-over';
             } else if (mouseTrail.length > 0) mouseTrail.shift();
 
-            ctx.globalAlpha = 1.0;
+            bgCtx.globalAlpha = 1.0;
             requestAnimationFrame(loop);
         }
 
