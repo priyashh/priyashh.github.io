@@ -3,27 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio | Priyash Vasava</title>
+    <title>Portfolio | Priyash Vasava</titltle>
     
-    <link rel="stylesheet" href="style.css">
+    >
     
     <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@300;700;900&display=swap" rel="stylesheet">
+    //fonts.googleapis.com">
+    //fonts.gstatic.com" crossorigin>
+    //fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@300;700;900&display=swap" rel="stylesheet">
     
     <style>
-        * { cursor: none !important; }
-        
-        body, html {
-            margin: 0; padding: 0; background-color: #030305;
-            color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* Combined Fullscreen Graphic Canvas */
-        #gl-canvas {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            z-index: 0; pointer-events: none;
+        body, html {
+            margin: 0;
+            padding: 0;
+            background-color: #030305;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
         }
 
         /* --- NAVBAR --- */
@@ -40,62 +38,132 @@
         }
         .navbar .nav-links a:hover { opacity: 1; color: #fff; text-shadow: 0 0 15px rgba(255, 255, 255, 0.8); }
 
+        /* --- HERO AREA LAYOUT (ORACLE + TEXT + BIO) --- */
+        .hero-wrapper {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* New oracle canvas fills hero background */
+        #oracle-canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .scanlines {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0.3;
+        }
+
+        #hud {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 40px;
+            box-sizing: border-box;
+            background: radial-gradient(circle at center, transparent 40%, rgba(3,3,5,0.8) 100%);
+        }
+
+        .hud-text {
+            color: #00f3ff;
+            font-size: 12px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+            opacity: 0.7;
+        }
+
+        #prompt {
+            position: absolute;
+            bottom: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            transition: opacity 0.3s;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 10px;
+            letter-spacing: 8px;
+            text-shadow: 0 0 20px rgba(255,255,255,0.5);
+        }
+
         /* --- ANIMATED HERO TEXT --- */
         #hero-text-overlay {
             position: absolute;
-            top: 10vh; /* moved slightly up */
+            top: 12vh; /* up a bit to avoid overlap with oracle center */
             left: 50%;
             transform: translateX(-50%) scale(1);
             text-align: center;
-            z-index: 15;
+            z-index: 4;
             pointer-events: none;
             transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s;
         }
 
-        /* Exploded State -> Shifts perfectly over to the bio */
+        /* Exploded state: fly to the right, above bio picture */
         #hero-text-overlay.exploded {
-            /* Pushes right and down so it sits over the bio area */
-            transform: translate(30vw, 8vh) scale(0.65);
+            transform: translate(26vw, 6vh) scale(0.7);
         }
 
         #hero-text-overlay h1 { font-family: 'Inter', sans-serif; font-size: 1.1rem; letter-spacing: 0.2em; line-height: 1.8; margin: 0; }
         #hero-text-overlay .highlight { font-family: 'Montserrat', sans-serif; color: #fff; font-size: 2rem; font-weight: 900; letter-spacing: 0.15em; text-shadow: 0 0 15px rgba(255,255,255,0.4); }
         #hero-text-overlay .muted { color: #888; font-weight: 400; }
 
-        /* The Cyan Hint Action */
         #hint {
-            position: absolute; top: 32vh; left: 50%; transform: translateX(-50%);
+            position: absolute; top: 30vh; left: 50%; transform: translateX(-50%);
             color: #00f3ff; font-family: 'Courier Prime', monospace; font-size: 11px; letter-spacing: 5px;
-            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5); transition: opacity 0.3s; z-index: 15; pointer-events: none;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5); transition: opacity 0.3s; z-index: 4; pointer-events: none;
         }
 
-        /* The Subtitle under the 8-Ball answer */
         #magic-quote {
-            position: absolute; top: 36vh; left: 50%; transform: translateX(-50%);
+            position: absolute; top: 35vh; left: 50%; transform: translateX(-50%);
             font-family: 'Courier Prime', monospace; color: #00f3ff; font-size: 12px; letter-spacing: 3px;
-            opacity: 0; transition: opacity 0.5s; z-index: 15; pointer-events: none; text-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
+            opacity: 0; transition: opacity 0.5s; z-index: 4; pointer-events: none; text-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
         }
 
-        /* --- THE PAGE LAYOUT --- */
+        /* --- PAGE LAYOUT FOR BIO + PROJECTS --- */
         .layout-container {
-            position: relative; z-index: 10; max-width: 1400px; margin: 0 auto;
-            display: flex; justify-content: space-between; padding: 40px 5vw;
+            position: relative; z-index: 5; max-width: 1400px; margin: 0 auto;
+            display: flex; justify-content: flex-end; padding: 40px 5vw 0 5vw;
+            pointer-events: none;
         }
 
-        /* Contains Profile right side */
         .right-column {
-            width: 340px; margin-top: 15vh;
-            margin-right: 5vw; /* nudged slightly to the right */
-            display: flex; flex-direction: column; gap: 15px; pointer-events: none;
+            width: 340px;
+            margin-top: -10vh; /* pulls bio up so hero text can sit above */
+            margin-right: 4vw; /* keeps bio to the right, not centered */
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            pointer-events: auto;
         }
 
-        .sidebar-img { width: 120px; height: 120px; border-radius: 4px; object-fit: cover; filter: grayscale(100%); pointer-events: auto;}
-        .right-column p { font-size: 0.85rem; line-height: 1.8; color: #888; margin: 0; pointer-events: auto;}
-        .right-column a { font-size: 0.75rem; font-weight: 700; color: #fff; text-decoration: underline; text-underline-offset: 4px; letter-spacing: 0.05em; pointer-events: auto; }
+        .sidebar-img { width: 120px; height: 120px; border-radius: 4px; object-fit: cover; filter: grayscale(100%); }
+        .right-column p { font-size: 0.85rem; line-height: 1.8; color: #888; margin: 0; }
+        .right-column a { font-size: 0.75rem; font-weight: 700; color: #fff; text-decoration: underline; text-underline-offset: 4px; letter-spacing: 0.05em; }
 
         /* --- Projects Lower Half --- */
         .bottom-section {
-            position: relative; z-index: 10; max-width: 1100px; margin: 60vh auto 0 auto;
+            position: relative; z-index: 5; max-width: 1100px; margin: 60vh auto 0 auto;
             border-top: 1px solid rgba(255,255,255,0.05); padding-top: 80px; padding-bottom: 80px; pointer-events: auto;
         }
 
@@ -110,9 +178,6 @@
 </head>
 <body>
 
-    <!-- Graphics Engine -->
-    <canvas id="gl-canvas"></canvas>
-
     <nav class="navbar">
         <a href="/" class="logo">PRIYASH VASAVA</a>
         <div class="nav-links">
@@ -123,22 +188,36 @@
         </div>
     </nav>
 
-    <!-- Fly-away Text Component -->
-    <div id="hero-text-overlay">
-        <h1>
-            <span class="highlight">ANALYST</span> <span class="muted">BY DAY</span><br>
-            <span class="highlight">VIBE CODER</span><br>
-            <span class="muted">BY NIGHT</span>
-        </h1>
-    </div>
-    
-    <div id="hint">CLICK AND HOLD TO BLOW YOUR MIND</div>
-    <!-- Quote container -->
-    <div id="magic-quote">- says the magic 8 ball</div>
+    <!-- HERO WRAPPER: NEW ORACLE + HERO TEXT -->
+    <div class="hero-wrapper">
+        anvas id="oracle-canvas"></canvas>
+        <div class="scanlines"></div>
+        
+        <div id="hud">
+            <div class="hud-text">SYS.ORACLE.V1 // SECURE CONNECTION</div>
+            <div class="hud-text" style="text-align: right;">AWAITING QUERY...</div>
+            
+            <div id="prompt">
+                <div class="title">THE ORACLE</div>
+                <div class="hud-text">HOLD MOUSE TO FOCUS INTENT<br>RELEASE FOR ANSWER</div>
+            </div>
+        </div>
 
-    <!-- Upper Body Bio Position -->
+        <!-- Animated hero tagline -->
+        <div id="hero-text-overlay">
+            <h1>
+                <span class="highlight">ANALYST</span> <span class="muted">BY DAY</span><br>
+                <span class="highlight">VIBE CODER</span><br>
+                <span class="muted">BY NIGHT</span>
+            </h1>
+        </div>
+        
+        <div id="hint">CLICK AND HOLD TO BLOW YOUR MIND</div>
+        <div id="magic-quote">- says the magic 8 ball</div>
+    </div>
+
+    <!-- BIO BELOW HERO, ON THE RIGHT -->
     <div class="layout-container">
-        <div><!-- Left side empty to let Canvas shine --></div>
         <div class="right-column">
             <img src="assets/user-portrait.jpg" alt="Priyash" class="sidebar-img" onerror="this.src='https://via.placeholder.com/120/111/444?text=PV'">
             <p>I like to think of myself as an observer. Observing different kinds of systems, from the system of Nature to the system of Metropolitan city and much more. Fascinated by how they function, why they break, and how they can be optimized. Be it a problem-solving project or just curiosity, I rely on SQL and Power BI as my core tools to uncover facts.</p>
@@ -167,338 +246,299 @@
         </a>
     </div>
 
-    <!-- JavaScript Base -->
+    <!-- QUANTUM ORACLE SCRIPT (adapted to #oracle-canvas) -->
     <script>
-        const canvas = document.getElementById('gl-canvas');
-        const ctx = canvas.getContext('2d', { alpha: false }); // Optmizing draw calls
-
-        const hintEl = document.getElementById('hint');
+        const canvas = document.getElementById('oracle-canvas');
+        const ctx = canvas.getContext('2d');
+        const promptEl = document.getElementById('prompt');
         const heroText = document.getElementById('hero-text-overlay');
-        const quoteEl = document.getElementById('magic-quote');
-
-        let W, H;
-        const N = 3800; // Increased density for rendering
+        const magicQuote = document.getElementById('magic-quote');
+        
+        let W, H, cx, cy;
+        const N = 2500; // Number of particles
         let particles = [];
-        let stars = [];
         
-        let cx = 0; let cy = 0;
-        let baseRadius = 260; // Size of Atomic Core Oracle
-        let rotationX = 0; let rotationY = 0;
+        // 3D Sphere Variables
+        let sphereRadius = 250;
+        let baseRadius = 250;
+        let rotationX = 0;
+        let rotationY = 0;
         
-        let state = 'idle'; // State-machine
-        let cgLevel = 0; // Charge tracking
+        // Interaction States
+        let state = 'idle'; // idle, charging, answering
+        let chargeLevel = 0;
+        let answerTimer = 0;
+        const mouse = { x: -1000, y: -1000, isDown: false };
 
-        let mouse = { x: -1000, y: -1000 };
-        let trail = []; // Holding tail arrays
-
-        // scroll velocity for trail-like effect
-        let lastScrollY = window.scrollY;
-        let scrollVel = 0;
-
-        const colors = ['#00f3ff', '#b026ff', '#ffffff']; // Brand Cyan, Purple, White Array
-        const answerPool = [
-            "THE UNIVERSE ALIGNS", "GREEN LIGHT", "TRUST YOUR GUT",
-            "RECALIBRATING...", "THE VIBES ARE OFF", "ROUTING ERROR",
-            "GLITCH DETECTED", "SKILL ISSUE", "MAIN CHARACTER ENERGY",
-            "DEFINITELY YES", "HARD PASS", "ASK THE SIMULATION"
+        const answers = [
+            "CERTAIN", "DECIDEDLY SO", "WITHOUT A DOUBT", "DEFINITELY", "RELY ON IT",
+            "YES", "MOST LIKELY", "OUTLOOK GOOD", "SIGNS POINT TO YES", "AFFIRMATIVE",
+            "HAZY TRY AGAIN", "ASK LATER", "BETTER NOT TELL", "CANNOT PREDICT", "CONCENTRATE",
+            "DON'T COUNT ON IT", "NO", "SOURCES SAY NO", "OUTLOOK POOR", "DOUBTFUL"
         ];
 
-        // Ensure Math calculations are tied explicitly to screen ratios immediately at boot.
-        function updateScreen() {
+        const colors = ['#00f3ff', '#b026ff', '#ffffff'];
+
+        function resize() {
             W = canvas.width = window.innerWidth;
             H = canvas.height = window.innerHeight;
-            
             cx = W / 2;
-            cy = H * 0.50; // Oracle spins exactly at 50% screen height natively always 
+            cy = H / 2;
+        }
+        window.addEventListener('resize', resize);
+        resize();
 
-            baseRadius = Math.min(W, H) * 0.30;
-            if(baseRadius > 250) baseRadius = 250;
+        function randomSpherePoint() {
+            const u = Math.random();
+            const v = Math.random();
+            const theta = 2 * Math.PI * u;
+            const phi = Math.acos(2 * v - 1);
+            return {
+                x: Math.sin(phi) * Math.cos(theta),
+                y: Math.sin(phi) * Math.sin(theta),
+                z: Math.cos(phi)
+            };
         }
 
-        class StarBg {
+        class Particle {
             constructor() {
-                this.x = Math.random() * W;
-                this.pageZ = Math.random() * (H * 2.5); // Locks Y coords across long distances for normal Parallax scolls.
-                this.depth = Math.random() * W; 
-                this.s = Math.random() * 1.5;
-                this.color = Math.random() > 0.85 ? '#00f3ff' : '#ffffff';
-            }
-            update() {
-                this.x -= 0.12 * (W / Math.max(this.depth, 1)); 
-                if (this.x < 0) this.x = W;
-            }
-            draw() {
-                // Parallax calculations against actual window scroll.
-                let renderY = this.pageZ - (window.scrollY * (0.8 + 0.5 * (100 / Math.max(this.depth, 100))));
-                if (renderY < -100 || renderY > H + 100) return; // Save off-screen renders
-
-                let opacityFactor = Math.min(1, W / this.depth);
-                if (state === 'charge') opacityFactor = Math.max(0.1, 1 - cgLevel);
-
-                ctx.globalAlpha = opacityFactor;
-                ctx.fillStyle = this.color;
-                ctx.beginPath(); ctx.arc(this.x, renderY, this.s, 0, Math.PI * 2); ctx.fill();
-            }
-        }
-
-        class AtomCore {
-            constructor() {
-                // Core or Orbit configuration probabilities (30% pure core clump)
-                if (Math.random() < 0.3) {
-                    let u = Math.random(), v = Math.random(), theta = 2*Math.PI*u, phi = Math.acos(2*v - 1);
-                    this.ox = Math.sin(phi) * Math.cos(theta) * 0.45; // inner tight ball
-                    this.oy = Math.sin(phi) * Math.sin(theta) * 0.45;
-                    this.oz = Math.cos(phi) * 0.45;
-                } else {
-                    let angle = Math.random() * Math.PI * 2;
-                    let rings = Math.floor(Math.random() * 3);
-                    let x = Math.cos(angle), z = Math.sin(angle), y = (Math.random()-0.5) * 0.08; 
-                    
-                    if (rings === 0) { let t = Math.PI / 3; this.ox = x; this.oy = y*Math.cos(t) - z*Math.sin(t); this.oz = y*Math.sin(t) + z*Math.cos(t); }
-                    else if (rings === 1) { let t = -Math.PI / 3; this.ox = x; this.oy = y*Math.cos(t) - z*Math.sin(t); this.oz = y*Math.sin(t) + z*Math.cos(t); }
-                    else { this.ox = x; this.oy = y; this.oz = z; }
-                }
-
-                // Initial assignments
-                this.x = cx; this.y = cy; this.z = 0; 
-                this.tx = 0; this.ty = 0; // Text target positions array setup
-                this.c = colors[Math.floor(Math.random() * colors.length)];
-                this.sz = Math.random() * 1.5 + 0.6;
+                const pt = randomSpherePoint();
+                this.ox = pt.x;
+                this.oy = pt.y;
+                this.oz = pt.z;
+                
+                this.x = 0; this.y = 0; this.z = 0;
+                this.tx = 0; this.ty = 0;
+                
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.size = Math.random() * 1.5 + 0.5;
+                
                 this.vx = 0; this.vy = 0;
-                
-                this.flagDebris = false; 
-                this.flagText = false;
+                this.assignedText = false;
             }
 
-            update() {
-                if (state === 'idle' || state === 'charge') {
-                    // Quantum math transformations mapped into bounds natively 
-                    let rx = this.ox * baseRadius * Math.cos(rotationY) - (this.oz * baseRadius) * Math.sin(rotationY);
-                    let rz = this.ox * baseRadius * Math.sin(rotationY) + (this.oz * baseRadius) * Math.cos(rotationY);
-                    let ry = this.oy * baseRadius * Math.cos(rotationX) - rz * Math.sin(rotationX);
-                    let fZ = this.oy * baseRadius * Math.sin(rotationX) + rz * Math.cos(rotationX);
+            update(time) {
+                if (state === 'idle' || state === 'charging') {
+                    let currentRadius = sphereRadius + (Math.sin(time * 0.002 + this.ox * 10) * 10);
+                    
+                    let sx = this.ox * currentRadius;
+                    let sy = this.oy * currentRadius;
+                    let sz = this.oz * currentRadius;
 
-                    let zIndexProject = 800 / (800 - fZ);
-                    this.tx = cx + rx * zIndexProject; 
-                    // Add scroll-velocity-based lag opposite scroll direction
-                    this.ty = (cy - window.scrollY) + ry * zIndexProject - scrollVel * 4;
-                    this.z = fZ;
+                    let cosY = Math.cos(rotationY), sinY = Math.sin(rotationY);
+                    let rx = sx * cosY - sz * sinY;
+                    let rz = sx * sinY + sz * cosY;
 
-                    let flexSpring = state === 'charge' ? 0.35 : 0.08; 
-                    this.vx += (this.tx - this.x) * flexSpring;
-                    this.vy += (this.ty - this.y) * flexSpring;
+                    let cosX = Math.cos(rotationX), sinX = Math.cos(rotationX);
+                    let ry = sy * cosX - rz * Math.sin(rotationX);
+                    let finalZ = sy * Math.sin(rotationX) + rz * cosX;
 
-                    // Interaction 
-                    if (state === 'idle') {
-                        let mDist = Math.hypot(mouse.x - this.x, mouse.y - this.y);
-                        if (mDist < 120 && mDist > 0) {
-                            let pwr = (120 - mDist) / 120;
-                            this.vx -= ((mouse.x - this.x) / mDist) * pwr * 6;
-                            this.vy -= ((mouse.y - this.y) / mDist) * pwr * 6;
-                        }
-                    }
-                } 
-                else if (state === 'burst') {
-                    if (this.flagText) {
-                        this.vx += (this.tx - this.x) * 0.12; 
-                        this.vy += (this.ty - this.y) * 0.12;
-                    } else if (this.flagDebris) {
-                        this.vx *= 0.94; this.vy *= 0.94; // Drag fields locally applying 
-                        this.vx -= 0.15; // Sweep away
+                    const perspective = 800 / (800 - finalZ);
+                    this.tx = cx + rx * perspective;
+                    this.ty = cy + ry * perspective;
+                    this.z = finalZ;
+                    this.assignedText = false;
+                }
+
+                let spring = state === 'answering' ? 0.05 : 0.1;
+                if (state === 'charging') spring = 0.3;
+                
+                let dx = this.tx - this.x;
+                let dy = this.ty - this.y;
+                
+                this.vx += dx * spring;
+                this.vy += dy * spring;
+                
+                let friction = state === 'answering' ? 0.85 : 0.9;
+                this.vx *= friction;
+                this.vy *= friction;
+
+                if (state === 'idle') {
+                    let mx = mouse.x - this.x;
+                    let my = mouse.y - this.y;
+                    let dist = Math.sqrt(mx*mx + my*my);
+                    if (dist < 100) {
+                        let force = (100 - dist) / 100;
+                        this.vx -= (mx / dist) * force * 5;
+                        this.vy -= (my / dist) * force * 5;
                     }
                 }
 
-                let pullBlocker = (state === 'burst' && !this.flagDebris && !this.flagText) ? 0.70 : 0.86;
-                this.vx *= pullBlocker; this.vy *= pullBlocker;
-                this.x += this.vx; this.y += this.vy;
+                this.x += this.vx;
+                this.y += this.vy;
             }
 
             draw() {
-                let currentAlpha = 1;
-                if (state === 'burst') {
-                    if (this.flagDebris) currentAlpha = Math.max(0, 1 - (Math.abs(this.x - cx) / (W * 0.6))); 
-                    else if (!this.flagText) currentAlpha = 0; // Hides raw idle bits during txt bursts 
+                let alpha = state === 'answering' ? 1 : Math.max(0.1, (this.z + baseRadius) / (baseRadius * 2));
+                if (alpha < 0) alpha = 0;
+                
+                ctx.globalAlpha = alpha;
+                ctx.fillStyle = this.color;
+                
+                let renderSize = state === 'answering' ? this.size * 1.5 : this.size * (alpha + 0.5);
+
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, renderSize, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < N; i++) particles.push(new Particle());
+
+        function getTextPoints(text) {
+            const tCanvas = document.createElement('canvas');
+            const tCtx = tCanvas.getContext('2d', { willReadFrequently: true });
+            tCanvas.width = W; tCanvas.height = H;
+            
+            tCtx.fillStyle = 'white';
+            tCtx.textAlign = 'center';
+            tCtx.textBaseline = 'middle';
+            tCtx.font = `bold ${Math.min(W/8, 120)}px "Courier New", monospace`;
+            
+            let words = text.split(" ");
+            if (words.length > 2 && text.length > 10) {
+                tCtx.fillText(words.slice(0, Math.ceil(words.length/2)).join(" "), W/2, H/2 - 40);
+                tCtx.fillText(words.slice(Math.ceil(words.length/2)).join(" "), W/2, H/2 + 40);
+            } else {
+                tCtx.fillText(text, W/2, H/2);
+            }
+
+            const imgData = tCtx.getImageData(0, 0, W, H).data;
+            const points = [];
+            const step = Math.min(W, H) > 800 ? 5 : 4;
+
+            for (let y = 0; y < H; y += step) {
+                for (let x = 0; x < W; x += step) {
+                    if (imgData[(y * W + x) * 4 + 3] > 128) {
+                        points.push({ x, y });
+                    }
+                }
+            }
+            return points;
+        }
+
+        function triggerAnswer() {
+            state = 'answering';
+            promptEl.style.opacity = 0;
+            magicQuote.style.opacity = 1;
+            const answer = answers[Math.floor(Math.random() * answers.length)];
+            const pts = getTextPoints(answer);
+            
+            particles.forEach((p, i) => {
+                if (i < pts.length) {
+                    p.tx = pts[i].x;
+                    p.ty = pts[i].y;
+                    p.assignedText = true;
+                    p.color = Math.random() > 0.8 ? '#ffffff' : '#00f3ff';
                 } else {
-                    currentAlpha = Math.max(0.1, (this.z + baseRadius) / (baseRadius * 2));
+                    p.tx = cx + (Math.random() - 0.5) * W * 2;
+                    p.ty = cy + (Math.random() - 0.5) * H * 2;
+                    p.color = '#b026ff';
                 }
+            });
 
-                if (currentAlpha > 0) {
-                    ctx.globalAlpha = currentAlpha;
-                    ctx.fillStyle = this.c;
-                    let actualS = (state === 'burst' && this.flagText) ? this.sz * 1.5 : this.sz;
-                    ctx.beginPath(); ctx.arc(this.x, this.y, actualS, 0, Math.PI * 2); ctx.fill();
-                }
-            }
+            heroText.classList.add('exploded');
+
+            clearTimeout(answerTimer);
+            answerTimer = setTimeout(() => {
+                state = 'idle';
+                promptEl.style.opacity = 1;
+                magicQuote.style.opacity = 0;
+                heroText.classList.remove('exploded');
+                particles.forEach(p => p.color = colors[Math.floor(Math.random() * colors.length)]);
+            }, 4000);
         }
 
-        // Logic Processor Loop Triggers
-        function generateTextBlueprint(answerInMsg) {
-            let tmpCans = document.createElement('canvas');
-            tmpCans.width = W; tmpCans.height = H;
-            let tempLayer = tmpCans.getContext('2d');
-            
-            tempLayer.fillStyle = '#fff'; tempLayer.textAlign = 'center'; tempLayer.textBaseline = 'middle';
-            let bigFontS = Math.min(W/12, 65); 
-            tempLayer.font = `900 ${bigFontS}px "Montserrat"`;
-
-            // Renders perfectly in empty column slot natively
-            let messageRows = answerInMsg.split('\\n');
-            let anchorRowCenter = cy - window.scrollY - 30; // Float center screen purely  
-            
-            messageRows.forEach((rText, indexer ) => {
-               let yOffset = anchorRowCenter - ((messageRows.length-1) * (bigFontS*1.1)/2) + (indexer * bigFontS * 1.1);
-               tempLayer.fillText(rText, W/2, yOffset);
-            });
-
-            // Adjust DOM ID node cleanly underneath text lines ! >
-            quoteEl.style.top = `${anchorRowCenter + (messageRows.length * bigFontS * 1.1) + 10}px`;
-
-            let pixelImgArr = tempLayer.getImageData(0,0,W,H).data;
-            let resultBluePnts = [];
-            // Optimize array gaps
-            for (let localY = 0; localY < H; localY += 4) {
-                for (let localX = 0; localX < W; localX += 4) {
-                    if (pixelImgArr[(localY * W + localX)*4 +3] > 120) {
-                        resultBluePnts.push({ x: localX, y: localY });
-                    }
-                }
-            }
-            return resultBluePnts;
-        }
-
-        // Engine Runner Sequence
-        function RunSystemLoop() {
-            ctx.fillStyle = '#030305';
-            ctx.fillRect(0,0,W,H);
-
-            // compute scroll velocity each frame
-            const currentScroll = window.scrollY;
-            scrollVel = currentScroll - lastScrollY;
-            lastScrollY = currentScroll;
-            
-            ctx.globalCompositeOperation = 'source-over'; 
-
-            stars.forEach(st => { st.update(); st.draw(); });
-
-            if (state === 'idle') {
-                rotationX += 0.001; rotationY += 0.003;
-                let t_r = Math.min(W, H) * 0.32; 
-                baseRadius += ((t_r > 220 ? 220 : t_r) - baseRadius) * 0.1;
-            } else if (state === 'charge') {
-                cgLevel += 0.015;
-                rotationX += 0.02 + cgLevel*0.05; rotationY += 0.02 + cgLevel*0.05;
-                baseRadius -= cgLevel * 5; 
-                if (baseRadius < 10) baseRadius = 10;
-                
-                // Active Visual Shakes during build-ups
-                ctx.save(); ctx.translate(Math.random()*4-2, Math.random()*4-2);
-            }
-
-            // Central Lines Linkages Process
-            if (state !== 'burst') {
-                ctx.lineWidth = 0.4; ctx.globalCompositeOperation = 'lighter';
-                for (let i = 0; i < N; i += 18) {
-                    for (let j = i+1; j < N; j += 18) {
-                        let distanceQ = Math.hypot(particles[i].x - particles[j].x, particles[i].y - particles[j].y);
-                        if (distanceQ < 50) {
-                             ctx.strokeStyle = `rgba(0, 243, 255, ${0.1 * (1-distanceQ/50)})`;
-                             ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
-                        }
-                    }
-                }
-                ctx.globalCompositeOperation = 'source-over';
-            }
-
-            // Output all items functionally
-            particles.forEach(pt => { pt.update(); pt.draw(); });
-            if (state === 'charge') { ctx.restore(); } 
-
-            // Pointer Tracking Trail Effects Custom 
-            if (mouse.x > 0 && mouse.y > 0) {
-                trail.push({x:mouse.x, y:mouse.y});
-                if (trail.length > 20) trail.shift();
-                
-                ctx.globalCompositeOperation = 'lighter';
-                trail.forEach((pt, loopindex) => {
-                     let tracerOptM = loopindex / trail.length;
-                     ctx.fillStyle = `rgba(0,243,255,${tracerOptM})`;
-                     ctx.beginPath(); ctx.arc(pt.x, pt.y, tracerOptM * 4, 0, Math.PI*2); ctx.fill();
-                });
-
-                if (trail.length > 0) {
-                   let mainHdr = trail[trail.length-1];
-                   ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(mainHdr.x, mainHdr.y, 4.5, 0, Math.PI*2); ctx.fill();
-                }
-                ctx.globalCompositeOperation = 'source-over';
-            }
-
-            requestAnimationFrame(RunSystemLoop);
-        }
-
-        // DOM Loading and Attachments cleanly mapped
-        window.addEventListener('DOMContentLoaded', () => {
-            updateScreen();
-            
-            // Build elements strictly safely now	
-            for(let i=0; i<N; i++) particles.push(new AtomCore());
-            for(let i=0; i<150; i++) stars.push(new StarBg());
-
-            // Pointer interactions strictly 
-            window.addEventListener('mousemove', e => { 
-                mouse.x = e.clientX; mouse.y = e.clientY; 
-            });
-
-            window.addEventListener('mousedown', e => { 
-                let hitDist = Math.hypot(mouse.x - cx, mouse.y - cy );
-                if (hitDist < 300 && state !== 'burst') { 
-                    state = 'charge'; 
-                    hintEl.style.opacity = 0; 
-                } 
-            });
-
-            window.addEventListener('mouseup', e => { 
-               if (state === 'charge') {
-                    if (cgLevel > 0.4) {
-                        // Explosion Function call execution logically safe here 
-                        state = 'burst';
-                        heroText.classList.add('exploded'); 
-                        quoteEl.style.opacity = 1;
-
-                        const rawDestPoints = generateTextBlueprint(answerPool[Math.floor(Math.random()*answerPool.length)]);
-                        
-                        particles.forEach((pBits, countid) => {
-                            if (countid < rawDestPoints.length) {
-                                pBits.tx = rawDestPoints[countid].x; pBits.ty = rawDestPoints[countid].y;
-                                pBits.flagText = true; pBits.flagDebris = false; 
-                            } else {
-                                pBits.flagText = false; pBits.flagDebris = true;
-                                let fAtk = Math.random()*80 + 30; let angL = Math.random()*2 * Math.PI;
-                                pBits.vx = Math.cos(angL)*fAtk; pBits.vy = Math.sin(angL)*fAtk; 
-                            }
-                        });
-
-                        setTimeout(() => {
-                           // Resets layout correctly
-                           state = 'idle'; cgLevel = 0; hintEl.style.opacity = 0.8;
-                           heroText.classList.remove('exploded'); quoteEl.style.opacity = 0;
-                           
-                           particles.forEach(ps=> {
-                              if (ps.flagDebris) { ps.x = cx; ps.y = cy; ps.vx = 0; ps.vy = 0; }
-                              ps.flagDebris = false; ps.flagText = false;
-                           });
-                        }, 5800); // Back into rotation gracefully
-                    } else {
-                         state = 'idle'; hintEl.style.opacity = 0.8; cgLevel = 0;
-                    }
-               }
-            });
-
-            window.addEventListener('resize', updateScreen);
-            
-            // Render kickstart perfectly safely
-            requestAnimationFrame(RunSystemLoop);
+        window.addEventListener('mousemove', e => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+        
+        window.addEventListener('mousedown', () => {
+            if (state === 'answering') return;
+            mouse.isDown = true;
+            state = 'charging';
+            promptEl.style.opacity = 0.2;
         });
 
+        window.addEventListener('mouseup', () => {
+            if (state === 'answering') return;
+            mouse.isDown = false;
+            
+            if (chargeLevel > 0.5) {
+                triggerAnswer();
+            } else {
+                state = 'idle';
+                promptEl.style.opacity = 1;
+            }
+            chargeLevel = 0;
+        });
+
+        window.addEventListener('touchstart', e => {
+            mouse.x = e.touches[0].clientX; mouse.y = e.touches[0].clientY;
+            if (state !== 'answering') { mouse.isDown = true; state = 'charging'; promptEl.style.opacity = 0.2; }
+        });
+        window.addEventListener('touchend', () => {
+            mouse.isDown = false;
+            if (state !== 'answering') {
+                if (chargeLevel > 0.5) triggerAnswer();
+                else { state = 'idle'; promptEl.style.opacity = 1; }
+                chargeLevel = 0;
+            }
+        });
+
+        function loop(time) {
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.fillStyle = 'rgba(3, 3, 5, 0.25)';
+            ctx.fillRect(0, 0, W, H);
+            
+            ctx.globalCompositeOperation = 'lighter';
+
+            if (state === 'idle') {
+                rotationY += 0.003;
+                rotationX += 0.002;
+                sphereRadius += (baseRadius - sphereRadius) * 0.1;
+            } else if (state === 'charging') {
+                chargeLevel += 0.015;
+                rotationY += 0.02 + (chargeLevel * 0.05);
+                rotationX += 0.02 + (chargeLevel * 0.05);
+                sphereRadius = baseRadius - (chargeLevel * 150);
+                
+                ctx.save();
+                ctx.translate(Math.random() * 4 - 2, Math.random() * 4 - 2);
+            }
+
+            if (state !== 'answering') {
+                ctx.lineWidth = 0.5;
+                for (let i = 0; i < N; i += 8) { 
+                    for (let j = i + 1; j < N; j += 8) {
+                        let dx = particles[i].x - particles[j].x;
+                        let dy = particles[i].y - particles[j].y;
+                        let distSq = dx * dx + dy * dy;
+                        if (distSq < 3000) {
+                            ctx.strokeStyle = `rgba(0, 243, 255, ${0.15 * (1 - distSq/3000)})`;
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            particles.forEach(p => {
+                p.update(time);
+                p.draw();
+            });
+
+            if (state === 'charging') {
+                ctx.restore();
+            }
+
+            requestAnimationFrame(loop);
+        }
+
+        requestAnimationFrame(loop);
     </script>
 </body>
 </html>
