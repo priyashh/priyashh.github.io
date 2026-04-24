@@ -30,7 +30,7 @@
             pointer-events: none;
         }
 
-        /* --- FORCE VISIBILITY (Fixes the dark/faded issue) --- */
+        /* --- FORCE VISIBILITY (Fixes the fade issue) --- */
         .animate, .case-hero, .stat-bar, .section-block {
             opacity: 1 !important;
             visibility: visible !important;
@@ -88,6 +88,10 @@
         .case-hero {
             margin-bottom: 70px;
             padding-top: 40px;
+            text-align: center; /* Centers the hero content */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .hero-title {
@@ -100,7 +104,7 @@
         }
 
         .text-gradient {
-            background: linear-gradient(90deg, #ffffff, #00f3ff);
+            background: linear-gradient(90deg, #00f3ff, #ffffff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -110,6 +114,13 @@
             color: #e0e0e0 !important; /* Bright crisp gray */
             line-height: 1.7;
             max-width: 680px;
+            margin: 0 auto;
+        }
+
+        .slide-tags {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
         }
 
         .slide-tags span {
@@ -121,41 +132,43 @@
             border-radius: 4px;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            margin-right: 8px;
         }
 
-        /* Buttons */
-        .btn-primary {
+        /* Unique Button Classes to avoid CSS conflicts */
+        .cyber-btn-primary {
             display: inline-block;
             padding: 12px 24px;
-            background: #00f3ff;
-            color: #000 !important; /* Black text for contrast */
+            background-color: #00f3ff !important;
+            color: #000000 !important;
             text-decoration: none;
             border-radius: 8px;
-            font-weight: 700;
+            font-weight: 800;
             font-size: 0.95rem;
             box-shadow: 0 0 15px rgba(0,243,255,0.4);
+            border: 1px solid #00f3ff;
             transition: all 0.2s;
         }
-        .btn-primary:hover {
+        .cyber-btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 0 25px rgba(0,243,255,0.6);
+            box-shadow: 0 0 25px rgba(0,243,255,0.7);
+            background-color: #ffffff !important;
+            border-color: #ffffff !important;
         }
 
-        .btn-secondary {
+        .cyber-btn-secondary {
             display: inline-block;
             padding: 12px 24px;
-            background: rgba(255,255,255,0.05);
-            color: #fff !important;
+            background-color: rgba(255,255,255,0.05) !important;
+            color: #ffffff !important;
             text-decoration: none;
             border-radius: 8px;
             font-weight: 600;
             font-size: 0.95rem;
-            border: 1px solid rgba(255,255,255,0.2);
+            border: 1px solid rgba(255,255,255,0.2) !important;
             transition: all 0.2s;
         }
-        .btn-secondary:hover {
-            border-color: #00f3ff;
+        .cyber-btn-secondary:hover {
+            border-color: #00f3ff !important;
             color: #00f3ff !important;
             transform: translateY(-2px);
         }
@@ -228,26 +241,27 @@
 
         <div class="case-hero">
             <h1 class="hero-title">
-                Olist <span class="text-gradient">customer behavior</span> analysis.
+                OLIST CUSTOMER<br>
+                <span class="text-gradient">BEHAVIOR</span> ANALYSIS.
             </h1>
             <p class="hero-desc">
                 Decoding over 100,000 Brazilian e-commerce transactions to uncover the real drivers of revenue, the true cost of bad logistics, and the platform's hidden retention crisis.
             </p>
             <div style="margin-top: 24px;">
-                <div class="slide-tags" style="display: inline-flex;">
+                <div class="slide-tags">
                     <span>SQL</span>
                     <span>Power BI</span>
                     <span>Excel</span>
                 </div>
-               <div style="margin-top: 32px; display: flex; gap: 16px; flex-wrap: wrap;">
-                <a href="https://drive.google.com/drive/folders/1eY7CV_8uih5-rfIrify8KFza0TFmxfJC?usp=drive_link" target="_blank" class="btn-primary">
-                    ↗ View Dashboard & Data
-                </a>
-                
-                <a href="https://github.com/priyashh/priyashh.github.io/tree/main/projects/olist/project%20file" target="_blank" class="btn-secondary">
-                    ↓ View SQL Scripts
-                </a>
-            </div> 
+                <div style="margin-top: 32px; display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;">
+                    <a href="https://drive.google.com/drive/folders/1eY7CV_8uih5-rfIrify8KFza0TFmxfJC?usp=drive_link" target="_blank" class="cyber-btn-primary">
+                        ↗ VIEW DASHBOARD & DATA
+                    </a>
+                    
+                    <a href="https://github.com/priyashh/priyashh.github.io/tree/main/projects/olist/project%20file" target="_blank" class="cyber-btn-secondary">
+                        ↓ VIEW SQL SCRIPTS
+                    </a>
+                </div> 
             </div>
         </div>
 
@@ -308,14 +322,13 @@
         <a href="../../index.html#projects" class="back-link">← Return to projects</a>
 
     </div>
-
     <!-- MAIN INTERACTIVE SCRIPT FOR BACKGROUND STARS -->
     <script>
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
         
         let W, H;
-        let stars =[];
+        let stars = [];
 
         class Star {
             constructor() {
@@ -327,11 +340,11 @@
             }
             update() {
                 // Drift left naturally across whole page
-                this.x -= 0.15 * (W / this.z); 
+                this.x -= 0.15 * (W / Math.max(this.z, 1)); 
                 if (this.x < 0) this.x = W;
             }
             draw() {
-                let alpha = Math.min(1, W / this.z);
+                let alpha = Math.min(1, W / Math.max(this.z, 1));
                 ctx.fillStyle = this.color;
                 ctx.globalAlpha = alpha;
                 ctx.beginPath(); 
@@ -344,4 +357,29 @@
             W = canvas.width = window.innerWidth;
             H = canvas.height = window.innerHeight;
             
-            stars =
+            stars = [];
+            for (let i = 0; i < 150; i++) {
+                stars.push(new Star());
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            init();
+        });
+
+        function loop() {
+            ctx.clearRect(0, 0, W, H);
+            
+            stars.forEach(s => {
+                s.update();
+                s.draw();
+            });
+            
+            requestAnimationFrame(loop);
+        }
+
+        init();
+        requestAnimationFrame(loop);
+    </script>
+</body>
+</html>
