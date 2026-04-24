@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Priyash Vasava | Interactive Particle Portfolio</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&family=Montserrat:wght@300;900&display=swap" rel="stylesheet">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body, html {
+            width: 100%; height: 100%;
+            background-color: #020202; /* Pure void black */
+            font-family: 'Inter', sans-serif;
+            overflow: hidden; user-select: none;
+            color: white;
+            cursor: none !important; /* Hide default cursor */
+        }
+
+        /* Right Sidebar Mockup (Kept as HTML since it contains layout/image) */
+        .sidebar {
+            position: absolute; right: 50px; top: 50%; transform: translateY(-50%);
+            display: flex; flex-direction: column; align-items: center; gap: 40px;
+            z-index: 100; pointer-events: none; opacity: 0.8;
+        }
+        .rotated-text {
+            writing-mode: vertical-rl; transform: rotate(180deg);
+            font-size: 10px; letter-spacing: 4px; color: #666;
+        }
+        .mock-card {
+            width: 120px; border-top: 1px solid #333; padding-top: 20px;
+        }
+        .mock-card .img { width: 100%; height: 80px; background: #111; border-radius: 4px; margin-bottom: 15px; }
+        .mock-card .desc { font-size: 9px; color: #666; line-height: 1.6; }
+
+        canvas {
+            display: block; width: 100%; height: 100%;
+            position: absolute; top: 0; left: 0; z-index: 1;
+        }
+
+        #hint {
+            position: absolute; bottom: 30px; width: 100%; text-align: center;
+            color: rgba(0, 243, 255, 0.4); font-size: 11px; letter-spacing: 4px; font-family: monospace;
+            pointer-events: none; z-index: 60; transition: opacity 0.3s;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="rotated-text">FEATURED WORKS</div>
+        <div class="mock-card">
+            <div class="img"></div>
+            <div class="desc">I like to think of myself as an observer. Observing different kinds of systems...</div>
+        </div>
+    </div>
+
+    <div id="hint">[ HOLD THE BLACK HOLE TO UPLOAD QUERY ]</div>
+    <canvas id="c"></canvas>
+
+    <script>
+        const canvas = document.getElementById('c');
+        const ctx = canvas.getContext('2d');
+        const hintEl = document.getElementById('hint');
+        
+        let W, H, cx, cy, bhRadius;
+        let state = 'IDLE'; // IDLE, CHARGING, ANSWERING
+        let chargeLevel = 0;
+        let answerTimer = null;
+        
+        // Arrays & Objects
+        let textParticles = [];
+        let accretionDust =[];
+        let stars = [];
+        let planets = [];
+        let mouseTrail = [];
+        let navBoxes =[]; // To track clickable nav regions
+
+        // Color Palettes mapped to elements
+        const colors = {
+            nav:['#ffffff', '#aaaaaa'],
+            main: ['#ffffff', '#e0e0e0', '#00f3ff'],
+            quote: ['#888888', '#bbbbbb'],
+            prefix:['#00f3ff', '#aaaaaa'],
+            answer:['#ff007f', '#00f3ff', '#ffffff'],
+            dust:['#ffffff', '#888888', '#00f3ff', '#0055ff', '#001133'],
+            debris:['#333333', '#1a1a1a']
+        };
+
+        // Expanded 8-Ball Answers
+        const answers =[
+            // Original
+            "CERTAIN", "DECIDEDLY\nSO", "WITHOUT\nA DOUBT", "DEFINITELY", "YES", 
+            "MOST\nLIKELY", "OUTLOOK\nGOOD", "SIGNS POINT\nTO YES", "AFFIRMATIVE",
+            "HAZY\nTRY AGAIN", "ASK\nLATER", "CANNOT\nPREDICT", "DON'T COUNT\nON IT", "NO", 
+            // Fun / Tech - Positive
+            "W DUB", "EASY\nCLAP", "STONKS GO\nUP", "ABSOLUTE\nCOOK", "GREEN\nLIGHT", "LGTM", "THE DATA\nSAYS YES",
+            // Fun / Tech - Negative
+            "BIG\nYIKES", "NGMI", "FATAL\nEXCEPTION", "ABSOLUTELY\nNOT", "TOUCH\nGRASS", "SKILL\nISSUE", "HIGHLY\nSUS",
+            // Extras
+            "VIBE CHECK:\nPASSED", "VIBE CHECK:\nFAILED", "IT'S A FEATURE\nNOT A BUG", "DEPLOY ON\nFRIDAY", "CTRL + Z"
+        ];
+
+        const mouse = { x: -1000, y: -1000, isDown: false };
+
+        // --- CLASSES ---
+
+        class Star {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * W; this.y = Math.random() * H;
+                this.z = Math.random() * W; this.size = Math.random() * 1.5;
+                this.color = Math.random() > 0.8 ? '#00f3ff' : '#ffffff';
+            }
+            update() {
+                if (state === 'CHARGING') {
+                    let dx = cx - this.x; let dy = cy - this.y;
+                    this.x += dx * 0.015 * chargeLevel; this.y += dy * 0.015 * chargeLevel;
+                    if (Math.abs(dx) < 10 && Math.abs(dy) < 10) this.reset();
+                } else {
+                    this.x -= 0.03 * (W / this.z); 
+                    if (this.x < 0) this.x = W;
+                }
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = state === 'CHARGING' ? Math.max(0.1, 1 - chargeLevel) : Math.min(1, W / this.z);
+                if (state === 'CHARGING' && chargeLevel > 0.1) {
+                    ctx.beginPath(); ctx.moveTo(this.x, this.y);
+                    ctx.lineTo(this.x - (cx - this.x) * 0.08 * chargeLevel, this.y - (cy - this.y) * 0.08 * chargeLevel);
+                    ctx.strokeStyle = this.color; ctx.lineWidth = this.size; ctx.stroke();
+                } else {
+                    ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+                }
+                ctx.globalAlpha = 1.0;
+            }
+        }
+
+        class Dust {
+            constructor() {
+                this.angle = Math.random() * Math.PI * 2;
+                this.initR = bhRadius * 1.05 + Math.random() * bhRadius * 2.5; 
+                this.r = this.initR;
+                this.speed = (Math.random() * 0.006 + 0.002) * (bhRadius * 2 / this.r);
+                this.yOff = (Math.random() - 0.5) * (bhRadius * 0.12);
+                this.size = Math.random() * 1.5 + 0.5;
+                this.color = colors.dust[Math.floor(Math.random() * colors.dust.length)];
+                this.x = 0; this.y = 0; this.isBack = false;
+            }
+            update() {
+                this.angle += this.speed * (1 + (chargeLevel * 25));
+                if (state === 'CHARGING') {
+                    if (this.r > bhRadius * 1.02) this.r -= chargeLevel * 2.0;
+                } else if (this.r < this.initR) this.r += (this.initR - this.r) * 0.02;
+
+                let flatX = Math.cos(this.angle) * this.r;
+                let flatY = Math.sin(this.angle) * this.r * 0.22 + this.yOff;
+                this.isBack = Math.sin(this.angle) < 0; 
+                
+                if (this.isBack) flatY -= (bhRadius * 1.9) * Math.pow(Math.sin(this.angle), 2) * ((bhRadius * 1.5) / this.r);
+
+                this.x = cx + flatX; this.y = cy + flatY;
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = Math.random() > 0.8 ? 0.6 : 1.0;
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+            }
+        }
+
+        class TextParticle {
+            constructor(tx, ty, type) {
+                this.tx = tx; this.ty = ty;
+                this.x = Math.random() * W; this.y = Math.random() * H;
+                this.vx = 0; this.vy = 0;
+                this.type = type;
+                let cSet = colors[type] || colors.main;
+                this.color = cSet[Math.floor(Math.random() * cSet.length)];
+                this.size = Math.random() * 1.5 + 0.5;
+                
+                // Fluid spring speed for flow effect
+                this.speed = Math.random() * 0.06 + 0.04; 
+                this.isDebris = false;
+            }
+            update() {
+                if (state === 'CHARGING') {
+                    // Everything gets sucked in
+                    let dx = cx - this.x; let dy = cy - this.y;
+                    let dist = Math.max(Math.hypot(dx, dy), 1);
+                    let force = chargeLevel * 2.5;
+                    this.vx += (dx / dist) * force; this.vy += (dy / dist) * force;
+                    this.vx += (dy / dist) * force * 1.5; this.vy -= (dx / dist) * force * 1.5;
+
+                } else if (this.isDebris) {
+                    // EVENT HORIZON LOOP: Continuous ambient gravity
+                    let bdx = cx - this.x; let bdy = cy - this.y;
+                    let bDist = Math.max(Math.hypot(bdx, bdy), 1);
+                    
+                    let pull = 60 / bDist; 
+                    if(pull > 1.5) pull = 1.5;
+
+                    this.vx += (bdx / bDist) * pull * 0.2; // Suck in
+                    this.vy += (bdy / bDist) * pull * 0.2;
+                    this.vx += (bdy / bDist) * pull * 0.5; // Swirl
+                    this.vy -= (bdx / bDist) * pull * 0.5;
+                    
+                    // Consume and respawn far away to loop
+                    if (bDist < bhRadius * 0.2) {
+                        let angle = Math.random() * Math.PI * 2;
+                        let r = W > H ? W : H;
+                        this.x = cx + Math.cos(angle) * r;
+                        this.y = cy + Math.sin(angle) * r;
+                    }
+
+                } else {
+                    // FLUID TEXT FLOW (Claude's Physics)
+                    this.vx += (this.tx - this.x) * this.speed;
+                    this.vy += (this.ty - this.y) * this.speed;
+
+                    let mdx = mouse.x - this.x;
+                    let mdy = mouse.y - this.y;
+                    let mDist = Math.hypot(mdx, mdy);
+                    let repelR = 80;
+                    
+                    if (mDist < repelR && mDist > 0) {
+                        let force = (repelR - mDist) / repelR;
+                        this.vx -= (mdx / mDist) * force * 3; // Fluid dodge
+                        this.vy -= (mdy / mDist) * force * 3;
+                    }
+                }
+
+                this.vx *= 0.85; this.vy *= 0.85;
+                this.x += this.vx; this.y += this.vy;
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = state === 'CHARGING' && Math.hypot(cx - this.x, cy - this.y) < bhRadius ? 0 : 1;
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+                ctx.globalAlpha = 1.0;
+            }
+        }
+
+        // --- CORE LOGIC ---
+
+        function getIdleTargets() {
+            const tmp = document.createElement('canvas');
+            tmp.width = W; tmp.height = H;
+            const tCtx = tmp.getContext('2d', { willReadFrequently: true });
+            let pts = [];
+            navBoxes =[]; // Reset clickable regions
+
+            // 1. Draw Particle Nav Links (Top Right)
+            tCtx.fillStyle = 'white'; tCtx.textAlign = 'right'; tCtx.textBaseline = 'middle';
+            tCtx.font = `600 11px "Inter", sans-serif`;
+            tCtx.letterSpacing = "1.5px";
+            
+            let navY = 55;
+            let navX = W - 50;
+            const navItems =[
+                { t: "CONNECT", url: "#connect" },
+                { t: "WHO AM I?", url: "#who" },
+                { t: "BLOG", url: "#blog" },
+                { t: "PROJECTS", url: "#projects" }
+            ];
+            
+            navItems.forEach(item => {
+                let textW = tCtx.measureText(item.t).width;
+                navBoxes.push({ x: navX - textW, y: navY - 15, w: textW, h: 30, url: item.url });
+                tCtx.fillText(item.t, navX, navY);
+                navX -= (textW + 40); // Gap between links
+            });
+            tCtx.letterSpacing = "0px";
+
+            // 2. Draw Name
+            let nameSize = Math.min(W / 12, 60); if (W < 500) nameSize = 35;
+            let startY = H * 0.20;
+            tCtx.font = `900 ${nameSize}px "Montserrat", sans-serif`;
+            tCtx.textAlign = 'center';
+            tCtx.fillText("PRIYASH VASAVA", W/2, startY);
+
+            // 3. Draw Quote
+            let quoteSize = nameSize * 0.35;
+            tCtx.font = `300 ${quoteSize}px "Montserrat", sans-serif`;
+            tCtx.letterSpacing = "6px"; 
+            tCtx.fillText("ANALYST BY DAY", W/2, startY + nameSize * 0.9);
+            tCtx.fillText("VIBE CODER BY NIGHT", W/2, startY + nameSize * 0.9 + quoteSize * 1.8);
+
+            const imgData = tCtx.getImageData(0, 0, W, H).data;
+            let step = W < 600 ? 3 : 4;
+            for (let y = 0; y < H; y += step) {
+                for (let x = 0; x < W; x += step) {
+                    if (imgData[(y * W + x) * 4 + 3] > 128) {
+                        // Positional type mapping
+                        let type = 'main';
+                        if (y < 100) type = 'nav';
+                        else if (y > startY + nameSize * 0.5) type = 'quote';
+                        pts.push({x, y, type});
+                    }
+                }
+            }
+            return pts;
+        }
+
+        function getAnswerTargets(answerText) {
+            const tmp = document.createElement('canvas');
+            tmp.width = W; tmp.height = H;
+            const tCtx = tmp.getContext('2d', { willReadFrequently: true });
+            let pts =[];
+
+            // Prefix Text
+            let prefixSize = Math.min(W / 35, 14); if (prefixSize < 10) prefixSize = 10;
+            tCtx.font = `600 ${prefixSize}px "Inter", monospace`;
+            tCtx.fillStyle = 'white'; tCtx.textAlign = 'center'; tCtx.textBaseline = 'middle';
+            let ansStartY = H * 0.22;
+            tCtx.letterSpacing = "4px";
+            tCtx.fillText("- MAGIC 8 BALL SAYS: -", W/2, ansStartY);
+            tCtx.letterSpacing = "0px";
+
+            // Main Answer Text
+            let size = Math.min(W / 14, 70); if (W < 500) size = 35;
+            tCtx.font = `900 ${size}px "Montserrat", sans-serif`;
+            let lines = answerText.split('\n');
+            let textY = ansStartY + prefixSize * 3.5;
+            lines.forEach((line, i) => { tCtx.fillText(line, W/2, textY + (i * size * 1.1)); });
+
+            const imgData = tCtx.getImageData(0, 0, W, H).data;
+            let step = W < 600 ? 3 : 4;
+            for (let y = 0; y < H; y += step) {
+                for (let x = 0; x < W; x += step) {
+                    if (imgData[(y * W + x) * 4 + 3] > 128) {
+                        let type = (y < ansStartY + prefixSize * 2) ? 'prefix' : 'answer';
+                        pts.push({x, y, type});
+                    }
+                }
+            }
+            return pts;
+        }
+
+        function init() {
+            W = canvas.width = window.innerWidth;
+            H = canvas.height = window.innerHeight;
+            cx = W / 2;
+            cy = H * 0.85; 
+            bhRadius = Math.min(W, H) * 0.12;
+            if (bhRadius > 90) bhRadius = 90;
+
+            stars =[]; for (let i = 0; i < 200; i++) stars.push(new Star());
+            accretionDust =[]; for (let i = 0; i < 1500; i++) accretionDust.push(new Dust());
+
+            textParticles =[];
+            let pts = getIdleTargets();
+            pts.forEach(pt => textParticles.push(new TextParticle(pt.x, pt.y, pt.type)));
+        }
+
+        function triggerAnswer() {
+            state = 'ANSWERING';
+            const ans = answers[Math.floor(Math.random() * answers.length)];
+            let ansPts = getAnswerTargets(ans);
+            
+            textParticles.forEach((p, i) => {
+                let angle = Math.random() * Math.PI * 2;
+                let force = Math.random() * 50 + 30; 
+                p.vx = Math.cos(angle) * force; p.vy = Math.sin(angle) * force;
+                p.x = cx; p.y = cy; 
+
+                if (i < ansPts.length) {
+                    p.tx = ansPts[i].x; p.ty = ansPts[i].y;
+                    p.type = ansPts[i].type;
+                    let cSet = colors[p.type];
+                    p.color = cSet[Math.floor(Math.random() * cSet.length)];
+                    p.isDebris = false;
+                } else {
+                    p.isDebris = true;
+                    p.color = colors.debris[Math.floor(Math.random() * colors.debris.length)];
+                }
+            });
+
+            if (answerTimer) clearTimeout(answerTimer);
+            answerTimer = setTimeout(() => {
+                state = 'IDLE';
+                hintEl.style.opacity = 1;
+                
+                let idlePts = getIdleTargets();
+                textParticles.forEach((p, i) => {
+                    p.isDebris = false;
+                    if (i < idlePts.length) {
+                        p.tx = idlePts[i].x; p.ty = idlePts[i].y;
+                        p.type = idlePts[i].type;
+                        let cSet = colors[p.type];
+                        p.color = cSet[Math.floor(Math.random() * cSet.length)];
+                    } else {
+                        // Leftovers become floating ambient debris permanently sucked by BH
+                        p.isDebris = true;
+                        p.color = colors.debris[0];
+                    }
+                });
+            }, 8000);
+        }
+
+        // --- EVENT LISTENERS ---
+
+        function getHoveredNav() {
+            if (state !== 'IDLE') return null;
+            for (let b of navBoxes) {
+                if (mouse.x >= b.x && mouse.x <= b.x + b.w && mouse.y >= b.y && mouse.y <= b.y + b.h) return b;
+            }
+            return null;
+        }
+
+        function handlePointerDown(x, y) {
+            let nav = getHoveredNav();
+            if (nav) return; // Don't charge black hole if clicking nav
+
+            let dist = Math.hypot(x - cx, y - cy);
+            if (dist < bhRadius * 2.5 && state === 'IDLE') {
+                state = 'CHARGING'; mouse.isDown = true; hintEl.style.opacity = 0;
+            }
+        }
+
+        function handlePointerUp() {
+            let nav = getHoveredNav();
+            if (nav) {
+                console.log("Navigating to: " + nav.url);
+                window.location.hash = nav.url; // Trigger link logic here
+                return;
+            }
+
+            if (state === 'CHARGING') {
+                mouse.isDown = false;
+                if (chargeLevel > 0.6) triggerAnswer();
+                else { state = 'IDLE'; hintEl.style.opacity = 1; }
+                chargeLevel = 0;
+            }
+        }
+
+        window.addEventListener('mousedown', e => handlePointerDown(e.clientX, e.clientY));
+        window.addEventListener('mouseup', handlePointerUp);
+        window.addEventListener('touchstart', e => {
+            mouse.x = e.touches[0].clientX; mouse.y = e.touches[0].clientY;
+            handlePointerDown(e.touches[0].clientX, e.touches[0].clientY);
+        });
+        window.addEventListener('touchend', handlePointerUp);
+        window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        window.addEventListener('resize', () => { clearTimeout(window.resizeTimer); window.resizeTimer = setTimeout(init, 300); });
+
+        // --- MAIN RENDER LOOP ---
+
+        function loop() {
+            ctx.fillStyle = '#020202'; ctx.fillRect(0, 0, W, H);
+
+            // Cursor Trail
+            if (mouse.x > 0) {
+                mouseTrail.push({x: mouse.x, y: mouse.y});
+                if (mouseTrail.length > 25) mouseTrail.shift(); 
+            } else if (mouseTrail.length > 0) mouseTrail.shift();
+
+            ctx.save();
+            if (state === 'CHARGING') {
+                chargeLevel += 0.0035; 
+                if (chargeLevel > 1) chargeLevel = 1;
+                let shake = chargeLevel * 6;
+                ctx.translate((Math.random() - 0.5) * shake, (Math.random() - 0.5) * shake);
+            }
+
+            stars.forEach(s => { s.update(); s.draw(); });
+
+            accretionDust.forEach(d => d.update());
+            let backDust = accretionDust.filter(d => d.isBack);
+            let frontDust = accretionDust.filter(d => !d.isBack);
+
+            ctx.globalCompositeOperation = 'lighter';
+            backDust.forEach(d => d.draw());
+
+            ctx.globalCompositeOperation = 'source-over';
+            let currentRadius = bhRadius - (chargeLevel * 10); 
+            
+            // Black Hole Glow & Body
+            let glow = ctx.createRadialGradient(cx, cy, currentRadius * 0.9, cx, cy, currentRadius * 2.5);
+            glow.addColorStop(0, '#00f3ff'); glow.addColorStop(0.3, 'rgba(0, 85, 255, 0.3)'); glow.addColorStop(1, 'transparent');
+            ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(cx, cy, currentRadius * 2.5, 0, Math.PI * 2); ctx.fill();
+
+            ctx.fillStyle = '#000000'; ctx.beginPath(); ctx.arc(cx, cy, currentRadius, 0, Math.PI * 2); ctx.fill();
+            ctx.strokeStyle = `rgba(255, 255, 255, ${0.4 + chargeLevel * 0.6})`;
+            ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(cx, cy, currentRadius + 1, 0, Math.PI * 2); ctx.stroke();
+
+            // The Dim '8' inside the Black Hole during Answer
+            if (state === 'ANSWERING') {
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.15)'; 
+                ctx.font = `800 ${currentRadius * 1.3}px "Montserrat", sans-serif`;
+                ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+                ctx.fillText("8", cx, cy);
+            }
+
+            ctx.globalCompositeOperation = 'lighter';
+            frontDust.forEach(d => d.draw());
+
+            // Mesh Plexus for Text (Skip debris)
+            ctx.lineWidth = 0.5;
+            for (let i = 0; i < textParticles.length; i += 3) {
+                if(textParticles[i].isDebris) continue;
+                for (let j = i + 1; j < textParticles.length; j += 3) {
+                    if(textParticles[j].isDebris) continue;
+                    let dx = textParticles[i].x - textParticles[j].x; let dy = textParticles[i].y - textParticles[j].y;
+                    if (Math.abs(dx) > 15 || Math.abs(dy) > 15) continue;
+                    let dSq = dx*dx + dy*dy;
+                    if (dSq < 225) {
+                        ctx.strokeStyle = textParticles[i].color;
+                        ctx.globalAlpha = 0.4 * (1 - Math.sqrt(dSq)/15);
+                        ctx.beginPath(); ctx.moveTo(textParticles[i].x, textParticles[i].y); ctx.lineTo(textParticles[j].x, textParticles[j].y); ctx.stroke();
+                    }
+                }
+            }
+            ctx.globalAlpha = 1.0;
+            ctx.globalCompositeOperation = 'source-over';
+
+            textParticles.forEach(p => { p.update(); p.draw(); });
+
+            // Interactive Pointers
+            let navHover = getHoveredNav();
+            let bhHover = Math.hypot(mouse.x - cx, mouse.y - cy) < bhRadius * 2.5;
+            
+            if (navHover || (bhHover && state === 'IDLE')) {
+                // Change cursor visually via shooting star color
+                ctx.fillStyle = navHover ? '#ff007f' : '#ffffff';
+            } else {
+                ctx.fillStyle = '#ffffff';
+            }
+
+            // Shooting Star Cursor
+            if (mouseTrail.length > 0) {
+                ctx.globalCompositeOperation = 'lighter';
+                for (let i = 0; i < mouseTrail.length; i++) {
+                    let pt = mouseTrail[i]; let ratio = i / mouseTrail.length;
+                    ctx.beginPath(); ctx.arc(pt.x, pt.y, ratio * 3.5, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(0, 243, 255, ${ratio})`; ctx.fill();
+                }
+                let head = mouseTrail[mouseTrail.length - 1];
+                ctx.beginPath(); ctx.arc(head.x, head.y, 4, 0, Math.PI * 2);
+                ctx.fillStyle = (navHover || bhHover) ? '#ffffff' : '#00f3ff'; ctx.fill();
+                ctx.globalCompositeOperation = 'source-over';
+            }
+
+            ctx.restore();
+            requestAnimationFrame(loop);
+        }
+
+        init();
+        requestAnimationFrame(loop);
+
+    </script>
+</body>
+</html>
