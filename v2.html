@@ -8,20 +8,15 @@
     <!-- Link to your existing external stylesheet -->
     <link rel="stylesheet" href="style.css">
     
-    <!-- Google Fonts for the Particle Typography -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&family=Montserrat:wght@300;900&display=swap" rel="stylesheet">
-    
     <style>
-        /* --- BLACK HOLE HERO SECTION --- */
+        /* --- QUANTUM ORACLE HERO SECTION --- */
         #hero-canvas-container {
             position: relative;
             width: 100%;
             height: 100vh;
-            background-color: #020202; /* Pure void black */
+            background-color: #030305; /* Deep void navy */
             overflow: hidden;
-            cursor: none; /* Hide default cursor inside canvas */
+            font-family: 'Courier New', Courier, monospace;
         }
 
         #hero-canvas-container canvas {
@@ -32,6 +27,7 @@
             top: 0;
             left: 0;
             z-index: 1;
+            cursor: crosshair;
         }
 
         /* Float your original navbar over the canvas */
@@ -40,36 +36,80 @@
             top: 0;
             left: 0;
             width: 100%;
-            z-index: 10;
-            cursor: default; /* Bring cursor back for nav links */
-        }
-        
-        #hero-canvas-container .navbar a {
-            cursor: pointer;
+            z-index: 100;
         }
 
-        #hint {
+        /* Quantum Oracle HUD Overlay */
+        #hud {
             position: absolute;
-            bottom: 30px;
-            width: 100%;
-            text-align: center;
-            color: rgba(0, 243, 255, 0.4);
-            font-size: 11px;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 80px 40px 40px 40px; /* Padding accommodates navbar */
+            box-sizing: border-box;
+            background: radial-gradient(circle at center, transparent 40%, rgba(3,3,5,0.8) 100%);
+        }
+
+        .hud-text {
+            color: #00f3ff;
+            font-size: 12px;
             letter-spacing: 4px;
-            font-family: 'Inter', monospace;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+            opacity: 0.7;
+        }
+
+        /* Center Prompt (Replaces Hero Statement) */
+        #prompt {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            transition: opacity 0.3s;
+            pointer-events: none; /* Lets clicks pass through to canvas */
+            z-index: 20;
+        }
+
+        .title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 15px;
+            letter-spacing: 6px;
+            line-height: 1.6;
+            text-shadow: 0 0 20px rgba(255,255,255,0.5);
+        }
+
+        .blue-text {
+            color: #00f3ff;
+            font-size: 12px;
+            letter-spacing: 4px;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+            text-transform: uppercase;
+            opacity: 1;
+        }
+
+        /* Scanline effect */
+        .scanlines {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
+            background-size: 100% 4px;
             pointer-events: none;
             z-index: 5;
-            transition: opacity 0.3s;
+            opacity: 0.3;
         }
 
-        /* --- ORIGINAL PORTFOLIO STYLES (Adjusted for Grid) --- */
-        .case-wrapper {
-            padding-top: 60px;
-        }
+        /* --- ORIGINAL PORTFOLIO STYLES (Grid Adjustments) --- */
+        body { background-color: #030305; }
+        .case-wrapper { padding-top: 60px; }
 
-        /* Right Sidebar Bio - Adjusted to span full layout since monolith is removed */
         .sidebar-bio {
-            grid-column: 2; /* Moved to center column to align with projects */
+            grid-column: 2; /* Center alignment */
             display: flex;
             flex-direction: column;
             gap: 16px;
@@ -78,151 +118,37 @@
             border-bottom: 1px solid var(--border-subtle, #333);
             padding-bottom: 40px;
         }
+        .sidebar-img { width: 80px; height: 80px; border-radius: 4px; object-fit: cover; filter: grayscale(100%) contrast(1.2); }
+        .sidebar-bio p { font-size: 0.85rem; line-height: 1.7; color: var(--text-muted, #888); margin: 0; max-width: 800px; }
+        .sidebar-bio a { font-size: 0.75rem; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; color: var(--text-main, #fff); text-transform: uppercase; letter-spacing: 0.05em; }
 
-        .sidebar-img {
-            width: 80px;
-            height: 80px;
-            border-radius: 4px;
-            object-fit: cover;
-            filter: grayscale(100%) contrast(1.2);
-        }
+        .projects-container { grid-column: 2; display: flex; flex-direction: column; margin-bottom: 80px; }
+        .project-row { display: grid; grid-template-columns: 200px 1fr; gap: 30px; padding: 30px 0; border-top: 1px solid var(--border-subtle, #333); align-items: center; transition: opacity 0.3s ease; text-decoration: none; }
+        .project-row:hover { opacity: 0.7; }
+        .project-row img { width: 100%; height: 120px; object-fit: cover; border-radius: 4px; border: 1px solid var(--border-subtle, #333); }
+        .project-info h2 { font-size: 1.1rem; letter-spacing: 0.05em; margin-bottom: 8px; color: var(--text-main, #fff); }
+        .project-info p { font-size: 0.9rem; color: var(--text-muted, #888); margin-bottom: 12px; line-height: 1.6; }
+        .slide-tags { display: flex; gap: 8px; }
+        .slide-tags span { font-size: 0.7rem; color: var(--text-main, #fff); background: var(--bg-void, #111); padding: 4px 8px; border: 1px solid var(--border-subtle, #333); border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
 
-        .sidebar-bio p {
-            font-size: 0.85rem;
-            line-height: 1.7;
-            color: var(--text-muted, #888);
-            margin: 0;
-            max-width: 800px;
-        }
+        .connect-section { grid-column: 2; text-align: center; padding: 60px 0; border-top: 1px solid var(--border-subtle, #333); }
+        .connect-section blockquote { font-size: 1.1rem; color: var(--text-main, #fff); font-style: italic; margin-bottom: 30px; }
+        .connect-links a { display: inline-block; margin: 0 10px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted, #888); border: 1px solid var(--border-subtle, #333); padding: 8px 16px; border-radius: 4px; transition: 0.3s; text-decoration: none; }
+        .connect-links a:hover { color: var(--text-main, #fff); border-color: var(--text-muted, #888); }
 
-        .sidebar-bio a {
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-decoration: underline;
-            text-underline-offset: 4px;
-            color: var(--text-main, #fff);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        /* Compact Project List */
-        .projects-container {
-            grid-column: 2;
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 80px;
-        }
-
-        .project-row {
-            display: grid;
-            grid-template-columns: 200px 1fr;
-            gap: 30px;
-            padding: 30px 0;
-            border-top: 1px solid var(--border-subtle, #333);
-            align-items: center;
-            transition: opacity 0.3s ease;
-            text-decoration: none;
-        }
-
-        .project-row:hover {
-            opacity: 0.7;
-        }
-
-        .project-row img {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 4px;
-            border: 1px solid var(--border-subtle, #333);
-        }
-
-        .project-info h2 {
-            font-size: 1.1rem;
-            letter-spacing: 0.05em;
-            margin-bottom: 8px;
-            color: var(--text-main, #fff);
-        }
-
-        .project-info p {
-            font-size: 0.9rem;
-            color: var(--text-muted, #888);
-            margin-bottom: 12px;
-            line-height: 1.6;
-        }
-
-        .slide-tags {
-            display: flex;
-            gap: 8px;
-        }
-
-        .slide-tags span {
-            font-size: 0.7rem;
-            color: var(--text-main, #fff);
-            background: var(--bg-void, #111);
-            padding: 4px 8px;
-            border: 1px solid var(--border-subtle, #333);
-            border-radius: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        /* Connect Section */
-        .connect-section {
-            grid-column: 2;
-            text-align: center;
-            padding: 60px 0;
-            border-top: 1px solid var(--border-subtle, #333);
-        }
-
-        .connect-section blockquote {
-            font-size: 1.1rem;
-            color: var(--text-main, #fff);
-            font-style: italic;
-            margin-bottom: 30px;
-        }
-
-        .connect-links a {
-            display: inline-block;
-            margin: 0 10px;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--text-muted, #888);
-            border: 1px solid var(--border-subtle, #333);
-            padding: 8px 16px;
-            border-radius: 4px;
-            transition: 0.3s;
-            text-decoration: none;
-        }
-
-        .connect-links a:hover {
-            color: var(--text-main, #fff);
-            border-color: var(--text-muted, #888);
-        }
-
-        /* Mobile Adjustments */
         @media (max-width: 950px) {
-            .project-row {
-                grid-template-columns: 1fr;
-                gap: 16px;
-            }
-            .sidebar-bio {
-                grid-column: 1;
-                align-items: center;
-                text-align: center;
-                margin-top: 40px;
-            }
+            .project-row { grid-template-columns: 1fr; gap: 16px; }
+            .sidebar-bio { grid-column: 1; align-items: center; text-align: center; margin-top: 40px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- INTERACTIVE HERO CANVAS (Replaces top section) -->
+    <!-- INTERACTIVE HERO CANVAS -->
     <div id="hero-canvas-container">
         
-        <!-- ORIGINAL NAVBAR: Overlays the canvas to ensure perfect routing -->
         <nav class="navbar">
-            <a href="/" class="logo" style="visibility: hidden;">Priyash Vasava</a> <!-- Hidden because particles spell it, but kept for DOM structure -->
+            <a href="/" class="logo">Priyash Vasava</a>
             <div class="nav-links">
                 <a href="#projects">Projects</a>
                 <a href="blog.html">Blog</a>
@@ -231,11 +157,21 @@
             </div>
         </nav>
 
-        <div id="hint">[ HOLD THE BLACK HOLE TO UPLOAD QUERY ]</div>
+        <div class="scanlines"></div>
+        
+        <div id="hud">
+            <div class="hud-text">SYS.PORTFOLIO.V1 // SECURE CONNECTION</div>
+        </div>
+
+        <div id="prompt">
+            <div class="title">ANALYST BY DAY<br>VIBE CODER<br>BY NIGHT</div>
+            <div class="blue-text">CLICK AND HOLD TO BLOW YOUR MIND</div>
+        </div>
+
         <canvas id="c"></canvas>
     </div>
 
-    <!-- REST OF YOUR PORTFOLIO (Scrolls naturally below) -->
+    <!-- REST OF PORTFOLIO -->
     <div class="case-wrapper">
         
         <div class="sidebar-bio">
@@ -247,17 +183,12 @@
         </div>
 
         <div id="projects" class="projects-container">
-            
             <a href="projects/olist/index.html" class="project-row">
                 <img src="assets/olist-cover.png" alt="Olist Project Cover">
                 <div class="project-info">
                     <h2>Olist E-Commerce</h2>
                     <p>Olist is a Brazilian SaaS technology company that acts as a unified marketplace integrator, connecting small and medium-sized businesses to major e-commerce channels through a single platform. The goal of this data analysis was to uncover hidden customer behaviour patterns from 550K rows across 8 relational dataset. from exploring in excel to advanced visuals in Power bi. Come check it out !</p>
-                    <div class="slide-tags">
-                        <span>Excel</span>
-                        <span>SQL</span>
-                        <span>Power BI</span>
-                    </div>
+                    <div class="slide-tags"><span>Excel</span><span>SQL</span><span>Power BI</span></div>
                 </div>
             </a>
 
@@ -266,14 +197,9 @@
                 <div class="project-info">
                     <h2>Google Stock Analysis</h2>
                     <p>The aim of this project was to understand and find meaningful patterns in the journey of Google(Alphabet Inc.) stock market performmance using Excel, SQL, Power Bi. This project was heavily relied on Power Bi's DAX formula which helped turning numbers into crystal clear picture of long journey that google's stock has come through.</p>
-                    <div class="slide-tags">
-                        <span>Excel</span>
-                        <span>PowerBi</span>
-                        <span>SQL</span>
-                    </div>
+                    <div class="slide-tags"><span>Excel</span><span>PowerBi</span><span>SQL</span></div>
                 </div>
             </a>
-
         </div>
 
         <div id="connect" class="connect-section">
@@ -290,425 +216,315 @@
                 Priyashvasava@outlook.com
             </p>
         </div>
-
     </div>
 
-    <!-- BLACK HOLE SCRIPT -->
+    <!-- QUANTUM ORACLE SCRIPT -->
     <script>
         const canvas = document.getElementById('c');
         const ctx = canvas.getContext('2d');
-        const hintEl = document.getElementById('hint');
+        const promptEl = document.getElementById('prompt');
         
-        let W, H, cx, cy, bhRadius;
-        let state = 'IDLE'; 
+        let W, H, cx, cy;
+        const N = 2500; // Dense particle count
+        let particles =[];
+        
+        // 3D Sphere Variables
+        let sphereRadius = 280;
+        let baseRadius = 280;
+        let rotationX = 0;
+        let rotationY = 0;
+        
+        // States
+        let state = 'idle'; // idle, charging, answering
         let chargeLevel = 0;
-        let answerTimer = null;
-        
-        let textParticles = [];
-        let accretionDust =[];
-        let stars = [];
-        let planets = [];
-        let mouseTrail =[];
-
-        const colors = {
-            main: ['#ffffff', '#e0e0e0', '#00f3ff'],
-            quote: ['#888888', '#bbbbbb'],
-            prefix:['#00f3ff', '#aaaaaa'],
-            answer:['#ff007f', '#00f3ff', '#ffffff'],
-            dust:['#ffffff', '#888888', '#00f3ff', '#0055ff', '#001133'],
-            debris:['#333333', '#1a1a1a']
-        };
-
-        const answers =[
-            "CERTAIN", "DECIDEDLY\nSO", "WITHOUT\nA DOUBT", "DEFINITELY", "YES", 
-            "MOST\nLIKELY", "OUTLOOK\nGOOD", "SIGNS POINT\nTO YES", "AFFIRMATIVE",
-            "HAZY\nTRY AGAIN", "ASK\nLATER", "CANNOT\nPREDICT", "DON'T COUNT\nON IT", "NO", 
-            "W DUB", "EASY\nCLAP", "STONKS GO\nUP", "ABSOLUTE\nCOOK", "GREEN\nLIGHT", "LGTM", "THE DATA\nSAYS YES",
-            "BIG\nYIKES", "NGMI", "FATAL\nEXCEPTION", "ABSOLUTELY\nNOT", "TOUCH\nGRASS", "SKILL\nISSUE", "HIGHLY\nSUS",
-            "VIBE CHECK:\nPASSED", "VIBE CHECK:\nFAILED", "IT'S A FEATURE\nNOT A BUG", "DEPLOY ON\nFRIDAY", "CTRL + Z"
-        ];
-
+        let answerTimer = 0;
         const mouse = { x: -1000, y: -1000, isDown: false };
 
-        class Star {
-            constructor() { this.reset(); }
-            reset() {
-                this.x = Math.random() * W; this.y = Math.random() * H;
-                this.z = Math.random() * W; this.size = Math.random() * 1.5;
-                this.color = Math.random() > 0.8 ? '#00f3ff' : '#ffffff';
-            }
-            update() {
-                if (state === 'CHARGING') {
-                    let dx = cx - this.x; let dy = cy - this.y;
-                    this.x += dx * 0.015 * chargeLevel; this.y += dy * 0.015 * chargeLevel;
-                    if (Math.abs(dx) < 10 && Math.abs(dy) < 10) this.reset();
-                } else {
-                    this.x -= 0.03 * (W / this.z); 
-                    if (this.x < 0) this.x = W;
-                }
-            }
-            draw() {
-                ctx.fillStyle = this.color;
-                ctx.globalAlpha = state === 'CHARGING' ? Math.max(0.1, 1 - chargeLevel) : Math.min(1, W / this.z);
-                if (state === 'CHARGING' && chargeLevel > 0.1) {
-                    ctx.beginPath(); ctx.moveTo(this.x, this.y);
-                    ctx.lineTo(this.x - (cx - this.x) * 0.08 * chargeLevel, this.y - (cy - this.y) * 0.08 * chargeLevel);
-                    ctx.strokeStyle = this.color; ctx.lineWidth = this.size; ctx.stroke();
-                } else {
-                    ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
-                }
-                ctx.globalAlpha = 1.0;
-            }
-        }
+        const answers =[
+            "CERTAIN", "DECIDEDLY SO", "WITHOUT A DOUBT", "DEFINITELY", "RELY ON IT",
+            "YES", "MOST LIKELY", "OUTLOOK GOOD", "SIGNS POINT TO YES", "AFFIRMATIVE",
+            "HAZY TRY AGAIN", "ASK LATER", "BETTER NOT TELL", "CANNOT PREDICT", "CONCENTRATE",
+            "DON'T COUNT ON IT", "NO", "SOURCES SAY NO", "OUTLOOK POOR", "DOUBTFUL",
+            "VIBE CHECK:\nPASSED", "VIBE CHECK:\nFAILED", "IT'S A FEATURE\nNOT A BUG", 
+            "DEPLOY ON\nFRIDAY", "CTRL + Z", "THE DATA\nSAYS YES", "SKILL\nISSUE", "LGTM"
+        ];
 
-        class Dust {
-            constructor() {
-                this.angle = Math.random() * Math.PI * 2;
-                this.initR = bhRadius * 1.05 + Math.random() * bhRadius * 2.5; 
-                this.r = this.initR;
-                this.speed = (Math.random() * 0.006 + 0.002) * (bhRadius * 2 / this.r);
-                this.yOff = (Math.random() - 0.5) * (bhRadius * 0.12);
-                this.size = Math.random() * 1.5 + 0.5;
-                this.color = colors.dust[Math.floor(Math.random() * colors.dust.length)];
-                this.x = 0; this.y = 0; this.isBack = false;
-            }
-            update() {
-                this.angle += this.speed * (1 + (chargeLevel * 25));
-                if (state === 'CHARGING') {
-                    if (this.r > bhRadius * 1.02) this.r -= chargeLevel * 2.0;
-                } else if (this.r < this.initR) this.r += (this.initR - this.r) * 0.02;
-
-                let flatX = Math.cos(this.angle) * this.r;
-                let flatY = Math.sin(this.angle) * this.r * 0.22 + this.yOff;
-                this.isBack = Math.sin(this.angle) < 0; 
-                
-                if (this.isBack) flatY -= (bhRadius * 1.9) * Math.pow(Math.sin(this.angle), 2) * ((bhRadius * 1.5) / this.r);
-
-                this.x = cx + flatX; this.y = cy + flatY;
-            }
-            draw() {
-                ctx.fillStyle = this.color;
-                ctx.globalAlpha = Math.random() > 0.8 ? 0.6 : 1.0;
-                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
-            }
-        }
-
-        class TextParticle {
-            constructor(tx, ty, type) {
-                this.tx = tx; this.ty = ty;
-                this.x = Math.random() * W; this.y = Math.random() * H;
-                this.vx = 0; this.vy = 0;
-                this.type = type;
-                let cSet = colors[type] || colors.main;
-                this.color = cSet[Math.floor(Math.random() * cSet.length)];
-                this.size = Math.random() * 1.5 + 0.5;
-                this.speed = Math.random() * 0.06 + 0.04; 
-                this.isDebris = false;
-            }
-            update() {
-                if (state === 'CHARGING') {
-                    let dx = cx - this.x; let dy = cy - this.y;
-                    let dist = Math.max(Math.hypot(dx, dy), 1);
-                    let force = chargeLevel * 2.5;
-                    this.vx += (dx / dist) * force; this.vy += (dy / dist) * force;
-                    this.vx += (dy / dist) * force * 1.5; this.vy -= (dx / dist) * force * 1.5;
-
-                } else if (this.isDebris) {
-                    let bdx = cx - this.x; let bdy = cy - this.y;
-                    let bDist = Math.max(Math.hypot(bdx, bdy), 1);
-                    
-                    let pull = 60 / bDist; 
-                    if(pull > 1.5) pull = 1.5;
-
-                    this.vx += (bdx / bDist) * pull * 0.2; 
-                    this.vy += (bdy / bDist) * pull * 0.2;
-                    this.vx += (bdy / bDist) * pull * 0.5; 
-                    this.vy -= (bdx / bDist) * pull * 0.5;
-                    
-                    if (bDist < bhRadius * 0.2) {
-                        let angle = Math.random() * Math.PI * 2;
-                        let r = W > H ? W : H;
-                        this.x = cx + Math.cos(angle) * r;
-                        this.y = cy + Math.sin(angle) * r;
-                    }
-
-                } else {
-                    this.vx += (this.tx - this.x) * this.speed;
-                    this.vy += (this.ty - this.y) * this.speed;
-
-                    let mdx = mouse.x - this.x;
-                    let mdy = mouse.y - this.y;
-                    let mDist = Math.hypot(mdx, mdy);
-                    let repelR = 80;
-                    
-                    if (mDist < repelR && mDist > 0) {
-                        let force = (repelR - mDist) / repelR;
-                        this.vx -= (mdx / mDist) * force * 3; 
-                        this.vy -= (mdy / mDist) * force * 3;
-                    }
-                }
-
-                this.vx *= 0.85; this.vy *= 0.85;
-                this.x += this.vx; this.y += this.vy;
-            }
-            draw() {
-                ctx.fillStyle = this.color;
-                ctx.globalAlpha = state === 'CHARGING' && Math.hypot(cx - this.x, cy - this.y) < bhRadius ? 0 : 1;
-                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
-                ctx.globalAlpha = 1.0;
-            }
-        }
-
-        function getIdleTargets() {
-            const tmp = document.createElement('canvas');
-            tmp.width = W; tmp.height = H;
-            const tCtx = tmp.getContext('2d', { willReadFrequently: true });
-            let pts =[];
-
-            let nameSize = Math.min(W / 12, 60); if (W < 500) nameSize = 35;
-            let startY = H * 0.30;
-            
-            tCtx.fillStyle = 'white';
-            tCtx.font = `900 ${nameSize}px "Montserrat", sans-serif`;
-            tCtx.textAlign = 'center';
-            tCtx.textBaseline = 'middle';
-            tCtx.fillText("PRIYASH VASAVA", W/2, startY);
-
-            let quoteSize = nameSize * 0.35;
-            tCtx.font = `300 ${quoteSize}px "Montserrat", sans-serif`;
-            tCtx.letterSpacing = "6px"; 
-            tCtx.fillText("ANALYST BY DAY", W/2, startY + nameSize * 0.9);
-            tCtx.fillText("VIBE CODER BY NIGHT", W/2, startY + nameSize * 0.9 + quoteSize * 1.8);
-
-            const imgData = tCtx.getImageData(0, 0, W, H).data;
-            let step = W < 600 ? 3 : 4;
-            for (let y = 0; y < H; y += step) {
-                for (let x = 0; x < W; x += step) {
-                    if (imgData[(y * W + x) * 4 + 3] > 128) {
-                        let type = (y > startY + nameSize * 0.5) ? 'quote' : 'main';
-                        pts.push({x, y, type});
-                    }
-                }
-            }
-            return pts;
-        }
-
-        function getAnswerTargets(answerText) {
-            const tmp = document.createElement('canvas');
-            tmp.width = W; tmp.height = H;
-            const tCtx = tmp.getContext('2d', { willReadFrequently: true });
-            let pts =[];
-
-            let prefixSize = Math.min(W / 35, 14); if (prefixSize < 10) prefixSize = 10;
-            tCtx.font = `600 ${prefixSize}px "Inter", monospace`;
-            tCtx.fillStyle = 'white'; tCtx.textAlign = 'center'; tCtx.textBaseline = 'middle';
-            let ansStartY = H * 0.25;
-            tCtx.letterSpacing = "4px";
-            tCtx.fillText("- MAGIC 8 BALL SAYS: -", W/2, ansStartY);
-            tCtx.letterSpacing = "0px";
-
-            let size = Math.min(W / 14, 70); if (W < 500) size = 35;
-            tCtx.font = `900 ${size}px "Montserrat", sans-serif`;
-            let lines = answerText.split('\n');
-            let textY = ansStartY + prefixSize * 3.5;
-            lines.forEach((line, i) => { tCtx.fillText(line, W/2, textY + (i * size * 1.1)); });
-
-            const imgData = tCtx.getImageData(0, 0, W, H).data;
-            let step = W < 600 ? 3 : 4;
-            for (let y = 0; y < H; y += step) {
-                for (let x = 0; x < W; x += step) {
-                    if (imgData[(y * W + x) * 4 + 3] > 128) {
-                        let type = (y < ansStartY + prefixSize * 2) ? 'prefix' : 'answer';
-                        pts.push({x, y, type});
-                    }
-                }
-            }
-            return pts;
-        }
+        // Quantum Colors
+        const colors = ['#00f3ff', '#b026ff', '#ffffff'];
 
         function init() {
             W = canvas.width = document.getElementById('hero-canvas-container').clientWidth;
             H = canvas.height = document.getElementById('hero-canvas-container').clientHeight;
             cx = W / 2;
-            cy = H * 0.85; 
-            bhRadius = Math.min(W, H) * 0.12;
-            if (bhRadius > 90) bhRadius = 90;
+            cy = H / 2;
+            
+            // Adjust radius for mobile
+            baseRadius = Math.min(W, H) * 0.35;
+            if(baseRadius > 300) baseRadius = 300;
+            sphereRadius = baseRadius;
+        }
 
-            stars =[]; for (let i = 0; i < 200; i++) stars.push(new Star());
-            accretionDust =[]; for (let i = 0; i < 1500; i++) accretionDust.push(new Dust());
+        // 3D Math Helper
+        function randomSpherePoint() {
+            const u = Math.random();
+            const v = Math.random();
+            const theta = 2 * Math.PI * u;
+            const phi = Math.acos(2 * v - 1);
+            return {
+                x: Math.sin(phi) * Math.cos(theta),
+                y: Math.sin(phi) * Math.sin(theta),
+                z: Math.cos(phi)
+            };
+        }
 
-            textParticles =[];
-            let pts = getIdleTargets();
-            pts.forEach(pt => textParticles.push(new TextParticle(pt.x, pt.y, pt.type)));
+        class Particle {
+            constructor() {
+                const pt = randomSpherePoint();
+                this.ox = pt.x; 
+                this.oy = pt.y;
+                this.oz = pt.z;
+                
+                this.x = 0; this.y = 0; this.z = 0;
+                this.tx = 0; this.ty = 0; 
+                
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.size = Math.random() * 1.5 + 0.5;
+                
+                this.vx = 0; this.vy = 0;
+                this.assignedText = false;
+            }
+
+            update(time) {
+                if (state === 'idle' || state === 'charging') {
+                    // 3D Math for orbiting sphere
+                    let currentRadius = sphereRadius + (Math.sin(time * 0.002 + this.ox * 10) * 10); 
+                    
+                    let sx = this.ox * currentRadius;
+                    let sy = this.oy * currentRadius;
+                    let sz = this.oz * currentRadius;
+
+                    let cosY = Math.cos(rotationY), sinY = Math.sin(rotationY);
+                    let rx = sx * cosY - sz * sinY;
+                    let rz = sx * sinY + sz * cosY;
+
+                    let cosX = Math.cos(rotationX), sinX = Math.sin(rotationX);
+                    let ry = sy * cosX - rz * sinX;
+                    let finalZ = sy * sinX + rz * cosX;
+
+                    const perspective = 800 / (800 - finalZ);
+                    this.tx = cx + rx * perspective;
+                    this.ty = cy + ry * perspective;
+                    this.z = finalZ;
+                    this.assignedText = false;
+                }
+
+                // Spring physics
+                let spring = state === 'answering' ? 0.05 : 0.1;
+                if (state === 'charging') spring = 0.3;
+                
+                let dx = this.tx - this.x;
+                let dy = this.ty - this.y;
+                
+                this.vx += dx * spring;
+                this.vy += dy * spring;
+                
+                // Friction
+                let friction = state === 'answering' ? 0.85 : 0.9;
+                this.vx *= friction;
+                this.vy *= friction;
+
+                // Mouse Repulsion (only in idle)
+                if (state === 'idle') {
+                    let mx = mouse.x - this.x;
+                    let my = mouse.y - this.y;
+                    let dist = Math.sqrt(mx*mx + my*my);
+                    if (dist < 100) {
+                        let force = (100 - dist) / 100;
+                        this.vx -= (mx / dist) * force * 5;
+                        this.vy -= (my / dist) * force * 5;
+                    }
+                }
+
+                this.x += this.vx;
+                this.y += this.vy;
+            }
+
+            draw() {
+                let alpha = state === 'answering' ? 1 : Math.max(0.1, (this.z + baseRadius) / (baseRadius * 2));
+                if (alpha < 0) alpha = 0;
+                
+                ctx.globalAlpha = alpha;
+                ctx.fillStyle = this.color;
+                
+                let renderSize = state === 'answering' ? this.size * 1.5 : this.size * (alpha + 0.5);
+
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, renderSize, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Initialize Particles
+        for (let i = 0; i < N; i++) particles.push(new Particle());
+
+        // Extract Text Coordinates for Answer
+        function getTextPoints(text) {
+            const tCanvas = document.createElement('canvas');
+            const tCtx = tCanvas.getContext('2d', { willReadFrequently: true });
+            tCanvas.width = W; tCanvas.height = H;
+            
+            tCtx.fillStyle = 'white';
+            tCtx.textAlign = 'center';
+            tCtx.textBaseline = 'middle';
+            
+            let size = Math.min(W/10, 90);
+            if(W < 500) size = 40;
+            tCtx.font = `bold ${size}px "Courier New", monospace`;
+            
+            let lines = text.split("\n");
+            let startY = (H / 2) - ((size * 1.1 * (lines.length - 1)) / 2);
+            
+            lines.forEach((line, i) => { 
+                tCtx.fillText(line, W/2, startY + (i * size * 1.1)); 
+            });
+
+            const imgData = tCtx.getImageData(0, 0, W, H).data;
+            const points =[];
+            const step = Math.min(W, H) > 800 ? 5 : 4; 
+
+            for (let y = 0; y < H; y += step) {
+                for (let x = 0; x < W; x += step) {
+                    if (imgData[(y * W + x) * 4 + 3] > 128) {
+                        points.push({ x, y });
+                    }
+                }
+            }
+            return points;
         }
 
         function triggerAnswer() {
-            state = 'ANSWERING';
-            const ans = answers[Math.floor(Math.random() * answers.length)];
-            let ansPts = getAnswerTargets(ans);
+            state = 'answering';
+            promptEl.style.opacity = 0;
+            const answer = answers[Math.floor(Math.random() * answers.length)];
+            const pts = getTextPoints(answer);
             
-            textParticles.forEach((p, i) => {
-                let angle = Math.random() * Math.PI * 2;
-                let force = Math.random() * 50 + 30; 
-                p.vx = Math.cos(angle) * force; p.vy = Math.sin(angle) * force;
-                p.x = cx; p.y = cy; 
-
-                if (i < ansPts.length) {
-                    p.tx = ansPts[i].x; p.ty = ansPts[i].y;
-                    p.type = ansPts[i].type;
-                    let cSet = colors[p.type];
-                    p.color = cSet[Math.floor(Math.random() * cSet.length)];
-                    p.isDebris = false;
+            particles.forEach((p, i) => {
+                if (i < pts.length) {
+                    p.tx = pts[i].x;
+                    p.ty = pts[i].y;
+                    p.assignedText = true;
+                    p.color = Math.random() > 0.8 ? '#ffffff' : '#00f3ff';
                 } else {
-                    p.isDebris = true;
-                    p.color = colors.debris[Math.floor(Math.random() * colors.debris.length)];
+                    p.tx = cx + (Math.random() - 0.5) * W * 2;
+                    p.ty = cy + (Math.random() - 0.5) * H * 2;
+                    p.color = '#b026ff';
                 }
             });
 
-            if (answerTimer) clearTimeout(answerTimer);
+            clearTimeout(answerTimer);
             answerTimer = setTimeout(() => {
-                state = 'IDLE';
-                hintEl.style.opacity = 1;
-                
-                let idlePts = getIdleTargets();
-                textParticles.forEach((p, i) => {
-                    p.isDebris = false;
-                    if (i < idlePts.length) {
-                        p.tx = idlePts[i].x; p.ty = idlePts[i].y;
-                        p.type = idlePts[i].type;
-                        let cSet = colors[p.type];
-                        p.color = cSet[Math.floor(Math.random() * cSet.length)];
-                    } else {
-                        p.isDebris = true;
-                        p.color = colors.debris[0];
-                    }
-                });
-            }, 8000);
+                state = 'idle';
+                promptEl.style.opacity = 1;
+                particles.forEach(p => p.color = colors[Math.floor(Math.random() * colors.length)]);
+            }, 5000); // Back to sphere after 5s
         }
 
-        function handlePointerDown(x, y) {
-            // Only trigger black hole if clicking roughly lower half to avoid blocking nav
-            let dist = Math.hypot(x - cx, y - cy);
-            if (dist < bhRadius * 2.5 && state === 'IDLE') {
-                state = 'CHARGING'; mouse.isDown = true; hintEl.style.opacity = 0;
+        // Interaction Listeners (Attached to canvas container so it doesn't block HTML Nav)
+        const container = document.getElementById('hero-canvas-container');
+
+        container.addEventListener('mousemove', e => {
+            const rect = container.getBoundingClientRect();
+            mouse.x = e.clientX - rect.left;
+            mouse.y = e.clientY - rect.top;
+        });
+        
+        container.addEventListener('mousedown', () => {
+            if (state === 'answering') return;
+            mouse.isDown = true;
+            state = 'charging';
+            promptEl.style.opacity = 0.1;
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (state === 'answering') return;
+            mouse.isDown = false;
+            
+            if (chargeLevel > 0.4) {
+                triggerAnswer();
+            } else {
+                state = 'idle';
+                promptEl.style.opacity = 1;
             }
-        }
+            chargeLevel = 0;
+        });
 
-        function handlePointerUp() {
-            if (state === 'CHARGING') {
-                mouse.isDown = false;
-                if (chargeLevel > 0.6) triggerAnswer();
-                else { state = 'IDLE'; hintEl.style.opacity = 1; }
+        container.addEventListener('touchstart', e => {
+            const rect = container.getBoundingClientRect();
+            mouse.x = e.touches[0].clientX - rect.left; mouse.y = e.touches[0].clientY - rect.top;
+            if (state !== 'answering') { mouse.isDown = true; state = 'charging'; promptEl.style.opacity = 0.1; }
+        });
+        
+        window.addEventListener('touchend', () => {
+            mouse.isDown = false;
+            if (state !== 'answering') {
+                if (chargeLevel > 0.4) triggerAnswer();
+                else { state = 'idle'; promptEl.style.opacity = 1; }
                 chargeLevel = 0;
             }
-        }
+        });
 
-        // Event listeners applied directly to canvas to prevent blocking HTML links
-        canvas.addEventListener('mousedown', e => {
-            const rect = canvas.getBoundingClientRect();
-            handlePointerDown(e.clientX - rect.left, e.clientY - rect.top);
-        });
-        window.addEventListener('mouseup', handlePointerUp);
-        
-        canvas.addEventListener('touchstart', e => {
-            const rect = canvas.getBoundingClientRect();
-            mouse.x = e.touches[0].clientX - rect.left; mouse.y = e.touches[0].clientY - rect.top;
-            handlePointerDown(mouse.x, mouse.y);
-        });
-        window.addEventListener('touchend', handlePointerUp);
-        
-        canvas.addEventListener('mousemove', e => { 
-            const rect = canvas.getBoundingClientRect();
-            mouse.x = e.clientX - rect.left; mouse.y = e.clientY - rect.top; 
-        });
         window.addEventListener('resize', () => { clearTimeout(window.resizeTimer); window.resizeTimer = setTimeout(init, 300); });
 
-        function loop() {
-            ctx.fillStyle = '#020202'; ctx.fillRect(0, 0, W, H);
-
-            if (mouse.x > 0 && mouse.y > 0 && mouse.y < H) {
-                mouseTrail.push({x: mouse.x, y: mouse.y});
-                if (mouseTrail.length > 25) mouseTrail.shift(); 
-            } else if (mouseTrail.length > 0) mouseTrail.shift();
-
-            ctx.save();
-            if (state === 'CHARGING') {
-                chargeLevel += 0.0035; 
-                if (chargeLevel > 1) chargeLevel = 1;
-                let shake = chargeLevel * 6;
-                ctx.translate((Math.random() - 0.5) * shake, (Math.random() - 0.5) * shake);
-            }
-
-            stars.forEach(s => { s.update(); s.draw(); });
-
-            accretionDust.forEach(d => d.update());
-            let backDust = accretionDust.filter(d => d.isBack);
-            let frontDust = accretionDust.filter(d => !d.isBack);
-
-            ctx.globalCompositeOperation = 'lighter';
-            backDust.forEach(d => d.draw());
-
+        // Main Loop
+        function loop(time) {
             ctx.globalCompositeOperation = 'source-over';
-            let currentRadius = bhRadius - (chargeLevel * 10); 
+            ctx.fillStyle = 'rgba(3, 3, 5, 0.25)';
+            ctx.fillRect(0, 0, W, H);
             
-            let glow = ctx.createRadialGradient(cx, cy, currentRadius * 0.9, cx, cy, currentRadius * 2.5);
-            glow.addColorStop(0, '#00f3ff'); glow.addColorStop(0.3, 'rgba(0, 85, 255, 0.3)'); glow.addColorStop(1, 'transparent');
-            ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(cx, cy, currentRadius * 2.5, 0, Math.PI * 2); ctx.fill();
+            ctx.globalCompositeOperation = 'lighter';
 
-            ctx.fillStyle = '#000000'; ctx.beginPath(); ctx.arc(cx, cy, currentRadius, 0, Math.PI * 2); ctx.fill();
-            ctx.strokeStyle = `rgba(255, 255, 255, ${0.4 + chargeLevel * 0.6})`;
-            ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(cx, cy, currentRadius + 1, 0, Math.PI * 2); ctx.stroke();
-
-            if (state === 'ANSWERING') {
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.12)'; 
-                ctx.font = `800 ${currentRadius * 1.3}px "Montserrat", sans-serif`;
-                ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-                ctx.fillText("8", cx, cy);
+            if (state === 'idle') {
+                rotationY += 0.003;
+                rotationX += 0.002;
+                sphereRadius += (baseRadius - sphereRadius) * 0.1;
+            } else if (state === 'charging') {
+                chargeLevel += 0.015;
+                rotationY += 0.02 + (chargeLevel * 0.05); 
+                rotationX += 0.02 + (chargeLevel * 0.05);
+                sphereRadius = baseRadius - (chargeLevel * 150); 
+                
+                ctx.translate(Math.random() * 4 - 2, Math.random() * 4 - 2);
+            } else {
+                ctx.setTransform(1, 0, 0, 1, 0, 0); 
             }
 
-            ctx.globalCompositeOperation = 'lighter';
-            frontDust.forEach(d => d.draw());
-
-            ctx.lineWidth = 0.5;
-            for (let i = 0; i < textParticles.length; i += 3) {
-                if(textParticles[i].isDebris) continue;
-                for (let j = i + 1; j < textParticles.length; j += 3) {
-                    if(textParticles[j].isDebris) continue;
-                    let dx = textParticles[i].x - textParticles[j].x; let dy = textParticles[i].y - textParticles[j].y;
-                    if (Math.abs(dx) > 15 || Math.abs(dy) > 15) continue;
-                    let dSq = dx*dx + dy*dy;
-                    if (dSq < 225) {
-                        ctx.strokeStyle = textParticles[i].color;
-                        ctx.globalAlpha = 0.4 * (1 - Math.sqrt(dSq)/15);
-                        ctx.beginPath(); ctx.moveTo(textParticles[i].x, textParticles[i].y); ctx.lineTo(textParticles[j].x, textParticles[j].y); ctx.stroke();
+            if (state !== 'answering') {
+                ctx.lineWidth = 0.5;
+                for (let i = 0; i < N; i += 8) { 
+                    for (let j = i + 1; j < N; j += 8) {
+                        let dx = particles[i].x - particles[j].x;
+                        let dy = particles[i].y - particles[j].y;
+                        let distSq = dx * dx + dy * dy;
+                        if (distSq < 3000) {
+                            ctx.strokeStyle = `rgba(0, 243, 255, ${0.15 * (1 - distSq/3000)})`;
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                        }
                     }
                 }
             }
-            ctx.globalAlpha = 1.0;
-            ctx.globalCompositeOperation = 'source-over';
 
-            textParticles.forEach(p => { p.update(); p.draw(); });
+            particles.forEach(p => {
+                p.update(time);
+                p.draw();
+            });
 
-            let bhHover = Math.hypot(mouse.x - cx, mouse.y - cy) < bhRadius * 2.5;
-
-            if (mouseTrail.length > 0) {
-                ctx.globalCompositeOperation = 'lighter';
-                for (let i = 0; i < mouseTrail.length; i++) {
-                    let pt = mouseTrail[i]; let ratio = i / mouseTrail.length;
-                    ctx.beginPath(); ctx.arc(pt.x, pt.y, ratio * 3.5, 0, Math.PI * 2);
-                    ctx.fillStyle = `rgba(0, 243, 255, ${ratio})`; ctx.fill();
-                }
-                let head = mouseTrail[mouseTrail.length - 1];
-                ctx.beginPath(); ctx.arc(head.x, head.y, 4, 0, Math.PI * 2);
-                ctx.fillStyle = bhHover ? '#ffffff' : '#00f3ff'; ctx.fill();
-                ctx.globalCompositeOperation = 'source-over';
-            }
-
-            ctx.restore();
+            ctx.setTransform(1, 0, 0, 1, 0, 0); 
             requestAnimationFrame(loop);
         }
 
-        // FIX: Ensure custom fonts are fully loaded BEFORE creating text particles
         document.fonts.ready.then(() => {
             init();
             requestAnimationFrame(loop);
