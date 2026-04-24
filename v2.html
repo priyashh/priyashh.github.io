@@ -8,7 +8,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@300;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -81,7 +80,7 @@
         /* --- ANIMATED HERO TEXT --- */
         #hero-text-overlay {
             position: absolute;
-            top: 8vh; 
+            top: 18vh; /* Fixed alignment: pushed down slightly so it sits right above the sphere */
             left: 50%;
             transform: translateX(-50%) scale(1);
             text-align: center;
@@ -92,7 +91,7 @@
 
         /* Moves right above the bio section perfectly */
         #hero-text-overlay.exploded {
-            transform: translate(25vw, 2vh) scale(0.7);
+            transform: translate(25vw, -6vh) scale(0.7);
         }
 
         #hero-text-overlay h1 {
@@ -107,7 +106,7 @@
         #hero-text-overlay .muted { color: #888; font-weight: 400; }
 
         #magic-quote {
-            position: absolute; top: 35vh; left: 50%; transform: translateX(-50%);
+            position: absolute; top: 40vh; left: 50%; transform: translateX(-50%);
             font-family: 'Courier Prime', monospace; color: #00f3ff; font-size: 12px; letter-spacing: 3px;
             opacity: 0; transition: opacity 0.5s; z-index: 4; pointer-events: none;
             text-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
@@ -137,7 +136,7 @@
                           text-decoration: underline; text-underline-offset: 4px; letter-spacing: 0.05em; text-transform: uppercase; }
 
         .bottom-section {
-            position: relative; z-index: 5; max-width: 1100px; margin: 40vh auto 0 auto;
+            position: relative; z-index: 5; max-width: 1100px; margin: 20vh auto 0 auto;
             border-top: 1px solid rgba(255,255,255,0.05); padding-top: 80px; padding-bottom: 80px; pointer-events: auto;
         }
 
@@ -203,7 +202,6 @@
     <div class="hero-wrapper">
         <canvas id="oracle-canvas"></canvas>
         <div class="scanlines"></div>
-
         <div id="hud"></div>
 
         <div id="hero-text-overlay">
@@ -621,9 +619,13 @@
             ctx.globalAlpha = 1;
             cursorTrails.forEach((trail) => {
                 trail.age += 0.05; // Fade speed
+                
+                // THE BUG FIX: Prevents negative radius crash
+                let radius = Math.max(0, 3 * (1 - trail.age)); 
+                
                 ctx.fillStyle = `rgba(255, 255, 255, ${1 - trail.age})`;
                 ctx.beginPath();
-                ctx.arc(trail.x, trail.y, 3 * (1 - trail.age), 0, Math.PI*2);
+                ctx.arc(trail.x, trail.y, radius, 0, Math.PI*2);
                 ctx.fill();
             });
             // Remove old trails
