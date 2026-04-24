@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portfolio | Priyash Vasava</title>
     
-    <!-- Link to your existing external stylesheet -->
     <link rel="stylesheet" href="style.css">
     
     <!-- Fonts -->
@@ -14,29 +13,32 @@
     <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@300;500;600;700;800&family=Montserrat:wght@300;700;900&display=swap" rel="stylesheet">
     
     <style>
-        /* --- GLOBAL & FIXED CANVAS --- */
+        /* --- GLOBAL --- */
+        * {
+            cursor: none !important; /* Forces custom cursor everywhere */
+        }
+        
         body, html {
             margin: 0; padding: 0;
             background-color: #030305;
             color: white;
             font-family: 'Inter', sans-serif;
-            cursor: none; /* Hide default cursor everywhere */
             overflow-x: hidden;
         }
 
+        /* Fixed Fullscreen Canvas */
         #bg-canvas {
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
-            z-index: -1; /* Sits permanently behind the website */
-            pointer-events: none;
+            z-index: 0;
+            pointer-events: none; /* Lets clicks pass through to HTML links */
         }
 
         /* --- NAVBAR --- */
         .navbar {
-            position: absolute;
-            top: 0; left: 0; width: 100%;
-            z-index: 100;
+            position: relative;
+            z-index: 10;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -51,7 +53,6 @@
             color: #fff;
             letter-spacing: 2px;
             text-decoration: none;
-            cursor: none;
         }
 
         .navbar .nav-links {
@@ -68,7 +69,6 @@
             text-decoration: none;
             opacity: 0.8;
             transition: all 0.3s ease;
-            cursor: none;
         }
         
         .navbar .nav-links a:hover {
@@ -76,30 +76,50 @@
             text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
         }
 
-        /* --- ORIGINAL PORTFOLIO GRID LAYOUT --- */
+        /* --- NEW GRID LAYOUT (Matches Screenshot 2) --- */
         .case-wrapper {
+            position: relative;
+            z-index: 10;
             display: grid;
-            grid-template-columns: 1fr minmax(auto, 600px) 250px 1fr;
-            padding-top: 120px; /* Space below navbar */
-            max-width: 1400px;
+            /* 1: Vertical Line, 2: Main Content, 3: Spacer Gap, 4: Sidebar */
+            grid-template-columns: 80px minmax(500px, 600px) 1fr 260px;
+            padding-top: 60px;
+            max-width: 1300px;
             margin: 0 auto;
-            column-gap: 40px;
+            column-gap: 20px;
         }
 
-        /* Hero Text (Perfectly positioned) */
-        .hero-statement {
+        /* Column 1: Vertical Line */
+        .vertical-line {
+            grid-column: 1;
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            font-size: 10px;
+            letter-spacing: 4px;
+            color: #666;
+            text-align: right;
+            padding-top: 150px;
+        }
+
+        /* Column 2: Main Center Content */
+        .main-column {
             grid-column: 2;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero-statement {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             pointer-events: none;
         }
         
         .hero-statement h1 {
             font-family: 'Inter', sans-serif;
-            font-size: 1.2rem;
-            letter-spacing: 0.15em;
+            font-size: 1.1rem;
+            letter-spacing: 0.2em;
             color: #888;
-            font-weight: 500;
+            font-weight: 400;
             line-height: 1.8;
             text-transform: uppercase;
             margin: 0;
@@ -108,14 +128,13 @@
         .hero-statement span {
             font-family: 'Montserrat', sans-serif;
             color: #fff;
-            font-size: 1.6rem;
+            font-size: 2rem;
             font-weight: 900;
-            letter-spacing: 0.2em;
+            letter-spacing: 0.15em;
             text-shadow: 0 0 20px rgba(255,255,255,0.3);
         }
 
         .hero-hint {
-            grid-column: 2;
             text-align: center;
             color: #00f3ff;
             font-family: 'Courier Prime', monospace;
@@ -128,32 +147,19 @@
             pointer-events: none;
         }
 
-        /* Invisible spacer that reserves room for the Atom */
+        /* Invisible spacer that reserves room for the Atom Oracle */
         .oracle-spacer {
-            grid-column: 2;
-            height: 550px; 
+            height: 500px; 
             width: 100%;
         }
 
-        /* Vertical Line Text */
-        .vertical-line {
-            grid-column: 1;
-            writing-mode: vertical-rl;
-            transform: rotate(180deg);
-            font-size: 10px;
-            letter-spacing: 4px;
-            color: #666;
-            text-align: right;
-            padding-top: 150px;
-        }
-
-        /* Right Sidebar Bio (Positioned accurately from screenshot) */
+        /* Column 4: Right Sidebar Bio */
         .sidebar-bio {
-            grid-column: 3;
+            grid-column: 4;
             display: flex;
             flex-direction: column;
             gap: 16px;
-            padding-top: 150px; /* Aligns with Oracle spacer */
+            padding-top: 250px; /* Aligns with Oracle spacer visually */
         }
 
         .sidebar-img {
@@ -163,7 +169,7 @@
         }
 
         .sidebar-bio p {
-            font-size: 0.75rem; line-height: 1.7;
+            font-size: 0.8rem; line-height: 1.8;
             color: #888; margin: 0;
         }
 
@@ -171,28 +177,27 @@
             font-size: 0.75rem; font-weight: 700;
             text-decoration: underline; text-underline-offset: 4px;
             color: #fff; text-transform: uppercase; letter-spacing: 0.05em;
-            cursor: none;
         }
 
-        /* Compact Project List */
-        .projects-container { grid-column: 2; display: flex; flex-direction: column; margin-bottom: 80px; }
-        .project-row { display: grid; grid-template-columns: 200px 1fr; gap: 30px; padding: 30px 0; border-top: 1px solid #333; align-items: center; transition: opacity 0.3s ease; text-decoration: none; cursor: none; }
+        /* Projects List */
+        .projects-container { display: flex; flex-direction: column; margin-bottom: 80px; }
+        .project-row { display: grid; grid-template-columns: 200px 1fr; gap: 30px; padding: 30px 0; border-top: 1px solid #222; align-items: center; transition: opacity 0.3s ease; text-decoration: none; }
         .project-row:hover { opacity: 0.7; }
-        .project-row img { width: 100%; height: 120px; object-fit: cover; border-radius: 4px; border: 1px solid #333; }
+        .project-row img { width: 100%; height: 120px; object-fit: cover; border-radius: 4px; border: 1px solid #222; }
         .project-info h2 { font-size: 1.1rem; letter-spacing: 0.05em; margin-bottom: 8px; color: #fff; }
         .project-info p { font-size: 0.9rem; color: #888; margin-bottom: 12px; line-height: 1.6; }
         .slide-tags { display: flex; gap: 8px; }
         .slide-tags span { font-size: 0.7rem; color: #fff; background: #111; padding: 4px 8px; border: 1px solid #333; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
         
-        .connect-section { grid-column: 2; text-align: center; padding: 60px 0; border-top: 1px solid #333; }
+        .connect-section { text-align: center; padding: 60px 0; border-top: 1px solid #222; }
         .connect-section blockquote { font-size: 1.1rem; color: #fff; font-style: italic; margin-bottom: 30px; }
-        .connect-links a { display: inline-block; margin: 0 10px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; color: #888; border: 1px solid #333; padding: 8px 16px; border-radius: 4px; transition: 0.3s; text-decoration: none; cursor: none; }
+        .connect-links a { display: inline-block; margin: 0 10px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; color: #888; border: 1px solid #333; padding: 8px 16px; border-radius: 4px; transition: 0.3s; text-decoration: none; }
         .connect-links a:hover { color: #fff; border-color: #888; }
 
         @media (max-width: 1050px) {
-            .case-wrapper { display: flex; flex-direction: column; padding: 100px 20px 0 20px; }
+            .case-wrapper { display: flex; flex-direction: column; padding: 40px 20px 0 20px; }
             .vertical-line { display: none; }
-            .sidebar-bio { padding-top: 20px; align-items: center; text-align: center; border-bottom: 1px solid #333; padding-bottom: 40px; margin-bottom: 40px; }
+            .sidebar-bio { padding-top: 20px; align-items: center; text-align: center; border-bottom: 1px solid #222; padding-bottom: 40px; margin-bottom: 40px; }
             .oracle-spacer { height: 400px; }
             .project-row { grid-template-columns: 1fr; gap: 16px; }
         }
@@ -203,7 +208,7 @@
     <!-- Fixed Background Canvas -->
     <canvas id="bg-canvas"></canvas>
 
-    <!-- Navigation Overlay -->
+    <!-- Navigation -->
     <nav class="navbar">
         <a href="/" class="logo">PRIYASH VASAVA</a>
         <div class="nav-links">
@@ -214,62 +219,66 @@
         </div>
     </nav>
 
-    <!-- Main Content Layout -->
+    <!-- Main Grid Layout -->
     <div class="case-wrapper">
         
-        <!-- Hero Text (Perfectly centered above Oracle) -->
-        <div class="hero-statement">
-            <h1>Analyst by day<br><span>VIBE CODER</span><br>by night</h1>
-        </div>
-        
-        <div class="hero-hint" id="hint">CLICK AND HOLD TO BLOW YOUR MIND</div>
-
         <div class="vertical-line">FEATURED WORKS</div>
+        
+        <!-- Center Column -->
+        <div class="main-column">
+            
+            <div class="hero-statement">
+                <h1>Analyst by day<br><span>VIBE CODER</span><br>by night</h1>
+            </div>
+            
+            <div class="hero-hint" id="hint">CLICK AND HOLD TO BLOW YOUR MIND</div>
 
-        <!-- Invisible Spacer for Oracle to render over -->
-        <div class="oracle-spacer" id="oracle-anchor"></div>
+            <!-- Empty space that the Atom locks onto mathematically -->
+            <div class="oracle-spacer" id="oracle-anchor"></div>
 
-        <!-- Right Sidebar -->
+            <!-- Projects -->
+            <div id="projects" class="projects-container">
+                <a href="projects/olist/index.html" class="project-row">
+                    <img src="assets/olist-cover.png" alt="Olist Project" onerror="this.style.display='none'">
+                    <div class="project-info">
+                        <h2>Olist E-Commerce</h2>
+                        <p>Olist is a Brazilian SaaS technology company that acts as a unified marketplace integrator. Uncovered hidden customer behaviour patterns from 550K rows across 8 relational datasets using Excel, SQL, and Power BI.</p>
+                        <div class="slide-tags"><span>Excel</span><span>SQL</span><span>Power BI</span></div>
+                    </div>
+                </a>
+
+                <a href="projects/google-stock/index.html" class="project-row">
+                    <img src="assets/google-cover.png" alt="Google Stock" onerror="this.style.display='none'">
+                    <div class="project-info">
+                        <h2>Google Stock Analysis</h2>
+                        <p>Understand and find meaningful patterns in the journey of Google (Alphabet Inc.) stock market performance. Heavily relied on Power BI's DAX formulas to turn numbers into a crystal clear picture.</p>
+                        <div class="slide-tags"><span>Excel</span><span>PowerBi</span><span>SQL</span></div>
+                    </div>
+                </a>
+            </div>
+
+            <div id="connect" class="connect-section">
+                <blockquote>
+                    "In God we trust. All others must bring data."<br>
+                    <span style="font-size: 0.85rem; color: #888;">— W. Edwards Deming</span>
+                </blockquote>
+                <div class="connect-links">
+                    <a href="mailto:Priyashvasava@outlook.com">Say Hello ↗</a>
+                    <a href="https://www.linkedin.com/in/priyashvasava" target="_blank">LinkedIn</a>
+                    <a href="https://github.com/priyashh" target="_blank">GitHub</a>
+                </div>
+                <p style="font-size: 0.85rem; color: #888; margin-top: 20px;">Priyashvasava@outlook.com</p>
+            </div>
+
+        </div>
+
+        <!-- Right Sidebar (Pushed to Far Right Box) -->
         <div class="sidebar-bio">
             <img src="assets/user-portrait.jpg" alt="Priyash" class="sidebar-img" onerror="this.src='https://via.placeholder.com/80/111/444?text=PV'">
             <p>
-                I like to think of myself as an observer. Observing different kinds of systems, from the system of Nature to the system of Metropolitan city and much more. Fascinated by how they function, why they break, and how they can be optimized. Be it a problem-solving project or just curiosity, I rely on SQL and Power BI as my core tools to uncover facts. In my free time, I'm probably experimenting with new AI features across the internet.
+                I like to think of myself as an observer. Observing different kinds of systems, from the system of Nature to the system of Metropolitan city and much more. Fascinated by how they function, why they break, and how they can be optimized. Be it a problem-solving project or just curiosity, I rely on SQL and Power BI as my core tools to uncover facts.
             </p>
             <a href="who-am-i.html">Know more of me ↗</a>
-        </div>
-
-        <!-- Projects -->
-        <div id="projects" class="projects-container">
-            <a href="projects/olist/index.html" class="project-row">
-                <img src="assets/olist-cover.png" alt="Olist Project" onerror="this.style.display='none'">
-                <div class="project-info">
-                    <h2>Olist E-Commerce</h2>
-                    <p>Olist is a Brazilian SaaS technology company that acts as a unified marketplace integrator. The goal of this data analysis was to uncover hidden customer behaviour patterns from 550K rows across 8 relational datasets using Excel, SQL, and Power BI.</p>
-                    <div class="slide-tags"><span>Excel</span><span>SQL</span><span>Power BI</span></div>
-                </div>
-            </a>
-
-            <a href="projects/google-stock/index.html" class="project-row">
-                <img src="assets/google-cover.png" alt="Google Stock" onerror="this.style.display='none'">
-                <div class="project-info">
-                    <h2>Google Stock Analysis</h2>
-                    <p>The aim of this project was to understand and find meaningful patterns in the journey of Google (Alphabet Inc.) stock market performance. Heavily relied on Power BI's DAX formulas to turn numbers into a crystal clear picture.</p>
-                    <div class="slide-tags"><span>Excel</span><span>PowerBi</span><span>SQL</span></div>
-                </div>
-            </a>
-        </div>
-
-        <div id="connect" class="connect-section">
-            <blockquote>
-                "In God we trust. All others must bring data."<br>
-                <span style="font-size: 0.85rem; color: #888;">— W. Edwards Deming</span>
-            </blockquote>
-            <div class="connect-links">
-                <a href="mailto:Priyashvasava@outlook.com">Say Hello ↗</a>
-                <a href="https://www.linkedin.com/in/priyashvasava" target="_blank">LinkedIn</a>
-                <a href="https://github.com/priyashh" target="_blank">GitHub</a>
-            </div>
-            <p style="font-size: 0.85rem; color: #888; margin-top: 20px;">Priyashvasava@outlook.com</p>
         </div>
 
     </div>
@@ -277,15 +286,15 @@
     <!-- MAIN INTERACTIVE SCRIPT -->
     <script>
         const canvas = document.getElementById('bg-canvas');
-        const ctx = canvas.getContext('2d', { alpha: false });
+        const ctx = canvas.getContext('2d');
         const hintEl = document.getElementById('hint');
         const oracleAnchor = document.getElementById('oracle-anchor');
         
         let W, H;
-        let cx, cy; // Oracle Center
+        let cx, cy; 
         
-        const N = 2400; 
-        let particles = [];
+        const N = 2600; 
+        let particles =[];
         let stars = [];
         let mouseTrail =[];
         
@@ -293,98 +302,84 @@
         let rotationX = 0;
         let rotationY = 0;
         
-        let state = 'idle'; // idle, charging, answering
+        let state = 'idle'; 
         let chargeLevel = 0;
         let answerTimer = 0;
 
-        // Exactly 15 Specific Magic 8-Ball Answers
+        // EXACTLY 15 Magic 8-Ball Answers
         const answers =[
-            // 5 Positive
             "IT IS CERTAIN", "WITHOUT\nA DOUBT", "YES\nDEFINITELY", "OUTLOOK\nGOOD", "SIGNS POINT\nTO YES",
-            // 5 Negative
             "DON'T COUNT\nON IT", "MY REPLY\nIS NO", "SOURCES\nSAY NO", "OUTLOOK\nPOOR", "VERY\nDOUBTFUL",
-            // 5 Wild Card
             "VIBE CHECK:\nPASSED", "ERROR 404:\nNOT FOUND", "DEPLOY ON\nFRIDAY", "SKILL\nISSUE", "CTRL + Z"
         ];
 
-        // Oracle Colors
+        // Particle Colors
         const colors =['#00f3ff', '#b026ff', '#ffffff'];
         const mouse = { x: -1000, y: -1000, isDown: false };
 
-        // --- BACKGROUND STARS ---
+        // --- BACKGROUND STARS (Top Only & Parallax Scroll) ---
         class Star {
-            constructor() { this.reset(); }
-            reset() {
-                this.x = Math.random() * W;
-                this.y = Math.random() * H;
-                this.z = Math.random() * W; 
+            constructor() {
+                this.x = Math.random() * window.innerWidth;
+                this.docY = Math.random() * window.innerHeight * 1.2; // Exists only in top section
+                this.z = Math.random() * window.innerWidth; 
                 this.size = Math.random() * 1.5;
                 this.color = Math.random() > 0.8 ? '#00f3ff' : '#ffffff';
             }
             update() {
-                if (state === 'charging') {
-                    // Warp inward towards the Oracle
-                    let dx = cx - this.x; let dy = cy - this.y;
-                    this.x += dx * 0.012 * chargeLevel;
-                    this.y += dy * 0.012 * chargeLevel;
-                    if (Math.abs(dx) < 10 && Math.abs(dy) < 10) this.reset();
-                } else {
-                    // Drift left naturally across whole page
-                    this.x -= 0.15 * (W / this.z); 
-                    if (this.x < 0) this.x = W;
-                }
+                this.x -= 0.15 * (W / this.z); 
+                if (this.x < 0) this.x = W;
             }
             draw() {
-                ctx.fillStyle = this.color;
-                ctx.globalAlpha = state === 'charging' ? Math.max(0.1, 1 - chargeLevel) : Math.min(1, W / this.z);
+                // Parallax scroll calculation
+                let screenY = this.docY - (window.scrollY * (0.3 + 0.7 * (100 / Math.max(this.z, 100))));
                 
-                if (state === 'charging' && chargeLevel > 0.1) {
-                    ctx.beginPath(); ctx.moveTo(this.x, this.y);
-                    let dx = cx - this.x; let dy = cy - this.y;
-                    ctx.lineTo(this.x - dx * 0.06 * chargeLevel, this.y - dy * 0.06 * chargeLevel);
-                    ctx.strokeStyle = this.color; ctx.lineWidth = this.size; ctx.stroke();
-                } else {
-                    ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
-                }
+                // Don't draw if scrolled way off screen
+                if (screenY < -50 || screenY > H) return;
+
+                let alpha = Math.min(1, W / this.z);
+                if (state === 'charging') alpha = Math.max(0.1, 1 - chargeLevel);
+                
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = alpha;
+                ctx.beginPath(); ctx.arc(this.x, screenY, this.size, 0, Math.PI * 2); ctx.fill();
             }
         }
 
-        // --- THE "ACTUAL ATOM" QUANTUM ORACLE ---
+        // --- THE ACTUAL ATOM (Core + Rings) ---
         class Particle {
             constructor() {
-                // 30% Core, 70% Intersecting Rings
                 let type = Math.random();
                 
-                if (type < 0.3) {
+                if (type < 0.25) {
                     // Dense Inner Core
                     let u = Math.random(), v = Math.random();
                     let theta = 2 * Math.PI * u, phi = Math.acos(2 * v - 1);
-                    let r = Math.random() * 0.35; // 35% of radius
+                    let r = Math.random() * 0.35; 
                     this.ox = Math.sin(phi) * Math.cos(theta) * r;
                     this.oy = Math.sin(phi) * Math.sin(theta) * r;
                     this.oz = Math.cos(phi) * r;
                 } else {
-                    // 3 Distinct Intersecting Orbital Rings
+                    // 3 Distinct Orbital Rings
                     let angle = Math.random() * Math.PI * 2;
                     let ring = Math.floor(Math.random() * 3);
-                    let r = 0.9 + Math.random() * 0.2; // 90% to 110% of radius
+                    let r = 0.9 + Math.random() * 0.2; 
                     
                     let x = Math.cos(angle) * r;
                     let z = Math.sin(angle) * r;
-                    let y = (Math.random() - 0.5) * 0.12; // Ring thickness
+                    let y = (Math.random() - 0.5) * 0.08; 
                     
-                    if (ring === 0) { // Tilt X
+                    if (ring === 0) { // Tilt /
                         let t = Math.PI / 3; 
                         this.ox = x; this.oy = y*Math.cos(t) - z*Math.sin(t); this.oz = y*Math.sin(t) + z*Math.cos(t);
-                    } else if (ring === 1) { // Tilt -X
+                    } else if (ring === 1) { // Tilt \
                         let t = -Math.PI / 3;
                         this.ox = x; this.oy = y*Math.cos(t) - z*Math.sin(t); this.oz = y*Math.sin(t) + z*Math.cos(t);
-                    } else { // Flat Y
+                    } else { // Flat -
                         this.ox = x; this.oy = y; this.oz = z;
                     }
                 }
                 
-                // Spawn perfectly in place immediately
                 this.x = cx; this.y = cy; this.z = 0;
                 this.tx = 0; this.ty = 0; 
                 this.color = colors[Math.floor(Math.random() * colors.length)];
@@ -409,36 +404,33 @@
                     this.ty = cy + ry * perspective;
                     this.z = finalZ;
                     
-                    // Bouncy Spring Physics to target
                     let spring = state === 'charging' ? 0.35 : 0.12;
                     this.vx += (this.tx - this.x) * spring;
                     this.vy += (this.ty - this.y) * spring;
 
-                    // RESTORED: Mouse Hover Repel Effect
+                    // THE FLUID MOUSE HOVER REPEL
                     if (state === 'idle') {
                         let mx = mouse.x - this.x;
                         let my = mouse.y - this.y;
                         let mDist = Math.hypot(mx, my);
-                        let repelR = 100;
+                        let repelR = 120; // Increased radius for better effect
                         if (mDist < repelR && mDist > 0) {
                             let force = (repelR - mDist) / repelR;
-                            this.vx -= (mx / mDist) * force * 4;
-                            this.vy -= (my / mDist) * force * 4;
+                            this.vx -= (mx / mDist) * force * 5;
+                            this.vy -= (my / mDist) * force * 5;
                         }
                     }
                 } else if (state === 'answering') {
                     if (this.isText) {
-                        // Snap smoothly into Magic 8-ball text
                         this.vx += (this.tx - this.x) * 0.08;
                         this.vy += (this.ty - this.y) * 0.08;
                     } else {
-                        // Slow-Mo Majestic Floating Debris
+                        // Slow-Mo Majestic Debris
                         this.vx += (Math.random() - 0.5) * 0.15;
                         this.vy += (Math.random() - 0.5) * 0.15;
                     }
                 }
 
-                // Drag/Friction
                 let friction = (state === 'answering' && !this.isText) ? 0.92 : 0.82; 
                 this.vx *= friction; 
                 this.vy *= friction;
@@ -447,7 +439,7 @@
             }
 
             draw() {
-                let depthAlpha = state === 'answering' ? 1 : Math.max(0.05, (this.z + baseRadius) / (baseRadius * 2));
+                let depthAlpha = state === 'answering' ? 1 : Math.max(0.05, (this.z + baseRadius) / (baseRadius * 2.5));
                 if (depthAlpha < 0) depthAlpha = 0;
                 
                 ctx.globalAlpha = depthAlpha;
@@ -458,10 +450,10 @@
             }
         }
 
-        // --- LOGIC & HELPERS ---
+        // --- LOGIC ---
 
         function updateOraclePosition() {
-            // Locks the Oracle mathematically to the empty spacer div, so it scrolls naturally
+            // Locks the Atom mathematically to the empty spacer div so it scrolls naturally
             const rect = oracleAnchor.getBoundingClientRect();
             cx = rect.left + (rect.width / 2);
             cy = rect.top + (rect.height / 2);
@@ -472,7 +464,7 @@
             H = canvas.height = window.innerHeight;
             
             baseRadius = Math.min(W, H) * 0.32;
-            if(baseRadius > 260) baseRadius = 260;
+            if(baseRadius > 230) baseRadius = 230;
             
             updateOraclePosition();
 
@@ -480,7 +472,7 @@
             for (let i = 0; i < N; i++) particles.push(new Particle());
 
             stars =[];
-            for (let i = 0; i < 200; i++) stars.push(new Star());
+            for (let i = 0; i < 150; i++) stars.push(new Star());
         }
 
         function getTextPoints(answerText) {
@@ -490,18 +482,18 @@
             
             tCtx.fillStyle = 'white'; tCtx.textAlign = 'center'; tCtx.textBaseline = 'middle';
             
-            // 1. Big Answer Text
-            let size = Math.min(W/12, 70); if(W < 500) size = 35;
+            // Big Answer Text
+            let size = Math.min(W/12, 65); if(W < 500) size = 35;
             tCtx.font = `900 ${size}px "Montserrat", sans-serif`;
             let lines = answerText.split("\n");
-            let startY = cy - ((size * 1.1 * (lines.length - 1)) / 2) - 20;
+            let startY = cy - ((size * 1.1 * (lines.length - 1)) / 2) - 15;
             lines.forEach((line, i) => { tCtx.fillText(line, W/2, startY + (i * size * 1.1)); });
 
-            // 2. Small Subtitle Text
+            // Small Subtitle Text
             let subSize = Math.min(W/35, 14); if (subSize < 10) subSize = 10;
             tCtx.font = `400 ${subSize}px "Courier Prime", monospace`;
             tCtx.letterSpacing = "2px";
-            let subY = startY + (lines.length * size * 1.1) + 10;
+            let subY = startY + (lines.length * size * 1.1) + 15;
             tCtx.fillText("- says the magic 8 ball", W/2, subY);
 
             const imgData = tCtx.getImageData(0, 0, W, H).data;
@@ -525,10 +517,8 @@
             particles.forEach((p, i) => {
                 if (i < pts.length) {
                     p.tx = pts[i].x; p.ty = pts[i].y; p.isText = true;
-                    // Strict rule: Colors DO NOT change.
                 } else {
                     p.isText = false;
-                    // Slow-mo blast physics
                     let angle = Math.random() * Math.PI * 2;
                     let force = Math.random() * 45 + 15;
                     p.vx = Math.cos(angle) * force;
@@ -543,14 +533,13 @@
             }, 6000); 
         }
 
-        // --- MOUSE INTERACTIONS (Attached to Window to cover everything) ---
+        // --- MOUSE INTERACTIONS ---
         
         window.addEventListener('mousemove', e => {
             mouse.x = e.clientX; mouse.y = e.clientY;
         });
         
         window.addEventListener('mousedown', e => {
-            // Only trigger if clicking near the Oracle
             let dist = Math.hypot(e.clientX - cx, e.clientY - cy);
             if (dist < baseRadius * 1.5 && state !== 'answering') {
                 state = 'charging';
@@ -568,40 +557,37 @@
 
         window.addEventListener('scroll', updateOraclePosition);
         window.addEventListener('resize', () => { 
-            W = canvas.width = window.innerWidth;
-            H = canvas.height = window.innerHeight;
-            updateOraclePosition(); 
+            clearTimeout(window.resizeTimer); 
+            window.resizeTimer = setTimeout(init, 300); 
         });
 
         // --- RENDER LOOP ---
 
-        function loop(time) {
-            // Draw pure black background
-            ctx.fillStyle = '#030305';
-            ctx.fillRect(0, 0, W, H);
+        function loop() {
+            // Because canvas is z-index:0, it naturally sits behind the site layout
+            ctx.clearRect(0, 0, W, H);
             
             ctx.globalCompositeOperation = 'lighter';
 
-            // Draw Full Page Stars
+            // Parallax Stars
             stars.forEach(s => { s.update(); s.draw(); });
 
-            // Oracle State Logic
+            // Oracle State
             if (state === 'idle') {
-                rotationY += 0.003; rotationX += 0.0015;
+                rotationY += 0.0025; rotationX += 0.001;
                 baseRadius += (Math.min(W, H) * 0.32 - baseRadius) * 0.1; 
-                if(baseRadius > 260) baseRadius = 260;
+                if(baseRadius > 230) baseRadius = 230;
             } else if (state === 'charging') {
                 chargeLevel += 0.01;
                 rotationY += 0.02 + (chargeLevel * 0.06); 
                 rotationX += 0.01 + (chargeLevel * 0.06);
-                baseRadius -= chargeLevel * 2; // Contract inwards
+                baseRadius -= chargeLevel * 2; 
                 
-                // Shake canvas slightly for intensity
                 ctx.save();
                 ctx.translate(Math.random() * 4 - 2, Math.random() * 4 - 2);
             }
 
-            // Draw Atom Plexus Lines (Idle/Charging only)
+            // Atom Plexus Lines
             if (state !== 'answering') {
                 ctx.lineWidth = 0.4;
                 for (let i = 0; i < N; i += 12) { 
@@ -616,12 +602,12 @@
                 }
             }
 
-            // Draw Atom Particles
+            // Atom Particles
             particles.forEach(p => { p.update(); p.draw(); });
 
-            if (state === 'charging') ctx.restore(); // Restore from shake
+            if (state === 'charging') ctx.restore();
 
-            // RESTORED: Shooting Star Mouse Trail
+            // SHOOTING STAR MOUSE TRAIL
             if (mouse.x > 0 && mouse.y > 0) {
                 mouseTrail.push({x: mouse.x, y: mouse.y});
                 if (mouseTrail.length > 20) mouseTrail.shift();
@@ -633,7 +619,6 @@
                     ctx.fillStyle = `rgba(0, 243, 255, ${ratio})`; ctx.fill();
                 }
                 
-                // Glowing Head
                 let head = mouseTrail[mouseTrail.length - 1];
                 if(head) {
                     ctx.beginPath(); ctx.arc(head.x, head.y, 4, 0, Math.PI * 2);
