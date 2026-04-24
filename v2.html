@@ -10,7 +10,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@300;500;600;700;800&family=Montserrat:wght@300;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@300;700;900&display=swap" rel="stylesheet">
     
     <style>
         /* --- GLOBAL --- */
@@ -24,6 +24,7 @@
             overflow-x: hidden;
         }
 
+        /* Ambient Canvas Layers */
         #bg-canvas, #cursor-canvas {
             position: fixed;
             top: 0; left: 0;
@@ -70,22 +71,29 @@
         }
         .navbar .nav-links a:hover { opacity: 1; color: #fff; text-shadow: 0 0 15px rgba(255, 255, 255, 0.8); }
 
-        /* --- HERO TEXT OVERLAY (Pre & Post Explosion) --- */
+        /* --- 100VH HERO CONTAINER (Anchors absolute text safely) --- */
+        #hero-container {
+            position: relative;
+            width: 100vw;
+            height: calc(100vh - 100px); /* Minus navbar approx height */
+            pointer-events: none; /* Let clicks pass to canvas */
+            z-index: 15;
+        }
+
+        /* Hero Text Group */
         #hero-text-overlay {
-            position: fixed; /* Fixed so it flies relative to screen */
-            top: 13%; /* Moved Higher */
+            position: absolute;
+            top: 10%; /* High Up */
             left: 50%;
             transform: translate(-50%, 0) scale(1);
             text-align: center;
-            z-index: 15;
-            pointer-events: none; 
             transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* The Animation Class: Glides far right and drops down over Bio */
+        /* Animation Trigger */
         #hero-text-overlay.exploded {
-            /* 35vw pushes it hard right. 30vh drops it down */
-            transform: translate(calc(50vw - 360px), 28vh) scale(0.65);
+            /* Glides gracefully down and right to sit over the bio */
+            transform: translate(calc(50vw - 320px), 30vh) scale(0.65);
         }
 
         #hero-text-overlay h1 {
@@ -111,59 +119,43 @@
             font-weight: 400;
         }
 
-        /* The Cyan Hint */
-        .hero-hint {
+        /* The Hint & Quote Texts */
+        .hero-hint, #magic-quote {
             position: absolute;
-            top: 26%; /* Moved higher, just under the text */
             left: 50%;
             transform: translateX(-50%);
             color: #00f3ff;
             font-family: 'Courier Prime', monospace;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+            text-transform: uppercase;
+        }
+
+        .hero-hint {
+            top: 30%; /* Between title and oracle */
             font-size: 11px;
             letter-spacing: 4px;
-            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
             opacity: 0.8;
             transition: opacity 0.3s;
-            pointer-events: none;
-            z-index: 15;
         }
 
-        /* The Magical 8-Ball Subtitle (HTML Element) */
         #magic-quote {
-            position: fixed;
-            top: 40%; /* Will be dynamically adjusted via JS based on particle height */
-            left: 50%;
-            transform: translateX(-50%);
-            font-family: 'Courier Prime', monospace;
-            color: #00f3ff;
-            font-size: 12px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            text-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
+            top: 36%; /* Directly underneath where the 8-ball generated particle text forms */
+            font-size: 13px;
+            letter-spacing: 2px;
             opacity: 0; /* Invisible by default */
             transition: opacity 0.5s ease-in;
-            z-index: 15;
-            pointer-events: none;
         }
 
-        /* --- FLAWLESS MODIFIED GRID LAYOUT --- */
+        /* --- FLAWLESS GRID LAYOUT --- */
         .case-wrapper {
             position: relative;
             z-index: 10;
             display: grid;
-            /* Column 3 is now 380px to hold the wider bio tight against the right */
-            grid-template-columns: 80px minmax(500px, 1fr) 380px;
+            grid-template-columns: 80px minmax(500px, 1fr) 300px;
             padding-top: 40px;
-            max-width: 1400px; /* Widened layout to stretch bio right */
+            max-width: 1250px; 
             margin: 0 auto;
             column-gap: 50px;
-        }
-
-        /* Reserved Space for Oracle */
-        .oracle-spacer {
-            grid-column: 2;
-            grid-row: 1;
-            height: 800px; 
         }
 
         /* Sidebar Bio (Pushed far right) */
@@ -173,12 +165,11 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
-            padding-top: 380px;  /* Deep down, making room for the flying text */
-            padding-right: 40px; /* Buffer against screen edge */
+            padding-top: 100px;  /* Tucked neatly near top of content area */
         }
 
         .sidebar-img {
-            width: 120px; height: 120px; 
+            width: 130px; height: 130px; /* Big focus image */
             border-radius: 4px; object-fit: cover;
             filter: grayscale(100%) contrast(1.2);
         }
@@ -189,21 +180,22 @@
         /* Featured Works Axis */
         .vertical-line {
             grid-column: 1;
-            grid-row: 2; 
+            grid-row: 1; 
             writing-mode: vertical-rl;
             transform: rotate(180deg);
             font-size: 10px;
             letter-spacing: 4px;
             color: #666;
             text-align: right;
-            padding-top: 20px;
+            padding-top: 140px;
         }
 
         /* Projects Section */
         .projects-container { 
             grid-column: 2 / 4; 
-            grid-row: 2;
+            grid-row: 1;
             display: flex; flex-direction: column; margin-bottom: 80px; 
+            padding-top: 50px;
         }
         
         .project-row { display: grid; grid-template-columns: 200px 1fr; gap: 30px; padding: 30px 0; border-top: 1px solid #222; align-items: center; transition: opacity 0.3s ease; text-decoration: none; }
@@ -217,7 +209,7 @@
         /* Connect Section */
         .connect-section { 
             grid-column: 2 / 4; 
-            grid-row: 3;
+            grid-row: 2;
             text-align: center; padding: 60px 0; border-top: 1px solid #222; 
         }
         .connect-section blockquote { font-size: 1.1rem; color: #fff; font-style: italic; margin-bottom: 30px; }
@@ -227,19 +219,22 @@
         @media (max-width: 1050px) {
             .case-wrapper { display: flex; flex-direction: column; padding: 40px 20px 0 20px; }
             .vertical-line { display: none; }
-            .sidebar-bio { padding-top: 20px; padding-right: 0; align-items: center; text-align: center; border-bottom: 1px solid #222; padding-bottom: 40px; margin-bottom: 40px; }
-            .oracle-spacer { height: 400px; }
+            .sidebar-bio { padding-top: 20px; text-align: center; border-bottom: 1px solid #222; padding-bottom: 40px; margin-bottom: 40px; }
+            .sidebar-bio img { margin: 0 auto; }
             .project-row { grid-template-columns: 1fr; gap: 16px; }
-            #hero-text-overlay.exploded { transform: translate(-50%, -8vh) scale(0.7); } 
-            .hero-hint { top: 25%; }
+            #hero-text-overlay.exploded { transform: translate(-50%, -10vh) scale(0.7); } 
+            .hero-hint { top: 22%; }
+            #magic-quote { top: 32%; }
         }
     </style>
 </head>
 <body>
 
+    <!-- Canvases -->
     <canvas id="bg-canvas"></canvas>
     <canvas id="cursor-canvas"></canvas>
 
+    <!-- Content Structure -->
     <nav class="navbar">
         <a href="/" class="logo">PRIYASH VASAVA</a>
         <div class="nav-links">
@@ -250,28 +245,23 @@
         </div>
     </nav>
 
-    <!-- Fast-moving Animated Hero Text -->
-    <div id="hero-text-overlay">
-        <h1>
-            <span class="highlight">ANALYST</span> <span class="muted">BY DAY</span><br>
-            <span class="highlight">VIBE CODER</span><br>
-            <span class="muted">BY NIGHT</span>
-        </h1>
+    <!-- Anchors Absolute Text within Hero view -->
+    <div id="hero-container">
+        <div id="hero-text-overlay">
+            <h1>
+                <span class="highlight">ANALYST</span> <span class="muted">BY DAY</span><br>
+                <span class="highlight">VIBE CODER</span><br>
+                <span class="muted">BY NIGHT</span>
+            </h1>
+        </div>
+        <div class="hero-hint" id="hint">CLICK AND HOLD TO BLOW YOUR MIND</div>
+        <div id="magic-quote">- says the magic 8 ball</div>
     </div>
-    
-    <div class="hero-hint" id="hint">CLICK AND HOLD TO BLOW YOUR MIND</div>
-    
-    <!-- Clean HTML Subtitle for Magic 8-Ball -->
-    <div id="magic-quote">- says the magic 8 ball</div>
 
+    <!-- Scrolling Projects -->
     <div class="case-wrapper">
-        
-        <!-- Oracle Anchor -->
-        <div class="oracle-spacer" id="oracle-anchor"></div>
-
-        <!-- Bio sidebar -->
         <div class="sidebar-bio">
-            <img src="assets/user-portrait.jpg" alt="Priyash" class="sidebar-img" onerror="this.src='https://via.placeholder.com/120/111/444?text=PV'">
+            <img src="assets/user-portrait.jpg" alt="Priyash" class="sidebar-img" onerror="this.src='https://via.placeholder.com/130/111/444?text=PV'">
             <p>
                 I like to think of myself as an observer. Observing different kinds of systems, from the system of Nature to the system of Metropolitan city and much more. Fascinated by how they function, why they break, and how they can be optimized. Be it a problem-solving project or just curiosity, I rely on SQL and Power BI as my core tools to uncover facts.
             </p>
@@ -315,7 +305,7 @@
 
     </div>
 
-    <!-- MAIN SCRIPT -->
+    <!-- PURE GRAPHICS LOGIC -->
     <script>
         const bgCanvas = document.getElementById('bg-canvas');
         const bgCtx = bgCanvas.getContext('2d');
@@ -325,33 +315,32 @@
         const hintEl = document.getElementById('hint');
         const heroText = document.getElementById('hero-text-overlay');
         const quoteEl = document.getElementById('magic-quote');
-        const oracleAnchor = document.getElementById('oracle-anchor');
         
-        let W, H, cx, cy; 
+        let W, H;
+        let cx, cy; // Oracle Center Absolute Position
         
         const N = 4000; 
         let particles =[];
         let stars = [];
         let mouseTrail =[];
+        let mouse = { x: -1000, y: -1000 };
         
         let baseRadius = 240;
         let rotationX = 0;
         let rotationY = 0;
-        
         let state = 'idle'; 
         let chargeLevel = 0;
         let answerTimer = 0;
 
+        // Exactly 5 Pos, 5 Neg, 5 Wild
         const answers =[
             "THE UNIVERSE\nALIGNS", "GREEN LIGHT", "TRUST YOUR\nGUT", "IT IS\nWRITTEN", "ABSOLUTELY",
             "NOT IN THIS\nTIMELINE", "THE VIBES\nARE OFF", "RETHINK\nEVERYTHING", "HARD NO", "ABORT\nMISSION",
             "PLOT TWIST\nIMMINENT", "RECALIBRATING...", "ASK THE\nSIMULATION", "MAIN CHARACTER\nENERGY", "GLITCH IN\nTHE MATRIX"
         ];
-
         const colors =['#00f3ff', '#b026ff', '#ffffff'];
-        const mouse = { x: -1000, y: -1000 };
 
-        // --- BACKGROUND STARS ---
+        // --- STARS ---
         class Star {
             constructor() {
                 this.x = Math.random() * window.innerWidth;
@@ -367,17 +356,14 @@
             draw() {
                 let screenY = this.docY - (window.scrollY * (0.3 + 0.7 * (100 / Math.max(this.z, 100))));
                 if (screenY < -50 || screenY > H) return;
-
                 let alpha = Math.min(1, W / this.z);
                 if (state === 'charging') alpha = Math.max(0.1, 1 - chargeLevel);
-                
-                bgCtx.fillStyle = this.color;
-                bgCtx.globalAlpha = alpha;
+                bgCtx.fillStyle = this.color; bgCtx.globalAlpha = alpha;
                 bgCtx.beginPath(); bgCtx.arc(this.x, screenY, this.size, 0, Math.PI * 2); bgCtx.fill();
             }
         }
 
-        // --- QUANTUM ATOM PARTICLES ---
+        // --- ATOM ---
         class Particle {
             constructor() {
                 let type = Math.random();
@@ -393,25 +379,21 @@
                     let ring = Math.floor(Math.random() * 3);
                     let r = 0.9 + Math.random() * 0.2; 
                     let x = Math.cos(angle) * r, z = Math.sin(angle) * r, y = (Math.random() - 0.5) * 0.08; 
-                    
                     if (ring === 0) { let t = Math.PI / 3; this.ox = x; this.oy = y*Math.cos(t) - z*Math.sin(t); this.oz = y*Math.sin(t) + z*Math.cos(t); }
                     else if (ring === 1) { let t = -Math.PI / 3; this.ox = x; this.oy = y*Math.cos(t) - z*Math.sin(t); this.oz = y*Math.sin(t) + z*Math.cos(t); }
                     else { this.ox = x; this.oy = y; this.oz = z; }
                 }
-                
                 this.x = cx; this.y = cy; this.z = 0;
                 this.tx = 0; this.ty = 0; 
                 this.color = colors[Math.floor(Math.random() * colors.length)];
                 this.size = Math.random() * 1.5 + 0.5;
                 this.vx = 0; this.vy = 0;
-                this.isText = false;
-                this.isDebris = false;
+                this.isText = false; this.isDebris = false;
             }
 
             update() {
                 if (state === 'idle' || state === 'charging') {
                     let sx = this.ox * baseRadius, sy = this.oy * baseRadius, sz = this.oz * baseRadius;
-                    
                     let cosY = Math.cos(rotationY), sinY = Math.sin(rotationY);
                     let rx = sx * cosY - sz * sinY, rz = sx * sinY + sz * cosY;
                     let cosX = Math.cos(rotationX), sinX = Math.sin(rotationX);
@@ -423,25 +405,23 @@
                     this.z = finalZ;
                     
                     let spring = state === 'charging' ? 0.35 : 0.12;
-                    this.vx += (this.tx - this.x) * spring;
-                    this.vy += (this.ty - this.y) * spring;
+                    this.vx += (this.tx - this.x) * spring; this.vy += (this.ty - this.y) * spring;
 
+                    // Hover Repel Corrected for Scroll
                     if (state === 'idle') {
-                        let mx = mouse.x - this.x, my = mouse.y - this.y;
-                        let mDist = Math.hypot(mx, my);
+                        let mY = mouse.y + window.scrollY; // Mouse absolute document pos
+                        let mDist = Math.hypot(mouse.x - this.x, mY - this.y);
                         if (mDist < 120 && mDist > 0) {
                             let force = (120 - mDist) / 120;
-                            this.vx -= (mx / mDist) * force * 5;
-                            this.vy -= (my / mDist) * force * 5;
+                            this.vx -= ((mouse.x - this.x) / mDist) * force * 5;
+                            this.vy -= ((mY - this.y) / mDist) * force * 5;
                         }
                     }
                 } else if (state === 'answering') {
                     if (this.isText) {
-                        this.vx += (this.tx - this.x) * 0.08;
-                        this.vy += (this.ty - this.y) * 0.08;
+                        this.vx += (this.tx - this.x) * 0.08; this.vy += (this.ty - this.y) * 0.08;
                     } else if (this.isDebris) {
-                        this.vx *= 0.95; 
-                        this.vy *= 0.95;
+                        this.vx *= 0.95; this.vy *= 0.95;
                         this.vx -= 0.08 * (W / Math.max(this.z, 1));
                         this.vy += (Math.random() - 0.5) * 0.1;
                     }
@@ -457,32 +437,25 @@
                 if (state === 'answering') {
                     if (this.isDebris) depthAlpha = Math.max(0, 1 - (Math.abs(this.x - cx) / (W * 0.8)));
                     else if (!this.isText) depthAlpha = 0; 
-                } else {
-                    depthAlpha = Math.max(0.1, (this.z + baseRadius) / (baseRadius * 2.2));
-                }
+                } else depthAlpha = Math.max(0.1, (this.z + baseRadius) / (baseRadius * 2.2));
 
                 if (depthAlpha <= 0) return; 
                 
-                bgCtx.globalAlpha = depthAlpha;
-                bgCtx.fillStyle = this.color; 
+                bgCtx.globalAlpha = depthAlpha; bgCtx.fillStyle = this.color; 
                 let renderSize = (state === 'answering' && this.isText) ? this.size * 1.5 : this.size * (depthAlpha + 0.5);
                 bgCtx.beginPath(); bgCtx.arc(this.x, this.y, renderSize, 0, Math.PI * 2); bgCtx.fill();
             }
         }
 
-        // --- SETUP ---
-
+        // --- MATH & LOGIC ---
         function init() {
-            W = canvas.width = window.innerWidth;
-            H = canvas.height = window.innerHeight;
-            
-            bgCanvas.width = cursorCanvas.width = W;
+            W = window.innerWidth;
+            H = window.innerHeight;
+            bgCanvas.width = cursorCanvas.width = W; 
             bgCanvas.height = cursorCanvas.height = H;
             
-            // Atom is locked dead-center relative to screen width
             cx = W / 2;
-            cy = H * 0.65; 
-            
+            cy = H * 0.60; // Oracle permanently anchored dead-center lower
             baseRadius = Math.min(W, H) * 0.28;
             if(baseRadius > 230) baseRadius = 230;
 
@@ -498,13 +471,12 @@
             
             let size = Math.min(W/12, 65); if(W < 500) size = 35;
             tCtx.font = `900 ${size}px "Montserrat", sans-serif`;
+            
+            // Render text High Up!
             let lines = answerText.split("\n");
+            let docStartY = H * 0.20 + window.scrollY; // Forms exactly at the top of the current viewport
             
-            // Text forms HIGH UP where Hero Text used to be
-            let screenCy = cy - window.scrollY;
-            let startY = H * 0.22; 
-            
-            lines.forEach((line, i) => { tCtx.fillText(line, W/2, startY + (i * size * 1.1)); });
+            lines.forEach((line, i) => { tCtx.fillText(line, W/2, docStartY + (i * size * 1.1)); });
 
             const d = tCtx.getImageData(0, 0, W, H).data;
             const pts =[];
@@ -514,11 +486,6 @@
                     if (d[(y * W + x) * 4 + 3] > 128) pts.push({ x, y: y + window.scrollY }); 
                 }
             }
-            
-            // Position the HTML Quote smoothly below the text exactly
-            let quoteY = startY + (lines.length * size * 1.1) + 20;
-            quoteEl.style.top = `${quoteY}px`;
-            
             return pts;
         }
 
@@ -526,10 +493,9 @@
             state = 'answering';
             hintEl.style.opacity = 0;
             heroText.classList.add('exploded'); 
-            quoteEl.style.opacity = 1; // Fade in HTML quote
+            quoteEl.style.opacity = 1;
             
             const pts = getTextPoints(answers[Math.floor(Math.random() * answers.length)]);
-            
             particles.forEach((p, i) => {
                 if (i < pts.length) {
                     p.tx = pts[i].x; p.ty = pts[i].y; p.isText = true; p.isDebris = false;
@@ -537,9 +503,7 @@
                     p.isText = false; p.isDebris = true;
                     let angle = Math.random() * Math.PI * 2;
                     let force = Math.random() * 80 + 20; 
-                    p.vx = Math.cos(angle) * force;
-                    p.vy = Math.sin(angle) * force;
-                    p.z = Math.random() * 800; 
+                    p.vx = Math.cos(angle) * force; p.vy = Math.sin(angle) * force; p.z = Math.random() * 800; 
                 }
             });
 
@@ -547,7 +511,7 @@
             answerTimer = setTimeout(() => {
                 state = 'idle';
                 hintEl.style.opacity = 0.8;
-                quoteEl.style.opacity = 0; 
+                quoteEl.style.opacity = 0;
                 heroText.classList.remove('exploded'); 
                 
                 particles.forEach(p => {
@@ -557,30 +521,23 @@
             }, 6500); 
         }
 
-        // --- INTERACTIONS ---
-        
+        // --- INTERACTION ---
         window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-        
         window.addEventListener('mousedown', e => {
-            let screenCy = cy - window.scrollY;
-            let dist = Math.hypot(e.clientX - cx, e.clientY - screenCy);
-            if (dist < baseRadius * 1.5 && state !== 'answering') {
+            let mY = e.clientY + window.scrollY;
+            if (Math.hypot(e.clientX - cx, mY - cy) < baseRadius * 1.5 && state !== 'answering') {
                 state = 'charging'; hintEl.style.opacity = 0;
             }
         });
-
         window.addEventListener('mouseup', () => {
             if (state === 'charging') {
-                if (chargeLevel > 0.4) triggerAnswer(); 
-                else { state = 'idle'; hintEl.style.opacity = 0.8; }
+                if (chargeLevel > 0.4) triggerAnswer(); else { state = 'idle'; hintEl.style.opacity = 0.8; }
                 chargeLevel = 0;
             }
         });
-
-        window.addEventListener('resize', () => { clearTimeout(window.resizeTimer); window.resizeTimer = setTimeout(init, 300); });
+        window.addEventListener('resize', () => { setTimeout(init, 300); });
 
         // --- RENDER LOOP ---
-
         function loop() {
             bgCtx.clearRect(0, 0, W, H);
             bgCtx.globalCompositeOperation = 'lighter';
@@ -599,13 +556,13 @@
             }
 
             bgCtx.save();
-            bgCtx.translate(0, -window.scrollY);
+            bgCtx.translate(0, -window.scrollY); // Everything naturally scrolls up!
 
             if (state !== 'answering') {
                 bgCtx.lineWidth = 0.4;
                 for (let i = 0; i < N; i += 12) { 
                     for (let j = i + 1; j < N; j += 12) {
-                        let dx = particles[i].x - particles[j].x; let dy = particles[i].y - particles[j].y;
+                        let dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y;
                         let distSq = dx * dx + dy * dy;
                         if (distSq < 4000) {
                             bgCtx.strokeStyle = `rgba(0, 243, 255, ${0.15 * (1 - distSq/4000)})`;
@@ -617,21 +574,18 @@
 
             particles.forEach(p => { p.update(); p.draw(); });
             bgCtx.restore(); 
-
             if (state === 'charging') bgCtx.restore(); 
 
             cursorCtx.clearRect(0, 0, W, H);
             if (mouse.x > 0 && mouse.y > 0) {
                 mouseTrail.push({x: mouse.x, y: mouse.y});
                 if (mouseTrail.length > 20) mouseTrail.shift();
-                
                 cursorCtx.globalCompositeOperation = 'lighter';
                 for (let i = 0; i < mouseTrail.length; i++) {
                     let pt = mouseTrail[i]; let ratio = i / mouseTrail.length;
                     cursorCtx.beginPath(); cursorCtx.arc(pt.x, pt.y, ratio * 3.5, 0, Math.PI * 2);
                     cursorCtx.fillStyle = `rgba(0, 243, 255, ${ratio})`; cursorCtx.fill();
                 }
-                
                 let head = mouseTrail[mouseTrail.length - 1];
                 if(head) {
                     cursorCtx.beginPath(); cursorCtx.arc(head.x, head.y, 4, 0, Math.PI * 2);
@@ -644,10 +598,8 @@
             requestAnimationFrame(loop);
         }
 
-        document.fonts.ready.then(() => {
-            init();
-            requestAnimationFrame(loop);
-        });
+        init();
+        requestAnimationFrame(loop);
     </script>
 </body>
 </html>
