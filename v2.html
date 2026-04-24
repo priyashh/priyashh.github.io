@@ -28,7 +28,7 @@
             left: 0;
             width: 100vw;
             height: 100vh;
-            z-index: 0;
+            z-index: 1; /* Moved to z-index 1 so it draws OVER the Oracle's black fade layer */
             pointer-events: none;
         }
 
@@ -55,7 +55,7 @@
             width: 100%;
             height: 100vh;
             overflow: hidden;
-            cursor: none; /* Hide default cursor for our custom star trail */
+            cursor: none; 
         }
 
         /* Oracle canvas */
@@ -66,7 +66,7 @@
             position: absolute;
             top: 0;
             left: 0;
-            z-index: 1;
+            z-index: 0; /* Moved behind the background stars */
         }
 
         .scanlines {
@@ -88,20 +88,22 @@
             background: radial-gradient(circle at center, transparent 40%, rgba(3,3,5,0.8) 100%);
         }
 
-        /* --- ANIMATED HERO TEXT --- */
+        /* --- ANIMATED HERO TEXT (Left Aligned) --- */
         #hero-text-overlay {
             position: absolute;
-            top: 18vh; 
-            left: 50%;
-            transform: translateX(-50%) scale(1);
-            text-align: center;
+            top: 15vh; 
+            left: 10vw; 
+            transform: scale(1);
+            transform-origin: left center; 
+            text-align: left;
             z-index: 4;
             pointer-events: none;
             transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s;
         }
 
+        /* Target position when Oracle Explodes */
         #hero-text-overlay.exploded {
-            transform: translate(25vw, -6vh) scale(0.7);
+            transform: translate(55vw, 5vh) scale(0.65);
         }
 
         #hero-text-overlay h1 {
@@ -117,7 +119,10 @@
 
         /* HINT TEXT */
         #hint-text {
-            position: absolute; top: 85vh; left: 50%; transform: translateX(-50%);
+            position: absolute; 
+            top: 80vh; 
+            left: 25vw; 
+            transform: translateX(-50%);
             font-family: 'Courier Prime', monospace; color: #00f3ff; font-size: 12px; letter-spacing: 3px;
             opacity: 0.8; transition: opacity 0.5s; z-index: 4; pointer-events: none;
             text-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
@@ -137,7 +142,7 @@
 
         .right-column {
             width: 340px;
-            margin-top: 10vh; 
+            margin-top: 25vh; 
             margin-right: 4vw; 
             display: flex;
             flex-direction: column;
@@ -186,14 +191,30 @@
             color: #fff; border-color: #888;
         }
 
+        /* --- MOBILE RESPONSIVENESS --- */
         @media (max-width: 950px) {
+            #hero-text-overlay {
+                left: 50%;
+                top: 15vh;
+                transform: translateX(-50%) scale(1);
+                text-align: center;
+                transform-origin: center center;
+            }
+            #hero-text-overlay.exploded {
+                transform: translate(-50%, 0) scale(0.65); 
+                left: 50%;
+            }
+            #hint-text {
+                left: 50%;
+                top: 75vh;
+            }
             .project-row {
                 grid-template-columns: 1fr;
                 gap: 16px;
             }
             .right-column {
                 width: 100%;
-                margin-top: 40px;
+                margin-top: 5vh;
                 margin-right: 0;
                 align-items: center;
                 text-align: center;
@@ -294,7 +315,6 @@
         const N = 2500;
         let particles = [];
         
-        // Background Stars & Cursor Trails
         let bgStars = [];
         let cursorTrails = [];
 
@@ -303,7 +323,7 @@
         let rotationX = 0;
         let rotationY = 0;
 
-        // Sequence States: idle -> charging -> answering -> sweeping -> collecting -> idle
+        // Sequence States
         let state = 'idle'; 
         let chargeLevel = 0;
         let sequenceTimer = 0;
@@ -318,6 +338,69 @@
 
         const colors = ['#00f3ff', '#b026ff', '#ffffff'];
 
+        // --- NEW UPGRADED BACKGROUND STAR CLASS ---
+        class BgStar {
+            constructor() {
+                this.x = Math.random() * W;
+                this.y = Math.random() * H;
+                this.speed = (Math.random() * 1.5 + 0.2) / 1.5; 
+                this.baseSize = Math.random() * 2 + 0.5; // Varying sizes
+                
+                // Assign colors for glowing effect
+                const randColor = Math.random();
+                if (randColor > 0.95) {
+                    this.color = '255, 100, 120'; // Soft Red
+                } else if (randColor > 0.85) {
+                    this.color = '100, 200, 255'; // Soft Blue
+                } else {
+                    this.color = '220, 230, 255'; // Cool White
+                }
+                
+                // Twinkle / Fade mechanics
+                this.alpha = Math.random();
+                this.fadeSpeed = (Math.random() * 0.01) + 0.002;
+                this.fadeDir = Math.random() > 0.5 ? 1 : -1;
+            }
+            
+            update() {
+                this.x -= this.speed;
+                
+                // Fade logic
+                this.alpha += this.fadeSpeed * this.fadeDir;
+                if (this.alpha > 1) {
+                    this.alpha = 1;
+                    this.fadeDir = -1;
+                } else if (this.alpha < 0) {
+                    this.alpha = 0;
+                    this.fadeDir = 1;
+                    // Respawn when invisible
+                    this.x = Math.random() * W + (W * 0.1); 
+                    this.y = Math.random() * H;
+                }
+
+                if (this.x < -10) {
+                    this.x = W + 10;
+                    this.y = Math.random() * H;
+                }
+            }
+            
+            draw() {
+                // Draw inner core
+                bgCtx.globalAlpha = this.alpha;
+                bgCtx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
+                bgCtx.beginPath();
+                bgCtx.arc(this.x, this.y, this.baseSize * 0.6, 0, Math.PI*2);
+                bgCtx.fill();
+                
+                // Draw colored glow
+                bgCtx.globalAlpha = this.alpha * 0.4;
+                bgCtx.fillStyle = `rgba(${this.color}, ${this.alpha})`;
+                bgCtx.beginPath();
+                bgCtx.arc(this.x, this.y, this.baseSize * 2, 0, Math.PI*2);
+                bgCtx.fill();
+            }
+        }
+
         function resize() {
             W = window.innerWidth;
             H = window.innerHeight;
@@ -327,19 +410,17 @@
             canvas.width = W;
             canvas.height = H;
             
-            cx = W / 2;
-            cy = H / 2;
+            if (W > 950) {
+                cx = W * 0.25; 
+                cy = H * 0.60;
+            } else {
+                cx = W / 2;
+                cy = H / 2;
+            }
             
-            // Init clean Background Stars flowing left
             bgStars = [];
-            for(let i=0; i<300; i++) {
-                bgStars.push({
-                    x: Math.random() * W,
-                    y: Math.random() * H,
-                    speed: (Math.random() * 1.5 + 0.5) / 1.5, // Reduced speed 1.5x
-                    size: Math.random() * 1.5,
-                    opacity: Math.random() * 0.5 + 0.1
-                });
+            for(let i=0; i<350; i++) {
+                bgStars.push(new BgStar());
             }
         }
         window.addEventListener('resize', resize);
@@ -377,9 +458,7 @@
             }
 
             update(time) {
-                // Sphere Math (Slower 1x)
                 if (state === 'idle' || state === 'charging' || state === 'collecting') {
-                    // Slower breathing (0.001 instead of 0.002)
                     let currentRadius = sphereRadius + (Math.sin(time * 0.001 + this.ox * 10) * 10);
 
                     let sx = this.ox * currentRadius;
@@ -401,14 +480,12 @@
                 }
 
                 if (state === 'sweeping') {
-                    // Fly off to the left with background stars
                     this.x += this.vx;
                     this.y += this.vy;
                 } else {
-                    // Normal Spring physics for idle, text, and collecting
                     let spring = state === 'answering' ? 0.05 : 0.05;
                     if (state === 'charging') spring = 0.3;
-                    if (state === 'collecting') spring = 0.015; // Slower gather effect
+                    if (state === 'collecting') spring = 0.015; 
 
                     let dx = this.tx - this.x;
                     let dy = this.ty - this.y;
@@ -421,13 +498,11 @@
                     this.vx *= friction;
                     this.vy *= friction;
 
-                    // Mouse Interaction
                     if (state === 'idle') {
                         let mx = mouse.x - this.x;
                         let my = mouse.y - this.y;
                         let dist = Math.sqrt(mx*mx + my*my);
                         
-                        // Disable Interaction if scrolled down
                         if (dist < 100 && window.scrollY < 100) {
                             let force = (100 - dist) / 100;
                             this.vx -= (mx / dist) * force * 5;
@@ -482,25 +557,24 @@
             for (let y = 0; y < H; y += step) {
                 for (let x = 0; x < W; x += step) {
                     if (imgData[(y * W + x) * 4 + 3] > 128) {
-                        points.push({ x, y });
+                        points.push({ x: x - W/2, y: y - H/2 });
                     }
                 }
             }
             return points;
         }
 
-        // SEQUENCE 1: Text Forms
         function triggerAnswer() {
             state = 'answering';
-            hintText.style.opacity = 0; // Hide hint
+            hintText.style.opacity = 0; 
 
             const answer = answers[Math.floor(Math.random() * answers.length)];
             const pts = getTextPoints(answer);
 
             particles.forEach((p, i) => {
                 if (i < pts.length) {
-                    p.tx = pts[i].x;
-                    p.ty = pts[i].y;
+                    p.tx = cx + pts[i].x;
+                    p.ty = cy + pts[i].y;
                     p.color = Math.random() > 0.8 ? '#ffffff' : '#00f3ff';
                 } else {
                     p.tx = cx + (Math.random() - 0.5) * W * 2;
@@ -515,24 +589,20 @@
             sequenceTimer = setTimeout(() => triggerSweep(), 3500);
         }
 
-        // SEQUENCE 2: Sweep Left
         function triggerSweep() {
             state = 'sweeping';
             particles.forEach(p => {
-                p.vx = -(Math.random() * 15 + 10); // Shoot fast to the left
+                p.vx = -(Math.random() * 15 + 10); 
                 p.vy = (Math.random() - 0.5) * 8;
             });
             sequenceTimer = setTimeout(() => triggerCollect(), 1200);
         }
 
-        // SEQUENCE 3: Collect from Environment
         function triggerCollect() {
             state = 'collecting';
             
             particles.forEach(p => {
-                // Revert to original colors!
                 p.color = p.originalColor;
-                // Scatter them randomly around to simulate "gathering nearby floating stars"
                 p.x = Math.random() * W;
                 p.y = Math.random() * H;
                 p.vx = (Math.random() - 0.5) * 2; 
@@ -543,16 +613,14 @@
 
             sequenceTimer = setTimeout(() => {
                 state = 'idle';
-                hintText.style.opacity = 0.8; // Bring hint back
+                hintText.style.opacity = 0.8; 
             }, 3000);
         }
 
         window.addEventListener('mousemove', e => {
             mouse.x = e.clientX;
-            // Adjust cursor trails to scroll position
             mouse.y = e.clientY + window.scrollY; 
             
-            // Add point to cursor trail
             if (window.scrollY < window.innerHeight) {
                 cursorTrails.push({x: e.clientX, y: e.clientY, age: 0});
             }
@@ -578,7 +646,6 @@
             chargeLevel = 0;
         });
 
-        // Touch support
         window.addEventListener('touchstart', e => {
             if (state !== 'idle' || window.scrollY > 100) return;
             mouse.x = e.touches[0].clientX; 
@@ -596,31 +663,21 @@
         });
 
         function loop(time) {
-            // --- 1. Background Stars Layer (Clean clear, no tails) ---
+            // --- DRAW BACKGROUND STARS FIRST (CLEAR FULLY) ---
             bgCtx.clearRect(0, 0, W, H);
             bgStars.forEach(star => {
-                star.x -= star.speed; // Flow left
-                if(star.x < 0) {
-                    star.x = W;
-                    star.y = Math.random() * H;
-                }
-                bgCtx.globalAlpha = star.opacity;
-                bgCtx.fillStyle = 'white';
-                bgCtx.beginPath();
-                bgCtx.arc(star.x, star.y, star.size, 0, Math.PI*2);
-                bgCtx.fill();
+                star.update();
+                star.draw();
             });
 
-            // --- 2. Oracle Layer (Dark fill to create motion tails) ---
+            // --- DRAW ORACLE ---
             ctx.globalCompositeOperation = 'source-over';
             ctx.fillStyle = 'rgba(3, 3, 5, 0.3)';
             ctx.fillRect(0, 0, W, H);
 
             ctx.globalCompositeOperation = 'lighter';
 
-            // State Logic
             if (state === 'idle' || state === 'collecting') {
-                // Slower rotation Math (1x slower)
                 rotationY += 0.0015;
                 rotationX += 0.001;
                 sphereRadius += (baseRadius - sphereRadius) * 0.1;
@@ -634,7 +691,6 @@
                 ctx.translate(Math.random() * 4 - 2, Math.random() * 4 - 2);
             }
 
-            // Draw Plexus Lines
             if (state === 'idle' || state === 'charging' || state === 'collecting') {
                 ctx.lineWidth = 0.5;
                 for (let i = 0; i < N; i += 8) {
@@ -653,7 +709,6 @@
                 }
             }
 
-            // Update and draw particles
             particles.forEach(p => {
                 p.update(time);
                 p.draw();
@@ -663,25 +718,23 @@
                 ctx.restore();
             }
 
-            // Draw Custom Cursor and Trails
-            ctx.globalAlpha = 1;
+            // --- CURSOR TRAILS ON BACKGROUND LAYER ---
+            bgCtx.globalAlpha = 1;
             cursorTrails.forEach((trail) => {
-                trail.age += 0.05; // Fade speed
+                trail.age += 0.05; 
                 let radius = Math.max(0, 3 * (1 - trail.age)); 
-                ctx.fillStyle = `rgba(255, 255, 255, ${1 - trail.age})`;
-                ctx.beginPath();
-                ctx.arc(trail.x, trail.y, radius, 0, Math.PI*2);
-                ctx.fill();
+                bgCtx.fillStyle = `rgba(255, 255, 255, ${1 - trail.age})`;
+                bgCtx.beginPath();
+                bgCtx.arc(trail.x, trail.y, radius, 0, Math.PI*2);
+                bgCtx.fill();
             });
             cursorTrails = cursorTrails.filter(t => t.age < 1);
 
-            // Draw main cursor dot (only if not scrolled past hero)
             if(mouse.x > -1000 && window.scrollY < 100) {
-                ctx.fillStyle = 'white';
-                ctx.beginPath();
-                // Mouse Y adjusted back for fixed canvas drawing
-                ctx.arc(mouse.x, mouse.y - window.scrollY, 4, 0, Math.PI*2);
-                ctx.fill();
+                bgCtx.fillStyle = 'white';
+                bgCtx.beginPath();
+                bgCtx.arc(mouse.x, mouse.y - window.scrollY, 4, 0, Math.PI*2);
+                bgCtx.fill();
             }
 
             requestAnimationFrame(loop);
