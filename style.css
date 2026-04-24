@@ -71,10 +71,9 @@ a {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: rgba(0,0,0,0.8);
-    backdrop-filter: blur(5px);
+    background: transparent; /* FIXED: Removed dark background */
     z-index: 1000;
-    border-bottom: 1px solid var(--border-subtle);
+    border-bottom: none; /* FIXED: Removed the subtle line at the bottom */
 }
 
 .navbar .logo {
