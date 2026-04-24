@@ -3,86 +3,314 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Priyash Vasava | Interactive Particle Portfolio</title>
+    <title>Portfolio | Priyash Vasava</title>
     
+    <!-- Link to your existing external stylesheet -->
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Google Fonts for the Particle Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&family=Montserrat:wght@300;900&display=swap" rel="stylesheet">
-
+    
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body, html {
-            width: 100%; height: 100%;
+        /* --- BLACK HOLE HERO SECTION --- */
+        #hero-canvas-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
             background-color: #020202; /* Pure void black */
-            font-family: 'Inter', sans-serif;
-            overflow: hidden; user-select: none;
-            color: white;
-            cursor: none !important; /* Hide default cursor */
+            overflow: hidden;
+            cursor: none; /* Hide default cursor inside canvas */
         }
 
-        /* Right Sidebar Mockup (Kept as HTML since it contains layout/image) */
-        .sidebar {
-            position: absolute; right: 50px; top: 50%; transform: translateY(-50%);
-            display: flex; flex-direction: column; align-items: center; gap: 40px;
-            z-index: 100; pointer-events: none; opacity: 0.8;
+        #hero-canvas-container canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
         }
-        .rotated-text {
-            writing-mode: vertical-rl; transform: rotate(180deg);
-            font-size: 10px; letter-spacing: 4px; color: #666;
-        }
-        .mock-card {
-            width: 120px; border-top: 1px solid #333; padding-top: 20px;
-        }
-        .mock-card .img { width: 100%; height: 80px; background: #111; border-radius: 4px; margin-bottom: 15px; }
-        .mock-card .desc { font-size: 9px; color: #666; line-height: 1.6; }
 
-        canvas {
-            display: block; width: 100%; height: 100%;
-            position: absolute; top: 0; left: 0; z-index: 1;
+        /* Float your original navbar over the canvas */
+        #hero-canvas-container .navbar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 10;
+            cursor: default; /* Bring cursor back for nav links */
+        }
+        
+        #hero-canvas-container .navbar a {
+            cursor: pointer;
         }
 
         #hint {
-            position: absolute; bottom: 30px; width: 100%; text-align: center;
-            color: rgba(0, 243, 255, 0.4); font-size: 11px; letter-spacing: 4px; font-family: monospace;
-            pointer-events: none; z-index: 60; transition: opacity 0.3s;
+            position: absolute;
+            bottom: 30px;
+            width: 100%;
+            text-align: center;
+            color: rgba(0, 243, 255, 0.4);
+            font-size: 11px;
+            letter-spacing: 4px;
+            font-family: 'Inter', monospace;
+            pointer-events: none;
+            z-index: 5;
+            transition: opacity 0.3s;
+        }
+
+        /* --- ORIGINAL PORTFOLIO STYLES (Adjusted for Grid) --- */
+        .case-wrapper {
+            padding-top: 60px;
+        }
+
+        /* Right Sidebar Bio - Adjusted to span full layout since monolith is removed */
+        .sidebar-bio {
+            grid-column: 2; /* Moved to center column to align with projects */
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding-top: 20px;
+            margin-bottom: 60px;
+            border-bottom: 1px solid var(--border-subtle, #333);
+            padding-bottom: 40px;
+        }
+
+        .sidebar-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 4px;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(1.2);
+        }
+
+        .sidebar-bio p {
+            font-size: 0.85rem;
+            line-height: 1.7;
+            color: var(--text-muted, #888);
+            margin: 0;
+            max-width: 800px;
+        }
+
+        .sidebar-bio a {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+            color: var(--text-main, #fff);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Compact Project List */
+        .projects-container {
+            grid-column: 2;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 80px;
+        }
+
+        .project-row {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 30px;
+            padding: 30px 0;
+            border-top: 1px solid var(--border-subtle, #333);
+            align-items: center;
+            transition: opacity 0.3s ease;
+            text-decoration: none;
+        }
+
+        .project-row:hover {
+            opacity: 0.7;
+        }
+
+        .project-row img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid var(--border-subtle, #333);
+        }
+
+        .project-info h2 {
+            font-size: 1.1rem;
+            letter-spacing: 0.05em;
+            margin-bottom: 8px;
+            color: var(--text-main, #fff);
+        }
+
+        .project-info p {
+            font-size: 0.9rem;
+            color: var(--text-muted, #888);
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .slide-tags {
+            display: flex;
+            gap: 8px;
+        }
+
+        .slide-tags span {
+            font-size: 0.7rem;
+            color: var(--text-main, #fff);
+            background: var(--bg-void, #111);
+            padding: 4px 8px;
+            border: 1px solid var(--border-subtle, #333);
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Connect Section */
+        .connect-section {
+            grid-column: 2;
+            text-align: center;
+            padding: 60px 0;
+            border-top: 1px solid var(--border-subtle, #333);
+        }
+
+        .connect-section blockquote {
+            font-size: 1.1rem;
+            color: var(--text-main, #fff);
+            font-style: italic;
+            margin-bottom: 30px;
+        }
+
+        .connect-links a {
+            display: inline-block;
+            margin: 0 10px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted, #888);
+            border: 1px solid var(--border-subtle, #333);
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        .connect-links a:hover {
+            color: var(--text-main, #fff);
+            border-color: var(--text-muted, #888);
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 950px) {
+            .project-row {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .sidebar-bio {
+                grid-column: 1;
+                align-items: center;
+                text-align: center;
+                margin-top: 40px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <div class="rotated-text">FEATURED WORKS</div>
-        <div class="mock-card">
-            <div class="img"></div>
-            <div class="desc">I like to think of myself as an observer. Observing different kinds of systems...</div>
-        </div>
+    <!-- INTERACTIVE HERO CANVAS (Replaces top section) -->
+    <div id="hero-canvas-container">
+        
+        <!-- ORIGINAL NAVBAR: Overlays the canvas to ensure perfect routing -->
+        <nav class="navbar">
+            <a href="/" class="logo" style="visibility: hidden;">Priyash Vasava</a> <!-- Hidden because particles spell it, but kept for DOM structure -->
+            <div class="nav-links">
+                <a href="#projects">Projects</a>
+                <a href="blog.html">Blog</a>
+                <a href="who-am-i.html">Who Am I?</a>
+                <a href="#connect">Connect</a>
+            </div>
+        </nav>
+
+        <div id="hint">[ HOLD THE BLACK HOLE TO UPLOAD QUERY ]</div>
+        <canvas id="c"></canvas>
     </div>
 
-    <div id="hint">[ HOLD THE BLACK HOLE TO UPLOAD QUERY ]</div>
-    <canvas id="c"></canvas>
+    <!-- REST OF YOUR PORTFOLIO (Scrolls naturally below) -->
+    <div class="case-wrapper">
+        
+        <div class="sidebar-bio">
+            <img src="assets/user-portrait.jpg" alt="Priyash" class="sidebar-img">
+            <p>
+                I like to think of myself as an observer. Observing different kinds of system, from the system of Nature to the system of Metropolitan city and much more. fascinated by how they function, why they break, and how they can be optimized. be it problem solving project or just a curiosity (mostly curiosity), I was able to quickly get my hands on SQL and Power BI as my core tools to uncover the facts. In my free time When I'm not mastering SQL or Power BI, I'm probably experimenting with new AI features and tools across the internet.
+            </p>
+            <a href="who-am-i.html">Know more of me ↗</a>
+        </div>
 
+        <div id="projects" class="projects-container">
+            
+            <a href="projects/olist/index.html" class="project-row">
+                <img src="assets/olist-cover.png" alt="Olist Project Cover">
+                <div class="project-info">
+                    <h2>Olist E-Commerce</h2>
+                    <p>Olist is a Brazilian SaaS technology company that acts as a unified marketplace integrator, connecting small and medium-sized businesses to major e-commerce channels through a single platform. The goal of this data analysis was to uncover hidden customer behaviour patterns from 550K rows across 8 relational dataset. from exploring in excel to advanced visuals in Power bi. Come check it out !</p>
+                    <div class="slide-tags">
+                        <span>Excel</span>
+                        <span>SQL</span>
+                        <span>Power BI</span>
+                    </div>
+                </div>
+            </a>
+
+            <a href="projects/google-stock/index.html" class="project-row">
+                <img src="assets/google-cover.png" alt="Google Stock Cover">
+                <div class="project-info">
+                    <h2>Google Stock Analysis</h2>
+                    <p>The aim of this project was to understand and find meaningful patterns in the journey of Google(Alphabet Inc.) stock market performmance using Excel, SQL, Power Bi. This project was heavily relied on Power Bi's DAX formula which helped turning numbers into crystal clear picture of long journey that google's stock has come through.</p>
+                    <div class="slide-tags">
+                        <span>Excel</span>
+                        <span>PowerBi</span>
+                        <span>SQL</span>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+
+        <div id="connect" class="connect-section">
+            <blockquote>
+                "In God we trust. All others must bring data."<br>
+                <span style="font-family: 'Inter', sans-serif; font-size: 0.85rem; font-style: normal; color: var(--text-muted, #888);">— W. Edwards Deming</span>
+            </blockquote>
+            <div class="connect-links">
+                <a href="mailto:Priyashvasava@outlook.com">Say Hello ↗</a>
+                <a href="https://www.linkedin.com/in/priyashvasava" target="_blank">LinkedIn</a>
+                <a href="https://github.com/priyashh" target="_blank">GitHub</a>
+            </div>
+            <p style="font-size: 0.85rem; color: var(--text-muted, #888); margin-top: 20px;">
+                Priyashvasava@outlook.com
+            </p>
+        </div>
+
+    </div>
+
+    <!-- BLACK HOLE SCRIPT -->
     <script>
         const canvas = document.getElementById('c');
         const ctx = canvas.getContext('2d');
         const hintEl = document.getElementById('hint');
         
         let W, H, cx, cy, bhRadius;
-        let state = 'IDLE'; // IDLE, CHARGING, ANSWERING
+        let state = 'IDLE'; 
         let chargeLevel = 0;
         let answerTimer = null;
         
-        // Arrays & Objects
         let textParticles = [];
         let accretionDust =[];
         let stars = [];
         let planets = [];
-        let mouseTrail = [];
-        let navBoxes =[]; // To track clickable nav regions
+        let mouseTrail =[];
 
-        // Color Palettes mapped to elements
         const colors = {
-            nav:['#ffffff', '#aaaaaa'],
             main: ['#ffffff', '#e0e0e0', '#00f3ff'],
             quote: ['#888888', '#bbbbbb'],
             prefix:['#00f3ff', '#aaaaaa'],
@@ -91,23 +319,16 @@
             debris:['#333333', '#1a1a1a']
         };
 
-        // Expanded 8-Ball Answers
         const answers =[
-            // Original
             "CERTAIN", "DECIDEDLY\nSO", "WITHOUT\nA DOUBT", "DEFINITELY", "YES", 
             "MOST\nLIKELY", "OUTLOOK\nGOOD", "SIGNS POINT\nTO YES", "AFFIRMATIVE",
             "HAZY\nTRY AGAIN", "ASK\nLATER", "CANNOT\nPREDICT", "DON'T COUNT\nON IT", "NO", 
-            // Fun / Tech - Positive
             "W DUB", "EASY\nCLAP", "STONKS GO\nUP", "ABSOLUTE\nCOOK", "GREEN\nLIGHT", "LGTM", "THE DATA\nSAYS YES",
-            // Fun / Tech - Negative
             "BIG\nYIKES", "NGMI", "FATAL\nEXCEPTION", "ABSOLUTELY\nNOT", "TOUCH\nGRASS", "SKILL\nISSUE", "HIGHLY\nSUS",
-            // Extras
             "VIBE CHECK:\nPASSED", "VIBE CHECK:\nFAILED", "IT'S A FEATURE\nNOT A BUG", "DEPLOY ON\nFRIDAY", "CTRL + Z"
         ];
 
         const mouse = { x: -1000, y: -1000, isDown: false };
-
-        // --- CLASSES ---
 
         class Star {
             constructor() { this.reset(); }
@@ -181,14 +402,11 @@
                 let cSet = colors[type] || colors.main;
                 this.color = cSet[Math.floor(Math.random() * cSet.length)];
                 this.size = Math.random() * 1.5 + 0.5;
-                
-                // Fluid spring speed for flow effect
                 this.speed = Math.random() * 0.06 + 0.04; 
                 this.isDebris = false;
             }
             update() {
                 if (state === 'CHARGING') {
-                    // Everything gets sucked in
                     let dx = cx - this.x; let dy = cy - this.y;
                     let dist = Math.max(Math.hypot(dx, dy), 1);
                     let force = chargeLevel * 2.5;
@@ -196,19 +414,17 @@
                     this.vx += (dy / dist) * force * 1.5; this.vy -= (dx / dist) * force * 1.5;
 
                 } else if (this.isDebris) {
-                    // EVENT HORIZON LOOP: Continuous ambient gravity
                     let bdx = cx - this.x; let bdy = cy - this.y;
                     let bDist = Math.max(Math.hypot(bdx, bdy), 1);
                     
                     let pull = 60 / bDist; 
                     if(pull > 1.5) pull = 1.5;
 
-                    this.vx += (bdx / bDist) * pull * 0.2; // Suck in
+                    this.vx += (bdx / bDist) * pull * 0.2; 
                     this.vy += (bdy / bDist) * pull * 0.2;
-                    this.vx += (bdy / bDist) * pull * 0.5; // Swirl
+                    this.vx += (bdy / bDist) * pull * 0.5; 
                     this.vy -= (bdx / bDist) * pull * 0.5;
                     
-                    // Consume and respawn far away to loop
                     if (bDist < bhRadius * 0.2) {
                         let angle = Math.random() * Math.PI * 2;
                         let r = W > H ? W : H;
@@ -217,7 +433,6 @@
                     }
 
                 } else {
-                    // FLUID TEXT FLOW (Claude's Physics)
                     this.vx += (this.tx - this.x) * this.speed;
                     this.vy += (this.ty - this.y) * this.speed;
 
@@ -228,7 +443,7 @@
                     
                     if (mDist < repelR && mDist > 0) {
                         let force = (repelR - mDist) / repelR;
-                        this.vx -= (mdx / mDist) * force * 3; // Fluid dodge
+                        this.vx -= (mdx / mDist) * force * 3; 
                         this.vy -= (mdy / mDist) * force * 3;
                     }
                 }
@@ -244,45 +459,21 @@
             }
         }
 
-        // --- CORE LOGIC ---
-
         function getIdleTargets() {
             const tmp = document.createElement('canvas');
             tmp.width = W; tmp.height = H;
             const tCtx = tmp.getContext('2d', { willReadFrequently: true });
-            let pts = [];
-            navBoxes =[]; // Reset clickable regions
+            let pts =[];
 
-            // 1. Draw Particle Nav Links (Top Right)
-            tCtx.fillStyle = 'white'; tCtx.textAlign = 'right'; tCtx.textBaseline = 'middle';
-            tCtx.font = `600 11px "Inter", sans-serif`;
-            tCtx.letterSpacing = "1.5px";
-            
-            let navY = 55;
-            let navX = W - 50;
-            const navItems =[
-                { t: "CONNECT", url: "#connect" },
-                { t: "WHO AM I?", url: "#who" },
-                { t: "BLOG", url: "#blog" },
-                { t: "PROJECTS", url: "#projects" }
-            ];
-            
-            navItems.forEach(item => {
-                let textW = tCtx.measureText(item.t).width;
-                navBoxes.push({ x: navX - textW, y: navY - 15, w: textW, h: 30, url: item.url });
-                tCtx.fillText(item.t, navX, navY);
-                navX -= (textW + 40); // Gap between links
-            });
-            tCtx.letterSpacing = "0px";
-
-            // 2. Draw Name
             let nameSize = Math.min(W / 12, 60); if (W < 500) nameSize = 35;
-            let startY = H * 0.20;
+            let startY = H * 0.30;
+            
+            tCtx.fillStyle = 'white';
             tCtx.font = `900 ${nameSize}px "Montserrat", sans-serif`;
             tCtx.textAlign = 'center';
+            tCtx.textBaseline = 'middle';
             tCtx.fillText("PRIYASH VASAVA", W/2, startY);
 
-            // 3. Draw Quote
             let quoteSize = nameSize * 0.35;
             tCtx.font = `300 ${quoteSize}px "Montserrat", sans-serif`;
             tCtx.letterSpacing = "6px"; 
@@ -294,10 +485,7 @@
             for (let y = 0; y < H; y += step) {
                 for (let x = 0; x < W; x += step) {
                     if (imgData[(y * W + x) * 4 + 3] > 128) {
-                        // Positional type mapping
-                        let type = 'main';
-                        if (y < 100) type = 'nav';
-                        else if (y > startY + nameSize * 0.5) type = 'quote';
+                        let type = (y > startY + nameSize * 0.5) ? 'quote' : 'main';
                         pts.push({x, y, type});
                     }
                 }
@@ -311,16 +499,14 @@
             const tCtx = tmp.getContext('2d', { willReadFrequently: true });
             let pts =[];
 
-            // Prefix Text
             let prefixSize = Math.min(W / 35, 14); if (prefixSize < 10) prefixSize = 10;
             tCtx.font = `600 ${prefixSize}px "Inter", monospace`;
             tCtx.fillStyle = 'white'; tCtx.textAlign = 'center'; tCtx.textBaseline = 'middle';
-            let ansStartY = H * 0.22;
+            let ansStartY = H * 0.25;
             tCtx.letterSpacing = "4px";
             tCtx.fillText("- MAGIC 8 BALL SAYS: -", W/2, ansStartY);
             tCtx.letterSpacing = "0px";
 
-            // Main Answer Text
             let size = Math.min(W / 14, 70); if (W < 500) size = 35;
             tCtx.font = `900 ${size}px "Montserrat", sans-serif`;
             let lines = answerText.split('\n');
@@ -341,8 +527,8 @@
         }
 
         function init() {
-            W = canvas.width = window.innerWidth;
-            H = canvas.height = window.innerHeight;
+            W = canvas.width = document.getElementById('hero-canvas-container').clientWidth;
+            H = canvas.height = document.getElementById('hero-canvas-container').clientHeight;
             cx = W / 2;
             cy = H * 0.85; 
             bhRadius = Math.min(W, H) * 0.12;
@@ -393,7 +579,6 @@
                         let cSet = colors[p.type];
                         p.color = cSet[Math.floor(Math.random() * cSet.length)];
                     } else {
-                        // Leftovers become floating ambient debris permanently sucked by BH
                         p.isDebris = true;
                         p.color = colors.debris[0];
                     }
@@ -401,20 +586,8 @@
             }, 8000);
         }
 
-        // --- EVENT LISTENERS ---
-
-        function getHoveredNav() {
-            if (state !== 'IDLE') return null;
-            for (let b of navBoxes) {
-                if (mouse.x >= b.x && mouse.x <= b.x + b.w && mouse.y >= b.y && mouse.y <= b.y + b.h) return b;
-            }
-            return null;
-        }
-
         function handlePointerDown(x, y) {
-            let nav = getHoveredNav();
-            if (nav) return; // Don't charge black hole if clicking nav
-
+            // Only trigger black hole if clicking roughly lower half to avoid blocking nav
             let dist = Math.hypot(x - cx, y - cy);
             if (dist < bhRadius * 2.5 && state === 'IDLE') {
                 state = 'CHARGING'; mouse.isDown = true; hintEl.style.opacity = 0;
@@ -422,13 +595,6 @@
         }
 
         function handlePointerUp() {
-            let nav = getHoveredNav();
-            if (nav) {
-                console.log("Navigating to: " + nav.url);
-                window.location.hash = nav.url; // Trigger link logic here
-                return;
-            }
-
             if (state === 'CHARGING') {
                 mouse.isDown = false;
                 if (chargeLevel > 0.6) triggerAnswer();
@@ -437,23 +603,30 @@
             }
         }
 
-        window.addEventListener('mousedown', e => handlePointerDown(e.clientX, e.clientY));
+        // Event listeners applied directly to canvas to prevent blocking HTML links
+        canvas.addEventListener('mousedown', e => {
+            const rect = canvas.getBoundingClientRect();
+            handlePointerDown(e.clientX - rect.left, e.clientY - rect.top);
+        });
         window.addEventListener('mouseup', handlePointerUp);
-        window.addEventListener('touchstart', e => {
-            mouse.x = e.touches[0].clientX; mouse.y = e.touches[0].clientY;
-            handlePointerDown(e.touches[0].clientX, e.touches[0].clientY);
+        
+        canvas.addEventListener('touchstart', e => {
+            const rect = canvas.getBoundingClientRect();
+            mouse.x = e.touches[0].clientX - rect.left; mouse.y = e.touches[0].clientY - rect.top;
+            handlePointerDown(mouse.x, mouse.y);
         });
         window.addEventListener('touchend', handlePointerUp);
-        window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        
+        canvas.addEventListener('mousemove', e => { 
+            const rect = canvas.getBoundingClientRect();
+            mouse.x = e.clientX - rect.left; mouse.y = e.clientY - rect.top; 
+        });
         window.addEventListener('resize', () => { clearTimeout(window.resizeTimer); window.resizeTimer = setTimeout(init, 300); });
-
-        // --- MAIN RENDER LOOP ---
 
         function loop() {
             ctx.fillStyle = '#020202'; ctx.fillRect(0, 0, W, H);
 
-            // Cursor Trail
-            if (mouse.x > 0) {
+            if (mouse.x > 0 && mouse.y > 0 && mouse.y < H) {
                 mouseTrail.push({x: mouse.x, y: mouse.y});
                 if (mouseTrail.length > 25) mouseTrail.shift(); 
             } else if (mouseTrail.length > 0) mouseTrail.shift();
@@ -478,7 +651,6 @@
             ctx.globalCompositeOperation = 'source-over';
             let currentRadius = bhRadius - (chargeLevel * 10); 
             
-            // Black Hole Glow & Body
             let glow = ctx.createRadialGradient(cx, cy, currentRadius * 0.9, cx, cy, currentRadius * 2.5);
             glow.addColorStop(0, '#00f3ff'); glow.addColorStop(0.3, 'rgba(0, 85, 255, 0.3)'); glow.addColorStop(1, 'transparent');
             ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(cx, cy, currentRadius * 2.5, 0, Math.PI * 2); ctx.fill();
@@ -487,9 +659,8 @@
             ctx.strokeStyle = `rgba(255, 255, 255, ${0.4 + chargeLevel * 0.6})`;
             ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(cx, cy, currentRadius + 1, 0, Math.PI * 2); ctx.stroke();
 
-            // The Dim '8' inside the Black Hole during Answer
             if (state === 'ANSWERING') {
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.15)'; 
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.12)'; 
                 ctx.font = `800 ${currentRadius * 1.3}px "Montserrat", sans-serif`;
                 ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
                 ctx.fillText("8", cx, cy);
@@ -498,7 +669,6 @@
             ctx.globalCompositeOperation = 'lighter';
             frontDust.forEach(d => d.draw());
 
-            // Mesh Plexus for Text (Skip debris)
             ctx.lineWidth = 0.5;
             for (let i = 0; i < textParticles.length; i += 3) {
                 if(textParticles[i].isDebris) continue;
@@ -519,18 +689,8 @@
 
             textParticles.forEach(p => { p.update(); p.draw(); });
 
-            // Interactive Pointers
-            let navHover = getHoveredNav();
             let bhHover = Math.hypot(mouse.x - cx, mouse.y - cy) < bhRadius * 2.5;
-            
-            if (navHover || (bhHover && state === 'IDLE')) {
-                // Change cursor visually via shooting star color
-                ctx.fillStyle = navHover ? '#ff007f' : '#ffffff';
-            } else {
-                ctx.fillStyle = '#ffffff';
-            }
 
-            // Shooting Star Cursor
             if (mouseTrail.length > 0) {
                 ctx.globalCompositeOperation = 'lighter';
                 for (let i = 0; i < mouseTrail.length; i++) {
@@ -540,7 +700,7 @@
                 }
                 let head = mouseTrail[mouseTrail.length - 1];
                 ctx.beginPath(); ctx.arc(head.x, head.y, 4, 0, Math.PI * 2);
-                ctx.fillStyle = (navHover || bhHover) ? '#ffffff' : '#00f3ff'; ctx.fill();
+                ctx.fillStyle = bhHover ? '#ffffff' : '#00f3ff'; ctx.fill();
                 ctx.globalCompositeOperation = 'source-over';
             }
 
@@ -548,8 +708,11 @@
             requestAnimationFrame(loop);
         }
 
-        init();
-        requestAnimationFrame(loop);
+        // FIX: Ensure custom fonts are fully loaded BEFORE creating text particles
+        document.fonts.ready.then(() => {
+            init();
+            requestAnimationFrame(loop);
+        });
 
     </script>
 </body>
