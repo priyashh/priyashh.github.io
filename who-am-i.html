@@ -20,17 +20,27 @@
             padding: 0;
             overflow-x: hidden;
             font-family: 'Inter', sans-serif;
-            cursor: none !important; /* Forces custom cursor logic if applied later, or hides it fully */
+            cursor: none !important; /* Hides system cursor */
         }
         
         * { cursor: none !important; }
 
+        /* Drifting Stars Layer (Behind text) */
         #bg-canvas {
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
             z-index: -1; 
             pointer-events: none;
+        }
+
+        /* Shooting Star Cursor Layer (Over text) */
+        #cursor-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 9999; 
+            pointer-events: none; /* Clicks pass through to buttons below */
         }
 
         /* --- NAVBAR --- */
@@ -41,6 +51,9 @@
             justify-content: space-between;
             align-items: center;
             padding: 40px 50px;
+            background: transparent !important; /* FIXED: Removes the dark strip */
+            border-bottom: none !important;
+            box-shadow: none !important;
         }
 
         .navbar .logo {
@@ -106,7 +119,7 @@
         .image-column {
             flex: 0 0 400px;
             position: sticky;
-            top: 120px; /* Sticks to the screen when scrolling */
+            top: 120px; 
             height: fit-content;
         }
 
@@ -116,7 +129,7 @@
             border: 1px solid rgba(255,255,255,0.1);
             box-shadow: 0 16px 48px rgba(0,0,0,0.6);
             object-fit: cover;
-            filter: grayscale(100%) contrast(1.1); /* Cinematic monotone look */
+            filter: grayscale(100%) contrast(1.1); 
         }
 
         /* RIGHT SIDE: The Text */
@@ -137,12 +150,11 @@
 
         .text-column p {
             font-size: 1.15rem;
-            color: #a3a3a3; /* Light grey */
+            color: #a3a3a3; 
             line-height: 1.8;
             margin-bottom: 32px;
         }
 
-        /* Tool tags */
         .tools-section {
             margin-top: 60px;
         }
@@ -152,7 +164,7 @@
             font-weight: 600;
             letter-spacing: 0.14em;
             text-transform: uppercase;
-            color: #00f3ff; /* Cyan accent */
+            color: #00f3ff; 
             margin-bottom: 20px;
         }
 
@@ -164,7 +176,7 @@
 
         .slide-tags span {
             padding: 8px 16px;
-            background: rgba(255,255,255,0.05); /* Sleek glass block */
+            background: rgba(255,255,255,0.05); 
             border: 1px solid rgba(255,255,255,0.1);
             border-radius: 6px;
             font-size: 0.9rem;
@@ -173,14 +185,12 @@
             letter-spacing: 0.05em;
         }
 
-        /* The fading animation class */
         .fade-on-scroll {
             transition: opacity 0.1s ease-out, transform 0.1s ease-out;
             opacity: 0.15; 
             will-change: opacity, transform;
         }
         
-        /* Back link */
         .back-link {
             display: inline-block;
             margin-top: 60px;
@@ -209,8 +219,11 @@
 </head>
 <body>
 
-    <!-- Ambient Stars Fixed Canvas -->
+    <!-- Background Stars Layer -->
     <canvas id="bg-canvas"></canvas>
+    
+    <!-- Top Mouse Trail Layer -->
+    <canvas id="cursor-canvas"></canvas>
 
     <nav class="navbar">
         <a href="index.html" class="logo">PRIYASH VASAVA</a>
@@ -265,18 +278,9 @@
                 <div class="tools-section fade-on-scroll">
                     <div class="tools-eyebrow">Tools & Skills</div>
                     <div class="slide-tags">
-                        <span>SQL</span>
-                        <span>Data Modeling</span>
-                        <span>Power BI</span>
-                        <span>Dashboards</span>
-                        <span>Excel</span>
-                        <span>Analysis</span>
-                        <span>Looker Studio</span>
-                        <span>Reporting</span>
-                        <span>Tableau</span>
-                        <span>Visualization</span>
-                        <span>AI Tools</span>
-                        <span>Vibe Coding</span>
+                        <span>SQL</span><span>Data Modeling</span><span>Power BI</span><span>Dashboards</span>
+                        <span>Excel</span><span>Analysis</span><span>Looker Studio</span><span>Reporting</span>
+                        <span>Tableau</span><span>Visualization</span><span>AI Tools</span><span>Vibe Coding</span>
                     </div>
                 </div>
 
@@ -284,15 +288,29 @@
 
             </div>
         </div>
-        <!-- BACKGROUND STARS AND SCROLL OPACITY LOGIC -->
+    </div>
+    <!-- SCRIPT FOR BOTH CANVASES AND SCROLL LOGIC -->
     <script>
-        // 1. BACKGROUND STARS LOGIC
-        const canvas = document.getElementById('bg-canvas');
-        const ctx = canvas.getContext('2d');
+        // 1. CANVAS SETUPS
+        const bgCanvas = document.getElementById('bg-canvas');
+        const bgCtx = bgCanvas.getContext('2d');
+        
+        const cursorCanvas = document.getElementById('cursor-canvas');
+        const cursorCtx = cursorCanvas.getContext('2d');
         
         let W, H;
         let stars = [];
+        
+        // 2. MOUSE TRACKING
+        let mouse = { x: -1000, y: -1000 };
+        let mouseTrail = [];
 
+        window.addEventListener('mousemove', e => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        // 3. BACKGROUND STARS LOGIC
         class Star {
             constructor() {
                 this.x = Math.random() * window.innerWidth;
@@ -302,23 +320,25 @@
                 this.color = Math.random() > 0.8 ? '#00f3ff' : '#ffffff';
             }
             update() {
-                // Drift left naturally across whole page
                 this.x -= 0.15 * (W / Math.max(this.z, 1)); 
                 if (this.x < 0) this.x = W;
             }
             draw() {
                 let alpha = Math.min(1, W / Math.max(this.z, 1));
-                ctx.fillStyle = this.color;
-                ctx.globalAlpha = alpha;
-                ctx.beginPath(); 
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); 
-                ctx.fill();
+                bgCtx.fillStyle = this.color;
+                bgCtx.globalAlpha = alpha;
+                bgCtx.beginPath(); 
+                bgCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2); 
+                bgCtx.fill();
             }
         }
 
-        function initStars() {
-            W = canvas.width = window.innerWidth;
-            H = canvas.height = window.innerHeight;
+        function initCanvases() {
+            W = window.innerWidth;
+            H = window.innerHeight;
+            
+            bgCanvas.width = W; bgCanvas.height = H;
+            cursorCanvas.width = W; cursorCanvas.height = H;
             
             stars = [];
             for (let i = 0; i < 150; i++) {
@@ -326,20 +346,46 @@
             }
         }
 
+        // 4. MAIN RENDER LOOP
         function loop() {
-            ctx.clearRect(0, 0, W, H);
+            // Render Background Stars
+            bgCtx.clearRect(0, 0, W, H);
             stars.forEach(s => {
                 s.update();
                 s.draw();
             });
+
+            // Render Glowing Shooting Star Cursor (On top layer)
+            cursorCtx.clearRect(0, 0, W, H);
+            if (mouse.x > 0 && mouse.y > 0 && mouse.y < H) {
+                mouseTrail.push({x: mouse.x, y: mouse.y});
+                if (mouseTrail.length > 20) mouseTrail.shift();
+                
+                cursorCtx.globalCompositeOperation = 'lighter';
+                for (let i = 0; i < mouseTrail.length; i++) {
+                    let pt = mouseTrail[i]; let ratio = i / mouseTrail.length;
+                    cursorCtx.beginPath(); cursorCtx.arc(pt.x, pt.y, ratio * 3.5, 0, Math.PI * 2);
+                    cursorCtx.fillStyle = `rgba(0, 243, 255, ${ratio})`; cursorCtx.fill();
+                }
+                
+                let head = mouseTrail[mouseTrail.length - 1];
+                if(head) {
+                    cursorCtx.beginPath(); cursorCtx.arc(head.x, head.y, 4, 0, Math.PI * 2);
+                    cursorCtx.fillStyle = '#ffffff'; cursorCtx.fill();
+                }
+                cursorCtx.globalCompositeOperation = 'source-over';
+            } else if (mouseTrail.length > 0) {
+                mouseTrail.shift();
+            }
+            
             requestAnimationFrame(loop);
         }
 
-        window.addEventListener('resize', initStars);
+        window.addEventListener('resize', initCanvases);
         
-        // 2. FADE-ON-SCROLL LOGIC
+        // 5. FADE-ON-SCROLL LOGIC
         document.addEventListener("DOMContentLoaded", () => {
-            initStars();
+            initCanvases();
             requestAnimationFrame(loop);
 
             const elements = document.querySelectorAll('.fade-on-scroll');
@@ -349,20 +395,12 @@
                 
                 elements.forEach(el => {
                     const rect = el.getBoundingClientRect();
-                    // Get the center point of the element
                     const elementCenter = rect.top + (rect.height / 2);
-                    // Get the center point of the viewport
-                    const screenCenter = windowHeight / 2.5; // Offset slightly up for better reading
-                    
-                    // Calculate how far the element's center is from the viewport's ideal center
+                    const screenCenter = windowHeight / 2.5; 
                     const distance = Math.abs(screenCenter - elementCenter);
-                    
-                    // The distance at which the text starts aggressively fading out
                     const maxDistance = windowHeight / 3; 
                     
-                    // Calculate opacity (1 when centered, approaching 0.15 as it moves away)
                     let opacity = 1 - (distance / maxDistance);
-                    
                     if(opacity < 0.15) opacity = 0.15;
                     if(opacity > 1) opacity = 1;
                     
@@ -373,12 +411,9 @@
                 });
             }
 
-            // Run once on load
             checkFade();
-            // Re-calculate on scroll
             window.addEventListener('scroll', checkFade);
         });
     </script>
 </body>
 </html>
-    </div>
