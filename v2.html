@@ -42,19 +42,19 @@
 
         /* --- ANIMATED HERO TEXT --- */
         #hero-text-overlay {
-    position: absolute;
-    top: 10vh; /* moved up */
-    left: 50%;
-    transform: translateX(-50%) scale(1);
-    text-align: center;
-    z-index: 15;
-    pointer-events: none;
-    transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s;
-}
+            position: absolute;
+            top: 10vh; /* moved slightly up */
+            left: 50%;
+            transform: translateX(-50%) scale(1);
+            text-align: center;
+            z-index: 15;
+            pointer-events: none;
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s;
+        }
 
         /* Exploded State -> Shifts perfectly over to the bio */
         #hero-text-overlay.exploded {
-            /* Pushes directly right relative to viewport center! */
+            /* Pushes right and down so it sits over the bio area */
             transform: translate(30vw, 8vh) scale(0.65);
         }
 
@@ -84,14 +84,10 @@
 
         /* Contains Profile right side */
         .right-column {
-    width: 340px; 
-    margin-top: 15vh;
-    margin-right: 5vw; /* pushes it slightly further right */
-    display: flex; 
-    flex-direction: column; 
-    gap: 15px; 
-    pointer-events: none;
-}
+            width: 340px; margin-top: 15vh;
+            margin-right: 5vw; /* nudged slightly to the right */
+            display: flex; flex-direction: column; gap: 15px; pointer-events: none;
+        }
 
         .sidebar-img { width: 120px; height: 120px; border-radius: 4px; object-fit: cover; filter: grayscale(100%); pointer-events: auto;}
         .right-column p { font-size: 0.85rem; line-height: 1.8; color: #888; margin: 0; pointer-events: auto;}
@@ -181,7 +177,7 @@
         const quoteEl = document.getElementById('magic-quote');
 
         let W, H;
-        const N = 3800; // Optimal density for rendering
+        const N = 3800; // Increased density for rendering
         let particles = [];
         let stars = [];
         
@@ -194,6 +190,10 @@
 
         let mouse = { x: -1000, y: -1000 };
         let trail = []; // Holding tail arrays
+
+        // scroll velocity for trail-like effect
+        let lastScrollY = window.scrollY;
+        let scrollVel = 0;
 
         const colors = ['#00f3ff', '#b026ff', '#ffffff']; // Brand Cyan, Purple, White Array
         const answerPool = [
@@ -280,7 +280,8 @@
 
                     let zIndexProject = 800 / (800 - fZ);
                     this.tx = cx + rx * zIndexProject; 
-                    this.ty = (cy - window.scrollY) + ry * zIndexProject; // Track to scroll physically!!
+                    // Add scroll-velocity-based lag opposite scroll direction
+                    this.ty = (cy - window.scrollY) + ry * zIndexProject - scrollVel * 4;
                     this.z = fZ;
 
                     let flexSpring = state === 'charge' ? 0.35 : 0.08; 
@@ -341,7 +342,7 @@
             tempLayer.font = `900 ${bigFontS}px "Montserrat"`;
 
             // Renders perfectly in empty column slot natively
-            let messageRows = answerInMsg.split('\n');
+            let messageRows = answerInMsg.split('\\n');
             let anchorRowCenter = cy - window.scrollY - 30; // Float center screen purely  
             
             messageRows.forEach((rText, indexer ) => {
@@ -369,6 +370,11 @@
         function RunSystemLoop() {
             ctx.fillStyle = '#030305';
             ctx.fillRect(0,0,W,H);
+
+            // compute scroll velocity each frame
+            const currentScroll = window.scrollY;
+            scrollVel = currentScroll - lastScrollY;
+            lastScrollY = currentScroll;
             
             ctx.globalCompositeOperation = 'source-over'; 
 
