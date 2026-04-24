@@ -13,196 +13,104 @@
     <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@300;700;900&display=swap" rel="stylesheet">
     
     <style>
-        /* --- GLOBAL --- */
         * { cursor: none !important; }
         
         body, html {
-            margin: 0; padding: 0;
-            background-color: #030305;
-            color: white;
-            font-family: 'Inter', sans-serif;
-            overflow-x: hidden;
+            margin: 0; padding: 0; background-color: #030305;
+            color: #fff; font-family: 'Inter', sans-serif; overflow-x: hidden;
         }
 
-        /* Fixed Canvas Layers */
-        #bg-canvas, #cursor-canvas {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            pointer-events: none; 
+        /* Combined Fullscreen Graphic Canvas */
+        #gl-canvas {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 0; pointer-events: none;
         }
-        #bg-canvas { z-index: 0; }
-        #cursor-canvas { z-index: 9999; }
 
         /* --- NAVBAR --- */
         .navbar {
-            position: relative;
-            z-index: 20;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 40px 50px;
-            box-sizing: border-box;
-            background: transparent !important;
-            border: none !important;
-            box-shadow: none !important;
+            position: relative; z-index: 20; display: flex; justify-content: space-between;
+            align-items: center; padding: 30px 5vw; background: transparent; 
         }
-
-        .navbar .logo {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 900;
-            font-size: 16px;
-            color: #fff;
-            letter-spacing: 2px;
-            text-decoration: none;
-        }
-
+        .navbar .logo { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 16px; color: #fff; letter-spacing: 2px; text-decoration: none; pointer-events: auto;}
         .navbar .nav-links { display: flex; gap: 30px; }
         .navbar .nav-links a {
-            font-family: 'Courier Prime', monospace;
-            color: #00f3ff;
-            font-size: 14px; 
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
-            text-decoration: none;
-            opacity: 0.8;
-            transition: all 0.3s ease;
+            font-family: 'Courier Prime', monospace; color: #00f3ff; font-size: 14px; letter-spacing: 4px;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.4); text-decoration: none; opacity: 0.8; transition: 0.3s;
+            pointer-events: auto;
         }
         .navbar .nav-links a:hover { opacity: 1; color: #fff; text-shadow: 0 0 15px rgba(255, 255, 255, 0.8); }
 
-        /* --- SAFE FLEX HERO LAYOUT (Fixes text overlap completely) --- */
-        #hero-flex-container {
+        /* --- ANIMATED HERO TEXT --- */
+        #hero-text-overlay {
             position: absolute;
-            top: 15vh; /* Safe distance below navbar */
-            left: 0;
-            width: 100vw;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: flex-start;
-            gap: 20px; /* Forces spacing between title and hint */
+            top: 15vh; /* Safely floating at top center */
+            left: 50%;
+            transform: translateX(-50%) scale(1);
+            text-align: center;
             z-index: 15;
             pointer-events: none;
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s;
         }
 
-        /* The flying text container */
-        #flying-text {
-            text-align: center;
-            transform: translate(0, 0) scale(1);
-            transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+        /* Exploded State -> Shifts perfectly over to the bio */
+        #hero-text-overlay.exploded {
+            /* Pushes directly right relative to viewport center! */
+            transform: translate(20vw, 5vh) scale(0.65);
         }
 
-        /* The drop-target (Moves directly above the bio box on right) */
-        #flying-text.exploded {
-            transform: translate(32vw, 25vh) scale(0.65);
-        }
+        #hero-text-overlay h1 { font-family: 'Inter', sans-serif; font-size: 1.1rem; letter-spacing: 0.2em; line-height: 1.8; margin: 0; }
+        #hero-text-overlay .highlight { font-family: 'Montserrat', sans-serif; color: #fff; font-size: 2rem; font-weight: 900; letter-spacing: 0.15em; text-shadow: 0 0 15px rgba(255,255,255,0.4); }
+        #hero-text-overlay .muted { color: #888; font-weight: 400; }
 
-        #flying-text h1 {
-            font-family: 'Inter', sans-serif; font-size: 1.1rem; letter-spacing: 0.2em; line-height: 1.8; margin: 0; text-transform: uppercase;
-        }
-        #flying-text .highlight {
-            font-family: 'Montserrat', sans-serif; color: #fff; font-size: 2.2rem; font-weight: 900; letter-spacing: 0.15em; text-shadow: 0 0 20px rgba(255,255,255,0.3);
-        }
-        #flying-text .muted { color: #888; font-weight: 400; }
-
-        /* The Cyan Hint */
+        /* The Cyan Hint Action */
         #hint {
-            color: #00f3ff; font-family: 'Courier Prime', monospace; font-size: 11px; letter-spacing: 4px;
-            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5); opacity: 0.8; transition: opacity 0.3s;
+            position: absolute; top: 32vh; left: 50%; transform: translateX(-50%);
+            color: #00f3ff; font-family: 'Courier Prime', monospace; font-size: 11px; letter-spacing: 5px;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5); transition: opacity 0.3s; z-index: 15; pointer-events: none;
         }
 
-        /* Magic Quote */
+        /* The Subtitle under the 8-Ball answer */
         #magic-quote {
-            position: absolute;
-            top: 40vh; /* Set dynamically by JS relative to oracle */
-            left: 50%;
-            transform: translateX(-50%);
-            font-family: 'Courier Prime', monospace; color: #00f3ff; font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
-            text-shadow: 0 0 10px rgba(0, 243, 255, 0.4); opacity: 0; transition: opacity 0.5s ease-in;
-            z-index: 15; pointer-events: none;
+            position: absolute; top: 36vh; left: 50%; transform: translateX(-50%);
+            font-family: 'Courier Prime', monospace; color: #00f3ff; font-size: 12px; letter-spacing: 3px;
+            opacity: 0; transition: opacity 0.5s; z-index: 15; pointer-events: none; text-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
         }
 
-        /* --- FLAWLESS CSS GRID --- */
-        .case-wrapper {
-            position: relative;
-            z-index: 10;
-            display: grid;
-            grid-template-columns: 80px minmax(500px, 1fr) 320px; /* Widened right column for bio */
-            max-width: 1300px; 
-            margin: 0 auto;
-            column-gap: 50px;
-            pointer-events: none; /* Passes clicks through */
-        }
-        .case-wrapper * { pointer-events: auto; } /* Reactivates link clicking */
-
-        /* Oracle Spacer */
-        .oracle-spacer {
-            grid-column: 2;
-            grid-row: 1;
-            height: 60vh; /* Keeps projects pulled up nicely */
-            pointer-events: none;
+        /* --- THE PAGE LAYOUT --- */
+        .layout-container {
+            position: relative; z-index: 10; max-width: 1400px; margin: 0 auto;
+            display: flex; justify-content: space-between; padding: 40px 5vw;
         }
 
-        /* Sidebar Bio (Pushed up high and far right) */
-        .sidebar-bio {
-            grid-column: 3;
-            grid-row: 1 / 3; /* Spans multiple rows safely */
-            display: flex; flex-direction: column; gap: 16px;
-            padding-top: 38vh;  /* EXACT alignment for the flying text to naturally stack above */
+        /* Contains Profile right side */
+        .right-column {
+            width: 340px; margin-top: 15vh; /* Fits right underneath moving text layer */
+            display: flex; flex-direction: column; gap: 15px; pointer-events: none;
         }
 
-        .sidebar-img { width: 120px; height: 120px; border-radius: 4px; object-fit: cover; filter: grayscale(100%) contrast(1.2); }
-        .sidebar-bio p { font-size: 0.85rem; line-height: 1.8; color: #888; margin: 0; }
-        .sidebar-bio a { font-size: 0.75rem; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; color: #fff; text-transform: uppercase; letter-spacing: 0.05em; }
+        .sidebar-img { width: 120px; height: 120px; border-radius: 4px; object-fit: cover; filter: grayscale(100%); pointer-events: auto;}
+        .right-column p { font-size: 0.85rem; line-height: 1.8; color: #888; margin: 0; pointer-events: auto;}
+        .right-column a { font-size: 0.75rem; font-weight: 700; color: #fff; text-decoration: underline; text-underline-offset: 4px; letter-spacing: 0.05em; pointer-events: auto; }
 
-        /* Left Axis */
-        .vertical-line {
-            grid-column: 1;
-            grid-row: 2; 
-            writing-mode: vertical-rl; transform: rotate(180deg);
-            font-size: 10px; letter-spacing: 4px; color: #666; text-align: right;
-            padding-top: 20px;
+        /* --- Projects Lower Half --- */
+        .bottom-section {
+            position: relative; z-index: 10; max-width: 1100px; margin: 60vh auto 0 auto;
+            border-top: 1px solid rgba(255,255,255,0.05); padding-top: 80px; padding-bottom: 80px; pointer-events: auto;
         }
 
-        /* Projects Section */
-        .projects-container { 
-            grid-column: 2; 
-            grid-row: 2;
-            display: flex; flex-direction: column; margin-bottom: 80px; 
-        }
-        
-        .project-row { display: grid; grid-template-columns: 200px 1fr; gap: 30px; padding: 30px 0; border-top: 1px solid #222; align-items: center; transition: opacity 0.3s ease; text-decoration: none; }
+        .project-row { display: grid; grid-template-columns: 240px 1fr; gap: 40px; padding: 40px 0; border-top: 1px solid #222; text-decoration: none; align-items: start; }
+        .project-row img { width: 100%; height: 140px; border-radius: 4px; object-fit: cover; }
+        .project-row h2 { color: #fff; font-size: 1.2rem; font-family:'Montserrat',sans-serif; letter-spacing: 0.05em; margin-bottom:10px; text-transform: uppercase; }
+        .project-row p { color: #888; font-size: 0.95rem; line-height: 1.7; margin-bottom: 16px; }
+        .tags { display: flex; gap: 10px; }
+        .tags span { border: 1px solid #333; padding: 4px 10px; font-size: 0.7rem; text-transform: uppercase; border-radius: 4px; color: #fff;}
         .project-row:hover { opacity: 0.7; }
-        .project-row img { width: 100%; height: 120px; object-fit: cover; border-radius: 4px; border: 1px solid #222; }
-        .project-info h2 { font-size: 1.1rem; letter-spacing: 0.05em; margin-bottom: 8px; color: #fff; }
-        .project-info p { font-size: 0.9rem; color: #888; margin-bottom: 12px; line-height: 1.6; max-width: 90%; }
-        .slide-tags { display: flex; gap: 8px; }
-        .slide-tags span { font-size: 0.7rem; color: #fff; background: #111; padding: 4px 8px; border: 1px solid #333; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
-        
-        /* Connect Section */
-        .connect-section { 
-            grid-column: 2 / 4; grid-row: 3;
-            text-align: center; padding: 60px 0; border-top: 1px solid #222; 
-        }
-        .connect-section blockquote { font-size: 1.1rem; color: #fff; font-style: italic; margin-bottom: 30px; }
-        .connect-links a { display: inline-block; margin: 0 10px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; color: #888; border: 1px solid #333; padding: 8px 16px; border-radius: 4px; transition: 0.3s; text-decoration: none; }
-        .connect-links a:hover { color: #fff; border-color: #888; }
-
-        @media (max-width: 1050px) {
-            .case-wrapper { display: flex; flex-direction: column; padding: 40px 20px 0 20px; }
-            .vertical-line { display: none; }
-            .sidebar-bio { padding-top: 20px; text-align: center; align-items: center; border-bottom: 1px solid #222; padding-bottom: 40px; margin-bottom: 40px; }
-            .oracle-spacer { height: 400px; }
-            .project-row { grid-template-columns: 1fr; gap: 16px; }
-            #flying-text.exploded { transform: translate(0, 30vh) scale(0.7); } 
-        }
     </style>
 </head>
 <body>
 
-    <canvas id="bg-canvas"></canvas>
-    <canvas id="cursor-canvas"></canvas>
+    <!-- Graphics Engine -->
+    <canvas id="gl-canvas"></canvas>
 
     <nav class="navbar">
         <a href="/" class="logo">PRIYASH VASAVA</a>
@@ -214,387 +122,372 @@
         </div>
     </nav>
 
-    <!-- CRASH-PROOF FLEX CONTAINER FOR HERO TEXT -->
-    <div id="hero-flex-container">
-        <div id="flying-text">
-            <h1>
-                <span class="highlight">ANALYST</span> <span class="muted">BY DAY</span><br>
-                <span class="highlight">VIBE CODER</span><br>
-                <span class="muted">BY NIGHT</span>
-            </h1>
-        </div>
-        <div class="hero-hint" id="hint">CLICK AND HOLD TO BLOW YOUR MIND</div>
+    <!-- Fly-away Text Component -->
+    <div id="hero-text-overlay">
+        <h1>
+            <span class="highlight">ANALYST</span> <span class="muted">BY DAY</span><br>
+            <span class="highlight">VIBE CODER</span><br>
+            <span class="muted">BY NIGHT</span>
+        </h1>
     </div>
     
+    <div id="hint">CLICK AND HOLD TO BLOW YOUR MIND</div>
+    <!-- Quote container -->
     <div id="magic-quote">- says the magic 8 ball</div>
 
-    <div class="case-wrapper">
-        <div class="oracle-spacer" id="oracle-anchor"></div>
-
-        <div class="sidebar-bio">
+    <!-- Upper Body Bio Position -->
+    <div class="layout-container">
+        <div><!-- Left side empty to let Canvas shine --></div>
+        <div class="right-column">
             <img src="assets/user-portrait.jpg" alt="Priyash" class="sidebar-img" onerror="this.src='https://via.placeholder.com/120/111/444?text=PV'">
-            <p>
-                I like to think of myself as an observer. Observing different kinds of systems, from the system of Nature to the system of Metropolitan city and much more. Fascinated by how they function, why they break, and how they can be optimized. Be it a problem-solving project or just curiosity, I rely on SQL and Power BI as my core tools to uncover facts.
-            </p>
-            <a href="who-am-i.html">Know more of me ↗</a>
-        </div>
-
-        <div class="vertical-line">FEATURED WORKS</div>
-        
-        <div id="projects" class="projects-container">
-            <a href="projects/olist/index.html" class="project-row">
-                <img src="assets/olist-cover.png" alt="Olist Project" onerror="this.style.display='none'">
-                <div class="project-info">
-                    <h2>Olist E-Commerce</h2>
-                    <p>Olist is a Brazilian SaaS technology company that acts as a unified marketplace integrator. Uncovered hidden customer behaviour patterns from 550K rows across 8 relational datasets using Excel, SQL, and Power BI.</p>
-                    <div class="slide-tags"><span>Excel</span><span>SQL</span><span>Power BI</span></div>
-                </div>
-            </a>
-
-            <a href="projects/google-stock/index.html" class="project-row">
-                <img src="assets/google-cover.png" alt="Google Stock" onerror="this.style.display='none'">
-                <div class="project-info">
-                    <h2>Google Stock Analysis</h2>
-                    <p>Understand and find meaningful patterns in the journey of Google (Alphabet Inc.) stock market performance. Heavily relied on Power BI's DAX formulas to turn numbers into a crystal clear picture.</p>
-                    <div class="slide-tags"><span>Excel</span><span>PowerBi</span><span>SQL</span></div>
-                </div>
-            </a>
-        </div>
-
-        <div id="connect" class="connect-section">
-            <blockquote>
-                "In God we trust. All others must bring data."<br>
-                <span style="font-size: 0.85rem; color: #888;">— W. Edwards Deming</span>
-            </blockquote>
-            <div class="connect-links">
-                <a href="mailto:Priyashvasava@outlook.com">Say Hello ↗</a>
-                <a href="https://www.linkedin.com/in/priyashvasava" target="_blank">LinkedIn</a>
-                <a href="https://github.com/priyashh" target="_blank">GitHub</a>
-            </div>
-            <p style="font-size: 0.85rem; color: #888; margin-top: 20px;">Priyashvasava@outlook.com</p>
+            <p>I like to think of myself as an observer. Observing different kinds of systems, from the system of Nature to the system of Metropolitan city and much more. Fascinated by how they function, why they break, and how they can be optimized. Be it a problem-solving project or just curiosity, I rely on SQL and Power BI as my core tools to uncover facts.</p>
+            <a href="who-am-i.html">KNOW MORE OF ME ↗</a>
         </div>
     </div>
 
-    <!-- PURE, BULLETPROOF JAVASCRIPT -->
+    <!-- Scrolling Projects -->
+    <div class="bottom-section" id="projects">
+        <a href="projects/olist/index.html" class="project-row" style="border-top: none;">
+            <img src="assets/olist-cover.png" alt="Olist" onerror="this.style.display='none'">
+            <div>
+                <h2>Olist E-Commerce</h2>
+                <p>Olist is a Brazilian SaaS technology company that acts as a unified marketplace integrator. Uncovered hidden customer behaviour patterns from 550K rows across 8 relational datasets using Excel, SQL, and Power BI.</p>
+                <div class="tags"><span>Excel</span><span>SQL</span><span>Power BI</span></div>
+            </div>
+        </a>
+
+        <a href="projects/google-stock/index.html" class="project-row">
+            <img src="assets/google-cover.png" alt="Google" onerror="this.style.display='none'">
+            <div>
+                <h2>Google Stock Analysis</h2>
+                <p>Understand and find meaningful patterns in the journey of Google (Alphabet Inc.) stock market performance. Heavily relied on Power BI's DAX formulas to turn numbers into a crystal clear picture.</p>
+                <div class="tags"><span>Excel</span><span>PowerBi</span><span>SQL</span></div>
+            </div>
+        </a>
+    </div>
+
+    <!-- JavaScript Base -->
     <script>
-        const bgCanvas = document.getElementById('bg-canvas');
-        const bgCtx = bgCanvas.getContext('2d');
-        const cursorCanvas = document.getElementById('cursor-canvas');
-        const cursorCtx = cursorCanvas.getContext('2d');
+        const canvas = document.getElementById('gl-canvas');
+        const ctx = canvas.getContext('2d', { alpha: false }); // Optmizing draw calls
 
         const hintEl = document.getElementById('hint');
-        const flyingText = document.getElementById('flying-text');
+        const heroText = document.getElementById('hero-text-overlay');
         const quoteEl = document.getElementById('magic-quote');
-        const oracleAnchor = document.getElementById('oracle-anchor');
-        
-        let W, H, cx, cy; 
-        
-        const N = 4000; 
-        let particles =[];
-        let stars = [];
-        let mouseTrail =[];
-        
-        let baseRadius = 240;
-        let rotationX = 0;
-        let rotationY = 0;
-        
-        let state = 'idle'; 
-        let chargeLevel = 0;
-        let answerTimer = 0;
 
-        const answers =[
-            "THE UNIVERSE\nALIGNS", "GREEN LIGHT", "TRUST YOUR\nGUT", "IT IS\nWRITTEN", "ABSOLUTELY",
-            "NOT IN THIS\nTIMELINE", "THE VIBES\nARE OFF", "RETHINK\nEVERYTHING", "HARD NO", "ABORT\nMISSION",
-            "PLOT TWIST\nIMMINENT", "RECALIBRATING...", "ASK THE\nSIMULATION", "MAIN CHARACTER\nENERGY", "GLITCH IN\nTHE MATRIX"
+        let W, H;
+        const N = 2600; // Optimal density for rendering
+        let particles = [];
+        let stars = [];
+        
+        let cx = 0; let cy = 0;
+        let baseRadius = 260; // Size of Atomic Core Oracle
+        let rotationX = 0; let rotationY = 0;
+        
+        let state = 'idle'; // State-machine
+        let cgLevel = 0; // Charge tracking
+
+        let mouse = { x: -1000, y: -1000 };
+        let trail = []; // Holding tail arrays
+
+        const colors = ['#00f3ff', '#b026ff', '#ffffff']; // Brand Cyan, Purple, White Array
+        const answerPool = [
+            "THE UNIVERSE ALIGNS", "GREEN LIGHT", "TRUST YOUR GUT",
+            "RECALIBRATING...", "THE VIBES ARE OFF", "ROUTING ERROR",
+            "GLITCH DETECTED", "SKILL ISSUE", "MAIN CHARACTER ENERGY",
+            "DEFINITELY YES", "HARD PASS", "ASK THE SIMULATION"
         ];
 
-        const colors =['#00f3ff', '#b026ff', '#ffffff'];
-        const mouse = { x: -1000, y: -1000 };
-
-        function updateOraclePosition() {
-            if (!oracleAnchor) return;
-            const rect = oracleAnchor.getBoundingClientRect();
-            // Locked perfectly centered horizontally, dynamically bound vertically!
-            cx = window.innerWidth / 2;
-            cy = rect.top + (rect.height / 2) + window.scrollY; 
+        // Ensure Math calculations are tied explicitly to screen ratios immediately at boot.
+        function updateScreen() {
+            W = canvas.width = window.innerWidth;
+            H = canvas.height = window.innerHeight;
             
-            // Recalculate Atom target size based on screen
-            baseRadius = Math.min(W, H) * 0.28;
-            if(baseRadius > 230) baseRadius = 230;
+            cx = W / 2;
+            cy = H * 0.50; // Oracle spins exactly at 50% screen height natively always 
+
+            baseRadius = Math.min(W, H) * 0.30;
+            if(baseRadius > 250) baseRadius = 250;
         }
 
-        class Star {
+        class StarBg {
             constructor() {
-                this.x = Math.random() * window.innerWidth;
-                this.docY = Math.random() * window.innerHeight * 1.5; 
-                this.z = Math.random() * window.innerWidth; 
-                this.size = Math.random() * 1.5;
-                this.color = Math.random() > 0.8 ? '#00f3ff' : '#ffffff';
+                this.x = Math.random() * W;
+                this.pageZ = Math.random() * (H * 2.5); // Locks Y coords across long distances for normal Parallax scolls.
+                this.depth = Math.random() * W; 
+                this.s = Math.random() * 1.5;
+                this.color = Math.random() > 0.85 ? '#00f3ff' : '#ffffff';
             }
             update() {
-                this.x -= 0.15 * (W / Math.max(this.z, 1)); 
+                this.x -= 0.12 * (W / Math.max(this.depth, 1)); 
                 if (this.x < 0) this.x = W;
             }
             draw() {
-                let screenY = this.docY - (window.scrollY * (0.3 + 0.7 * (100 / Math.max(this.z, 100))));
-                if (screenY < -50 || screenY > H) return;
-                let alpha = Math.min(1, W / Math.max(this.z, 1));
-                if (state === 'charging') alpha = Math.max(0.1, 1 - chargeLevel);
-                
-                bgCtx.fillStyle = this.color; bgCtx.globalAlpha = alpha;
-                bgCtx.beginPath(); bgCtx.arc(this.x, screenY, this.size, 0, Math.PI * 2); bgCtx.fill();
+                // Parallax calculations against actual window scroll.
+                let renderY = this.pageZ - (window.scrollY * (0.8 + 0.5 * (100 / Math.max(this.depth, 100))));
+                if (renderY < -100 || renderY > H + 100) return; // Save off-screen renders
+
+                let opacityFactor = Math.min(1, W / this.depth);
+                if (state === 'charge') opacityFactor = Math.max(0.1, 1 - cgLevel);
+
+                ctx.globalAlpha = opacityFactor;
+                ctx.fillStyle = this.color;
+                ctx.beginPath(); ctx.arc(this.x, renderY, this.s, 0, Math.PI * 2); ctx.fill();
             }
         }
 
-        class Particle {
+        class AtomCore {
             constructor() {
-                let type = Math.random();
-                if (type < 0.25) { 
-                    let u = Math.random(), v = Math.random();
-                    let theta = 2 * Math.PI * u, phi = Math.acos(2 * v - 1);
-                    let r = Math.random() * 0.35; 
-                    this.ox = Math.sin(phi) * Math.cos(theta) * r;
-                    this.oy = Math.sin(phi) * Math.sin(theta) * r;
-                    this.oz = Math.cos(phi) * r;
-                } else { 
+                // Core or Orbit configuration probabilities (30% pure core clump)
+                if (Math.random() < 0.3) {
+                    let u = Math.random(), v = Math.random(), theta = 2*Math.PI*u, phi = Math.acos(2*v - 1);
+                    this.ox = Math.sin(phi) * Math.cos(theta) * 0.45; // inner tight ball
+                    this.oy = Math.sin(phi) * Math.sin(theta) * 0.45;
+                    this.oz = Math.cos(phi) * 0.45;
+                } else {
                     let angle = Math.random() * Math.PI * 2;
-                    let ring = Math.floor(Math.random() * 3);
-                    let r = 0.9 + Math.random() * 0.2; 
-                    let x = Math.cos(angle) * r, z = Math.sin(angle) * r, y = (Math.random() - 0.5) * 0.08; 
-                    if (ring === 0) { let t = Math.PI / 3; this.ox = x; this.oy = y*Math.cos(t) - z*Math.sin(t); this.oz = y*Math.sin(t) + z*Math.cos(t); }
-                    else if (ring === 1) { let t = -Math.PI / 3; this.ox = x; this.oy = y*Math.cos(t) - z*Math.sin(t); this.oz = y*Math.sin(t) + z*Math.cos(t); }
+                    let rings = Math.floor(Math.random() * 3);
+                    let x = Math.cos(angle), z = Math.sin(angle), y = (Math.random()-0.5) * 0.08; 
+                    
+                    if (rings === 0) { let t = Math.PI / 3; this.ox = x; this.oy = y*Math.cos(t) - z*Math.sin(t); this.oz = y*Math.sin(t) + z*Math.cos(t); }
+                    else if (rings === 1) { let t = -Math.PI / 3; this.ox = x; this.oy = y*Math.cos(t) - z*Math.sin(t); this.oz = y*Math.sin(t) + z*Math.cos(t); }
                     else { this.ox = x; this.oy = y; this.oz = z; }
                 }
-                
-                this.x = window.innerWidth/2; this.y = window.innerHeight*0.5; this.z = 0;
-                this.tx = 0; this.ty = 0; 
-                this.color = colors[Math.floor(Math.random() * colors.length)];
-                this.size = Math.random() * 1.5 + 0.5;
+
+                // Initial assignments
+                this.x = cx; this.y = cy; this.z = 0; 
+                this.tx = 0; this.ty = 0; // Text target positions array setup
+                this.c = colors[Math.floor(Math.random() * colors.length)];
+                this.sz = Math.random() * 1.5 + 0.6;
                 this.vx = 0; this.vy = 0;
-                this.isText = false; this.isDebris = false;
+                
+                this.flagDebris = false; 
+                this.flagText = false;
             }
 
             update() {
-                if (state === 'idle' || state === 'charging') {
-                    let sx = this.ox * baseRadius, sy = this.oy * baseRadius, sz = this.oz * baseRadius;
-                    let cosY = Math.cos(rotationY), sinY = Math.sin(rotationY);
-                    let rx = sx * cosY - sz * sinY, rz = sx * sinY + sz * cosY;
-                    let cosX = Math.cos(rotationX), sinX = Math.sin(rotationX);
-                    let ry = sy * cosX - rz * sinX, finalZ = sy * sinX + rz * cosX;
+                if (state === 'idle' || state === 'charge') {
+                    // Quantum math transformations mapped into bounds natively 
+                    let rx = this.ox * baseRadius * Math.cos(rotationY) - (this.oz * baseRadius) * Math.sin(rotationY);
+                    let rz = this.ox * baseRadius * Math.sin(rotationY) + (this.oz * baseRadius) * Math.cos(rotationY);
+                    let ry = this.oy * baseRadius * Math.cos(rotationX) - rz * Math.sin(rotationX);
+                    let fZ = this.oy * baseRadius * Math.sin(rotationX) + rz * Math.cos(rotationX);
 
-                    const perspective = 800 / (800 - finalZ);
-                    this.tx = cx + rx * perspective;
-                    this.ty = cy + ry * perspective;
-                    this.z = finalZ;
-                    
-                    let spring = state === 'charging' ? 0.35 : 0.12;
-                    this.vx += (this.tx - this.x) * spring;
-                    this.vy += (this.ty - this.y) * spring;
+                    let zIndexProject = 800 / (800 - fZ);
+                    this.tx = cx + rx * zIndexProject; 
+                    this.ty = (cy - window.scrollY) + ry * zIndexProject; // Track to scroll physically!!
+                    this.z = fZ;
 
+                    let flexSpring = state === 'charge' ? 0.35 : 0.08; 
+                    this.vx += (this.tx - this.x) * flexSpring;
+                    this.vy += (this.ty - this.y) * flexSpring;
+
+                    // Interaction 
                     if (state === 'idle') {
-                        let mY = mouse.y + window.scrollY; 
-                        let mDist = Math.hypot(mouse.x - this.x, mY - this.y);
+                        let mDist = Math.hypot(mouse.x - this.x, mouse.y - this.y);
                         if (mDist < 120 && mDist > 0) {
-                            let force = (120 - mDist) / 120;
-                            this.vx -= ((mouse.x - this.x) / mDist) * force * 5;
-                            this.vy -= ((mY - this.y) / mDist) * force * 5;
+                            let pwr = (120 - mDist) / 120;
+                            this.vx -= ((mouse.x - this.x) / mDist) * pwr * 6;
+                            this.vy -= ((mouse.y - this.y) / mDist) * pwr * 6;
                         }
                     }
-                } else if (state === 'answering') {
-                    if (this.isText) {
-                        this.vx += (this.tx - this.x) * 0.08;
-                        this.vy += (this.ty - this.y) * 0.08;
-                    } else if (this.isDebris) {
-                        this.vx *= 0.95; this.vy *= 0.95; 
-                        this.vx -= 0.08 * (W / Math.max(this.z, 1));
-                        this.vy += (Math.random() - 0.5) * 0.1;
+                } 
+                else if (state === 'burst') {
+                    if (this.flagText) {
+                        this.vx += (this.tx - this.x) * 0.12; 
+                        this.vy += (this.ty - this.y) * 0.12;
+                    } else if (this.flagDebris) {
+                        this.vx *= 0.94; this.vy *= 0.94; // Drag fields locally applying 
+                        this.vx -= 0.15; // Sweep away
                     }
                 }
 
-                let friction = (state === 'answering' && !this.isText && !this.isDebris) ? 0.92 : 0.82; 
-                this.vx *= friction; this.vy *= friction;
+                let pullBlocker = (state === 'burst' && !this.flagDebris && !this.flagText) ? 0.70 : 0.86;
+                this.vx *= pullBlocker; this.vy *= pullBlocker;
                 this.x += this.vx; this.y += this.vy;
             }
 
             draw() {
-                let depthAlpha = 1;
-                if (state === 'answering') {
-                    if (this.isDebris) depthAlpha = Math.max(0, 1 - (Math.abs(this.x - cx) / (W * 0.8)));
-                    else if (!this.isText) depthAlpha = 0; 
+                let currentAlpha = 1;
+                if (state === 'burst') {
+                    if (this.flagDebris) currentAlpha = Math.max(0, 1 - (Math.abs(this.x - cx) / (W * 0.6))); 
+                    else if (!this.flagText) currentAlpha = 0; // Hides raw idle bits during txt bursts 
                 } else {
-                    depthAlpha = Math.max(0.1, (this.z + baseRadius) / (baseRadius * 2.2));
+                    currentAlpha = Math.max(0.1, (this.z + baseRadius) / (baseRadius * 2));
                 }
-                if (depthAlpha <= 0) return; 
-                bgCtx.globalAlpha = depthAlpha; bgCtx.fillStyle = this.color; 
-                let renderSize = (state === 'answering' && this.isText) ? this.size * 1.5 : this.size * (depthAlpha + 0.5);
-                bgCtx.beginPath(); bgCtx.arc(this.x, this.y, renderSize, 0, Math.PI * 2); bgCtx.fill();
+
+                if (currentAlpha > 0) {
+                    ctx.globalAlpha = currentAlpha;
+                    ctx.fillStyle = this.c;
+                    let actualS = (state === 'burst' && this.flagText) ? this.sz * 1.5 : this.sz;
+                    ctx.beginPath(); ctx.arc(this.x, this.y, actualS, 0, Math.PI * 2); ctx.fill();
+                }
             }
         }
 
-        // --- MATH & LOGIC ---
+        // Logic Processor Loop Triggers
+        function generateTextBlueprint(answerInMsg) {
+            let tmpCans = document.createElement('canvas');
+            tmpCans.width = W; tmpCans.height = H;
+            let tempLayer = tmpCans.getContext('2d');
+            
+            tempLayer.fillStyle = '#fff'; tempLayer.textAlign = 'center'; tempLayer.textBaseline = 'middle';
+            let bigFontS = Math.min(W/12, 65); 
+            tempLayer.font = `900 ${bigFontS}px "Montserrat"`;
 
-        function init() {
-            W = canvas.width = window.innerWidth;
-            H = canvas.height = window.innerHeight;
-            bgCanvas.width = cursorCanvas.width = W; 
-            bgCanvas.height = cursorCanvas.height = H;
+            // Renders perfectly in empty column slot natively
+            let messageRows = answerInMsg.split('\n');
+            let anchorRowCenter = cy - window.scrollY - 30; // Float center screen purely  
             
-            updateOraclePosition();
-
-            particles =[]; for (let i = 0; i < N; i++) particles.push(new Particle());
-            stars =[]; for (let i = 0; i < 150; i++) stars.push(new Star());
-        }
-
-        function getTextPoints(answerText) {
-            const tCanvas = document.createElement('canvas');
-            const tCtx = tCanvas.getContext('2d', { willReadFrequently: true });
-            tCanvas.width = W; tCanvas.height = H;
-            tCtx.fillStyle = 'white'; tCtx.textAlign = 'center'; tCtx.textBaseline = 'middle';
-            
-            let size = Math.min(W/12, 65); if(W < 500) size = 35;
-            tCtx.font = `900 ${size}px "Montserrat", sans-serif`;
-            
-            // Text forms perfectly high up above oracle
-            let lines = answerText.split("\n");
-            let startY = H * 0.25; 
-            
-            lines.forEach((line, i) => { tCtx.fillText(line, W/2, startY + (i * size * 1.1)); });
-
-            // HTML Quote positioned cleanly beneath
-            let quoteY = startY + (lines.length * size * 1.1) + 20;
-            quoteEl.style.top = `${quoteY}px`; 
-
-            const d = tCtx.getImageData(0, 0, W, H).data;
-            const pts =[];
-            const step = Math.min(W, H) > 800 ? 5 : 4; 
-            for (let y = 0; y < H; y += step) {
-                for (let x = 0; x < W; x += step) {
-                    if (d[(y * W + x) * 4 + 3] > 128) pts.push({ x, y: y + window.scrollY }); 
-                }
-            }
-            return pts;
-        }
-
-        function triggerAnswer() {
-            state = 'answering';
-            hintEl.style.opacity = 0;
-            flyingText.classList.add('exploded'); 
-            
-            setTimeout(() => { quoteEl.style.opacity = 1; }, 500); 
-            
-            const pts = getTextPoints(answers[Math.floor(Math.random() * answers.length)]);
-            
-            particles.forEach((p, i) => {
-                if (i < pts.length) {
-                    p.tx = pts[i].x; p.ty = pts[i].y; p.isText = true; p.isDebris = false;
-                } else {
-                    p.isText = false; p.isDebris = true;
-                    let angle = Math.random() * Math.PI * 2;
-                    let force = Math.random() * 80 + 20; 
-                    p.vx = Math.cos(angle) * force; p.vy = Math.sin(angle) * force;
-                    p.z = Math.random() * 800; 
-                }
+            messageRows.forEach((rText, indexer ) => {
+               let yOffset = anchorRowCenter - ((messageRows.length-1) * (bigFontS*1.1)/2) + (indexer * bigFontS * 1.1);
+               tempLayer.fillText(rText, W/2, yOffset);
             });
 
-            clearTimeout(answerTimer);
-            answerTimer = setTimeout(() => {
-                state = 'idle';
-                hintEl.style.opacity = 0.8;
-                quoteEl.style.opacity = 0;
-                flyingText.classList.remove('exploded'); 
-                
-                particles.forEach(p => {
-                    if (p.isDebris) { p.x = cx; p.y = cy; p.vx = 0; p.vy = 0; }
-                    p.isText = false; p.isDebris = false;
-                });
-            }, 6500); 
-        }
+            // Adjust DOM ID node cleanly underneath text lines ! >
+            quoteEl.style.top = `${anchorRowCenter + (messageRows.length * bigFontS * 1.1) + 10}px`;
 
-        // --- BINDINGS ---
-        window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-        
-        window.addEventListener('mousedown', e => {
-            let screenCy = cy - window.scrollY;
-            let dist = Math.hypot(e.clientX - cx, e.clientY - screenCy);
-            if (dist < baseRadius * 1.5 && state !== 'answering') {
-                state = 'charging'; hintEl.style.opacity = 0;
-            }
-        });
-
-        window.addEventListener('mouseup', () => {
-            if (state === 'charging') {
-                if (chargeLevel > 0.4) triggerAnswer(); else { state = 'idle'; hintEl.style.opacity = 0.8; }
-                chargeLevel = 0;
-            }
-        });
-
-        window.addEventListener('scroll', () => { if(oracleAnchor) updateOraclePosition(); });
-        window.addEventListener('resize', () => { clearTimeout(window.resizeTimer); window.resizeTimer = setTimeout(init, 300); });
-
-        // --- RENDER LOOP ---
-        function loop() {
-            bgCtx.clearRect(0, 0, W, H);
-            bgCtx.globalCompositeOperation = 'lighter';
-
-            stars.forEach(s => { s.update(); s.draw(); });
-
-            if (state === 'idle') {
-                rotationY += 0.0025; rotationX += 0.0015;
-                baseRadius += (Math.min(W, H) * 0.32 - baseRadius) * 0.1; 
-                if(baseRadius > 230) baseRadius = 230;
-            } else if (state === 'charging') {
-                chargeLevel += 0.008; 
-                rotationY += 0.02 + (chargeLevel * 0.06); rotationX += 0.01 + (chargeLevel * 0.06);
-                baseRadius -= chargeLevel * 2; 
-                bgCtx.save(); bgCtx.translate(Math.random() * 4 - 2, Math.random() * 4 - 2);
-            }
-
-            bgCtx.save();
-            bgCtx.translate(0, -window.scrollY); 
-
-            if (state !== 'answering') {
-                bgCtx.lineWidth = 0.4;
-                for (let i = 0; i < N; i += 12) { 
-                    for (let j = i + 1; j < N; j += 12) {
-                        let dx = particles[i].x - particles[j].x; let dy = particles[i].y - particles[j].y;
-                        let distSq = dx * dx + dy * dy;
-                        if (distSq < 4000) {
-                            bgCtx.strokeStyle = `rgba(0, 243, 255, ${0.15 * (1 - distSq/4000)})`;
-                            bgCtx.beginPath(); bgCtx.moveTo(particles[i].x, particles[i].y); bgCtx.lineTo(particles[j].x, particles[j].y); bgCtx.stroke();
-                        }
+            let pixelImgArr = tempLayer.getImageData(0,0,W,H).data;
+            let resultBluePnts = [];
+            // Optimize array gaps
+            for (let localY = 0; localY < H; localY += 4) {
+                for (let localX = 0; localX < W; localX += 4) {
+                    if (pixelImgArr[(localY * W + localX)*4 +3] > 120) {
+                        resultBluePnts.push({ x: localX, y: localY });
                     }
                 }
             }
-
-            particles.forEach(p => { p.update(); p.draw(); });
-            bgCtx.restore(); 
-            if (state === 'charging') bgCtx.restore(); 
-
-            cursorCtx.clearRect(0, 0, W, H);
-            if (mouse.x > 0 && mouse.y > 0) {
-                mouseTrail.push({x: mouse.x, y: mouse.y});
-                if (mouseTrail.length > 20) mouseTrail.shift();
-                cursorCtx.globalCompositeOperation = 'lighter';
-                for (let i = 0; i < mouseTrail.length; i++) {
-                    let pt = mouseTrail[i]; let ratio = i / mouseTrail.length;
-                    cursorCtx.beginPath(); cursorCtx.arc(pt.x, pt.y, ratio * 3.5, 0, Math.PI * 2);
-                    cursorCtx.fillStyle = `rgba(0, 243, 255, ${ratio})`; cursorCtx.fill();
-                }
-                let head = mouseTrail[mouseTrail.length - 1];
-                if(head) {
-                    cursorCtx.beginPath(); cursorCtx.arc(head.x, head.y, 4, 0, Math.PI * 2);
-                    cursorCtx.fillStyle = '#ffffff'; cursorCtx.fill();
-                }
-                cursorCtx.globalCompositeOperation = 'source-over';
-            } else if (mouseTrail.length > 0) mouseTrail.shift();
-
-            bgCtx.globalAlpha = 1.0;
-            requestAnimationFrame(loop);
+            return resultBluePnts;
         }
 
-        // Guaranteed execution
-        init(); 
-        requestAnimationFrame(loop);
+        // Engine Runner Sequence
+        function RunSystemLoop() {
+            ctx.fillStyle = '#030305';
+            ctx.fillRect(0,0,W,H);
+            
+            ctx.globalCompositeOperation = 'source-over'; 
+
+            stars.forEach(st => { st.update(); st.draw(); });
+
+            if (state === 'idle') {
+                rotationX += 0.001; rotationY += 0.003;
+                let t_r = Math.min(W, H) * 0.32; 
+                baseRadius += ((t_r > 220 ? 220 : t_r) - baseRadius) * 0.1;
+            } else if (state === 'charge') {
+                cgLevel += 0.015;
+                rotationX += 0.02 + cgLevel*0.05; rotationY += 0.02 + cgLevel*0.05;
+                baseRadius -= cgLevel * 5; 
+                if (baseRadius < 10) baseRadius = 10;
+                
+                // Active Visual Shakes during build-ups
+                ctx.save(); ctx.translate(Math.random()*4-2, Math.random()*4-2);
+            }
+
+            // Central Lines Linkages Process
+            if (state !== 'burst') {
+                ctx.lineWidth = 0.4; ctx.globalCompositeOperation = 'lighter';
+                for (let i = 0; i < N; i += 18) {
+                    for (let j = i+1; j < N; j += 18) {
+                        let distanceQ = Math.hypot(particles[i].x - particles[j].x, particles[i].y - particles[j].y);
+                        if (distanceQ < 50) {
+                             ctx.strokeStyle = `rgba(0, 243, 255, ${0.1 * (1-distanceQ/50)})`;
+                             ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
+                        }
+                    }
+                }
+                ctx.globalCompositeOperation = 'source-over';
+            }
+
+            // Output all items functionally
+            particles.forEach(pt => { pt.update(); pt.draw(); });
+            if (state === 'charge') { ctx.restore(); } 
+
+            // Pointer Tracking Trail Effects Custom 
+            if (mouse.x > 0 && mouse.y > 0) {
+                trail.push({x:mouse.x, y:mouse.y});
+                if (trail.length > 20) trail.shift();
+                
+                ctx.globalCompositeOperation = 'lighter';
+                trail.forEach((pt, loopindex) => {
+                     let tracerOptM = loopindex / trail.length;
+                     ctx.fillStyle = `rgba(0,243,255,${tracerOptM})`;
+                     ctx.beginPath(); ctx.arc(pt.x, pt.y, tracerOptM * 4, 0, Math.PI*2); ctx.fill();
+                });
+
+                if (trail.length > 0) {
+                   let mainHdr = trail[trail.length-1];
+                   ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(mainHdr.x, mainHdr.y, 4.5, 0, Math.PI*2); ctx.fill();
+                }
+                ctx.globalCompositeOperation = 'source-over';
+            }
+
+            requestAnimationFrame(RunSystemLoop);
+        }
+
+        // DOM Loading and Attachments cleanly mapped
+        window.addEventListener('DOMContentLoaded', () => {
+            updateScreen();
+            
+            // Build elements strictly safely now	
+            for(let i=0; i<N; i++) particles.push(new AtomCore());
+            for(let i=0; i<150; i++) stars.push(new StarBg());
+
+            // Pointer interactions strictly 
+            window.addEventListener('mousemove', e => { 
+                mouse.x = e.clientX; mouse.y = e.clientY; 
+            });
+
+            window.addEventListener('mousedown', e => { 
+                let hitDist = Math.hypot(mouse.x - cx, mouse.y - cy );
+                if (hitDist < 300 && state !== 'burst') { 
+                    state = 'charge'; 
+                    hintEl.style.opacity = 0; 
+                } 
+            });
+
+            window.addEventListener('mouseup', e => { 
+               if (state === 'charge') {
+                    if (cgLevel > 0.4) {
+                        // Explosion Function call execution logically safe here 
+                        state = 'burst';
+                        heroText.classList.add('exploded'); 
+                        quoteEl.style.opacity = 1;
+
+                        const rawDestPoints = generateTextBlueprint(answerPool[Math.floor(Math.random()*answerPool.length)]);
+                        
+                        particles.forEach((pBits, countid) => {
+                            if (countid < rawDestPoints.length) {
+                                pBits.tx = rawDestPoints[countid].x; pBits.ty = rawDestPoints[countid].y;
+                                pBits.flagText = true; pBits.flagDebris = false; 
+                            } else {
+                                pBits.flagText = false; pBits.flagDebris = true;
+                                let fAtk = Math.random()*80 + 30; let angL = Math.random()*2 * Math.PI;
+                                pBits.vx = Math.cos(angL)*fAtk; pBits.vy = Math.sin(angL)*fAtk; 
+                            }
+                        });
+
+                        setTimeout(() => {
+                           // Resets layout correctly
+                           state = 'idle'; cgLevel = 0; hintEl.style.opacity = 0.8;
+                           heroText.classList.remove('exploded'); quoteEl.style.opacity = 0;
+                           
+                           particles.forEach(ps=> {
+                              if (ps.flagDebris) { ps.x = cx; ps.y = cy; ps.vx = 0; ps.vy = 0; }
+                              ps.flagDebris = false; ps.flagText = false;
+                           });
+                        }, 5800); // Back into rotation gracefully
+                    } else {
+                         state = 'idle'; hintEl.style.opacity = 0.8; cgLevel = 0;
+                    }
+               }
+            });
+
+            window.addEventListener('resize', updateScreen);
+            
+            // Render kickstart perfectly safely
+            requestAnimationFrame(RunSystemLoop);
+        });
+
     </script>
 </body>
 </html>
