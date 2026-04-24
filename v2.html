@@ -5,8 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portfolio | Priyash Vasava</title>
     
-    <!-- Link to your existing external stylesheet -->
+    <!-- External stylesheet -->
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@300;600;800&family=Montserrat:wght@300;900&display=swap" rel="stylesheet">
     
     <style>
         /* --- QUANTUM ORACLE HERO SECTION --- */
@@ -16,7 +21,6 @@
             height: 100vh;
             background-color: #030305; /* Deep void navy */
             overflow: hidden;
-            font-family: 'Courier New', Courier, monospace;
         }
 
         #hero-canvas-container canvas {
@@ -24,104 +28,110 @@
             width: 100%;
             height: 100%;
             position: absolute;
-            top: 0;
-            left: 0;
+            top: 0; left: 0;
             z-index: 1;
             cursor: crosshair;
         }
 
-        /* Float your original navbar over the canvas */
+        /* --- NAVBAR STYLED AS HUD (From Screenshot 2) --- */
         #hero-canvas-container .navbar {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
+            top: 0; left: 0; width: 100%;
             z-index: 100;
-        }
-
-        /* Quantum Oracle HUD Overlay */
-        #hud {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 10;
             display: flex;
-            flex-direction: column;
             justify-content: space-between;
-            padding: 80px 40px 40px 40px; /* Padding accommodates navbar */
-            box-sizing: border-box;
-            background: radial-gradient(circle at center, transparent 40%, rgba(3,3,5,0.8) 100%);
+            align-items: center;
+            padding: 40px 50px;
+            pointer-events: none; /* Let clicks pass through empty space */
         }
 
-        .hud-text {
+        .navbar .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 16px;
+            color: #fff;
+            letter-spacing: 2px;
+            text-decoration: none;
+            pointer-events: auto;
+        }
+
+        .navbar .nav-links {
+            display: flex;
+            gap: 30px;
+            pointer-events: auto;
+        }
+
+        /* Applying the SYS.PORTFOLIO.V1 style to Nav Links */
+        .navbar .nav-links a {
+            font-family: 'Courier Prime', monospace;
             color: #00f3ff;
             font-size: 12px;
             letter-spacing: 4px;
             text-transform: uppercase;
             text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
-            opacity: 0.7;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: all 0.3s ease;
         }
-
-        /* Center Prompt (Replaces Hero Statement) */
-        #prompt {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            transition: opacity 0.3s;
-            pointer-events: none; /* Lets clicks pass through to canvas */
-            z-index: 20;
-        }
-
-        .title {
-            font-size: 22px;
-            font-weight: bold;
+        .navbar .nav-links a:hover {
+            opacity: 1;
             color: #fff;
-            margin-bottom: 15px;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+        }
+
+        /* --- STATIC HERO TEXT OVERLAY --- */
+        #hero-text-overlay {
+            position: absolute;
+            top: 20%; /* Safely above the Oracle */
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 20;
+            pointer-events: none; /* Clicks pass through to canvas */
+            transition: opacity 0.3s;
+        }
+
+        #hero-text-overlay .title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 22px;
+            font-weight: 900;
+            color: #fff;
             letter-spacing: 6px;
-            line-height: 1.6;
+            line-height: 1.8;
             text-shadow: 0 0 20px rgba(255,255,255,0.5);
         }
 
-        .blue-text {
+        #hint {
+            position: absolute;
+            bottom: 12%; /* Safely below the Oracle */
+            left: 50%;
+            transform: translateX(-50%);
             color: #00f3ff;
+            font-family: 'Courier Prime', monospace;
             font-size: 12px;
             letter-spacing: 4px;
             text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
             text-transform: uppercase;
-            opacity: 1;
+            pointer-events: none;
+            z-index: 20;
+            transition: opacity 0.3s;
         }
 
         /* Scanline effect */
         .scanlines {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0) 50%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.1));
             background-size: 100% 4px;
-            pointer-events: none;
-            z-index: 5;
-            opacity: 0.3;
+            pointer-events: none; z-index: 5; opacity: 0.3;
         }
 
-        /* --- ORIGINAL PORTFOLIO STYLES (Grid Adjustments) --- */
-        body { background-color: #030305; }
-        .case-wrapper { padding-top: 60px; }
-
-        .sidebar-bio {
-            grid-column: 2; /* Center alignment */
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            padding-top: 20px;
-            margin-bottom: 60px;
-            border-bottom: 1px solid var(--border-subtle, #333);
-            padding-bottom: 40px;
-        }
+        /* --- ORIGINAL PORTFOLIO STYLES (Below the fold) --- */
+        body { background-color: #030305; margin: 0; }
+        .case-wrapper { padding-top: 60px; max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 2fr 1fr; }
+        .sidebar-bio { grid-column: 2; display: flex; flex-direction: column; gap: 16px; padding-top: 20px; margin-bottom: 60px; border-bottom: 1px solid var(--border-subtle, #333); padding-bottom: 40px; }
         .sidebar-img { width: 80px; height: 80px; border-radius: 4px; object-fit: cover; filter: grayscale(100%) contrast(1.2); }
         .sidebar-bio p { font-size: 0.85rem; line-height: 1.7; color: var(--text-muted, #888); margin: 0; max-width: 800px; }
         .sidebar-bio a { font-size: 0.75rem; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; color: var(--text-main, #fff); text-transform: uppercase; letter-spacing: 0.05em; }
-
         .projects-container { grid-column: 2; display: flex; flex-direction: column; margin-bottom: 80px; }
         .project-row { display: grid; grid-template-columns: 200px 1fr; gap: 30px; padding: 30px 0; border-top: 1px solid var(--border-subtle, #333); align-items: center; transition: opacity 0.3s ease; text-decoration: none; }
         .project-row:hover { opacity: 0.7; }
@@ -130,15 +140,16 @@
         .project-info p { font-size: 0.9rem; color: var(--text-muted, #888); margin-bottom: 12px; line-height: 1.6; }
         .slide-tags { display: flex; gap: 8px; }
         .slide-tags span { font-size: 0.7rem; color: var(--text-main, #fff); background: var(--bg-void, #111); padding: 4px 8px; border: 1px solid var(--border-subtle, #333); border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
-
         .connect-section { grid-column: 2; text-align: center; padding: 60px 0; border-top: 1px solid var(--border-subtle, #333); }
         .connect-section blockquote { font-size: 1.1rem; color: var(--text-main, #fff); font-style: italic; margin-bottom: 30px; }
         .connect-links a { display: inline-block; margin: 0 10px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted, #888); border: 1px solid var(--border-subtle, #333); padding: 8px 16px; border-radius: 4px; transition: 0.3s; text-decoration: none; }
         .connect-links a:hover { color: var(--text-main, #fff); border-color: var(--text-muted, #888); }
-
+        
         @media (max-width: 950px) {
+            .case-wrapper { display: flex; flex-direction: column; padding: 0 20px; }
             .project-row { grid-template-columns: 1fr; gap: 16px; }
-            .sidebar-bio { grid-column: 1; align-items: center; text-align: center; margin-top: 40px; }
+            .sidebar-bio { align-items: center; text-align: center; margin-top: 40px; }
+            #hero-text-overlay .title { font-size: 16px; }
         }
     </style>
 </head>
@@ -148,25 +159,22 @@
     <div id="hero-canvas-container">
         
         <nav class="navbar">
-            <a href="/" class="logo">Priyash Vasava</a>
+            <a href="/" class="logo">PRIYASH VASAVA</a>
             <div class="nav-links">
-                <a href="#projects">Projects</a>
-                <a href="blog.html">Blog</a>
-                <a href="who-am-i.html">Who Am I?</a>
-                <a href="#connect">Connect</a>
+                <a href="#projects">PROJECTS</a>
+                <a href="blog.html">BLOG</a>
+                <a href="who-am-i.html">WHO AM I?</a>
+                <a href="#connect">CONNECT</a>
             </div>
         </nav>
 
         <div class="scanlines"></div>
-        
-        <div id="hud">
-            <div class="hud-text">SYS.PORTFOLIO.V1 // SECURE CONNECTION</div>
+
+        <div id="hero-text-overlay">
+            <div class="title">ANALYST BY DAY<br>VIBE CODER<br>BY NIGHT</div>
         </div>
 
-        <div id="prompt">
-            <div class="title">ANALYST BY DAY<br>VIBE CODER<br>BY NIGHT</div>
-            <div class="blue-text">CLICK AND HOLD TO BLOW YOUR MIND</div>
-        </div>
+        <div id="hint">CLICK AND HOLD TO BLOW YOUR MIND</div>
 
         <canvas id="c"></canvas>
     </div>
@@ -222,181 +230,199 @@
     <script>
         const canvas = document.getElementById('c');
         const ctx = canvas.getContext('2d');
-        const promptEl = document.getElementById('prompt');
+        const overlayEl = document.getElementById('hero-text-overlay');
+        const hintEl = document.getElementById('hint');
         
         let W, H, cx, cy;
-        const N = 2500; // Dense particle count
+        const N = 2600; 
         let particles =[];
+        let stars =[];
         
-        // 3D Sphere Variables
-        let sphereRadius = 280;
-        let baseRadius = 280;
+        let sphereRadius = 240;
+        let baseRadius = 240;
         let rotationX = 0;
         let rotationY = 0;
         
-        // States
-        let state = 'idle'; // idle, charging, answering
+        let state = 'idle'; 
         let chargeLevel = 0;
         let answerTimer = 0;
-        const mouse = { x: -1000, y: -1000, isDown: false };
+        let introAlpha = 0; // For smooth fade in
 
+        // 15 Specific Magic 8-Ball Answers
         const answers =[
-            "CERTAIN", "DECIDEDLY SO", "WITHOUT A DOUBT", "DEFINITELY", "RELY ON IT",
-            "YES", "MOST LIKELY", "OUTLOOK GOOD", "SIGNS POINT TO YES", "AFFIRMATIVE",
-            "HAZY TRY AGAIN", "ASK LATER", "BETTER NOT TELL", "CANNOT PREDICT", "CONCENTRATE",
-            "DON'T COUNT ON IT", "NO", "SOURCES SAY NO", "OUTLOOK POOR", "DOUBTFUL",
-            "VIBE CHECK:\nPASSED", "VIBE CHECK:\nFAILED", "IT'S A FEATURE\nNOT A BUG", 
-            "DEPLOY ON\nFRIDAY", "CTRL + Z", "THE DATA\nSAYS YES", "SKILL\nISSUE", "LGTM"
+            // 5 Positive
+            "IT IS CERTAIN", "WITHOUT\nA DOUBT", "YES\nDEFINITELY", "OUTLOOK\nGOOD", "SIGNS POINT\nTO YES",
+            // 5 Negative
+            "DON'T COUNT\nON IT", "MY REPLY\nIS NO", "SOURCES\nSAY NO", "OUTLOOK\nPOOR", "VERY\nDOUBTFUL",
+            // 5 Wild Card
+            "VIBE CHECK:\nPASSED", "ERROR 404:\nNOT FOUND", "DEPLOY ON\nFRIDAY", "SKILL\nISSUE", "CTRL + Z"
         ];
 
-        // Quantum Colors
-        const colors = ['#00f3ff', '#b026ff', '#ffffff'];
+        // Original Quantum Colors
+        const colors =['#00f3ff', '#b026ff', '#ffffff'];
 
-        function init() {
-            W = canvas.width = document.getElementById('hero-canvas-container').clientWidth;
-            H = canvas.height = document.getElementById('hero-canvas-container').clientHeight;
-            cx = W / 2;
-            cy = H / 2;
-            
-            // Adjust radius for mobile
-            baseRadius = Math.min(W, H) * 0.35;
-            if(baseRadius > 300) baseRadius = 300;
-            sphereRadius = baseRadius;
+        // --- BACKGROUND STARS ---
+        class Star {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * W;
+                this.y = Math.random() * H;
+                this.z = Math.random() * W; 
+                this.size = Math.random() * 1.5;
+                this.color = Math.random() > 0.8 ? '#00f3ff' : '#ffffff';
+            }
+            update() {
+                if (state === 'charging') {
+                    // Warp inward
+                    let dx = cx - this.x; let dy = cy - this.y;
+                    this.x += dx * 0.01 * chargeLevel;
+                    this.y += dy * 0.01 * chargeLevel;
+                    if (Math.abs(dx) < 10 && Math.abs(dy) < 10) this.reset();
+                } else {
+                    // Drift left naturally
+                    this.x -= 0.15 * (W / this.z); 
+                    if (this.x < 0) this.x = W;
+                }
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = introAlpha * (state === 'charging' ? Math.max(0.1, 1 - chargeLevel) : Math.min(1, W / this.z));
+                if (state === 'charging' && chargeLevel > 0.1) {
+                    ctx.beginPath(); ctx.moveTo(this.x, this.y);
+                    let dx = cx - this.x; let dy = cy - this.y;
+                    ctx.lineTo(this.x - dx * 0.06 * chargeLevel, this.y - dy * 0.06 * chargeLevel);
+                    ctx.strokeStyle = this.color; ctx.lineWidth = this.size; ctx.stroke();
+                } else {
+                    ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill();
+                }
+            }
         }
 
-        // 3D Math Helper
+        // --- QUANTUM PARTICLES ---
         function randomSpherePoint() {
-            const u = Math.random();
-            const v = Math.random();
-            const theta = 2 * Math.PI * u;
-            const phi = Math.acos(2 * v - 1);
-            return {
-                x: Math.sin(phi) * Math.cos(theta),
-                y: Math.sin(phi) * Math.sin(theta),
-                z: Math.cos(phi)
-            };
+            const u = Math.random(); const v = Math.random();
+            const theta = 2 * Math.PI * u; const phi = Math.acos(2 * v - 1);
+            return { x: Math.sin(phi) * Math.cos(theta), y: Math.sin(phi) * Math.sin(theta), z: Math.cos(phi) };
         }
 
         class Particle {
             constructor() {
                 const pt = randomSpherePoint();
-                this.ox = pt.x; 
-                this.oy = pt.y;
-                this.oz = pt.z;
+                this.ox = pt.x; this.oy = pt.y; this.oz = pt.z;
                 
-                this.x = 0; this.y = 0; this.z = 0;
+                // Set EXACT initial 3D projection so they don't fly in from 0,0
+                this.z = this.oz * baseRadius;
+                const perspective = 800 / (800 - this.z);
+                this.x = (window.innerWidth/2) + (this.ox * baseRadius) * perspective; 
+                this.y = (window.innerHeight*0.6) + (this.oy * baseRadius) * perspective;
+                
                 this.tx = 0; this.ty = 0; 
-                
                 this.color = colors[Math.floor(Math.random() * colors.length)];
                 this.size = Math.random() * 1.5 + 0.5;
-                
                 this.vx = 0; this.vy = 0;
-                this.assignedText = false;
+                this.isText = false;
             }
 
             update(time) {
                 if (state === 'idle' || state === 'charging') {
-                    // 3D Math for orbiting sphere
+                    // Normal 3D Orbit
                     let currentRadius = sphereRadius + (Math.sin(time * 0.002 + this.ox * 10) * 10); 
                     
-                    let sx = this.ox * currentRadius;
-                    let sy = this.oy * currentRadius;
-                    let sz = this.oz * currentRadius;
-
+                    let sx = this.ox * currentRadius; let sy = this.oy * currentRadius; let sz = this.oz * currentRadius;
                     let cosY = Math.cos(rotationY), sinY = Math.sin(rotationY);
-                    let rx = sx * cosY - sz * sinY;
-                    let rz = sx * sinY + sz * cosY;
-
+                    let rx = sx * cosY - sz * sinY; let rz = sx * sinY + sz * cosY;
                     let cosX = Math.cos(rotationX), sinX = Math.sin(rotationX);
-                    let ry = sy * cosX - rz * sinX;
-                    let finalZ = sy * sinX + rz * cosX;
+                    let ry = sy * cosX - rz * sinX; let finalZ = sy * sinX + rz * cosX;
 
                     const perspective = 800 / (800 - finalZ);
                     this.tx = cx + rx * perspective;
                     this.ty = cy + ry * perspective;
                     this.z = finalZ;
-                    this.assignedText = false;
-                }
+                    
+                    let dx = this.tx - this.x; let dy = this.ty - this.y;
+                    let spring = state === 'charging' ? 0.3 : 0.1;
+                    this.vx += dx * spring; this.vy += dy * spring;
+                    this.vx *= 0.9; this.vy *= 0.9;
 
-                // Spring physics
-                let spring = state === 'answering' ? 0.05 : 0.1;
-                if (state === 'charging') spring = 0.3;
-                
-                let dx = this.tx - this.x;
-                let dy = this.ty - this.y;
-                
-                this.vx += dx * spring;
-                this.vy += dy * spring;
-                
-                // Friction
-                let friction = state === 'answering' ? 0.85 : 0.9;
-                this.vx *= friction;
-                this.vy *= friction;
-
-                // Mouse Repulsion (only in idle)
-                if (state === 'idle') {
-                    let mx = mouse.x - this.x;
-                    let my = mouse.y - this.y;
-                    let dist = Math.sqrt(mx*mx + my*my);
-                    if (dist < 100) {
-                        let force = (100 - dist) / 100;
-                        this.vx -= (mx / dist) * force * 5;
-                        this.vy -= (my / dist) * force * 5;
+                } else if (state === 'answering') {
+                    if (this.isText) {
+                        // Snap smoothly into Typography
+                        this.vx += (this.tx - this.x) * 0.06;
+                        this.vy += (this.ty - this.y) * 0.06;
+                        this.vx *= 0.82; this.vy *= 0.82;
+                    } else {
+                        // Slow-Mo Majestic Floating Debris
+                        this.vx *= 0.92; // Heavy drag creates slow-mo
+                        this.vy *= 0.92;
+                        // Add tiny ambient drift
+                        this.vx += (Math.random() - 0.5) * 0.1;
+                        this.vy += (Math.random() - 0.5) * 0.1;
                     }
                 }
 
-                this.x += this.vx;
-                this.y += this.vy;
+                this.x += this.vx; this.y += this.vy;
             }
 
             draw() {
-                let alpha = state === 'answering' ? 1 : Math.max(0.1, (this.z + baseRadius) / (baseRadius * 2));
-                if (alpha < 0) alpha = 0;
+                // Fade by depth when idle
+                let depthAlpha = state === 'answering' ? 1 : Math.max(0.1, (this.z + baseRadius) / (baseRadius * 2));
+                if (depthAlpha < 0) depthAlpha = 0;
                 
-                ctx.globalAlpha = alpha;
-                ctx.fillStyle = this.color;
+                ctx.globalAlpha = introAlpha * depthAlpha;
+                ctx.fillStyle = this.color; // NOTE: COLOR NEVER CHANGES
                 
-                let renderSize = state === 'answering' ? this.size * 1.5 : this.size * (alpha + 0.5);
+                let renderSize = state === 'answering' && this.isText ? this.size * 1.5 : this.size * (depthAlpha + 0.5);
 
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, renderSize, 0, Math.PI * 2);
-                ctx.fill();
+                ctx.beginPath(); ctx.arc(this.x, this.y, renderSize, 0, Math.PI * 2); ctx.fill();
             }
         }
 
-        // Initialize Particles
-        for (let i = 0; i < N; i++) particles.push(new Particle());
+        // --- CORE LOGIC ---
 
-        // Extract Text Coordinates for Answer
-        function getTextPoints(text) {
+        function init() {
+            W = canvas.width = document.getElementById('hero-canvas-container').clientWidth;
+            H = canvas.height = document.getElementById('hero-canvas-container').clientHeight;
+            cx = W / 2;
+            cy = H * 0.6; // Oracle sits perfectly below the top text
+            
+            baseRadius = Math.min(W, H) * 0.28;
+            if(baseRadius > 260) baseRadius = 260;
+            sphereRadius = baseRadius;
+
+            particles =[];
+            for (let i = 0; i < N; i++) particles.push(new Particle());
+
+            stars =[];
+            for (let i = 0; i < 150; i++) stars.push(new Star());
+        }
+
+        function getTextPoints(answerText) {
             const tCanvas = document.createElement('canvas');
             const tCtx = tCanvas.getContext('2d', { willReadFrequently: true });
             tCanvas.width = W; tCanvas.height = H;
             
-            tCtx.fillStyle = 'white';
-            tCtx.textAlign = 'center';
-            tCtx.textBaseline = 'middle';
+            tCtx.fillStyle = 'white'; tCtx.textAlign = 'center'; tCtx.textBaseline = 'middle';
             
-            let size = Math.min(W/10, 90);
-            if(W < 500) size = 40;
-            tCtx.font = `bold ${size}px "Courier New", monospace`;
-            
-            let lines = text.split("\n");
-            let startY = (H / 2) - ((size * 1.1 * (lines.length - 1)) / 2);
-            
-            lines.forEach((line, i) => { 
-                tCtx.fillText(line, W/2, startY + (i * size * 1.1)); 
-            });
+            // 1. Big Answer Text
+            let size = Math.min(W/12, 70); if(W < 500) size = 35;
+            tCtx.font = `900 ${size}px "Montserrat", sans-serif`;
+            let lines = answerText.split("\n");
+            let startY = cy - ((size * 1.1 * (lines.length - 1)) / 2) - 20;
+            lines.forEach((line, i) => { tCtx.fillText(line, W/2, startY + (i * size * 1.1)); });
+
+            // 2. Small "- says the magic 8 ball" Text
+            let subSize = Math.min(W/35, 14); if (subSize < 10) subSize = 10;
+            tCtx.font = `400 ${subSize}px "Courier Prime", monospace`;
+            tCtx.letterSpacing = "2px";
+            let subY = startY + (lines.length * size * 1.1) + 10;
+            tCtx.fillText("- says the magic 8 ball", W/2, subY);
 
             const imgData = tCtx.getImageData(0, 0, W, H).data;
             const points =[];
             const step = Math.min(W, H) > 800 ? 5 : 4; 
-
             for (let y = 0; y < H; y += step) {
                 for (let x = 0; x < W; x += step) {
-                    if (imgData[(y * W + x) * 4 + 3] > 128) {
-                        points.push({ x, y });
-                    }
+                    if (imgData[(y * W + x) * 4 + 3] > 128) points.push({ x, y });
                 }
             }
             return points;
@@ -404,127 +430,118 @@
 
         function triggerAnswer() {
             state = 'answering';
-            promptEl.style.opacity = 0;
+            overlayEl.style.opacity = 0;
+            hintEl.style.opacity = 0;
+            
             const answer = answers[Math.floor(Math.random() * answers.length)];
             const pts = getTextPoints(answer);
             
             particles.forEach((p, i) => {
                 if (i < pts.length) {
-                    p.tx = pts[i].x;
-                    p.ty = pts[i].y;
-                    p.assignedText = true;
-                    p.color = Math.random() > 0.8 ? '#ffffff' : '#00f3ff';
+                    p.tx = pts[i].x; p.ty = pts[i].y; p.isText = true;
+                    // Strict rule: Colors DO NOT change.
                 } else {
-                    p.tx = cx + (Math.random() - 0.5) * W * 2;
-                    p.ty = cy + (Math.random() - 0.5) * H * 2;
-                    p.color = '#b026ff';
+                    p.isText = false;
+                    // Massive outward blast velocity for slow-mo effect
+                    let angle = Math.random() * Math.PI * 2;
+                    let force = Math.random() * 45 + 15;
+                    p.vx = Math.cos(angle) * force;
+                    p.vy = Math.sin(angle) * force;
+                    // Strict rule: Colors DO NOT change.
                 }
             });
 
             clearTimeout(answerTimer);
             answerTimer = setTimeout(() => {
                 state = 'idle';
-                promptEl.style.opacity = 1;
-                particles.forEach(p => p.color = colors[Math.floor(Math.random() * colors.length)]);
-            }, 5000); // Back to sphere after 5s
+                overlayEl.style.opacity = 1;
+                hintEl.style.opacity = 1;
+            }, 6000); // Back to sphere after 6 seconds
         }
 
-        // Interaction Listeners (Attached to canvas container so it doesn't block HTML Nav)
-        const container = document.getElementById('hero-canvas-container');
+        // --- INTERACTION ---
 
-        container.addEventListener('mousemove', e => {
-            const rect = container.getBoundingClientRect();
-            mouse.x = e.clientX - rect.left;
-            mouse.y = e.clientY - rect.top;
-        });
+        const container = document.getElementById('hero-canvas-container');
         
         container.addEventListener('mousedown', () => {
             if (state === 'answering') return;
-            mouse.isDown = true;
             state = 'charging';
-            promptEl.style.opacity = 0.1;
+            overlayEl.style.opacity = 0.1;
+            hintEl.style.opacity = 0.1;
         });
 
         window.addEventListener('mouseup', () => {
             if (state === 'answering') return;
-            mouse.isDown = false;
-            
-            if (chargeLevel > 0.4) {
-                triggerAnswer();
-            } else {
-                state = 'idle';
-                promptEl.style.opacity = 1;
-            }
+            if (chargeLevel > 0.4) { triggerAnswer(); } 
+            else { state = 'idle'; overlayEl.style.opacity = 1; hintEl.style.opacity = 1; }
             chargeLevel = 0;
         });
 
         container.addEventListener('touchstart', e => {
-            const rect = container.getBoundingClientRect();
-            mouse.x = e.touches[0].clientX - rect.left; mouse.y = e.touches[0].clientY - rect.top;
-            if (state !== 'answering') { mouse.isDown = true; state = 'charging'; promptEl.style.opacity = 0.1; }
+            if (state !== 'answering') { state = 'charging'; overlayEl.style.opacity = 0.1; hintEl.style.opacity = 0.1; }
         });
-        
         window.addEventListener('touchend', () => {
-            mouse.isDown = false;
             if (state !== 'answering') {
                 if (chargeLevel > 0.4) triggerAnswer();
-                else { state = 'idle'; promptEl.style.opacity = 1; }
+                else { state = 'idle'; overlayEl.style.opacity = 1; hintEl.style.opacity = 1; }
                 chargeLevel = 0;
             }
         });
 
         window.addEventListener('resize', () => { clearTimeout(window.resizeTimer); window.resizeTimer = setTimeout(init, 300); });
 
-        // Main Loop
+        // --- RENDER LOOP ---
+
         function loop(time) {
+            // Smooth fade-in at the start
+            if (introAlpha < 1) introAlpha += 0.015;
+
             ctx.globalCompositeOperation = 'source-over';
-            ctx.fillStyle = 'rgba(3, 3, 5, 0.25)';
+            ctx.fillStyle = '#030305';
             ctx.fillRect(0, 0, W, H);
             
             ctx.globalCompositeOperation = 'lighter';
 
+            // Draw Stars First
+            stars.forEach(s => { s.update(); s.draw(); });
+
             if (state === 'idle') {
-                rotationY += 0.003;
-                rotationX += 0.002;
+                rotationY += 0.003; rotationX += 0.002;
                 sphereRadius += (baseRadius - sphereRadius) * 0.1;
             } else if (state === 'charging') {
-                chargeLevel += 0.015;
-                rotationY += 0.02 + (chargeLevel * 0.05); 
-                rotationX += 0.02 + (chargeLevel * 0.05);
-                sphereRadius = baseRadius - (chargeLevel * 150); 
-                
+                chargeLevel += 0.01;
+                rotationY += 0.02 + (chargeLevel * 0.06); 
+                rotationX += 0.02 + (chargeLevel * 0.06);
+                sphereRadius = baseRadius - (chargeLevel * 140); 
+                // Shake
                 ctx.translate(Math.random() * 4 - 2, Math.random() * 4 - 2);
             } else {
                 ctx.setTransform(1, 0, 0, 1, 0, 0); 
             }
 
+            // Draw Plexus Lines (Idle/Charging only)
             if (state !== 'answering') {
                 ctx.lineWidth = 0.5;
-                for (let i = 0; i < N; i += 8) { 
-                    for (let j = i + 1; j < N; j += 8) {
-                        let dx = particles[i].x - particles[j].x;
-                        let dy = particles[i].y - particles[j].y;
+                for (let i = 0; i < N; i += 10) { 
+                    for (let j = i + 1; j < N; j += 10) {
+                        let dx = particles[i].x - particles[j].x; let dy = particles[i].y - particles[j].y;
                         let distSq = dx * dx + dy * dy;
                         if (distSq < 3000) {
-                            ctx.strokeStyle = `rgba(0, 243, 255, ${0.15 * (1 - distSq/3000)})`;
-                            ctx.beginPath();
-                            ctx.moveTo(particles[i].x, particles[i].y);
-                            ctx.lineTo(particles[j].x, particles[j].y);
-                            ctx.stroke();
+                            ctx.strokeStyle = `rgba(0, 243, 255, ${introAlpha * 0.15 * (1 - distSq/3000)})`;
+                            ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke();
                         }
                     }
                 }
             }
 
-            particles.forEach(p => {
-                p.update(time);
-                p.draw();
-            });
+            // Draw Quantum Particles
+            particles.forEach(p => { p.update(time); p.draw(); });
 
             ctx.setTransform(1, 0, 0, 1, 0, 0); 
             requestAnimationFrame(loop);
         }
 
+        // Wait for custom fonts to load so the answer typography doesn't break
         document.fonts.ready.then(() => {
             init();
             requestAnimationFrame(loop);
