@@ -6,15 +6,41 @@
     <title>Olist Analysis | Priyash Vasava</title>
     <link rel="stylesheet" href="../../style.css">
     <style>
+        /* --- GLOBAL & FIXED CANVAS --- */
+        body {
+            background-color: #030305;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: -1; /* Sits permanently behind the website */
+            pointer-events: none;
+        }
+
         .case-wrapper {
+            position: relative;
+            z-index: 10;
             max-width: 1100px;
             margin: 0 auto;
             padding: 40px 20px 120px 20px;
         }
 
-        /* Hero */
+        /* --- HERO FIXES --- */
         .case-hero {
             margin-bottom: 70px;
+            padding-top: 40px;
+        }
+
+        .text-gradient {
+            background: linear-gradient(90deg, #ffffff, #00f3ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .case-hero .meta-tags {
@@ -42,7 +68,7 @@
         .stat-card .stat-value {
             font-size: clamp(1.6rem, 2.5vw, 2.2rem);
             font-weight: 700;
-            color: var(--text-main);
+            color: #ffffff; /* Forced bright white */
             letter-spacing: -0.02em;
             line-height: 1;
             margin-bottom: 8px;
@@ -50,7 +76,7 @@
 
         .stat-card .stat-label {
             font-size: 0.82rem;
-            color: var(--text-muted);
+            color: #a3a3a3; /* Forced bright grey */
             letter-spacing: 0.06em;
             text-transform: uppercase;
         }
@@ -65,7 +91,7 @@
             font-weight: 600;
             letter-spacing: 0.14em;
             text-transform: uppercase;
-            color: var(--text-muted);
+            color: #00f3ff; /* Adapted to new theme */
             margin-bottom: 14px;
         }
 
@@ -73,21 +99,21 @@
             font-size: clamp(1.6rem, 2.8vw, 2.2rem);
             font-weight: 700;
             letter-spacing: -0.02em;
-            color: var(--text-main);
+            color: #ffffff;
             margin-bottom: 24px;
             line-height: 1.25;
         }
 
         .section-block p {
             font-size: 1.08rem;
-            color: var(--text-muted);
+            color: #cccccc;
             line-height: 1.8;
             margin-bottom: 18px;
             max-width: 780px;
         }
 
         .section-block p strong {
-            color: var(--text-main);
+            color: #ffffff;
         }
 
         /* Dashboard image */
@@ -100,27 +126,27 @@
             display: block;
         }
 
-    
         /* Back link */
         .back-link {
             display: inline-block;
             margin-top: 20px;
             font-weight: 500;
-            color: var(--text-muted);
-            border-bottom: 2px solid var(--text-main);
+            color: #a3a3a3;
+            border-bottom: 2px solid #ffffff;
             padding-bottom: 2px;
             transition: 0.3s;
+            text-decoration: none;
         }
 
         .back-link:hover {
-            color: var(--accent-blue);
-            border-color: var(--accent-blue);
+            color: #00f3ff;
+            border-color: #00f3ff;
         }
 
         /* Divider */
         .section-divider {
             border: none;
-            border-top: 1px solid var(--glass-border, rgba(255,255,255,0.08));
+            border-top: 1px solid rgba(255,255,255,0.08);
             margin: 60px 0;
         }
 
@@ -131,37 +157,42 @@
 </head>
 <body>
 
-    <nav class="navbar">
-        <a href="../../index.html" class="logo">Priyash Vasava</a>
-        <div class="nav-links">
-            <a href="../../index.html#projects">Projects</a>
-            <a href="../../blog.html">Blog</a>
-            <a href="../../who-am-i.html">Who Am I?</a>
-            <a href="../../index.html#connect">Connect</a>
+    <!-- Ambient Stars Background Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
+    <nav class="navbar" style="position: relative; z-index: 10; display: flex; justify-content: space-between; align-items: center; padding: 40px 50px;">
+        <a href="../../index.html" class="logo" style="font-weight: 900; font-size: 16px; color: #fff; letter-spacing: 2px; text-decoration: none; font-family: 'Montserrat', sans-serif;">PRIYASH VASAVA</a>
+        <div class="nav-links" style="display: flex; gap: 30px;">
+            <a href="../../index.html#projects" style="color: #00f3ff; font-size: 12px; letter-spacing: 4px; text-transform: uppercase; text-decoration: none; font-family: 'Courier Prime', monospace;">Projects</a>
+            <a href="../../blog.html" style="color: #00f3ff; font-size: 12px; letter-spacing: 4px; text-transform: uppercase; text-decoration: none; font-family: 'Courier Prime', monospace;">Blog</a>
+            <a href="../../who-am-i.html" style="color: #00f3ff; font-size: 12px; letter-spacing: 4px; text-transform: uppercase; text-decoration: none; font-family: 'Courier Prime', monospace;">Who Am I?</a>
+            <a href="../../index.html#connect" style="color: #00f3ff; font-size: 12px; letter-spacing: 4px; text-transform: uppercase; text-decoration: none; font-family: 'Courier Prime', monospace;">Connect</a>
         </div>
     </nav>
 
     <div class="case-wrapper">
 
         <div class="case-hero animate">
-            <h1 style="font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 24px;">
+            <!-- Forced white color to fix darkish text -->
+            <h1 style="font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 24px; color: #ffffff;">
                 Olist <span class="text-gradient">customer behavior</span> analysis.
             </h1>
-            <p style="font-size: 1.15rem; color: var(--text-muted); line-height: 1.7; max-width: 680px;">
+            <!-- Forced light grey color to fix darkish paragraph -->
+            <p style="font-size: 1.15rem; color: #a3a3a3; line-height: 1.7; max-width: 680px;">
                 Decoding over 100,000 Brazilian e-commerce transactions to uncover the real drivers of revenue, the true cost of bad logistics, and the platform's hidden retention crisis.
             </p>
             <div style="margin-top: 24px;">
                 <div class="slide-tags" style="display: inline-flex;">
-                    <span>SQL</span>
-                    <span>Power BI</span>
-                    <span>Excel</span>
+                    <span style="font-size: 0.7rem; color: #fff; background: #111; padding: 4px 8px; border: 1px solid #333; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em; margin-right: 8px;">SQL</span>
+                    <span style="font-size: 0.7rem; color: #fff; background: #111; padding: 4px 8px; border: 1px solid #333; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em; margin-right: 8px;">Power BI</span>
+                    <span style="font-size: 0.7rem; color: #fff; background: #111; padding: 4px 8px; border: 1px solid #333; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em;">Excel</span>
                 </div>
                <div style="margin-top: 32px; display: flex; gap: 16px; flex-wrap: wrap;">
-                <a href="https://drive.google.com/drive/folders/1eY7CV_8uih5-rfIrify8KFza0TFmxfJC?usp=drive_link" target="_blank" style="padding: 12px 24px; background: var(--accent-blue, #4f8ef7); color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 0.95rem; transition: transform 0.2s, opacity 0.2s;" onmouseover="this.style.opacity='0.9'; this.style.transform='translateY(-2px)';" onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)';">
+                <a href="https://drive.google.com/drive/folders/1eY7CV_8uih5-rfIrify8KFza0TFmxfJC?usp=drive_link" target="_blank" style="padding: 12px 24px; background: #00f3ff; color: #000; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 0.95rem; transition: transform 0.2s, opacity 0.2s; box-shadow: 0 0 15px rgba(0,243,255,0.4);" onmouseover="this.style.opacity='0.9'; this.style.transform='translateY(-2px)';" onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)';">
                     ↗ View Dashboard & Data
                 </a>
                 
-                <a href="https://github.com/priyashh/priyashh.github.io/tree/main/projects/olist/project%20file" target="_blank" style="padding: 12px 24px; background: rgba(255,255,255,0.04); color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 0.95rem; border: 1px solid rgba(255,255,255,0.1); transition: transform 0.2s, border-color 0.2s;" onmouseover="this.style.borderColor='var(--accent-blue, #4f8ef7)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.transform='translateY(0)';">
+                <a href="https://github.com/priyashh/priyashh.github.io/tree/main/projects/olist/project%20file" target="_blank" style="padding: 12px 24px; background: rgba(255,255,255,0.04); color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 0.95rem; border: 1px solid rgba(255,255,255,0.1); transition: transform 0.2s, border-color 0.2s;" onmouseover="this.style.borderColor='#00f3ff'; this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.transform='translateY(0)';">
                     ↓ View SQL Scripts
                 </a>
             </div> 
@@ -215,7 +246,7 @@
             <p>
                 When we look closely at installment plans a distinct behavioral trend emerges. Shoppers aren't using ten month payment plans for everyday items. They are specifically leveraging them to finance high ticket premium purchases. Meanwhile the state of São Paulo acts as the platform's economic engine single-handedly generating more cash than the next four states combined.
             </p>
-            <img src="../../assets/olist Revenue dive.png" alt="Olist Revenue Deep Dive Dashboard" class="dashboard-img">
+            <img src="../../assets/olist Revenue dive.png" alt="Olist Revenue Deep Dive Dashboard" class="dashboard-img" onerror="this.style.display='none'">
         </div>
 
         <div class="section-block animate" style="margin-bottom: 50px;">
@@ -227,7 +258,7 @@
             <p>
                 While Olist maintains a respectable 93 percent on time delivery rate overall this sharp penalty for lateness highlights how fragile customer trust really is. One logistical hiccup is all it takes to ruin the relationship forever.
             </p>
-            <img src="../../assets/olist operation & delivery.png" alt="Olist Delivery and Operations Dashboard" class="dashboard-img">
+            <img src="../../assets/olist operation & delivery.png" alt="Olist Delivery and Operations Dashboard" class="dashboard-img" onerror="this.style.display='none'">
         </div>
 
         <div class="section-block animate" style="margin-bottom: 50px;">
@@ -239,7 +270,7 @@
             <p>
                 Furthermore the platform's geographic footprint is incredibly unbalanced. São Paulo alone houses over 40 thousand unique buyers. While that massive volume is great having your entire customer base concentrated in one single state makes the company dangerously exposed to regional economic shifts.
             </p>
-            <img src="../../assets/olist customer geography.png" alt="Olist Customer Geography Dashboard" class="dashboard-img">
+            <img src="../../assets/olist customer geography.png" alt="Olist Customer Geography Dashboard" class="dashboard-img" onerror="this.style.display='none'">
         </div>
 
         <div class="section-block animate" style="margin-bottom: 60px;">
@@ -251,7 +282,7 @@
             <p>
                 Interestingly the data proves that biggest doesn't always mean best. The merchants pushing the absolute highest volumes out of São Paulo actually suffer from significantly worse customer satisfaction ratings compared to smaller more focused sellers in neighboring states.
             </p>
-            <img src="../../assets/olist seller intelligence.png" alt="Olist Seller Intelligence Dashboard" class="dashboard-img">
+            <img src="../../assets/olist seller intelligence.png" alt="Olist Seller Intelligence Dashboard" class="dashboard-img" onerror="this.style.display='none'">
         </div>
 
         <div class="section-block animate" style="margin-bottom: 60px;">
@@ -296,5 +327,39 @@
 
     </div>
 
-</body>
-</html>
+    <!-- MAIN INTERACTIVE SCRIPT FOR BACKGROUND STARS -->
+    <script>
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let W, H;
+        let stars =[];
+
+        class Star {
+            constructor() {
+                this.x = Math.random() * window.innerWidth;
+                this.y = Math.random() * window.innerHeight; 
+                this.z = Math.random() * window.innerWidth; 
+                this.size = Math.random() * 1.5;
+                this.color = Math.random() > 0.8 ? '#00f3ff' : '#ffffff';
+            }
+            update() {
+                // Drift left naturally across whole page
+                this.x -= 0.15 * (W / this.z); 
+                if (this.x < 0) this.x = W;
+            }
+            draw() {
+                let alpha = Math.min(1, W / this.z);
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = alpha;
+                ctx.beginPath(); 
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); 
+                ctx.fill();
+            }
+        }
+
+        function init() {
+            W = canvas.width = window.innerWidth;
+            H = canvas.height = window.innerHeight;
+            
+            stars =
