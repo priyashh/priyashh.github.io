@@ -39,12 +39,13 @@
         }
         .navbar .nav-links a:hover { opacity: 1; color: #fff; text-shadow: 0 0 15px rgba(255, 255, 255, 0.8); }
 
-        /* --- HERO AREA LAYOUT (ORACLE + TEXT + BIO) --- */
+        /* --- HERO AREA LAYOUT --- */
         .hero-wrapper {
             position: relative;
             width: 100%;
             height: 100vh;
             overflow: hidden;
+            cursor: none; /* Hide default cursor for our custom star trail */
         }
 
         /* Oracle canvas */
@@ -74,45 +75,13 @@
             top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none;
             z-index: 3;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 40px;
-            box-sizing: border-box;
             background: radial-gradient(circle at center, transparent 40%, rgba(3,3,5,0.8) 100%);
-        }
-
-        .hud-text {
-            color: #00f3ff;
-            font-size: 12px;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
-            opacity: 0.7;
-        }
-
-        #prompt {
-            position: absolute;
-            bottom: 20%;
-            left: 50%;
-            transform: translateX(-50%);
-            text-align: center;
-            transition: opacity 0.3s;
-        }
-
-        .title {
-            font-size: 24px;
-            font-weight: bold;
-            color: #fff;
-            margin-bottom: 10px;
-            letter-spacing: 8px;
-            text-shadow: 0 0 20px rgba(255,255,255,0.5);
         }
 
         /* --- ANIMATED HERO TEXT --- */
         #hero-text-overlay {
             position: absolute;
-            top: 8vh;  /* above oracle center */
+            top: 8vh; 
             left: 50%;
             transform: translateX(-50%) scale(1);
             text-align: center;
@@ -121,9 +90,9 @@
             transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s;
         }
 
-        /* When oracle answers, hero text flies to above bio picture (right side) */
+        /* Moves right above the bio section perfectly */
         #hero-text-overlay.exploded {
-            transform: translate(26vw, 6vh) scale(0.7);
+            transform: translate(25vw, 2vh) scale(0.7);
         }
 
         #hero-text-overlay h1 {
@@ -136,12 +105,6 @@
             font-weight: 900; letter-spacing: 0.15em; text-shadow: 0 0 15px rgba(255,255,255,0.4);
         }
         #hero-text-overlay .muted { color: #888; font-weight: 400; }
-
-        #hint {
-            position: absolute; top: 30vh; left: 50%; transform: translateX(-50%);
-            color: #00f3ff; font-family: 'Courier Prime', monospace; font-size: 11px; letter-spacing: 5px;
-            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5); transition: opacity 0.3s; z-index: 4; pointer-events: none;
-        }
 
         #magic-quote {
             position: absolute; top: 35vh; left: 50%; transform: translateX(-50%);
@@ -158,8 +121,8 @@
 
         .right-column {
             width: 340px;
-            margin-top: -10vh;   /* pulled up under hero */
-            margin-right: 4vw;   /* stays on right side */
+            margin-top: 10vh; /* Pushed down so exploded text sits above it */
+            margin-right: 4vw; 
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -174,7 +137,7 @@
                           text-decoration: underline; text-underline-offset: 4px; letter-spacing: 0.05em; text-transform: uppercase; }
 
         .bottom-section {
-            position: relative; z-index: 5; max-width: 1100px; margin: 60vh auto 0 auto;
+            position: relative; z-index: 5; max-width: 1100px; margin: 40vh auto 0 auto;
             border-top: 1px solid rgba(255,255,255,0.05); padding-top: 80px; padding-bottom: 80px; pointer-events: auto;
         }
 
@@ -207,7 +170,6 @@
             color: #fff; border-color: #888;
         }
 
-        /* Mobile Adjustments */
         @media (max-width: 950px) {
             .project-row {
                 grid-template-columns: 1fr;
@@ -222,6 +184,7 @@
                 border-top: 1px solid rgba(255,255,255,0.05);
                 padding-top: 40px;
             }
+            .hero-wrapper { cursor: default; } /* Turn off custom cursor on mobile */
         }
     </style>
 </head>
@@ -241,25 +204,16 @@
         <canvas id="oracle-canvas"></canvas>
         <div class="scanlines"></div>
 
-        <div id="hud">
-            <div class="hud-text">SYS.ORACLE.V1 // SECURE CONNECTION</div>
-            <div class="hud-text" style="text-align: right;">AWAITING QUERY...</div>
-
-            <div id="prompt">
-                <div class="title">THE ORACLE</div>
-                <div class="hud-text">HOLD MOUSE TO FOCUS INTENT<br>RELEASE FOR ANSWER</div>
-            </div>
-        </div>
+        <div id="hud"></div>
 
         <div id="hero-text-overlay">
             <h1>
-                <span class="muted">Analyst by day</span><br>
-                <span class="highlight">Vibe coder</span><br>
-                <span class="muted">by night</span>
+                <span class="highlight">ANALYST</span> <span class="muted">BY DAY</span><br>
+                <span class="highlight">VIBE CODER</span><br>
+                <span class="muted">BY NIGHT</span>
             </h1>
         </div>
 
-        <div id="hint">CLICK AND HOLD TO BLOW YOUR MIND</div>
         <div id="magic-quote">- says the magic 8 ball</div>
     </div>
 
@@ -310,20 +264,23 @@
     <script>
         const canvas = document.getElementById('oracle-canvas');
         const ctx = canvas.getContext('2d');
-        const promptEl = document.getElementById('prompt');
         const heroText = document.getElementById('hero-text-overlay');
         const magicQuote = document.getElementById('magic-quote');
 
         let W, H, cx, cy;
         const N = 2500;
         let particles = [];
+        
+        // Background Stars & Cursor Trails
+        let bgStars = [];
+        let cursorTrails = [];
 
         let sphereRadius = 250;
         let baseRadius = 250;
         let rotationX = 0;
         let rotationY = 0;
 
-        let state = 'idle';
+        let state = 'idle'; // states: idle, charging, answering, drifting
         let chargeLevel = 0;
         let answerTimer = 0;
         const mouse = { x: -1000, y: -1000, isDown: false };
@@ -342,6 +299,19 @@
             H = canvas.height = window.innerHeight;
             cx = W / 2;
             cy = H / 2;
+            
+            // Re-init background stars on resize
+            bgStars = [];
+            for(let i=0; i<150; i++) {
+                bgStars.push({
+                    x: Math.random() * W,
+                    y: Math.random() * H,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    size: Math.random() * 1.5,
+                    opacity: Math.random() * 0.5 + 0.1
+                });
+            }
         }
         window.addEventListener('resize', resize);
         resize();
@@ -365,7 +335,9 @@
                 this.oy = pt.y;
                 this.oz = pt.z;
 
-                this.x = 0; this.y = 0; this.z = 0;
+                this.x = Math.random() * W; 
+                this.y = Math.random() * H; 
+                this.z = 0;
                 this.tx = 0; this.ty = 0;
 
                 this.color = colors[Math.floor(Math.random() * colors.length)];
@@ -396,36 +368,61 @@
                     this.z = finalZ;
                 }
 
-                let spring = state === 'answering' ? 0.05 : 0.1;
-                if (state === 'charging') spring = 0.3;
+                if (state === 'drifting') {
+                    // Drift out like background stars
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    
+                    // Add slight organic wiggle
+                    this.vx += (Math.random() - 0.5) * 0.05;
+                    this.vy += (Math.random() - 0.5) * 0.05;
+                    
+                    // Wrap around screen
+                    if(this.x < 0) this.x = W;
+                    if(this.x > W) this.x = 0;
+                    if(this.y < 0) this.y = H;
+                    if(this.y > H) this.y = 0;
 
-                let dx = this.tx - this.x;
-                let dy = this.ty - this.y;
-
-                this.vx += dx * spring;
-                this.vy += dy * spring;
-
-                let friction = state === 'answering' ? 0.85 : 0.9;
-                this.vx *= friction;
-                this.vy *= friction;
-
-                if (state === 'idle') {
-                    let mx = mouse.x - this.x;
-                    let my = mouse.y - this.y;
-                    let dist = Math.sqrt(mx*mx + my*my);
-                    if (dist < 100) {
-                        let force = (100 - dist) / 100;
-                        this.vx -= (mx / dist) * force * 5;
-                        this.vy -= (my / dist) * force * 5;
+                    // Speed cap
+                    let speed = Math.sqrt(this.vx*this.vx + this.vy*this.vy);
+                    if(speed > 1.5) {
+                        this.vx = (this.vx / speed) * 1.5;
+                        this.vy = (this.vy / speed) * 1.5;
                     }
-                }
+                } else {
+                    // Normal physics for sphere or text
+                    let spring = state === 'answering' ? 0.05 : 0.1;
+                    if (state === 'charging') spring = 0.3;
 
-                this.x += this.vx;
-                this.y += this.vy;
+                    let dx = this.tx - this.x;
+                    let dy = this.ty - this.y;
+
+                    this.vx += dx * spring;
+                    this.vy += dy * spring;
+
+                    let friction = state === 'answering' ? 0.85 : 0.9;
+                    this.vx *= friction;
+                    this.vy *= friction;
+
+                    if (state === 'idle') {
+                        let mx = mouse.x - this.x;
+                        let my = mouse.y - this.y;
+                        let dist = Math.sqrt(mx*mx + my*my);
+                        if (dist < 100) {
+                            let force = (100 - dist) / 100;
+                            this.vx -= (mx / dist) * force * 5;
+                            this.vy -= (my / dist) * force * 5;
+                        }
+                    }
+
+                    this.x += this.vx;
+                    this.y += this.vy;
+                }
             }
 
             draw() {
                 let alpha = state === 'answering' ? 1 : Math.max(0.1, (this.z + baseRadius) / (baseRadius * 2));
+                if (state === 'drifting') alpha = 0.6; // Keep them visible when drifting
                 if (alpha < 0) alpha = 0;
 
                 ctx.globalAlpha = alpha;
@@ -475,7 +472,6 @@
 
         function triggerAnswer() {
             state = 'answering';
-            promptEl.style.opacity = 0;
             magicQuote.style.opacity = 1;
 
             const answer = answers[Math.floor(Math.random() * answers.length)];
@@ -497,24 +493,32 @@
 
             clearTimeout(answerTimer);
             answerTimer = setTimeout(() => {
-                state = 'idle';
-                promptEl.style.opacity = 1;
+                // Instead of idle, particles become part of the background starfield
+                state = 'drifting';
                 magicQuote.style.opacity = 0;
                 heroText.classList.remove('exploded');
-                particles.forEach(p => p.color = colors[Math.floor(Math.random() * colors.length)]);
+                
+                particles.forEach(p => {
+                    p.color = colors[Math.floor(Math.random() * colors.length)];
+                    // Give them an initial drift velocity
+                    p.vx = (Math.random() - 0.5) * 2;
+                    p.vy = (Math.random() - 0.5) * 2;
+                });
             }, 4000);
         }
 
         window.addEventListener('mousemove', e => {
             mouse.x = e.clientX;
             mouse.y = e.clientY;
+            
+            // Add point to cursor trail
+            cursorTrails.push({x: mouse.x, y: mouse.y, age: 0});
         });
 
         window.addEventListener('mousedown', () => {
             if (state === 'answering') return;
             mouse.isDown = true;
-            state = 'charging';
-            promptEl.style.opacity = 0.2;
+            state = 'charging'; // This pulls them back from drifting!
         });
 
         window.addEventListener('mouseup', () => {
@@ -524,34 +528,52 @@
             if (chargeLevel > 0.5) {
                 triggerAnswer();
             } else {
-                state = 'idle';
-                promptEl.style.opacity = 1;
+                state = 'idle'; 
             }
             chargeLevel = 0;
         });
 
+        // Touch support
         window.addEventListener('touchstart', e => {
             mouse.x = e.touches[0].clientX; mouse.y = e.touches[0].clientY;
             if (state !== 'answering') {
-                mouse.isDown = true; state = 'charging'; promptEl.style.opacity = 0.2;
+                mouse.isDown = true; state = 'charging'; 
             }
         });
         window.addEventListener('touchend', () => {
             mouse.isDown = false;
             if (state !== 'answering') {
                 if (chargeLevel > 0.5) triggerAnswer();
-                else { state = 'idle'; promptEl.style.opacity = 1; }
+                else { state = 'idle'; }
                 chargeLevel = 0;
             }
         });
 
         function loop(time) {
+            // Dark trail effect for the background
             ctx.globalCompositeOperation = 'source-over';
             ctx.fillStyle = 'rgba(3, 3, 5, 0.25)';
             ctx.fillRect(0, 0, W, H);
 
             ctx.globalCompositeOperation = 'lighter';
 
+            // Draw Background Stars
+            bgStars.forEach(star => {
+                star.x += star.vx;
+                star.y += star.vy;
+                if(star.x < 0) star.x = W;
+                if(star.x > W) star.x = 0;
+                if(star.y < 0) star.y = H;
+                if(star.y > H) star.y = 0;
+                
+                ctx.globalAlpha = star.opacity;
+                ctx.fillStyle = 'white';
+                ctx.beginPath();
+                ctx.arc(star.x, star.y, star.size, 0, Math.PI*2);
+                ctx.fill();
+            });
+
+            // State Logic
             if (state === 'idle') {
                 rotationY += 0.003;
                 rotationX += 0.002;
@@ -566,7 +588,8 @@
                 ctx.translate(Math.random() * 4 - 2, Math.random() * 4 - 2);
             }
 
-            if (state !== 'answering') {
+            // Draw lines between particles (only when forming sphere/text)
+            if (state !== 'answering' && state !== 'drifting') {
                 ctx.lineWidth = 0.5;
                 for (let i = 0; i < N; i += 8) {
                     for (let j = i + 1; j < N; j += 8) {
@@ -584,6 +607,7 @@
                 }
             }
 
+            // Update and draw particles
             particles.forEach(p => {
                 p.update(time);
                 p.draw();
@@ -591,6 +615,26 @@
 
             if (state === 'charging') {
                 ctx.restore();
+            }
+
+            // Draw Custom Cursor and Trails
+            ctx.globalAlpha = 1;
+            cursorTrails.forEach((trail) => {
+                trail.age += 0.05; // Fade speed
+                ctx.fillStyle = `rgba(255, 255, 255, ${1 - trail.age})`;
+                ctx.beginPath();
+                ctx.arc(trail.x, trail.y, 3 * (1 - trail.age), 0, Math.PI*2);
+                ctx.fill();
+            });
+            // Remove old trails
+            cursorTrails = cursorTrails.filter(t => t.age < 1);
+
+            // Draw main cursor dot
+            if(mouse.x > -1000) {
+                ctx.fillStyle = 'white';
+                ctx.beginPath();
+                ctx.arc(mouse.x, mouse.y, 4, 0, Math.PI*2);
+                ctx.fill();
             }
 
             requestAnimationFrame(loop);
