@@ -10,7 +10,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@300;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@300;500;600;700;800&family=Montserrat:wght@300;700;900&display=swap" rel="stylesheet">
     
     <style>
         /* --- GLOBAL --- */
@@ -46,163 +46,107 @@
             border: none !important;
             box-shadow: none !important;
         }
-
-        .navbar .logo {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 900;
-            font-size: 16px;
-            color: #fff;
-            letter-spacing: 2px;
-            text-decoration: none;
-        }
-
+        .navbar .logo { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 16px; color: #fff; letter-spacing: 2px; text-decoration: none; }
         .navbar .nav-links { display: flex; gap: 30px; }
         .navbar .nav-links a {
-            font-family: 'Courier Prime', monospace;
-            color: #00f3ff;
-            font-size: 14px; 
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
-            text-decoration: none;
-            opacity: 0.8;
-            transition: all 0.3s ease;
+            font-family: 'Courier Prime', monospace; color: #00f3ff; font-size: 14px; letter-spacing: 4px;
+            text-transform: uppercase; text-shadow: 0 0 10px rgba(0, 243, 255, 0.5); text-decoration: none;
+            opacity: 0.8; transition: all 0.3s ease;
         }
         .navbar .nav-links a:hover { opacity: 1; color: #fff; text-shadow: 0 0 15px rgba(255, 255, 255, 0.8); }
 
-        /* --- HERO TEXT OVERLAY --- */
-        #hero-text-overlay {
-            position: fixed; 
-            top: 13%; 
-            left: 50%;
-            transform: translate(-50%, 0) scale(1);
-            text-align: center;
+        /* --- HERO CONTAINER (FLEXBOX FIX) --- */
+        #hero-flex-container {
+            position: absolute;
+            top: 15vh; /* Pushed down safely from navbar */
+            left: 0;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px; /* Ensures text NEVER overlaps */
             z-index: 15;
-            pointer-events: none; 
-            /* Cinematic glide */
-            transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
         }
 
+        #hero-text-overlay {
+            text-align: center;
+            transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+            transform-origin: center center;
+        }
+
+        /* Explosion Glide Target */
         #hero-text-overlay.exploded {
-            /* Glides to right to sit directly over the newly raised Bio */
-            transform: translate(calc(50vw - 340px), 5vh) scale(0.65);
+            /* Glides to the far right, just above the bio image */
+            transform: translate(28vw, 32vh) scale(0.65);
         }
 
         #hero-text-overlay h1 {
-            font-family: 'Inter', sans-serif;
-            font-size: 1.1rem;
-            letter-spacing: 0.2em;
-            line-height: 1.8;
-            margin: 0;
-            text-transform: uppercase;
+            font-family: 'Inter', sans-serif; font-size: 1.1rem; letter-spacing: 0.2em; line-height: 1.8; margin: 0; text-transform: uppercase;
         }
-
         #hero-text-overlay .highlight {
-            font-family: 'Montserrat', sans-serif;
-            color: #fff;
-            font-size: 2rem;
-            font-weight: 900;
-            letter-spacing: 0.15em;
-            text-shadow: 0 0 20px rgba(255,255,255,0.3);
+            font-family: 'Montserrat', sans-serif; color: #fff; font-size: 2rem; font-weight: 900; letter-spacing: 0.15em; text-shadow: 0 0 20px rgba(255,255,255,0.3);
         }
-
         #hero-text-overlay .muted { color: #888; font-weight: 400; }
 
-        /* Hint & Quote */
         .hero-hint {
-            position: absolute;
-            top: 26%; 
-            left: 50%;
-            transform: translateX(-50%);
-            color: #00f3ff;
-            font-family: 'Courier Prime', monospace;
-            font-size: 11px;
-            letter-spacing: 4px;
-            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
-            opacity: 0.8;
-            transition: opacity 0.3s;
-            pointer-events: none;
-            z-index: 15;
+            color: #00f3ff; font-family: 'Courier Prime', monospace; font-size: 11px; letter-spacing: 4px;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5); opacity: 0.8; transition: opacity 0.3s;
         }
 
         #magic-quote {
-            position: fixed;
-            top: 40%; 
+            position: absolute;
+            top: 40vh; /* Will map dynamically under answers */
             left: 50%;
             transform: translateX(-50%);
             font-family: 'Courier Prime', monospace;
-            color: #00f3ff;
-            font-size: 12px;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            text-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
-            opacity: 0; 
-            transition: opacity 0.5s ease-in;
-            z-index: 15;
-            pointer-events: none;
+            color: #00f3ff; font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.4); opacity: 0; transition: opacity 0.5s ease-in;
+            z-index: 15; pointer-events: none;
         }
 
-        /* --- FLAWLESS MODIFIED GRID LAYOUT --- */
+        /* --- BULLETPROOF GRID LAYOUT --- */
         .case-wrapper {
             position: relative;
             z-index: 10;
             display: grid;
-            /* Column 1: Axis, Column 2: Main Body, Column 3: Bio */
             grid-template-columns: 80px minmax(500px, 1fr) 340px;
-            padding-top: 40px;
             max-width: 1250px; 
             margin: 0 auto;
             column-gap: 50px;
+            padding-bottom: 100px;
         }
 
-        /* Oracle Spacer (Row 1) */
-        .oracle-spacer {
-            grid-column: 2;
-            grid-row: 1;
-            height: 600px; /* Reduced so projects slide up under Oracle */
-        }
-
-        /* Sidebar Bio (Row 1 & 2 - Pulled Up High!) */
+        /* Bio (Right Column, starts high up) */
         .sidebar-bio {
             grid-column: 3;
-            grid-row: 1 / span 2; /* Sits beside Oracle AND Projects */
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            padding-top: 80px;  /* Pulled way up perfectly */
+            grid-row: 1; /* Pinned to top row */
+            display: flex; flex-direction: column; gap: 16px;
+            padding-top: 45vh; /* Pushed down exactly enough so flying text fits above it */
             padding-right: 40px; 
         }
-
-        .sidebar-img {
-            width: 120px; height: 120px; 
-            border-radius: 4px; object-fit: cover;
-            filter: grayscale(100%) contrast(1.2);
-        }
-
+        .sidebar-img { width: 120px; height: 120px; border-radius: 4px; object-fit: cover; filter: grayscale(100%) contrast(1.2); }
         .sidebar-bio p { font-size: 0.85rem; line-height: 1.8; color: #888; margin: 0; }
-        .sidebar-bio a { font-size: 0.75rem; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; color: #fff; text-transform: uppercase; letter-spacing: 0.05em; }
+        .sidebar-bio a { font-size: 0.75rem; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; color: #fff; text-transform: uppercase; letter-spacing: 0.05em; pointer-events: auto; }
 
-        /* Featured Works Axis */
+        /* Left Axis */
         .vertical-line {
             grid-column: 1;
-            grid-row: 2; 
-            writing-mode: vertical-rl;
-            transform: rotate(180deg);
-            font-size: 10px;
-            letter-spacing: 4px;
-            color: #666;
-            text-align: right;
+            grid-row: 2; /* Sits naturally next to projects */
+            writing-mode: vertical-rl; transform: rotate(180deg);
+            font-size: 10px; letter-spacing: 4px; color: #666; text-align: right;
             padding-top: 20px;
         }
 
-        /* Projects Section (Column 2 Only, Right Under Oracle) */
+        /* Projects Section (Bottom Left/Center) */
         .projects-container { 
-            grid-column: 2; /* NOT spanning to column 4 anymore */
+            grid-column: 2; /* Stops before Bio column */
             grid-row: 2;
             display: flex; flex-direction: column; margin-bottom: 80px; 
+            margin-top: 55vh; /* Safely leaves top center 100% empty for Oracle */
         }
         
-        .project-row { display: grid; grid-template-columns: 200px 1fr; gap: 30px; padding: 30px 0; border-top: 1px solid #222; align-items: center; transition: opacity 0.3s ease; text-decoration: none; }
+        .project-row { display: grid; grid-template-columns: 200px 1fr; gap: 30px; padding: 30px 0; border-top: 1px solid #222; align-items: center; transition: opacity 0.3s ease; text-decoration: none; pointer-events: auto; }
         .project-row:hover { opacity: 0.7; }
         .project-row img { width: 100%; height: 120px; object-fit: cover; border-radius: 4px; border: 1px solid #222; }
         .project-info h2 { font-size: 1.1rem; letter-spacing: 0.05em; margin-bottom: 8px; color: #fff; }
@@ -210,25 +154,23 @@
         .slide-tags { display: flex; gap: 8px; }
         .slide-tags span { font-size: 0.7rem; color: #fff; background: #111; padding: 4px 8px; border: 1px solid #333; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
         
-        /* Connect Section (Row 3, Bottom) */
+        /* Connect (Bottom Full Span) */
         .connect-section { 
-            grid-column: 2 / 4; 
-            grid-row: 3;
+            grid-column: 2 / 4; grid-row: 3;
             text-align: center; padding: 60px 0; border-top: 1px solid #222; 
         }
         .connect-section blockquote { font-size: 1.1rem; color: #fff; font-style: italic; margin-bottom: 30px; }
-        .connect-links a { display: inline-block; margin: 0 10px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; color: #888; border: 1px solid #333; padding: 8px 16px; border-radius: 4px; transition: 0.3s; text-decoration: none; }
+        .connect-links a { display: inline-block; margin: 0 10px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; color: #888; border: 1px solid #333; padding: 8px 16px; border-radius: 4px; transition: 0.3s; text-decoration: none; pointer-events: auto; }
         .connect-links a:hover { color: #fff; border-color: #888; }
 
         @media (max-width: 1050px) {
             .case-wrapper { display: flex; flex-direction: column; padding: 40px 20px 0 20px; }
             .vertical-line { display: none; }
-            .sidebar-bio { padding-top: 20px; padding-right: 0; align-items: center; text-align: center; border-bottom: 1px solid #222; padding-bottom: 40px; margin-bottom: 40px; }
-            .oracle-spacer { height: 400px; }
+            .sidebar-bio { padding-top: 20px; padding-right: 0; align-items: center; text-align: center; border-bottom: 1px solid #222; padding-bottom: 40px; }
+            .projects-container { margin-top: 30vh; }
             .project-row { grid-template-columns: 1fr; gap: 16px; }
-            #hero-text-overlay.exploded { transform: translate(-50%, -8vh) scale(0.7); } 
-            .hero-hint { top: 25%; }
-            #magic-quote { top: 32%; }
+            #hero-text-overlay.exploded { transform: translate(0, 30vh) scale(0.7); } 
+            #hero-flex-container { top: 12vh; }
         }
     </style>
 </head>
@@ -247,8 +189,8 @@
         </div>
     </nav>
 
-    <!-- Fast-moving Animated Hero Text -->
-    <div id="hero-container">
+    <!-- Perfectly stacked, non-colliding container -->
+    <div id="hero-flex-container">
         <div id="hero-text-overlay">
             <h1>
                 <span class="highlight">ANALYST</span> <span class="muted">BY DAY</span><br>
@@ -257,15 +199,12 @@
             </h1>
         </div>
         <div class="hero-hint" id="hint">CLICK AND HOLD TO BLOW YOUR MIND</div>
-        <div id="magic-quote">- says the magic 8 ball</div>
     </div>
+    
+    <div id="magic-quote">- says the magic 8 ball</div>
 
     <div class="case-wrapper">
         
-        <!-- Oracle Anchor -->
-        <div class="oracle-spacer" id="oracle-anchor"></div>
-
-        <!-- Bio sidebar (Raised High, Right Side) -->
         <div class="sidebar-bio">
             <img src="assets/user-portrait.jpg" alt="Priyash" class="sidebar-img" onerror="this.src='https://via.placeholder.com/120/111/444?text=PV'">
             <p>
@@ -276,7 +215,6 @@
 
         <div class="vertical-line">FEATURED WORKS</div>
         
-        <!-- Projects (Sitting Left under Oracle) -->
         <div id="projects" class="projects-container">
             <a href="projects/olist/index.html" class="project-row">
                 <img src="assets/olist-cover.png" alt="Olist Project" onerror="this.style.display='none'">
@@ -309,10 +247,9 @@
             </div>
             <p style="font-size: 0.85rem; color: #888; margin-top: 20px;">Priyashvasava@outlook.com</p>
         </div>
-
     </div>
 
-    <!-- MAIN SCRIPT -->
+    <!-- SAFEST, BULLETPROOF INIT SCRIPT -->
     <script>
         const bgCanvas = document.getElementById('bg-canvas');
         const bgCtx = bgCanvas.getContext('2d');
@@ -322,7 +259,6 @@
         const hintEl = document.getElementById('hint');
         const heroText = document.getElementById('hero-text-overlay');
         const quoteEl = document.getElementById('magic-quote');
-        const oracleAnchor = document.getElementById('oracle-anchor');
         
         let W, H, cx, cy; 
         
@@ -348,7 +284,6 @@
         const colors =['#00f3ff', '#b026ff', '#ffffff'];
         const mouse = { x: -1000, y: -1000 };
 
-        // --- BACKGROUND STARS ---
         class Star {
             constructor() {
                 this.x = Math.random() * window.innerWidth;
@@ -364,17 +299,14 @@
             draw() {
                 let screenY = this.docY - (window.scrollY * (0.3 + 0.7 * (100 / Math.max(this.z, 100))));
                 if (screenY < -50 || screenY > H) return;
-
                 let alpha = Math.min(1, W / this.z);
                 if (state === 'charging') alpha = Math.max(0.1, 1 - chargeLevel);
-                
                 bgCtx.fillStyle = this.color;
                 bgCtx.globalAlpha = alpha;
                 bgCtx.beginPath(); bgCtx.arc(this.x, screenY, this.size, 0, Math.PI * 2); bgCtx.fill();
             }
         }
 
-        // --- QUANTUM ATOM PARTICLES ---
         class Particle {
             constructor() {
                 let type = Math.random();
@@ -390,25 +322,22 @@
                     let ring = Math.floor(Math.random() * 3);
                     let r = 0.9 + Math.random() * 0.2; 
                     let x = Math.cos(angle) * r, z = Math.sin(angle) * r, y = (Math.random() - 0.5) * 0.08; 
-                    
                     if (ring === 0) { let t = Math.PI / 3; this.ox = x; this.oy = y*Math.cos(t) - z*Math.sin(t); this.oz = y*Math.sin(t) + z*Math.cos(t); }
                     else if (ring === 1) { let t = -Math.PI / 3; this.ox = x; this.oy = y*Math.cos(t) - z*Math.sin(t); this.oz = y*Math.sin(t) + z*Math.cos(t); }
                     else { this.ox = x; this.oy = y; this.oz = z; }
                 }
                 
-                this.x = cx; this.y = cy; this.z = 0;
+                this.x = W/2; this.y = H*0.6; this.z = 0;
                 this.tx = 0; this.ty = 0; 
                 this.color = colors[Math.floor(Math.random() * colors.length)];
                 this.size = Math.random() * 1.5 + 0.5;
                 this.vx = 0; this.vy = 0;
-                this.isText = false;
-                this.isDebris = false;
+                this.isText = false; this.isDebris = false;
             }
 
             update() {
                 if (state === 'idle' || state === 'charging') {
                     let sx = this.ox * baseRadius, sy = this.oy * baseRadius, sz = this.oz * baseRadius;
-                    
                     let cosY = Math.cos(rotationY), sinY = Math.sin(rotationY);
                     let rx = sx * cosY - sz * sinY, rz = sx * sinY + sz * cosY;
                     let cosX = Math.cos(rotationX), sinX = Math.sin(rotationX);
@@ -424,12 +353,12 @@
                     this.vy += (this.ty - this.y) * spring;
 
                     if (state === 'idle') {
-                        let mx = mouse.x - this.x, my = mouse.y - this.y;
-                        let mDist = Math.hypot(mx, my);
+                        let mY = mouse.y + window.scrollY;
+                        let mDist = Math.hypot(mouse.x - this.x, mY - this.y);
                         if (mDist < 120 && mDist > 0) {
                             let force = (120 - mDist) / 120;
-                            this.vx -= (mx / mDist) * force * 5;
-                            this.vy -= (my / mDist) * force * 5;
+                            this.vx -= ((mouse.x - this.x) / mDist) * force * 5;
+                            this.vy -= ((mY - this.y) / mDist) * force * 5;
                         }
                     }
                 } else if (state === 'answering') {
@@ -437,8 +366,7 @@
                         this.vx += (this.tx - this.x) * 0.08;
                         this.vy += (this.ty - this.y) * 0.08;
                     } else if (this.isDebris) {
-                        this.vx *= 0.95; 
-                        this.vy *= 0.95;
+                        this.vx *= 0.95; this.vy *= 0.95;
                         this.vx -= 0.08 * (W / Math.max(this.z, 1));
                         this.vy += (Math.random() - 0.5) * 0.1;
                     }
@@ -451,46 +379,33 @@
 
             draw() {
                 let depthAlpha = 1;
-                
                 if (state === 'answering') {
-                    if (this.isDebris) {
-                        depthAlpha = Math.max(0, 1 - (Math.abs(this.x - cx) / (W * 0.8)));
-                    } else if (!this.isText) {
-                        depthAlpha = 0; 
-                    }
+                    if (this.isDebris) depthAlpha = Math.max(0, 1 - (Math.abs(this.x - cx) / (W * 0.8)));
+                    else if (!this.isText) depthAlpha = 0; 
                 } else {
                     depthAlpha = Math.max(0.1, (this.z + baseRadius) / (baseRadius * 2.2));
                 }
 
                 if (depthAlpha <= 0) return; 
-                
-                bgCtx.globalAlpha = depthAlpha;
-                bgCtx.fillStyle = this.color; 
+                bgCtx.globalAlpha = depthAlpha; bgCtx.fillStyle = this.color; 
                 let renderSize = (state === 'answering' && this.isText) ? this.size * 1.5 : this.size * (depthAlpha + 0.5);
                 bgCtx.beginPath(); bgCtx.arc(this.x, this.y, renderSize, 0, Math.PI * 2); bgCtx.fill();
             }
         }
 
-        // --- MATH & LOGIC ---
-
-        function updateOraclePosition() {
-            const rect = oracleAnchor.getBoundingClientRect();
-            // Locked purely to center-width, avoiding grid squish
-            cx = W / 2;
-            cy = rect.top + (rect.height / 2) + window.scrollY; 
-        }
-
+        // --- CALCS ---
         function init() {
             W = canvas.width = window.innerWidth;
             H = canvas.height = window.innerHeight;
-            
             bgCanvas.width = cursorCanvas.width = W; 
             bgCanvas.height = cursorCanvas.height = H;
             
+            // Hardcode center relative to screen size (avoids DOM layout bugs entirely)
+            cx = W / 2;
+            cy = H * 0.65; 
+            
             baseRadius = Math.min(W, H) * 0.28;
             if(baseRadius > 230) baseRadius = 230;
-            
-            updateOraclePosition();
 
             particles =[]; for (let i = 0; i < N; i++) particles.push(new Particle());
             stars =[]; for (let i = 0; i < 150; i++) stars.push(new Star());
@@ -505,26 +420,24 @@
             let size = Math.min(W/12, 65); if(W < 500) size = 35;
             tCtx.font = `900 ${size}px "Montserrat", sans-serif`;
             
-            // Text forms PERFECTLY CENTERED and High Up
             let lines = answerText.split("\n");
-            let screenCy = cy - window.scrollY;
-            let startY = H * 0.22; 
+            // Form specifically on top of Oracle 
+            let startY = H * 0.25; 
             
             lines.forEach((line, i) => { tCtx.fillText(line, W/2, startY + (i * size * 1.1)); });
 
+            let quoteY = startY + (lines.length * size * 1.1) + 20;
+            // Ensure Quote drops perfectly under the particles
+            quoteEl.style.top = `${quoteY}px`; 
+
             const d = tCtx.getImageData(0, 0, W, H).data;
             const pts =[];
-            const step = Math.min(W, H) > 800 ? 4 : 3; 
+            const step = Math.min(W, H) > 800 ? 5 : 4; 
             for (let y = 0; y < H; y += step) {
                 for (let x = 0; x < W; x += step) {
                     if (d[(y * W + x) * 4 + 3] > 128) pts.push({ x, y: y + window.scrollY }); 
                 }
             }
-            
-            // HTML Quote positioning
-            let quoteY = startY + (lines.length * size * 1.1) + 20;
-            quoteEl.style.top = `${quoteY}px`; 
-            
             return pts;
         }
 
@@ -532,7 +445,9 @@
             state = 'answering';
             hintEl.style.opacity = 0;
             heroText.classList.add('exploded'); 
-            quoteEl.style.opacity = 1;
+            
+            // Wait a tiny bit before showing quote for suspense
+            setTimeout(() => { quoteEl.style.opacity = 1; }, 500);
             
             const pts = getTextPoints(answers[Math.floor(Math.random() * answers.length)]);
             
@@ -543,8 +458,7 @@
                     p.isText = false; p.isDebris = true;
                     let angle = Math.random() * Math.PI * 2;
                     let force = Math.random() * 80 + 20; 
-                    p.vx = Math.cos(angle) * force;
-                    p.vy = Math.sin(angle) * force;
+                    p.vx = Math.cos(angle) * force; p.vy = Math.sin(angle) * force;
                     p.z = Math.random() * 800; 
                 }
             });
@@ -564,29 +478,22 @@
         }
 
         // --- INTERACTIONS ---
-        
         window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
         window.addEventListener('mousedown', e => {
-            let screenCy = cy - window.scrollY;
-            let dist = Math.hypot(e.clientX - cx, e.clientY - screenCy);
-            if (dist < baseRadius * 1.5 && state !== 'answering') {
+            let mY = e.clientY + window.scrollY;
+            if (Math.hypot(e.clientX - cx, mY - cy) < baseRadius * 1.5 && state !== 'answering') {
                 state = 'charging'; hintEl.style.opacity = 0;
             }
         });
-
         window.addEventListener('mouseup', () => {
             if (state === 'charging') {
-                if (chargeLevel > 0.4) triggerAnswer(); 
-                else { state = 'idle'; hintEl.style.opacity = 0.8; }
+                if (chargeLevel > 0.4) triggerAnswer(); else { state = 'idle'; hintEl.style.opacity = 0.8; }
                 chargeLevel = 0;
             }
         });
-
-        window.addEventListener('scroll', updateOraclePosition);
         window.addEventListener('resize', () => { clearTimeout(window.resizeTimer); window.resizeTimer = setTimeout(init, 300); });
 
         // --- RENDER LOOP ---
-
         function loop() {
             bgCtx.clearRect(0, 0, W, H);
             bgCtx.globalCompositeOperation = 'lighter';
@@ -598,7 +505,7 @@
                 baseRadius += (Math.min(W, H) * 0.32 - baseRadius) * 0.1; 
                 if(baseRadius > 230) baseRadius = 230;
             } else if (state === 'charging') {
-                chargeLevel += 0.008; 
+                chargeLevel += 0.01; 
                 rotationY += 0.02 + (chargeLevel * 0.06); rotationX += 0.01 + (chargeLevel * 0.06);
                 baseRadius -= chargeLevel * 2; 
                 bgCtx.save(); bgCtx.translate(Math.random() * 4 - 2, Math.random() * 4 - 2);
@@ -630,14 +537,12 @@
             if (mouse.x > 0 && mouse.y > 0) {
                 mouseTrail.push({x: mouse.x, y: mouse.y});
                 if (mouseTrail.length > 20) mouseTrail.shift();
-                
                 cursorCtx.globalCompositeOperation = 'lighter';
                 for (let i = 0; i < mouseTrail.length; i++) {
                     let pt = mouseTrail[i]; let ratio = i / mouseTrail.length;
                     cursorCtx.beginPath(); cursorCtx.arc(pt.x, pt.y, ratio * 3.5, 0, Math.PI * 2);
                     cursorCtx.fillStyle = `rgba(0, 243, 255, ${ratio})`; cursorCtx.fill();
                 }
-                
                 let head = mouseTrail[mouseTrail.length - 1];
                 if(head) {
                     cursorCtx.beginPath(); cursorCtx.arc(head.x, head.y, 4, 0, Math.PI * 2);
@@ -650,9 +555,11 @@
             requestAnimationFrame(loop);
         }
 
-        document.fonts.ready.then(() => {
-            init();
-            requestAnimationFrame(loop);
+        // Extremely safe boot system
+        window.addEventListener('DOMContentLoaded', () => {
+            init(); 
+            // Give fonts a tiny 150ms buffer to load in background before starting loop
+            setTimeout(() => { requestAnimationFrame(loop); }, 150);
         });
     </script>
 </body>
