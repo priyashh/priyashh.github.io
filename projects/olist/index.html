@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Olist Analysis | Priyash Vasava</title>
     <link rel="stylesheet" href="../../style.css">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@300;500;600;700;800&family=Montserrat:wght@300;700;900&display=swap" rel="stylesheet">
+    
     <style>
         /* --- GLOBAL & FIXED CANVAS --- */
         body {
@@ -13,14 +19,22 @@
             margin: 0;
             padding: 0;
             overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
         }
 
         #bg-canvas {
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
-            z-index: -1; /* Sits permanently behind the website */
+            z-index: -1; 
             pointer-events: none;
+        }
+
+        /* --- FORCE VISIBILITY (Fixes the dark/faded issue) --- */
+        .animate, .case-hero, .stat-bar, .section-block {
+            opacity: 1 !important;
+            visibility: visible !important;
+            transform: none !important;
         }
 
         .case-wrapper {
@@ -31,10 +45,58 @@
             padding: 40px 20px 120px 20px;
         }
 
-        /* --- HERO FIXES --- */
+        /* --- NAVBAR --- */
+        .navbar {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px 50px;
+        }
+
+        .navbar .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 16px;
+            color: #fff;
+            letter-spacing: 2px;
+            text-decoration: none;
+        }
+
+        .navbar .nav-links {
+            display: flex; gap: 30px;
+        }
+
+        .navbar .nav-links a {
+            font-family: 'Courier Prime', monospace;
+            color: #00f3ff;
+            font-size: 12px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar .nav-links a:hover {
+            color: #fff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+        }
+
+        /* --- HERO SECTION --- */
         .case-hero {
             margin-bottom: 70px;
             padding-top: 40px;
+        }
+
+        .hero-title {
+            font-size: clamp(2.4rem, 5vw, 4rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            color: #ffffff !important; /* Forced bright white */
         }
 
         .text-gradient {
@@ -43,14 +105,62 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .case-hero .meta-tags {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 24px;
+        .hero-desc {
+            font-size: 1.15rem;
+            color: #e0e0e0 !important; /* Bright crisp gray */
+            line-height: 1.7;
+            max-width: 680px;
         }
 
-        /* Stat bar */
+        .slide-tags span {
+            font-size: 0.7rem;
+            color: #fff;
+            background: rgba(255,255,255,0.05);
+            padding: 6px 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-right: 8px;
+        }
+
+        /* Buttons */
+        .btn-primary {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #00f3ff;
+            color: #000 !important; /* Black text for contrast */
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            box-shadow: 0 0 15px rgba(0,243,255,0.4);
+            transition: all 0.2s;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(0,243,255,0.6);
+        }
+
+        .btn-secondary {
+            display: inline-block;
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.05);
+            color: #fff !important;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.2s;
+        }
+        .btn-secondary:hover {
+            border-color: #00f3ff;
+            color: #00f3ff !important;
+            transform: translateY(-2px);
+        }
+
+        /* --- STAT BAR --- */
         .stat-bar {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -59,8 +169,8 @@
         }
 
         .stat-card {
-            background: var(--glass-bg, rgba(255,255,255,0.04));
-            border: 1px solid var(--glass-border, rgba(255,255,255,0.1));
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
             border-radius: 14px;
             padding: 24px 20px;
         }
@@ -68,7 +178,7 @@
         .stat-card .stat-value {
             font-size: clamp(1.6rem, 2.5vw, 2.2rem);
             font-weight: 700;
-            color: #ffffff; /* Forced bright white */
+            color: #ffffff;
             letter-spacing: -0.02em;
             line-height: 1;
             margin-bottom: 8px;
@@ -76,251 +186,123 @@
 
         .stat-card .stat-label {
             font-size: 0.82rem;
-            color: #a3a3a3; /* Forced bright grey */
+            color: #a3a3a3;
             letter-spacing: 0.06em;
             text-transform: uppercase;
         }
 
-        /* Section headings */
-        .section-block {
-            margin-bottom: 70px;
-        }
-
-        .section-block .section-eyebrow {
-            font-size: 0.78rem;
-            font-weight: 600;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: #00f3ff; /* Adapted to new theme */
-            margin-bottom: 14px;
-        }
-
-        .section-block h2 {
-            font-size: clamp(1.6rem, 2.8vw, 2.2rem);
-            font-weight: 700;
-            letter-spacing: -0.02em;
-            color: #ffffff;
-            margin-bottom: 24px;
-            line-height: 1.25;
-        }
-
-        .section-block p {
-            font-size: 1.08rem;
-            color: #cccccc;
-            line-height: 1.8;
-            margin-bottom: 18px;
-            max-width: 780px;
-        }
-
-        .section-block p strong {
-            color: #ffffff;
-        }
-
-        /* Dashboard image */
-        .dashboard-img {
-            width: 100%;
-            border-radius: 14px;
-            border: 1px solid var(--glass-border, rgba(255,255,255,0.1));
-            box-shadow: 0 16px 48px rgba(0,0,0,0.4);
-            margin: 28px 0;
-            display: block;
-        }
-
-        /* Back link */
-        .back-link {
-            display: inline-block;
-            margin-top: 20px;
-            font-weight: 500;
-            color: #a3a3a3;
-            border-bottom: 2px solid #ffffff;
-            padding-bottom: 2px;
-            transition: 0.3s;
-            text-decoration: none;
-        }
-
-        .back-link:hover {
-            color: #00f3ff;
-            border-color: #00f3ff;
-        }
-
-        /* Divider */
-        .section-divider {
-            border: none;
-            border-top: 1px solid rgba(255,255,255,0.08);
-            margin: 60px 0;
-        }
+        /* --- CONTENT BLOCKS --- */
+        .section-block { margin-bottom: 70px; }
+        .section-eyebrow { font-size: 0.78rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: #00f3ff; margin-bottom: 14px; }
+        .section-block h2 { font-size: clamp(1.6rem, 2.8vw, 2.2rem); font-weight: 700; letter-spacing: -0.02em; color: #ffffff; margin-bottom: 24px; line-height: 1.25; }
+        .section-block p { font-size: 1.08rem; color: #cccccc; line-height: 1.8; margin-bottom: 18px; max-width: 780px; }
+        
+        .dashboard-img { width: 100%; border-radius: 14px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 16px 48px rgba(0,0,0,0.6); margin: 28px 0; display: block; }
+        
+        .back-link { display: inline-block; margin-top: 20px; font-weight: 600; color: #a3a3a3; border-bottom: 2px solid #ffffff; padding-bottom: 2px; transition: 0.3s; text-decoration: none; }
+        .back-link:hover { color: #00f3ff; border-color: #00f3ff; }
+        .section-divider { border: none; border-top: 1px solid rgba(255,255,255,0.08); margin: 60px 0; }
 
         @media (max-width: 700px) {
             .stat-bar { grid-template-columns: repeat(2, 1fr); }
+            .navbar { padding: 20px; flex-direction: column; gap: 15px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Ambient Stars Background Canvas -->
+    <!-- Ambient Background Stars -->
     <canvas id="bg-canvas"></canvas>
 
-    <nav class="navbar" style="position: relative; z-index: 10; display: flex; justify-content: space-between; align-items: center; padding: 40px 50px;">
-        <a href="../../index.html" class="logo" style="font-weight: 900; font-size: 16px; color: #fff; letter-spacing: 2px; text-decoration: none; font-family: 'Montserrat', sans-serif;">PRIYASH VASAVA</a>
-        <div class="nav-links" style="display: flex; gap: 30px;">
-            <a href="../../index.html#projects" style="color: #00f3ff; font-size: 12px; letter-spacing: 4px; text-transform: uppercase; text-decoration: none; font-family: 'Courier Prime', monospace;">Projects</a>
-            <a href="../../blog.html" style="color: #00f3ff; font-size: 12px; letter-spacing: 4px; text-transform: uppercase; text-decoration: none; font-family: 'Courier Prime', monospace;">Blog</a>
-            <a href="../../who-am-i.html" style="color: #00f3ff; font-size: 12px; letter-spacing: 4px; text-transform: uppercase; text-decoration: none; font-family: 'Courier Prime', monospace;">Who Am I?</a>
-            <a href="../../index.html#connect" style="color: #00f3ff; font-size: 12px; letter-spacing: 4px; text-transform: uppercase; text-decoration: none; font-family: 'Courier Prime', monospace;">Connect</a>
+    <nav class="navbar">
+        <a href="../../index.html" class="logo">PRIYASH VASAVA</a>
+        <div class="nav-links">
+            <a href="../../index.html#projects">Projects</a>
+            <a href="../../blog.html">Blog</a>
+            <a href="../../who-am-i.html">Who Am I?</a>
+            <a href="../../index.html#connect">Connect</a>
         </div>
     </nav>
 
     <div class="case-wrapper">
 
-        <div class="case-hero animate">
-            <!-- Forced white color to fix darkish text -->
-            <h1 style="font-size: clamp(2.4rem, 5vw, 4rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 24px; color: #ffffff;">
+        <div class="case-hero">
+            <h1 class="hero-title">
                 Olist <span class="text-gradient">customer behavior</span> analysis.
             </h1>
-            <!-- Forced light grey color to fix darkish paragraph -->
-            <p style="font-size: 1.15rem; color: #a3a3a3; line-height: 1.7; max-width: 680px;">
+            <p class="hero-desc">
                 Decoding over 100,000 Brazilian e-commerce transactions to uncover the real drivers of revenue, the true cost of bad logistics, and the platform's hidden retention crisis.
             </p>
             <div style="margin-top: 24px;">
                 <div class="slide-tags" style="display: inline-flex;">
-                    <span style="font-size: 0.7rem; color: #fff; background: #111; padding: 4px 8px; border: 1px solid #333; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em; margin-right: 8px;">SQL</span>
-                    <span style="font-size: 0.7rem; color: #fff; background: #111; padding: 4px 8px; border: 1px solid #333; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em; margin-right: 8px;">Power BI</span>
-                    <span style="font-size: 0.7rem; color: #fff; background: #111; padding: 4px 8px; border: 1px solid #333; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em;">Excel</span>
+                    <span>SQL</span>
+                    <span>Power BI</span>
+                    <span>Excel</span>
                 </div>
                <div style="margin-top: 32px; display: flex; gap: 16px; flex-wrap: wrap;">
-                <a href="https://drive.google.com/drive/folders/1eY7CV_8uih5-rfIrify8KFza0TFmxfJC?usp=drive_link" target="_blank" style="padding: 12px 24px; background: #00f3ff; color: #000; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 0.95rem; transition: transform 0.2s, opacity 0.2s; box-shadow: 0 0 15px rgba(0,243,255,0.4);" onmouseover="this.style.opacity='0.9'; this.style.transform='translateY(-2px)';" onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)';">
+                <a href="https://drive.google.com/drive/folders/1eY7CV_8uih5-rfIrify8KFza0TFmxfJC?usp=drive_link" target="_blank" class="btn-primary">
                     ↗ View Dashboard & Data
                 </a>
                 
-                <a href="https://github.com/priyashh/priyashh.github.io/tree/main/projects/olist/project%20file" target="_blank" style="padding: 12px 24px; background: rgba(255,255,255,0.04); color: #fff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 0.95rem; border: 1px solid rgba(255,255,255,0.1); transition: transform 0.2s, border-color 0.2s;" onmouseover="this.style.borderColor='#00f3ff'; this.style.transform='translateY(-2px)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.1)'; this.style.transform='translateY(0)';">
+                <a href="https://github.com/priyashh/priyashh.github.io/tree/main/projects/olist/project%20file" target="_blank" class="btn-secondary">
                     ↓ View SQL Scripts
                 </a>
             </div> 
             </div>
         </div>
 
-        <div class="stat-bar animate" style="animation-delay: 0.15s;">
-            <div class="stat-card">
-                <div class="stat-value">99K+</div>
-                <div class="stat-label">Total Orders</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">96K</div>
-                <div class="stat-label">Customers</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">3K</div>
-                <div class="stat-label">Active Sellers</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">93.4%</div>
-                <div class="stat-label">On-Time Rate</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-value">4.10</div>
-                <div class="stat-label">Avg Review Score</div>
-            </div>
+        <div class="stat-bar">
+            <div class="stat-card"><div class="stat-value">99K+</div><div class="stat-label">Total Orders</div></div>
+            <div class="stat-card"><div class="stat-value">96K</div><div class="stat-label">Customers</div></div>
+            <div class="stat-card"><div class="stat-value">3K</div><div class="stat-label">Active Sellers</div></div>
+            <div class="stat-card"><div class="stat-value">93.4%</div><div class="stat-label">On-Time Rate</div></div>
+            <div class="stat-card"><div class="stat-value">4.10</div><div class="stat-label">Avg Review Score</div></div>
         </div>
 
         <hr class="section-divider">
 
-        <div class="section-block animate" style="animation-delay: 0.2s;">
+        <div class="section-block">
             <div class="section-eyebrow">The Objective</div>
             <h2>Piecing together a fragmented e-commerce ecosystem</h2>
-            <p>
-                Olist provided a massive incredibly messy database scattered across eight different tables. My objective wasn't just to clean the raw numbers but to extract the underlying business reality. I needed to map out the entire customer journey from the moment a credit card is swiped to the final delivery review to understand what makes the platform tick and where it is bleeding money.
-            </p>
-            <p>
-                By joining these datasets in SQL and modeling them visually I created an interactive narrative focused on four key pillars: revenue generation logistics geographic risks and supplier health.
-            </p>
+            <p>Olist provided a massive incredibly messy database scattered across eight different tables. My objective wasn't just to clean the raw numbers but to extract the underlying business reality. I needed to map out the entire customer journey from the moment a credit card is swiped to the final delivery review to understand what makes the platform tick and where it is bleeding money.</p>
+            <p>By joining these datasets in SQL and modeling them visually I created an interactive narrative focused on four key pillars: revenue generation logistics geographic risks and supplier health.</p>
         </div>
 
         <hr class="section-divider">
 
-        <div class="section-block animate" style="margin-bottom: 50px;">
+        <div class="section-block" style="margin-bottom: 50px;">
             <div class="section-eyebrow">Dashboard 01</div>
             <h2>Where the money flows and how people pay</h2>
-            <p>
-                Mapping out the sales data reveals a very clear hierarchy. Health and Beauty dominates the marketplace as the undeniable top earner with home goods and watches trailing behind. But the way Brazilians pay for these items is just as fascinating because credit cards power almost 80 percent of the entire economy.
-            </p>
-            <p>
-                When we look closely at installment plans a distinct behavioral trend emerges. Shoppers aren't using ten month payment plans for everyday items. They are specifically leveraging them to finance high ticket premium purchases. Meanwhile the state of São Paulo acts as the platform's economic engine single-handedly generating more cash than the next four states combined.
-            </p>
+            <p>Mapping out the sales data reveals a very clear hierarchy. Health and Beauty dominates the marketplace as the undeniable top earner with home goods and watches trailing behind. But the way Brazilians pay for these items is just as fascinating because credit cards power almost 80 percent of the entire economy.</p>
             <img src="../../assets/olist Revenue dive.png" alt="Olist Revenue Deep Dive Dashboard" class="dashboard-img" onerror="this.style.display='none'">
         </div>
 
-        <div class="section-block animate" style="margin-bottom: 50px;">
+        <div class="section-block" style="margin-bottom: 50px;">
             <div class="section-eyebrow">Dashboard 02</div>
             <h2>The unforgiving reality of shipping delays</h2>
-            <p>
-                If there is one chart that defines the success or failure of a transaction it is the relationship between delivery times and customer satisfaction. The data shows absolute zero forgiveness for bad logistics. When packages arrive even a day early shoppers happily award four or five stars. But the exact moment an order misses its deadline the feedback immediately tanks.
-            </p>
-            <p>
-                While Olist maintains a respectable 93 percent on time delivery rate overall this sharp penalty for lateness highlights how fragile customer trust really is. One logistical hiccup is all it takes to ruin the relationship forever.
-            </p>
+            <p>If there is one chart that defines the success or failure of a transaction it is the relationship between delivery times and customer satisfaction. The data shows absolute zero forgiveness for bad logistics. When packages arrive even a day early shoppers happily award four or five stars. But the exact moment an order misses its deadline the feedback immediately tanks.</p>
             <img src="../../assets/olist operation & delivery.png" alt="Olist Delivery and Operations Dashboard" class="dashboard-img" onerror="this.style.display='none'">
         </div>
 
-        <div class="section-block animate" style="margin-bottom: 50px;">
+        <div class="section-block" style="margin-bottom: 50px;">
             <div class="section-eyebrow">Dashboard 03</div>
             <h2>A massive platform-wide retention crisis</h2>
-            <p>
-                Diving into the user demographics exposes a glaring vulnerability in the business model. An alarming 96.8 percent of people buy something once and then completely disappear. There is virtually no repeat buyer loyalty meaning Olist's growth relies entirely on the incredibly expensive process of constantly acquiring brand new shoppers.
-            </p>
-            <p>
-                Furthermore the platform's geographic footprint is incredibly unbalanced. São Paulo alone houses over 40 thousand unique buyers. While that massive volume is great having your entire customer base concentrated in one single state makes the company dangerously exposed to regional economic shifts.
-            </p>
+            <p>Diving into the user demographics exposes a glaring vulnerability in the business model. An alarming 96.8 percent of people buy something once and then completely disappear. There is virtually no repeat buyer loyalty meaning Olist's growth relies entirely on the incredibly expensive process of constantly acquiring brand new shoppers.</p>
             <img src="../../assets/olist customer geography.png" alt="Olist Customer Geography Dashboard" class="dashboard-img" onerror="this.style.display='none'">
         </div>
 
-        <div class="section-block animate" style="margin-bottom: 60px;">
+        <div class="section-block" style="margin-bottom: 60px;">
             <div class="section-eyebrow">Dashboard 04</div>
             <h2>Identifying the merchants doing the heavy lifting</h2>
-            <p>
-                Looking closely at the supply side the platform is essentially carried by a tiny fraction of elite sellers. While thousands of merchants are registered the highest grossing individual pulled in nearly 46 thousand Reais by strategically selling premium items rather than pushing cheap volume. Another merchant managed to ship over eighteen hundred individual orders entirely on their own.
-            </p>
-            <p>
-                Interestingly the data proves that biggest doesn't always mean best. The merchants pushing the absolute highest volumes out of São Paulo actually suffer from significantly worse customer satisfaction ratings compared to smaller more focused sellers in neighboring states.
-            </p>
+            <p>Looking closely at the supply side the platform is essentially carried by a tiny fraction of elite sellers. While thousands of merchants are registered the highest grossing individual pulled in nearly 46 thousand Reais by strategically selling premium items rather than pushing cheap volume.</p>
             <img src="../../assets/olist seller intelligence.png" alt="Olist Seller Intelligence Dashboard" class="dashboard-img" onerror="this.style.display='none'">
         </div>
 
-        <div class="section-block animate" style="margin-bottom: 60px;">
-            <div class="section-eyebrow">Core Insights</div>
-            <h2>The undeniable truths hidden in the dataset</h2>
-            <div style="display: grid; gap: 24px; margin-top: 24px; padding: 20px; background: rgba(255,255,255,0.02); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
-                <div>
-                    <h3 style="margin-bottom: 6px; font-size: 1.1rem; color: #fff;">Logistics dictate reputation</h3>
-                    <p style="margin: 0; font-size: 0.95rem; color: #a3a3a3; line-height: 1.5;">The correlation is absolute. Early arrivals guarantee praise but missing a delivery date by even 24 hours permanently destroys the seller's rating.</p>
-                </div>
-                <div>
-                    <h3 style="margin-bottom: 6px; font-size: 1.1rem; color: #fff;">An endless acquisition treadmill</h3>
-                    <p style="margin: 0; font-size: 0.95rem; color: #a3a3a3; line-height: 1.5;">With a 97 percent churn rate there is no built in loyalty. The platform survives purely by replacing lost buyers with new ones.</p>
-                </div>
-                <div>
-                    <h3 style="margin-bottom: 6px; font-size: 1.1rem; color: #fff;">The São Paulo dependency</h3>
-                    <p style="margin: 0; font-size: 0.95rem; color: #a3a3a3; line-height: 1.5;">Whether you measure by active users merchants or gross revenue this one specific region completely controls the platform's fate.</p>
-                </div>
-                <div>
-                    <h3 style="margin-bottom: 6px; font-size: 1.1rem; color: #fff;">Financing premium goods</h3>
-                    <p style="margin: 0; font-size: 0.95rem; color: #a3a3a3; line-height: 1.5;">Installment plans are a strategic tool for the buyer. Maxing out a ten month payment plan is directly tied to the most expensive items in the catalog.</p>
-                </div>
-                <div>
-                    <h3 style="margin-bottom: 6px; font-size: 1.1rem; color: #fff;">Volume vs quality</h3>
-                    <p style="margin: 0; font-size: 0.95rem; color: #a3a3a3; line-height: 1.5;">Scaling up orders often degrades the buyer experience. The most prolific shippers frequently have lower satisfaction scores than smaller regional competitors.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="section-block animate" style="margin-bottom: 40px;">
+        <div class="section-block" style="margin-bottom: 40px;">
             <div class="section-eyebrow">The Technical Pipeline</div>
             <h2>How the analysis was executed</h2>
-            <p>
-                The raw information was split across eight isolated CSV files covering nearly 100 thousand transactions. I designed a relational schema and wrote custom SQL queries to unify the order history calculate precise delivery delays and aggregate geographic performance metrics. 
-            </p>
-            <p>
-                After validating the mathematical logic and identifying the strongest narrative angles in Excel I imported the refined dataset into Power BI. From there I engineered the cross filtering mechanics and designed the final layout to present a clear executive level story.
-            </p>
+            <p>The raw information was split across eight isolated CSV files covering nearly 100 thousand transactions. I designed a relational schema and wrote custom SQL queries to unify the order history calculate precise delivery delays and aggregate geographic performance metrics.</p>
+            <p>After validating the mathematical logic and identifying the strongest narrative angles in Excel I imported the refined dataset into Power BI. From there I engineered the cross filtering mechanics and designed the final layout to present a clear executive level story.</p>
         </div>
 
         <a href="../../index.html#projects" class="back-link">← Return to projects</a>
@@ -361,4 +343,5 @@
         function init() {
             W = canvas.width = window.innerWidth;
             H = canvas.height = window.innerHeight;
+            
             stars =
