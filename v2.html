@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portfolio | Priyash Vasava</title>
 
-    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@300;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -129,6 +129,7 @@
         #hero-text-overlay h1 {
             font-family: 'Inter', sans-serif; font-size: 1.1rem;
             letter-spacing: 0.2em; line-height: 1.8; margin: 0;
+            text-transform: uppercase;
         }
         #hero-text-overlay .highlight {
             font-family: 'Montserrat', sans-serif; color: #fff; font-size: 2rem;
@@ -170,7 +171,7 @@
         }
         .right-column p { font-size: 0.85rem; line-height: 1.8; color: #888; margin: 0; }
         .right-column a { font-size: 0.75rem; font-weight: 700; color: #fff;
-                          text-decoration: underline; text-underline-offset: 4px; letter-spacing: 0.05em; }
+                          text-decoration: underline; text-underline-offset: 4px; letter-spacing: 0.05em; text-transform: uppercase; }
 
         .bottom-section {
             position: relative; z-index: 5; max-width: 1100px; margin: 60vh auto 0 auto;
@@ -178,21 +179,56 @@
         }
 
         .project-row { display: grid; grid-template-columns: 240px 1fr; gap: 40px; padding: 40px 0;
-                       border-top: 1px solid #222; text-decoration: none; align-items: start; }
-        .project-row img { width: 100%; height: 140px; border-radius: 4px; object-fit: cover; }
+                       border-top: 1px solid #222; text-decoration: none; align-items: start; transition: opacity 0.3s ease; }
+        .project-row img { width: 100%; height: 140px; border-radius: 4px; object-fit: cover; border: 1px solid #333; }
         .project-row h2 { color: #fff; font-size: 1.2rem; font-family:'Montserrat',sans-serif;
-                          letter-spacing: 0.05em; margin-bottom:10px; text-transform: uppercase; }
+                          letter-spacing: 0.05em; margin-bottom:10px; }
         .project-row p { color: #888; font-size: 0.95rem; line-height: 1.7; margin-bottom: 16px; }
         .tags { display: flex; gap: 10px; }
         .tags span { border: 1px solid #333; padding: 4px 10px; font-size: 0.7rem;
                      text-transform: uppercase; border-radius: 4px; color: #fff; }
         .project-row:hover { opacity: 0.7; }
+
+        /* --- CONNECT SECTION --- */
+        .connect-section {
+            position: relative; z-index: 5; max-width: 1100px; margin: 0 auto;
+            text-align: center; padding: 60px 5vw 100px 5vw;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .connect-section blockquote {
+            font-size: 1.1rem; color: #fff; font-style: italic; margin-bottom: 30px; font-family: 'Montserrat', sans-serif;
+        }
+        .connect-links a {
+            display: inline-block; margin: 0 10px; font-size: 0.85rem; text-transform: uppercase;
+            letter-spacing: 0.1em; color: #888; border: 1px solid #333; padding: 8px 16px;
+            border-radius: 4px; transition: 0.3s; text-decoration: none;
+        }
+        .connect-links a:hover {
+            color: #fff; border-color: #888;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 950px) {
+            .project-row {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .right-column {
+                width: 100%;
+                margin-top: 40px;
+                margin-right: 0;
+                align-items: center;
+                text-align: center;
+                border-top: 1px solid rgba(255,255,255,0.05);
+                padding-top: 40px;
+            }
+        }
     </style>
 </head>
 <body>
 
     <nav class="navbar">
-        <a href="/" class="logo">PRIYASH VASAVA</a>
+        <a href="/" class="logo">Priyash Vasava</a>
         <div class="nav-links">
             <a href="#projects">PROJECTS</a>
             <a href="blog.html">BLOG</a>
@@ -201,7 +237,6 @@
         </div>
     </nav>
 
-    <!-- HERO: ORACLE + TEXT -->
     <div class="hero-wrapper">
         <canvas id="oracle-canvas"></canvas>
         <div class="scanlines"></div>
@@ -218,9 +253,9 @@
 
         <div id="hero-text-overlay">
             <h1>
-                <span class="highlight">ANALYST</span> <span class="muted">BY DAY</span><br>
-                <span class="highlight">VIBE CODER</span><br>
-                <span class="muted">BY NIGHT</span>
+                <span class="muted">Analyst by day</span><br>
+                <span class="highlight">Vibe coder</span><br>
+                <span class="muted">by night</span>
             </h1>
         </div>
 
@@ -228,38 +263,50 @@
         <div id="magic-quote">- says the magic 8 ball</div>
     </div>
 
-    <!-- BIO -->
     <div class="layout-container">
         <div class="right-column">
             <img src="assets/user-portrait.jpg" alt="Priyash" class="sidebar-img"
                  onerror="this.src='https://via.placeholder.com/120/111/444?text=PV'">
-            <p>I like to think of myself as an observer. Observing different kinds of systems, from the system of Nature to the system of Metropolitan city and much more. Fascinated by how they function, why they break, and how they can be optimized. Be it a problem-solving project or just curiosity, I rely on SQL and Power BI as my core tools to uncover facts.</p>
-            <a href="who-am-i.html">KNOW MORE OF ME ↗</a>
+            <p>I like to think of myself as an observer. Observing different kinds of system, from the system of Nature to the system of Metropolitan city and much more. fascinated by how they function, why they break, and how they can be optimized. be it problem solving project or just a curiosity (mostly curiosity), I was able to quickly get my hands on SQL and Power BI as my core tools to uncover the facts. In my free time When I'm not mastering SQL or Power BI, I'm probably experimenting with new AI features and tools across the internet.</p>
+            <a href="who-am-i.html">Know more of me ↗</a>
         </div>
     </div>
 
-    <!-- PROJECTS -->
     <div class="bottom-section" id="projects">
         <a href="projects/olist/index.html" class="project-row" style="border-top: none;">
-            <img src="assets/olist-cover.png" alt="Olist" onerror="this.style.display='none'">
+            <img src="assets/olist-cover.png" alt="Olist Project Cover" onerror="this.style.display='none'">
             <div>
                 <h2>Olist E-Commerce</h2>
-                <p>Olist is a Brazilian SaaS technology company that acts as a unified marketplace integrator. Uncovered hidden customer behaviour patterns from 550K rows across 8 relational datasets using Excel, SQL, and Power BI.</p>
+                <p>Olist is a Brazilian SaaS technology company that acts as a unified marketplace integrator, connecting small and medium-sized businesses to major e-commerce channels through a single platform. The goal of this data analysis was to uncover hidden customer behaviour patterns from 550K rows across 8 relational dataset. from exploring in excel to advanced visuals in Power bi. Come check it out !</p>
                 <div class="tags"><span>Excel</span><span>SQL</span><span>Power BI</span></div>
             </div>
         </a>
 
         <a href="projects/google-stock/index.html" class="project-row">
-            <img src="assets/google-cover.png" alt="Google" onerror="this.style.display='none'">
+            <img src="assets/google-cover.png" alt="Google Stock Cover" onerror="this.style.display='none'">
             <div>
                 <h2>Google Stock Analysis</h2>
-                <p>Understand and find meaningful patterns in the journey of Google (Alphabet Inc.) stock market performance. Heavily relied on Power BI's DAX formulas to turn numbers into a crystal clear picture.</p>
+                <p>The aim of this project was to understand and find meaningful patterns in the journey of Google(Alphabet Inc.) stock market performmance using Excel, SQL, Power Bi. This project was heavily relied on Power Bi's DAX formula which helped turning numbers into crystal clear picture of long journey that google's stock has come through. .</p>
                 <div class="tags"><span>Excel</span><span>PowerBi</span><span>SQL</span></div>
             </div>
         </a>
     </div>
 
-    <!-- QUANTUM ORACLE SCRIPT -->
+    <div id="connect" class="connect-section">
+        <blockquote>
+            "In God we trust. All others must bring data."<br>
+            <span style="font-family: 'Inter', sans-serif; font-size: 0.85rem; font-style: normal; color: #888;">— W. Edwards Deming</span>
+        </blockquote>
+        <div class="connect-links">
+            <a href="mailto:Priyashvasava@outlook.com">Say Hello ↗</a>
+            <a href="https://www.linkedin.com/in/priyashvasava" target="_blank">LinkedIn</a>
+            <a href="https://github.com/priyashh" target="_blank">GitHub</a>
+        </div>
+        <p style="font-size: 0.85rem; color: #888; margin-top: 20px;">
+            Priyashvasava@outlook.com
+        </p>
+    </div>
+
     <script>
         const canvas = document.getElementById('oracle-canvas');
         const ctx = canvas.getContext('2d');
