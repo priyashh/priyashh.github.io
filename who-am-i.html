@@ -5,8 +5,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Story of my life | Priyash Vasava</title>
     <link rel="stylesheet" href="style.css">
+    
+    <!-- Fonts matched to the main home page -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@300;500;600;700;800&family=Montserrat:wght@300;700;900&display=swap" rel="stylesheet">
+    
     <style>
+        /* --- GLOBAL & FIXED CANVAS --- */
+        body {
+            background-color: #030305;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+            cursor: none !important; /* Forces custom cursor logic if applied later, or hides it fully */
+        }
+        
+        * { cursor: none !important; }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: -1; 
+            pointer-events: none;
+        }
+
+        /* --- NAVBAR --- */
+        .navbar {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px 50px;
+        }
+
+        .navbar .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 16px;
+            color: #fff;
+            letter-spacing: 2px;
+            text-decoration: none;
+        }
+
+        .navbar .nav-links {
+            display: flex; gap: 30px;
+        }
+
+        .navbar .nav-links a {
+            font-family: 'Courier Prime', monospace;
+            color: #00f3ff;
+            font-size: 12px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .navbar .nav-links a:hover {
+            color: #fff;
+            text-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+        }
+
+        /* --- STORY PAGE LAYOUT --- */
         .story-wrapper {
+            position: relative;
+            z-index: 10;
             max-width: 1100px;
             margin: 0 auto;
             padding: 40px 20px 120px 20px;
@@ -17,11 +86,13 @@
         }
         
         .page-title h1 {
+            font-family: 'Montserrat', sans-serif;
             font-size: clamp(2.4rem, 5vw, 4rem); 
-            font-weight: 700; 
+            font-weight: 900; 
             letter-spacing: -0.03em; 
             line-height: 1.1;
-            color: var(--text-main, #fff);
+            color: #ffffff;
+            text-transform: uppercase;
         }
 
         .story-grid {
@@ -42,21 +113,23 @@
         #scrollImage {
             width: 100%;
             border-radius: 14px;
-            border: 1px solid var(--glass-border, rgba(255,255,255,0.1));
-            box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.6);
             object-fit: cover;
+            filter: grayscale(100%) contrast(1.1); /* Cinematic monotone look */
         }
 
         /* RIGHT SIDE: The Text */
         .text-column {
             flex: 1;
-            padding-bottom: 250px; /* Extra space to allow scrolling past the last item */
+            padding-bottom: 250px; 
         }
 
         .intro-heading {
+            font-family: 'Inter', sans-serif;
             font-size: clamp(2.5rem, 4vw, 3.5rem);
-            font-weight: 700;
-            color: var(--text-main, #fff);
+            font-weight: 800;
+            color: #ffffff;
             line-height: 1.1;
             margin-bottom: 40px;
             letter-spacing: -0.03em;
@@ -64,7 +137,7 @@
 
         .text-column p {
             font-size: 1.15rem;
-            color: var(--text-muted, #a3a3a3);
+            color: #a3a3a3; /* Light grey */
             line-height: 1.8;
             margin-bottom: 32px;
         }
@@ -79,7 +152,7 @@
             font-weight: 600;
             letter-spacing: 0.14em;
             text-transform: uppercase;
-            color: var(--text-muted, #a3a3a3);
+            color: #00f3ff; /* Cyan accent */
             margin-bottom: 20px;
         }
 
@@ -91,17 +164,19 @@
 
         .slide-tags span {
             padding: 8px 16px;
-            background: var(--glass-bg, rgba(255,255,255,0.04));
-            border: 1px solid var(--glass-border, rgba(255,255,255,0.1));
+            background: rgba(255,255,255,0.05); /* Sleek glass block */
+            border: 1px solid rgba(255,255,255,0.1);
             border-radius: 6px;
             font-size: 0.9rem;
-            color: var(--text-main, #fff);
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         /* The fading animation class */
         .fade-on-scroll {
             transition: opacity 0.1s ease-out, transform 0.1s ease-out;
-            opacity: 0.15; /* Default state for items not in center */
+            opacity: 0.15; 
             will-change: opacity, transform;
         }
         
@@ -109,38 +184,36 @@
         .back-link {
             display: inline-block;
             margin-top: 60px;
-            font-weight: 500;
-            color: var(--text-muted);
-            border-bottom: 2px solid var(--text-main);
+            font-weight: 600;
+            color: #a3a3a3;
+            border-bottom: 2px solid #ffffff;
             padding-bottom: 2px;
             transition: 0.3s;
             text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.85rem;
         }
 
         .back-link:hover {
-            color: var(--accent-blue, #4f8ef7);
-            border-color: var(--accent-blue, #4f8ef7);
+            color: #00f3ff;
+            border-color: #00f3ff;
         }
 
         @media (max-width: 850px) {
-            .story-grid {
-                flex-direction: column;
-            }
-            .image-column {
-                position: relative;
-                top: 0;
-                flex: auto;
-                width: 100%;
-                max-width: 400px;
-                margin-bottom: 40px;
-            }
+            .navbar { padding: 20px; flex-direction: column; gap: 15px; }
+            .story-grid { flex-direction: column; }
+            .image-column { position: relative; top: 0; flex: auto; width: 100%; max-width: 400px; margin-bottom: 40px; }
         }
     </style>
 </head>
 <body>
 
+    <!-- Ambient Stars Fixed Canvas -->
+    <canvas id="bg-canvas"></canvas>
+
     <nav class="navbar">
-        <a href="index.html" class="logo">Priyash Vasava</a>
+        <a href="index.html" class="logo">PRIYASH VASAVA</a>
         <div class="nav-links">
             <a href="index.html#projects">Projects</a>
             <a href="blog.html">Blog</a>
@@ -158,7 +231,7 @@
         <div class="story-grid">
             
             <div class="image-column">
-                <img id="scrollImage" src="assets/user-portrait.jpg" alt="Portrait of Priyash Vasava">
+                <img id="scrollImage" src="assets/user-portrait.jpg" alt="Portrait of Priyash Vasava" onerror="this.src='https://via.placeholder.com/400x500/111/444?text=Portrait'">
             </div>
 
             <div class="text-column">
@@ -170,7 +243,7 @@
                 </p>
 
                 <p class="fade-on-scroll">
-                    My technical foundation expanded through an internship at the Indian Space Research Organisation (ISRO), where I was introduced to advanced uses of Excel and reporting. I am also currently completing my degree in Economics. I am a <em>vibe coder</em> (directing AI to bridge the gap between intent and code) and my curiosity has no limits (or that's what I like to think).
+                    My technical foundation expanded through an internship at the Indian Space Research Organisation (ISRO), where I was introduced to advanced uses of Excel and reporting. I am also currently completing my degree in Economics. I am a <em style="color:#00f3ff; font-style:normal;">vibe coder</em> (directing AI to bridge the gap between intent and code) and my curiosity has no limits (or that's what I like to think).
                 </p>
 
                 <p class="fade-on-scroll">
@@ -186,7 +259,7 @@
                 </p>
 
                 <p class="fade-on-scroll">
-                    I am a forever learner. By building the projects highlighted here, I am just trying to step into the arena, find the problems I can solve using what I have learned so far, and keep on growing. <br><br>Ciao.
+                    I am a forever learner. By building the projects highlighted here, I am just trying to step into the arena, find the problems I can solve using what I have learned so far, and keep on growing. <br><br><span style="color: #fff; font-weight: 700;">Ciao.</span>
                 </p>
 
                 <div class="tools-section fade-on-scroll">
@@ -211,10 +284,64 @@
 
             </div>
         </div>
-    </div>
-
+        <!-- BACKGROUND STARS AND SCROLL OPACITY LOGIC -->
     <script>
+        // 1. BACKGROUND STARS LOGIC
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let W, H;
+        let stars = [];
+
+        class Star {
+            constructor() {
+                this.x = Math.random() * window.innerWidth;
+                this.y = Math.random() * window.innerHeight; 
+                this.z = Math.random() * window.innerWidth; 
+                this.size = Math.random() * 1.5;
+                this.color = Math.random() > 0.8 ? '#00f3ff' : '#ffffff';
+            }
+            update() {
+                // Drift left naturally across whole page
+                this.x -= 0.15 * (W / Math.max(this.z, 1)); 
+                if (this.x < 0) this.x = W;
+            }
+            draw() {
+                let alpha = Math.min(1, W / Math.max(this.z, 1));
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = alpha;
+                ctx.beginPath(); 
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); 
+                ctx.fill();
+            }
+        }
+
+        function initStars() {
+            W = canvas.width = window.innerWidth;
+            H = canvas.height = window.innerHeight;
+            
+            stars = [];
+            for (let i = 0; i < 150; i++) {
+                stars.push(new Star());
+            }
+        }
+
+        function loop() {
+            ctx.clearRect(0, 0, W, H);
+            stars.forEach(s => {
+                s.update();
+                s.draw();
+            });
+            requestAnimationFrame(loop);
+        }
+
+        window.addEventListener('resize', initStars);
+        
+        // 2. FADE-ON-SCROLL LOGIC
         document.addEventListener("DOMContentLoaded", () => {
+            initStars();
+            requestAnimationFrame(loop);
+
             const elements = document.querySelectorAll('.fade-on-scroll');
             
             function checkFade() {
@@ -225,22 +352,20 @@
                     // Get the center point of the element
                     const elementCenter = rect.top + (rect.height / 2);
                     // Get the center point of the viewport
-                    const screenCenter = windowHeight / 2;
+                    const screenCenter = windowHeight / 2.5; // Offset slightly up for better reading
                     
-                    // Calculate how far the element's center is from the viewport's center
+                    // Calculate how far the element's center is from the viewport's ideal center
                     const distance = Math.abs(screenCenter - elementCenter);
                     
                     // The distance at which the text starts aggressively fading out
-                    const maxDistance = windowHeight / 2.5; 
+                    const maxDistance = windowHeight / 3; 
                     
                     // Calculate opacity (1 when centered, approaching 0.15 as it moves away)
                     let opacity = 1 - (distance / maxDistance);
                     
-                    // Keep a minimum opacity so it doesn't entirely vanish, and cap at 1
                     if(opacity < 0.15) opacity = 0.15;
                     if(opacity > 1) opacity = 1;
                     
-                    // Add a slight translation effect based on distance to make it 'float'
                     let translateY = (elementCenter - screenCenter) * 0.05;
                     
                     el.style.opacity = opacity;
@@ -248,12 +373,12 @@
                 });
             }
 
-            // Run once on load to establish the starting brightness
+            // Run once on load
             checkFade();
-            
-            // Re-calculate the brightness every time the user scrolls
+            // Re-calculate on scroll
             window.addEventListener('scroll', checkFade);
         });
     </script>
 </body>
 </html>
+    </div>
