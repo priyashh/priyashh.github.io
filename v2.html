@@ -42,189 +42,148 @@
             justify-content: space-between;
             align-items: center;
             padding: 40px 50px;
-            box-sizing: border-box;
             background: transparent !important;
             border: none !important;
             box-shadow: none !important;
         }
 
-        .navbar .logo {
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 900;
-            font-size: 16px;
-            color: #fff;
-            letter-spacing: 2px;
-            text-decoration: none;
-        }
-
+        .navbar .logo { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 16px; color: #fff; letter-spacing: 2px; text-decoration: none; }
         .navbar .nav-links { display: flex; gap: 30px; }
-        .navbar .nav-links a {
-            font-family: 'Courier Prime', monospace;
-            color: #00f3ff;
-            font-size: 14px; 
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
-            text-decoration: none;
-            opacity: 0.8;
-            transition: all 0.3s ease;
-        }
+        .navbar .nav-links a { font-family: 'Courier Prime', monospace; color: #00f3ff; font-size: 14px; letter-spacing: 4px; text-transform: uppercase; text-shadow: 0 0 10px rgba(0, 243, 255, 0.5); text-decoration: none; opacity: 0.8; transition: all 0.3s ease; }
         .navbar .nav-links a:hover { opacity: 1; color: #fff; text-shadow: 0 0 15px rgba(255, 255, 255, 0.8); }
 
-        /* --- 100VH HERO CONTAINER (Anchors absolute text safely) --- */
+        /* --- 100VH HERO CONTAINER --- */
         #hero-container {
             position: relative;
             width: 100vw;
-            height: calc(100vh - 100px); /* Minus navbar approx height */
-            pointer-events: none; /* Let clicks pass to canvas */
+            height: calc(100vh - 100px); 
+            pointer-events: none; 
             z-index: 15;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         /* Hero Text Group */
         #hero-text-overlay {
             position: absolute;
-            top: 10%; /* High Up */
-            left: 50%;
-            transform: translate(-50%, 0) scale(1);
+            top: 20px; /* Locked nicely at top */
             text-align: center;
             transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* Animation Trigger */
+        /* Explosion Animation */
         #hero-text-overlay.exploded {
-            /* Glides gracefully down and right to sit over the bio */
-            transform: translate(calc(50vw - 320px), 30vh) scale(0.65);
+            /* Drops down and shifts to the right column */
+            transform: translate(calc(50vw - 200px), 65vh) scale(0.7);
         }
 
-        #hero-text-overlay h1 {
-            font-family: 'Inter', sans-serif;
-            font-size: 1.1rem;
-            letter-spacing: 0.2em;
-            line-height: 1.8;
-            margin: 0;
-            text-transform: uppercase;
-        }
+        #hero-text-overlay h1 { font-family: 'Inter', sans-serif; font-size: 1.1rem; letter-spacing: 0.2em; line-height: 1.8; margin: 0; text-transform: uppercase; }
+        #hero-text-overlay .highlight { font-family: 'Montserrat', sans-serif; color: #fff; font-size: 2rem; font-weight: 900; letter-spacing: 0.15em; text-shadow: 0 0 20px rgba(255,255,255,0.3); }
+        #hero-text-overlay .muted { color: #888; font-weight: 400; }
 
-        #hero-text-overlay .highlight {
-            font-family: 'Montserrat', sans-serif;
-            color: #fff;
-            font-size: 2rem;
-            font-weight: 900;
-            letter-spacing: 0.15em;
-            text-shadow: 0 0 20px rgba(255,255,255,0.3);
-        }
-
-        #hero-text-overlay .muted {
-            color: #888;
-            font-weight: 400;
-        }
-
-        /* The Hint & Quote Texts */
-        .hero-hint, #magic-quote {
+        /* The Hint */
+        .hero-hint {
             position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
+            bottom: 60px; /* Locked nicely at bottom */
             color: #00f3ff;
             font-family: 'Courier Prime', monospace;
-            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
-            text-transform: uppercase;
-        }
-
-        .hero-hint {
-            top: 30%; /* Between title and oracle */
             font-size: 11px;
             letter-spacing: 4px;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
             opacity: 0.8;
             transition: opacity 0.3s;
         }
 
+        /* The 8-Ball Quote */
         #magic-quote {
-            top: 36%; /* Directly underneath where the 8-ball generated particle text forms */
+            position: absolute;
+            top: 48%; 
+            color: #00f3ff;
+            font-family: 'Courier Prime', monospace;
             font-size: 13px;
             letter-spacing: 2px;
-            opacity: 0; /* Invisible by default */
+            opacity: 0; 
             transition: opacity 0.5s ease-in;
+            text-transform: uppercase;
         }
 
-        /* --- FLAWLESS GRID LAYOUT --- */
-        .case-wrapper {
+        /* --- BULLETPROOF FLEX LAYOUT --- */
+        .content-container {
             position: relative;
             z-index: 10;
-            display: grid;
-            grid-template-columns: 80px minmax(500px, 1fr) 300px;
-            padding-top: 40px;
-            max-width: 1250px; 
+            max-width: 1200px;
             margin: 0 auto;
-            column-gap: 50px;
+            padding: 20px 40px;
         }
 
-        /* Sidebar Bio (Pushed far right) */
+        /* The Top Row of Content (Bio pushed strictly to the right) */
+        .content-top-row {
+            display: flex;
+            justify-content: flex-end; /* Shoves contents to the right */
+            margin-bottom: 60px;
+        }
+
         .sidebar-bio {
-            grid-column: 3;
-            grid-row: 1;
+            width: 320px; /* Strictly enforces width so it never breaks layout */
             display: flex;
             flex-direction: column;
             gap: 16px;
-            padding-top: 100px;  /* Tucked neatly near top of content area */
         }
 
-        .sidebar-img {
-            width: 130px; height: 130px; /* Big focus image */
-            border-radius: 4px; object-fit: cover;
-            filter: grayscale(100%) contrast(1.2);
-        }
-
+        .sidebar-img { width: 130px; height: 130px; border-radius: 4px; object-fit: cover; filter: grayscale(100%) contrast(1.2); }
         .sidebar-bio p { font-size: 0.85rem; line-height: 1.8; color: #888; margin: 0; }
         .sidebar-bio a { font-size: 0.75rem; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; color: #fff; text-transform: uppercase; letter-spacing: 0.05em; }
 
+        /* The Bottom Row of Content */
+        .content-bottom-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 60px;
+            margin-bottom: 80px;
+        }
+
         /* Featured Works Axis */
         .vertical-line {
-            grid-column: 1;
-            grid-row: 1; 
             writing-mode: vertical-rl;
             transform: rotate(180deg);
             font-size: 10px;
             letter-spacing: 4px;
             color: #666;
             text-align: right;
-            padding-top: 140px;
+            padding-top: 20px;
+            flex-shrink: 0;
         }
 
         /* Projects Section */
         .projects-container { 
-            grid-column: 2 / 4; 
-            grid-row: 1;
-            display: flex; flex-direction: column; margin-bottom: 80px; 
-            padding-top: 50px;
+            flex-grow: 1;
+            display: flex; flex-direction: column; 
         }
         
-        .project-row { display: grid; grid-template-columns: 200px 1fr; gap: 30px; padding: 30px 0; border-top: 1px solid #222; align-items: center; transition: opacity 0.3s ease; text-decoration: none; }
+        .project-row { display: grid; grid-template-columns: 240px 1fr; gap: 30px; padding: 40px 0; border-top: 1px solid #222; align-items: center; transition: opacity 0.3s ease; text-decoration: none; }
         .project-row:hover { opacity: 0.7; }
-        .project-row img { width: 100%; height: 120px; object-fit: cover; border-radius: 4px; border: 1px solid #222; }
-        .project-info h2 { font-size: 1.1rem; letter-spacing: 0.05em; margin-bottom: 8px; color: #fff; }
-        .project-info p { font-size: 0.9rem; color: #888; margin-bottom: 12px; line-height: 1.6; max-width: 90%; }
+        .project-row img { width: 100%; height: 140px; object-fit: cover; border-radius: 4px; border: 1px solid #222; }
+        .project-info h2 { font-size: 1.2rem; letter-spacing: 0.05em; margin-bottom: 8px; color: #fff; text-transform: uppercase; font-family: 'Montserrat', sans-serif; font-weight: 800;}
+        .project-info p { font-size: 0.9rem; color: #888; margin-bottom: 16px; line-height: 1.7; max-width: 95%; }
         .slide-tags { display: flex; gap: 8px; }
         .slide-tags span { font-size: 0.7rem; color: #fff; background: #111; padding: 4px 8px; border: 1px solid #333; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
         
         /* Connect Section */
         .connect-section { 
-            grid-column: 2 / 4; 
-            grid-row: 2;
-            text-align: center; padding: 60px 0; border-top: 1px solid #222; 
+            text-align: center; padding: 60px 0; border-top: 1px solid #222; margin-top: 40px;
         }
         .connect-section blockquote { font-size: 1.1rem; color: #fff; font-style: italic; margin-bottom: 30px; }
         .connect-links a { display: inline-block; margin: 0 10px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; color: #888; border: 1px solid #333; padding: 8px 16px; border-radius: 4px; transition: 0.3s; text-decoration: none; }
         .connect-links a:hover { color: #fff; border-color: #888; }
 
         @media (max-width: 1050px) {
-            .case-wrapper { display: flex; flex-direction: column; padding: 40px 20px 0 20px; }
+            .content-top-row { justify-content: center; } /* Centers bio on mobile */
+            .sidebar-bio { text-align: center; align-items: center; padding-bottom: 40px; border-bottom: 1px solid #222; }
+            .content-bottom-row { flex-direction: column; gap: 20px;}
             .vertical-line { display: none; }
-            .sidebar-bio { padding-top: 20px; text-align: center; border-bottom: 1px solid #222; padding-bottom: 40px; margin-bottom: 40px; }
-            .sidebar-bio img { margin: 0 auto; }
-            .project-row { grid-template-columns: 1fr; gap: 16px; }
-            #hero-text-overlay.exploded { transform: translate(-50%, -10vh) scale(0.7); } 
-            .hero-hint { top: 22%; }
-            #magic-quote { top: 32%; }
+            .project-row { grid-template-columns: 1fr; }
+            #hero-text-overlay.exploded { transform: translate(-50%, 60vh) scale(0.8); } /* Drops straight down on phone */
         }
     </style>
 </head>
@@ -234,7 +193,7 @@
     <canvas id="bg-canvas"></canvas>
     <canvas id="cursor-canvas"></canvas>
 
-    <!-- Content Structure -->
+    <!-- Header -->
     <nav class="navbar">
         <a href="/" class="logo">PRIYASH VASAVA</a>
         <div class="nav-links">
@@ -245,7 +204,7 @@
         </div>
     </nav>
 
-    <!-- Anchors Absolute Text within Hero view -->
+    <!-- Hero Section (Takes up screen, anchors Oracle and Text) -->
     <div id="hero-container">
         <div id="hero-text-overlay">
             <h1>
@@ -258,36 +217,41 @@
         <div id="magic-quote">- says the magic 8 ball</div>
     </div>
 
-    <!-- Scrolling Projects -->
-    <div class="case-wrapper">
-        <div class="sidebar-bio">
-            <img src="assets/user-portrait.jpg" alt="Priyash" class="sidebar-img" onerror="this.src='https://via.placeholder.com/130/111/444?text=PV'">
-            <p>
-                I like to think of myself as an observer. Observing different kinds of systems, from the system of Nature to the system of Metropolitan city and much more. Fascinated by how they function, why they break, and how they can be optimized. Be it a problem-solving project or just curiosity, I rely on SQL and Power BI as my core tools to uncover facts.
-            </p>
-            <a href="who-am-i.html">Know more of me ↗</a>
+    <!-- Scrolling Content Area -->
+    <div class="content-container">
+        
+        <div class="content-top-row">
+            <div class="sidebar-bio">
+                <img src="assets/user-portrait.jpg" alt="Priyash" class="sidebar-img" onerror="this.src='https://via.placeholder.com/130/111/444?text=PV'">
+                <p>
+                    I like to think of myself as an observer. Observing different kinds of systems, from the system of Nature to the system of Metropolitan city and much more. Fascinated by how they function, why they break, and how they can be optimized. Be it a problem-solving project or just curiosity, I rely on SQL and Power BI as my core tools to uncover facts.
+                </p>
+                <a href="who-am-i.html">Know more of me ↗</a>
+            </div>
         </div>
 
-        <div class="vertical-line">FEATURED WORKS</div>
-        
-        <div id="projects" class="projects-container">
-            <a href="projects/olist/index.html" class="project-row">
-                <img src="assets/olist-cover.png" alt="Olist Project" onerror="this.style.display='none'">
-                <div class="project-info">
-                    <h2>Olist E-Commerce</h2>
-                    <p>Olist is a Brazilian SaaS technology company that acts as a unified marketplace integrator. Uncovered hidden customer behaviour patterns from 550K rows across 8 relational datasets using Excel, SQL, and Power BI.</p>
-                    <div class="slide-tags"><span>Excel</span><span>SQL</span><span>Power BI</span></div>
-                </div>
-            </a>
+        <div class="content-bottom-row">
+            <div class="vertical-line">FEATURED WORKS</div>
+            
+            <div id="projects" class="projects-container">
+                <a href="projects/olist/index.html" class="project-row">
+                    <img src="assets/olist-cover.png" alt="Olist Project" onerror="this.style.display='none'">
+                    <div class="project-info">
+                        <h2>Olist E-Commerce</h2>
+                        <p>Olist is a Brazilian SaaS technology company that acts as a unified marketplace integrator. Uncovered hidden customer behaviour patterns from 550K rows across 8 relational datasets using Excel, SQL, and Power BI.</p>
+                        <div class="slide-tags"><span>Excel</span><span>SQL</span><span>Power BI</span></div>
+                    </div>
+                </a>
 
-            <a href="projects/google-stock/index.html" class="project-row">
-                <img src="assets/google-cover.png" alt="Google Stock" onerror="this.style.display='none'">
-                <div class="project-info">
-                    <h2>Google Stock Analysis</h2>
-                    <p>Understand and find meaningful patterns in the journey of Google (Alphabet Inc.) stock market performance. Heavily relied on Power BI's DAX formulas to turn numbers into a crystal clear picture.</p>
-                    <div class="slide-tags"><span>Excel</span><span>PowerBi</span><span>SQL</span></div>
-                </div>
-            </a>
+                <a href="projects/google-stock/index.html" class="project-row">
+                    <img src="assets/google-cover.png" alt="Google Stock" onerror="this.style.display='none'">
+                    <div class="project-info">
+                        <h2>Google Stock Analysis</h2>
+                        <p>Understand and find meaningful patterns in the journey of Google (Alphabet Inc.) stock market performance. Heavily relied on Power BI's DAX formulas to turn numbers into a crystal clear picture.</p>
+                        <div class="slide-tags"><span>Excel</span><span>PowerBi</span><span>SQL</span></div>
+                    </div>
+                </a>
+            </div>
         </div>
 
         <div id="connect" class="connect-section">
@@ -305,7 +269,7 @@
 
     </div>
 
-    <!-- PURE GRAPHICS LOGIC -->
+    <!-- PURE GRAPHICS LOGIC (SPIRAL GALAXY FLUID PHYSICS) -->
     <script>
         const bgCanvas = document.getElementById('bg-canvas');
         const bgCtx = bgCanvas.getContext('2d');
@@ -316,29 +280,25 @@
         const heroText = document.getElementById('hero-text-overlay');
         const quoteEl = document.getElementById('magic-quote');
         
-        let W, H;
-        let cx, cy; // Oracle Center Absolute Position
+        let W, H, cx, cy; 
         
-        const N = 4000; 
+        const N = 2500; // Optimal density for fluid galaxy 
         let particles =[];
         let stars = [];
         let mouseTrail =[];
         let mouse = { x: -1000, y: -1000 };
         
-        let baseRadius = 240;
-        let rotationX = 0;
-        let rotationY = 0;
         let state = 'idle'; 
         let chargeLevel = 0;
         let answerTimer = 0;
 
-        // Exactly 5 Pos, 5 Neg, 5 Wild
         const answers =[
             "THE UNIVERSE\nALIGNS", "GREEN LIGHT", "TRUST YOUR\nGUT", "IT IS\nWRITTEN", "ABSOLUTELY",
             "NOT IN THIS\nTIMELINE", "THE VIBES\nARE OFF", "RETHINK\nEVERYTHING", "HARD NO", "ABORT\nMISSION",
             "PLOT TWIST\nIMMINENT", "RECALIBRATING...", "ASK THE\nSIMULATION", "MAIN CHARACTER\nENERGY", "GLITCH IN\nTHE MATRIX"
         ];
-        const colors =['#00f3ff', '#b026ff', '#ffffff'];
+        
+        const colors =['#00f3ff', '#b026ff', '#ffffff', '#00ffaa']; // Added neon green trace
 
         // --- STARS ---
         class Star {
@@ -363,71 +323,72 @@
             }
         }
 
-        // --- ATOM ---
+        // --- FLUID GALAXY PARTICLES ---
         class Particle {
             constructor() {
-                let type = Math.random();
-                if (type < 0.25) { 
-                    let u = Math.random(), v = Math.random();
-                    let theta = 2 * Math.PI * u, phi = Math.acos(2 * v - 1);
-                    let r = Math.random() * 0.35; 
-                    this.ox = Math.sin(phi) * Math.cos(theta) * r;
-                    this.oy = Math.sin(phi) * Math.sin(theta) * r;
-                    this.oz = Math.cos(phi) * r;
-                } else { 
-                    let angle = Math.random() * Math.PI * 2;
-                    let ring = Math.floor(Math.random() * 3);
-                    let r = 0.9 + Math.random() * 0.2; 
-                    let x = Math.cos(angle) * r, z = Math.sin(angle) * r, y = (Math.random() - 0.5) * 0.08; 
-                    if (ring === 0) { let t = Math.PI / 3; this.ox = x; this.oy = y*Math.cos(t) - z*Math.sin(t); this.oz = y*Math.sin(t) + z*Math.cos(t); }
-                    else if (ring === 1) { let t = -Math.PI / 3; this.ox = x; this.oy = y*Math.cos(t) - z*Math.sin(t); this.oz = y*Math.sin(t) + z*Math.cos(t); }
-                    else { this.ox = x; this.oy = y; this.oz = z; }
-                }
-                this.x = cx; this.y = cy; this.z = 0;
-                this.tx = 0; this.ty = 0; 
-                this.color = colors[Math.floor(Math.random() * colors.length)];
-                this.size = Math.random() * 1.5 + 0.5;
+                this.initParams();
+                this.x = cx; this.y = cy; 
                 this.vx = 0; this.vy = 0;
                 this.isText = false; this.isDebris = false;
             }
 
-            update() {
+            initParams() {
+                // Creates beautiful, dense spiral arms
+                let t = Math.pow(Math.random(), 2.8); 
+                let arm = Math.floor(Math.random() * 2); 
+                let angle = t * Math.PI * 12 + (arm * Math.PI); 
+                let maxR = Math.min(W, H) * 0.35;
+                let r = t * maxR;
+
+                let scatter = 10 + t * 60;
+                let sx = (Math.random() - 0.5) * scatter;
+                let sy = (Math.random() - 0.5) * scatter;
+
+                this.baseX = Math.cos(angle) * r + sx;
+                this.baseY = Math.sin(angle) * r + sy;
+                
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.size = Math.random() * 1.5 + 0.5;
+                this.spring = Math.random() * 0.02 + 0.02;
+            }
+
+            update(time) {
                 if (state === 'idle' || state === 'charging') {
-                    let sx = this.ox * baseRadius, sy = this.oy * baseRadius, sz = this.oz * baseRadius;
-                    let cosY = Math.cos(rotationY), sinY = Math.sin(rotationY);
-                    let rx = sx * cosY - sz * sinY, rz = sx * sinY + sz * cosY;
-                    let cosX = Math.cos(rotationX), sinX = Math.sin(rotationX);
-                    let ry = sy * cosX - rz * sinX, finalZ = sy * sinX + rz * cosX;
-
-                    const perspective = 800 / (800 - finalZ);
-                    this.tx = cx + rx * perspective;
-                    this.ty = cy + ry * perspective;
-                    this.z = finalZ;
+                    // Galaxy Rotation
+                    let speedMult = state === 'charging' ? (1 + chargeLevel * 8) : 1;
+                    let cos = Math.cos(time * speedMult);
+                    let sin = Math.sin(time * speedMult);
                     
-                    let spring = state === 'charging' ? 0.35 : 0.12;
-                    this.vx += (this.tx - this.x) * spring; this.vy += (this.ty - this.y) * spring;
+                    let collapse = state === 'charging' ? (1 - chargeLevel * 0.8) : 1;
+                    
+                    let tx = cx + (this.baseX * cos - this.baseY * sin) * collapse;
+                    let ty = cy + (this.baseX * sin + this.baseY * cos) * collapse;
 
-                    // Hover Repel Corrected for Scroll
+                    this.vx += (tx - this.x) * this.spring;
+                    this.vy += (ty - this.y) * this.spring;
+
+                    // Exquisite Fluid Hover MOUSE REPEL
                     if (state === 'idle') {
-                        let mY = mouse.y + window.scrollY; // Mouse absolute document pos
+                        let mY = mouse.y + window.scrollY; 
                         let mDist = Math.hypot(mouse.x - this.x, mY - this.y);
                         if (mDist < 120 && mDist > 0) {
                             let force = (120 - mDist) / 120;
-                            this.vx -= ((mouse.x - this.x) / mDist) * force * 5;
-                            this.vy -= ((mY - this.y) / mDist) * force * 5;
+                            this.vx -= ((mouse.x - this.x) / mDist) * force * 15;
+                            this.vy -= ((mY - this.y) / mDist) * force * 15;
                         }
                     }
                 } else if (state === 'answering') {
                     if (this.isText) {
-                        this.vx += (this.tx - this.x) * 0.08; this.vy += (this.ty - this.y) * 0.08;
+                        this.vx += (this.tx - this.x) * 0.08;
+                        this.vy += (this.ty - this.y) * 0.08;
                     } else if (this.isDebris) {
                         this.vx *= 0.95; this.vy *= 0.95;
-                        this.vx -= 0.08 * (W / Math.max(this.z, 1));
+                        this.vx -= 0.1; // Drift left
                         this.vy += (Math.random() - 0.5) * 0.1;
                     }
                 }
 
-                let friction = (state === 'answering' && !this.isText && !this.isDebris) ? 0.92 : 0.82; 
+                let friction = (state === 'answering' && !this.isText && !this.isDebris) ? 0.92 : 0.86; 
                 this.vx *= friction; this.vy *= friction;
                 this.x += this.vx; this.y += this.vy;
             }
@@ -437,12 +398,12 @@
                 if (state === 'answering') {
                     if (this.isDebris) depthAlpha = Math.max(0, 1 - (Math.abs(this.x - cx) / (W * 0.8)));
                     else if (!this.isText) depthAlpha = 0; 
-                } else depthAlpha = Math.max(0.1, (this.z + baseRadius) / (baseRadius * 2.2));
+                } 
 
                 if (depthAlpha <= 0) return; 
                 
                 bgCtx.globalAlpha = depthAlpha; bgCtx.fillStyle = this.color; 
-                let renderSize = (state === 'answering' && this.isText) ? this.size * 1.5 : this.size * (depthAlpha + 0.5);
+                let renderSize = (state === 'answering' && this.isText) ? this.size * 1.5 : this.size;
                 bgCtx.beginPath(); bgCtx.arc(this.x, this.y, renderSize, 0, Math.PI * 2); bgCtx.fill();
             }
         }
@@ -455,9 +416,7 @@
             bgCanvas.height = cursorCanvas.height = H;
             
             cx = W / 2;
-            cy = H * 0.60; // Oracle permanently anchored dead-center lower
-            baseRadius = Math.min(W, H) * 0.28;
-            if(baseRadius > 230) baseRadius = 230;
+            cy = H * 0.55; 
 
             particles =[]; for (let i = 0; i < N; i++) particles.push(new Particle());
             stars =[]; for (let i = 0; i < 150; i++) stars.push(new Star());
@@ -472,11 +431,12 @@
             let size = Math.min(W/12, 65); if(W < 500) size = 35;
             tCtx.font = `900 ${size}px "Montserrat", sans-serif`;
             
-            // Render text High Up!
+            // Text forms perfectly centered!
             let lines = answerText.split("\n");
-            let docStartY = H * 0.20 + window.scrollY; // Forms exactly at the top of the current viewport
+            let screenCy = cy - window.scrollY;
+            let startY = screenCy - ((size * 1.1 * (lines.length - 1)) / 2) - 15;
             
-            lines.forEach((line, i) => { tCtx.fillText(line, W/2, docStartY + (i * size * 1.1)); });
+            lines.forEach((line, i) => { tCtx.fillText(line, W/2, startY + (i * size * 1.1)); });
 
             const d = tCtx.getImageData(0, 0, W, H).data;
             const pts =[];
@@ -486,6 +446,11 @@
                     if (d[(y * W + x) * 4 + 3] > 128) pts.push({ x, y: y + window.scrollY }); 
                 }
             }
+            
+            let quoteY = startY + (lines.length * size * 1.1) + 20;
+            // Quote adjusts positioning absolutely so it centers perfectly under the text
+            quoteEl.style.top = `${quoteY + window.scrollY}px`; 
+            
             return pts;
         }
 
@@ -501,9 +466,10 @@
                     p.tx = pts[i].x; p.ty = pts[i].y; p.isText = true; p.isDebris = false;
                 } else {
                     p.isText = false; p.isDebris = true;
+                    // Violent Outward Blast
                     let angle = Math.random() * Math.PI * 2;
                     let force = Math.random() * 80 + 20; 
-                    p.vx = Math.cos(angle) * force; p.vy = Math.sin(angle) * force; p.z = Math.random() * 800; 
+                    p.vx = Math.cos(angle) * force; p.vy = Math.sin(angle) * force;
                 }
             });
 
@@ -516,7 +482,7 @@
                 
                 particles.forEach(p => {
                     if (p.isDebris) { p.x = cx; p.y = cy; p.vx = 0; p.vy = 0; }
-                    p.isText = false; p.isDebris = false;
+                    p.isText = false; p.isDebris = false; p.initParams(); // Rebuilds the galaxy mathematically
                 });
             }, 6500); 
         }
@@ -524,8 +490,9 @@
         // --- INTERACTION ---
         window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
         window.addEventListener('mousedown', e => {
-            let mY = e.clientY + window.scrollY;
-            if (Math.hypot(e.clientX - cx, mY - cy) < baseRadius * 1.5 && state !== 'answering') {
+            let screenCy = cy - window.scrollY;
+            let dist = Math.hypot(e.clientX - cx, e.clientY - screenCy);
+            if (dist < 300 && state !== 'answering') {
                 state = 'charging'; hintEl.style.opacity = 0;
             }
         });
@@ -535,44 +502,30 @@
                 chargeLevel = 0;
             }
         });
-        window.addEventListener('resize', () => { setTimeout(init, 300); });
+        window.addEventListener('resize', () => { clearTimeout(window.resizeTimer); window.resizeTimer = setTimeout(init, 300); });
 
         // --- RENDER LOOP ---
-        function loop() {
+        function loop(timestamp) {
             bgCtx.clearRect(0, 0, W, H);
-            bgCtx.globalCompositeOperation = 'lighter';
+            let time = timestamp * 0.0002;
+            
+            // Motion blur for galaxy
+             bgCtx.globalCompositeOperation = 'source-over';
+             bgCtx.fillStyle = 'rgba(3, 3, 5, 0.3)';
+             bgCtx.fillRect(0, 0, W, H);
 
+            bgCtx.globalCompositeOperation = 'lighter';
             stars.forEach(s => { s.update(); s.draw(); });
 
-            if (state === 'idle') {
-                rotationY += 0.0025; rotationX += 0.0015;
-                baseRadius += (Math.min(W, H) * 0.32 - baseRadius) * 0.1; 
-                if(baseRadius > 230) baseRadius = 230;
-            } else if (state === 'charging') {
+            if (state === 'charging') {
                 chargeLevel += 0.008; 
-                rotationY += 0.02 + (chargeLevel * 0.06); rotationX += 0.01 + (chargeLevel * 0.06);
-                baseRadius -= chargeLevel * 2; 
                 bgCtx.save(); bgCtx.translate(Math.random() * 4 - 2, Math.random() * 4 - 2);
             }
 
             bgCtx.save();
-            bgCtx.translate(0, -window.scrollY); // Everything naturally scrolls up!
+            bgCtx.translate(0, -window.scrollY); 
 
-            if (state !== 'answering') {
-                bgCtx.lineWidth = 0.4;
-                for (let i = 0; i < N; i += 12) { 
-                    for (let j = i + 1; j < N; j += 12) {
-                        let dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y;
-                        let distSq = dx * dx + dy * dy;
-                        if (distSq < 4000) {
-                            bgCtx.strokeStyle = `rgba(0, 243, 255, ${0.15 * (1 - distSq/4000)})`;
-                            bgCtx.beginPath(); bgCtx.moveTo(particles[i].x, particles[i].y); bgCtx.lineTo(particles[j].x, particles[j].y); bgCtx.stroke();
-                        }
-                    }
-                }
-            }
-
-            particles.forEach(p => { p.update(); p.draw(); });
+            particles.forEach(p => { p.update(time); p.draw(); });
             bgCtx.restore(); 
             if (state === 'charging') bgCtx.restore(); 
 
