@@ -10,7 +10,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@300;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@300;500;600;700;800&family=Montserrat:wght@300;700;900&display=swap" rel="stylesheet">
     
     <style>
         /* --- GLOBAL --- */
@@ -24,21 +24,14 @@
             overflow-x: hidden;
         }
 
-        #bg-canvas {
+        #bg-canvas, #cursor-canvas {
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
-            z-index: 0;
             pointer-events: none; 
         }
-
-        #cursor-canvas {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw; height: 100vh;
-            z-index: 9999; 
-            pointer-events: none; 
-        }
+        #bg-canvas { z-index: 0; }
+        #cursor-canvas { z-index: 9999; }
 
         /* --- NAVBAR --- */
         .navbar {
@@ -77,22 +70,22 @@
         }
         .navbar .nav-links a:hover { opacity: 1; color: #fff; text-shadow: 0 0 15px rgba(255, 255, 255, 0.8); }
 
-        /* --- HERO TEXT OVERLAY --- */
+        /* --- HERO TEXT OVERLAY (Pre & Post Explosion) --- */
         #hero-text-overlay {
-            position: absolute;
-            top: 13%; /* Sits cleanly at the top */
+            position: fixed; /* Fixed so it flies relative to screen */
+            top: 13%; /* Moved Higher */
             left: 50%;
             transform: translate(-50%, 0) scale(1);
             text-align: center;
             z-index: 15;
             pointer-events: none; 
-            /* Cinematic glide down into the right-side void */
             transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
+        /* The Animation Class: Glides far right and drops down over Bio */
         #hero-text-overlay.exploded {
-            /* Drops right and down, anchoring above the bio */
-            transform: translate(25vw, 24vh) scale(0.65);
+            /* 35vw pushes it hard right. 30vh drops it down */
+            transform: translate(calc(50vw - 360px), 28vh) scale(0.65);
         }
 
         #hero-text-overlay h1 {
@@ -121,7 +114,7 @@
         /* The Cyan Hint */
         .hero-hint {
             position: absolute;
-            top: 32%; /* Positioned above the Oracle, below the Hero text */
+            top: 26%; /* Moved higher, just under the text */
             left: 50%;
             transform: translateX(-50%);
             color: #00f3ff;
@@ -135,15 +128,33 @@
             z-index: 15;
         }
 
-        /* --- NEW FLAWLESS GRID LAYOUT --- */
+        /* The Magical 8-Ball Subtitle (HTML Element) */
+        #magic-quote {
+            position: fixed;
+            top: 40%; /* Will be dynamically adjusted via JS based on particle height */
+            left: 50%;
+            transform: translateX(-50%);
+            font-family: 'Courier Prime', monospace;
+            color: #00f3ff;
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
+            opacity: 0; /* Invisible by default */
+            transition: opacity 0.5s ease-in;
+            z-index: 15;
+            pointer-events: none;
+        }
+
+        /* --- FLAWLESS MODIFIED GRID LAYOUT --- */
         .case-wrapper {
             position: relative;
             z-index: 10;
             display: grid;
-            /* Wider right column to push bio towards the edge */
-            grid-template-columns: 80px minmax(500px, 1fr) 340px;
+            /* Column 3 is now 380px to hold the wider bio tight against the right */
+            grid-template-columns: 80px minmax(500px, 1fr) 380px;
             padding-top: 40px;
-            max-width: 1250px; /* Slightly wider boundaries */
+            max-width: 1400px; /* Widened layout to stretch bio right */
             margin: 0 auto;
             column-gap: 50px;
         }
@@ -152,21 +163,22 @@
         .oracle-spacer {
             grid-column: 2;
             grid-row: 1;
-            height: 800px; /* Massive stage for atomic explosion */
+            height: 800px; 
         }
 
-        /* Sidebar Bio (Pushed right and down) */
+        /* Sidebar Bio (Pushed far right) */
         .sidebar-bio {
             grid-column: 3;
             grid-row: 1;
             display: flex;
             flex-direction: column;
             gap: 16px;
-            padding-top: 380px;  /* Deep down, carving out that empty space above */
+            padding-top: 380px;  /* Deep down, making room for the flying text */
+            padding-right: 40px; /* Buffer against screen edge */
         }
 
         .sidebar-img {
-            width: 120px; height: 120px; /* Increased Size */
+            width: 120px; height: 120px; 
             border-radius: 4px; object-fit: cover;
             filter: grayscale(100%) contrast(1.2);
         }
@@ -187,7 +199,7 @@
             padding-top: 20px;
         }
 
-        /* Projects Section (Spans Col 2 & 3) */
+        /* Projects Section */
         .projects-container { 
             grid-column: 2 / 4; 
             grid-row: 2;
@@ -215,10 +227,10 @@
         @media (max-width: 1050px) {
             .case-wrapper { display: flex; flex-direction: column; padding: 40px 20px 0 20px; }
             .vertical-line { display: none; }
-            .sidebar-bio { padding-top: 20px; align-items: center; text-align: center; border-bottom: 1px solid #222; padding-bottom: 40px; margin-bottom: 40px; }
+            .sidebar-bio { padding-top: 20px; padding-right: 0; align-items: center; text-align: center; border-bottom: 1px solid #222; padding-bottom: 40px; margin-bottom: 40px; }
             .oracle-spacer { height: 400px; }
             .project-row { grid-template-columns: 1fr; gap: 16px; }
-            #hero-text-overlay.exploded { transform: translate(-50%, -12vh) scale(0.7); } 
+            #hero-text-overlay.exploded { transform: translate(-50%, -8vh) scale(0.7); } 
             .hero-hint { top: 25%; }
         }
     </style>
@@ -238,7 +250,7 @@
         </div>
     </nav>
 
-    <!-- Interactive Hero Text Overlay -->
+    <!-- Fast-moving Animated Hero Text -->
     <div id="hero-text-overlay">
         <h1>
             <span class="highlight">ANALYST</span> <span class="muted">BY DAY</span><br>
@@ -248,13 +260,16 @@
     </div>
     
     <div class="hero-hint" id="hint">CLICK AND HOLD TO BLOW YOUR MIND</div>
+    
+    <!-- Clean HTML Subtitle for Magic 8-Ball -->
+    <div id="magic-quote">- says the magic 8 ball</div>
 
     <div class="case-wrapper">
         
         <!-- Oracle Anchor -->
         <div class="oracle-spacer" id="oracle-anchor"></div>
 
-        <!-- Bio sidebar pushed deeply down / right -->
+        <!-- Bio sidebar -->
         <div class="sidebar-bio">
             <img src="assets/user-portrait.jpg" alt="Priyash" class="sidebar-img" onerror="this.src='https://via.placeholder.com/120/111/444?text=PV'">
             <p>
@@ -263,7 +278,6 @@
             <a href="who-am-i.html">Know more of me ↗</a>
         </div>
 
-        <!-- Featured Works Axis -->
         <div class="vertical-line">FEATURED WORKS</div>
         
         <div id="projects" class="projects-container">
@@ -310,11 +324,12 @@
 
         const hintEl = document.getElementById('hint');
         const heroText = document.getElementById('hero-text-overlay');
+        const quoteEl = document.getElementById('magic-quote');
         const oracleAnchor = document.getElementById('oracle-anchor');
         
         let W, H, cx, cy; 
         
-        const N = 4000; // MASSIVE PARTICLE DENSITY
+        const N = 4000; 
         let particles =[];
         let stars = [];
         let mouseTrail =[];
@@ -327,13 +342,9 @@
         let chargeLevel = 0;
         let answerTimer = 0;
 
-        // 15 BRAND NEW CREATIVE / TECH / EXISTENTIAL GEN-Z ANSWERS
         const answers =[
-            // 5 Positive
             "THE UNIVERSE\nALIGNS", "GREEN LIGHT", "TRUST YOUR\nGUT", "IT IS\nWRITTEN", "ABSOLUTELY",
-            // 5 Negative
             "NOT IN THIS\nTIMELINE", "THE VIBES\nARE OFF", "RETHINK\nEVERYTHING", "HARD NO", "ABORT\nMISSION",
-            // 5 Wildcard / Tech
             "PLOT TWIST\nIMMINENT", "RECALIBRATING...", "ASK THE\nSIMULATION", "MAIN CHARACTER\nENERGY", "GLITCH IN\nTHE MATRIX"
         ];
 
@@ -370,14 +381,14 @@
         class Particle {
             constructor() {
                 let type = Math.random();
-                if (type < 0.25) { // Core
+                if (type < 0.25) { 
                     let u = Math.random(), v = Math.random();
                     let theta = 2 * Math.PI * u, phi = Math.acos(2 * v - 1);
                     let r = Math.random() * 0.35; 
                     this.ox = Math.sin(phi) * Math.cos(theta) * r;
                     this.oy = Math.sin(phi) * Math.sin(theta) * r;
                     this.oz = Math.cos(phi) * r;
-                } else { // 3 Orbital Rings
+                } else { 
                     let angle = Math.random() * Math.PI * 2;
                     let ring = Math.floor(Math.random() * 3);
                     let r = 0.9 + Math.random() * 0.2; 
@@ -429,7 +440,6 @@
                         this.vx += (this.tx - this.x) * 0.08;
                         this.vy += (this.ty - this.y) * 0.08;
                     } else if (this.isDebris) {
-                        // Explosion logic: Blast out, hit drag, drift left!
                         this.vx *= 0.95; 
                         this.vy *= 0.95;
                         this.vx -= 0.08 * (W / Math.max(this.z, 1));
@@ -444,13 +454,9 @@
 
             draw() {
                 let depthAlpha = 1;
-                
                 if (state === 'answering') {
-                    if (this.isDebris) {
-                        depthAlpha = Math.max(0, 1 - (Math.abs(this.x - cx) / (W * 0.8)));
-                    } else if (!this.isText) {
-                        depthAlpha = 0; 
-                    }
+                    if (this.isDebris) depthAlpha = Math.max(0, 1 - (Math.abs(this.x - cx) / (W * 0.8)));
+                    else if (!this.isText) depthAlpha = 0; 
                 } else {
                     depthAlpha = Math.max(0.1, (this.z + baseRadius) / (baseRadius * 2.2));
                 }
@@ -464,26 +470,21 @@
             }
         }
 
-        // --- LOGIC ---
-
-        function updateOraclePosition() {
-            const rect = oracleAnchor.getBoundingClientRect();
-            cx = rect.left + (rect.width / 2);
-            // Oracle visually sits slightly higher in its huge container
-            cy = rect.top + (rect.height / 2.2) + window.scrollY; 
-        }
+        // --- SETUP ---
 
         function init() {
-            W = window.innerWidth;
-            H = window.innerHeight;
+            W = canvas.width = window.innerWidth;
+            H = canvas.height = window.innerHeight;
             
             bgCanvas.width = cursorCanvas.width = W;
             bgCanvas.height = cursorCanvas.height = H;
             
-            baseRadius = Math.min(W, H) * 0.28; // Tightly controlled core size
-            if(baseRadius > 230) baseRadius = 230;
+            // Atom is locked dead-center relative to screen width
+            cx = W / 2;
+            cy = H * 0.65; 
             
-            updateOraclePosition();
+            baseRadius = Math.min(W, H) * 0.28;
+            if(baseRadius > 230) baseRadius = 230;
 
             particles =[]; for (let i = 0; i < N; i++) particles.push(new Particle());
             stars =[]; for (let i = 0; i < 150; i++) stars.push(new Star());
@@ -495,37 +496,37 @@
             tCanvas.width = W; tCanvas.height = H;
             tCtx.fillStyle = 'white'; tCtx.textAlign = 'center'; tCtx.textBaseline = 'middle';
             
-            let size = Math.min(W/14, 55); if(W < 500) size = 32;
+            let size = Math.min(W/12, 65); if(W < 500) size = 35;
             tCtx.font = `900 ${size}px "Montserrat", sans-serif`;
             let lines = answerText.split("\n");
             
-            // Calculates height so 8-Ball Text sits exactly where the "Analyst..." text used to be!
+            // Text forms HIGH UP where Hero Text used to be
             let screenCy = cy - window.scrollY;
-            let startY = Math.max(H * 0.18, screenCy - baseRadius - 160);
+            let startY = H * 0.22; 
             
             lines.forEach((line, i) => { tCtx.fillText(line, W/2, startY + (i * size * 1.1)); });
 
-            let subSize = Math.min(W/35, 12); if (subSize < 10) subSize = 10;
-            tCtx.font = `400 ${subSize}px "Courier Prime", monospace`;
-            tCtx.letterSpacing = "2px";
-            let subY = startY + (lines.length * size * 1.1) + 15;
-            tCtx.fillText("- says the magic 8 ball", W/2, subY);
-
             const d = tCtx.getImageData(0, 0, W, H).data;
             const pts =[];
-            const step = Math.min(W, H) > 800 ? 4 : 3; // Dense text rendering
+            const step = Math.min(W, H) > 800 ? 5 : 4; 
             for (let y = 0; y < H; y += step) {
                 for (let x = 0; x < W; x += step) {
                     if (d[(y * W + x) * 4 + 3] > 128) pts.push({ x, y: y + window.scrollY }); 
                 }
             }
+            
+            // Position the HTML Quote smoothly below the text exactly
+            let quoteY = startY + (lines.length * size * 1.1) + 20;
+            quoteEl.style.top = `${quoteY}px`;
+            
             return pts;
         }
 
         function triggerAnswer() {
             state = 'answering';
             hintEl.style.opacity = 0;
-            heroText.classList.add('exploded'); // Triggers elegant text glide
+            heroText.classList.add('exploded'); 
+            quoteEl.style.opacity = 1; // Fade in HTML quote
             
             const pts = getTextPoints(answers[Math.floor(Math.random() * answers.length)]);
             
@@ -534,7 +535,6 @@
                     p.tx = pts[i].x; p.ty = pts[i].y; p.isText = true; p.isDebris = false;
                 } else {
                     p.isText = false; p.isDebris = true;
-                    // Violent Outward Blast
                     let angle = Math.random() * Math.PI * 2;
                     let force = Math.random() * 80 + 20; 
                     p.vx = Math.cos(angle) * force;
@@ -547,9 +547,9 @@
             answerTimer = setTimeout(() => {
                 state = 'idle';
                 hintEl.style.opacity = 0.8;
+                quoteEl.style.opacity = 0; 
                 heroText.classList.remove('exploded'); 
                 
-                // Infinite Loop Physics: Rebuild instantly inside core
                 particles.forEach(p => {
                     if (p.isDebris) { p.x = cx; p.y = cy; p.vx = 0; p.vy = 0; }
                     p.isText = false; p.isDebris = false;
@@ -559,9 +559,7 @@
 
         // --- INTERACTIONS ---
         
-        window.addEventListener('mousemove', e => {
-            mouse.x = e.clientX; mouse.y = e.clientY;
-        });
+        window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
         
         window.addEventListener('mousedown', e => {
             let screenCy = cy - window.scrollY;
@@ -579,13 +577,11 @@
             }
         });
 
-        window.addEventListener('scroll', updateOraclePosition);
         window.addEventListener('resize', () => { clearTimeout(window.resizeTimer); window.resizeTimer = setTimeout(init, 300); });
 
         // --- RENDER LOOP ---
 
         function loop() {
-            // Draw on Back Canvas
             bgCtx.clearRect(0, 0, W, H);
             bgCtx.globalCompositeOperation = 'lighter';
 
@@ -596,7 +592,7 @@
                 baseRadius += (Math.min(W, H) * 0.32 - baseRadius) * 0.1; 
                 if(baseRadius > 230) baseRadius = 230;
             } else if (state === 'charging') {
-                chargeLevel += 0.008; // Slower buildup for suspense
+                chargeLevel += 0.008; 
                 rotationY += 0.02 + (chargeLevel * 0.06); rotationX += 0.01 + (chargeLevel * 0.06);
                 baseRadius -= chargeLevel * 2; 
                 bgCtx.save(); bgCtx.translate(Math.random() * 4 - 2, Math.random() * 4 - 2);
@@ -620,11 +616,10 @@
             }
 
             particles.forEach(p => { p.update(); p.draw(); });
-            bgCtx.restore(); // Undo scroll translation for mouse overlay
+            bgCtx.restore(); 
 
-            if (state === 'charging') bgCtx.restore(); // Undo shake
+            if (state === 'charging') bgCtx.restore(); 
 
-            // Draw on Top Cursor Canvas
             cursorCtx.clearRect(0, 0, W, H);
             if (mouse.x > 0 && mouse.y > 0) {
                 mouseTrail.push({x: mouse.x, y: mouse.y});
