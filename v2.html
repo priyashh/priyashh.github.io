@@ -10,7 +10,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@300;500;600;700;800&family=Montserrat:wght@300;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@300;700;900&display=swap" rel="stylesheet">
     
     <style>
         /* --- GLOBAL --- */
@@ -24,6 +24,7 @@
             overflow-x: hidden;
         }
 
+        /* Fixed Background Canvases */
         #bg-canvas, #cursor-canvas {
             position: fixed;
             top: 0; left: 0;
@@ -46,39 +47,51 @@
             border: none !important;
             box-shadow: none !important;
         }
-        .navbar .logo { font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 16px; color: #fff; letter-spacing: 2px; text-decoration: none; }
+
+        .navbar .logo {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 16px;
+            color: #fff;
+            letter-spacing: 2px;
+            text-decoration: none;
+        }
+
         .navbar .nav-links { display: flex; gap: 30px; }
         .navbar .nav-links a {
-            font-family: 'Courier Prime', monospace; color: #00f3ff; font-size: 14px; letter-spacing: 4px;
-            text-transform: uppercase; text-shadow: 0 0 10px rgba(0, 243, 255, 0.5); text-decoration: none;
-            opacity: 0.8; transition: all 0.3s ease;
+            font-family: 'Courier Prime', monospace;
+            color: #00f3ff;
+            font-size: 14px; 
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
+            text-decoration: none;
+            opacity: 0.8;
+            transition: all 0.3s ease;
         }
         .navbar .nav-links a:hover { opacity: 1; color: #fff; text-shadow: 0 0 15px rgba(255, 255, 255, 0.8); }
 
-        /* --- HERO CONTAINER (FLEXBOX FIX) --- */
-        #hero-flex-container {
-            position: absolute;
-            top: 15vh; /* Pushed down safely from navbar */
-            left: 0;
+        /* --- HERO TEXT OVERLAY (Pre & Post Explosion) --- */
+        #hero-container {
+            position: relative;
             width: 100vw;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 25px; /* Ensures text NEVER overlaps */
+            height: 1vh; /* Ghost container to hold absolute text */
             z-index: 15;
             pointer-events: none;
         }
 
         #hero-text-overlay {
+            position: absolute; 
+            top: 10vh; /* High up above oracle */
+            left: 50%;
+            transform: translate(-50%, 0) scale(1);
             text-align: center;
             transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
-            transform-origin: center center;
         }
 
-        /* Explosion Glide Target */
         #hero-text-overlay.exploded {
-            /* Glides to the far right, just above the bio image */
-            transform: translate(28vw, 32vh) scale(0.65);
+            /* Glides exactly to the right and drops to sit over the Bio box */
+            transform: translate(320px, 30vh) scale(0.65);
         }
 
         #hero-text-overlay h1 {
@@ -90,63 +103,74 @@
         #hero-text-overlay .muted { color: #888; font-weight: 400; }
 
         .hero-hint {
+            position: absolute;
+            top: 25vh; /* Tucked cleanly under hero text */
+            left: 50%;
+            transform: translateX(-50%);
             color: #00f3ff; font-family: 'Courier Prime', monospace; font-size: 11px; letter-spacing: 4px;
             text-shadow: 0 0 10px rgba(0, 243, 255, 0.5); opacity: 0.8; transition: opacity 0.3s;
         }
 
         #magic-quote {
             position: absolute;
-            top: 40vh; /* Will map dynamically under answers */
+            top: 40vh; /* Will dynamically adjust under particle text in JS */
             left: 50%;
             transform: translateX(-50%);
-            font-family: 'Courier Prime', monospace;
-            color: #00f3ff; font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
+            font-family: 'Courier Prime', monospace; color: #00f3ff; font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
             text-shadow: 0 0 10px rgba(0, 243, 255, 0.4); opacity: 0; transition: opacity 0.5s ease-in;
-            z-index: 15; pointer-events: none;
         }
 
-        /* --- BULLETPROOF GRID LAYOUT --- */
+        /* --- BULLETPROOF CSS GRID --- */
         .case-wrapper {
             position: relative;
             z-index: 10;
             display: grid;
-            grid-template-columns: 80px minmax(500px, 1fr) 340px;
+            grid-template-columns: 80px minmax(500px, 1fr) 300px;
             max-width: 1250px; 
             margin: 0 auto;
             column-gap: 50px;
-            padding-bottom: 100px;
+            pointer-events: none; /* Allows clicks on the blank space to hit canvas */
         }
 
-        /* Bio (Right Column, starts high up) */
+        .case-wrapper * { pointer-events: auto; } /* Restores clicks inside grid items */
+
+        /* Oracle Spacer */
+        .oracle-spacer {
+            grid-column: 2;
+            grid-row: 1;
+            height: 65vh; /* Massive anchor for the center atom */
+            pointer-events: none;
+        }
+
+        /* Sidebar Bio (Pushed far right, drops down to wait for flying text) */
         .sidebar-bio {
             grid-column: 3;
-            grid-row: 1; /* Pinned to top row */
+            grid-row: 1 / 3; /* Spans across row 1 & 2 to avoid breaking layout */
             display: flex; flex-direction: column; gap: 16px;
-            padding-top: 45vh; /* Pushed down exactly enough so flying text fits above it */
-            padding-right: 40px; 
+            padding-top: 48vh;  /* Dropped exactly so text can land in the green box */
         }
+
         .sidebar-img { width: 120px; height: 120px; border-radius: 4px; object-fit: cover; filter: grayscale(100%) contrast(1.2); }
         .sidebar-bio p { font-size: 0.85rem; line-height: 1.8; color: #888; margin: 0; }
-        .sidebar-bio a { font-size: 0.75rem; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; color: #fff; text-transform: uppercase; letter-spacing: 0.05em; pointer-events: auto; }
+        .sidebar-bio a { font-size: 0.75rem; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; color: #fff; text-transform: uppercase; letter-spacing: 0.05em; }
 
         /* Left Axis */
         .vertical-line {
             grid-column: 1;
-            grid-row: 2; /* Sits naturally next to projects */
+            grid-row: 2; 
             writing-mode: vertical-rl; transform: rotate(180deg);
             font-size: 10px; letter-spacing: 4px; color: #666; text-align: right;
             padding-top: 20px;
         }
 
-        /* Projects Section (Bottom Left/Center) */
+        /* Projects Section */
         .projects-container { 
-            grid-column: 2; /* Stops before Bio column */
+            grid-column: 2; 
             grid-row: 2;
             display: flex; flex-direction: column; margin-bottom: 80px; 
-            margin-top: 55vh; /* Safely leaves top center 100% empty for Oracle */
         }
         
-        .project-row { display: grid; grid-template-columns: 200px 1fr; gap: 30px; padding: 30px 0; border-top: 1px solid #222; align-items: center; transition: opacity 0.3s ease; text-decoration: none; pointer-events: auto; }
+        .project-row { display: grid; grid-template-columns: 200px 1fr; gap: 30px; padding: 30px 0; border-top: 1px solid #222; align-items: center; transition: opacity 0.3s ease; text-decoration: none; }
         .project-row:hover { opacity: 0.7; }
         .project-row img { width: 100%; height: 120px; object-fit: cover; border-radius: 4px; border: 1px solid #222; }
         .project-info h2 { font-size: 1.1rem; letter-spacing: 0.05em; margin-bottom: 8px; color: #fff; }
@@ -154,23 +178,22 @@
         .slide-tags { display: flex; gap: 8px; }
         .slide-tags span { font-size: 0.7rem; color: #fff; background: #111; padding: 4px 8px; border: 1px solid #333; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
         
-        /* Connect (Bottom Full Span) */
+        /* Connect Section */
         .connect-section { 
             grid-column: 2 / 4; grid-row: 3;
             text-align: center; padding: 60px 0; border-top: 1px solid #222; 
         }
         .connect-section blockquote { font-size: 1.1rem; color: #fff; font-style: italic; margin-bottom: 30px; }
-        .connect-links a { display: inline-block; margin: 0 10px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; color: #888; border: 1px solid #333; padding: 8px 16px; border-radius: 4px; transition: 0.3s; text-decoration: none; pointer-events: auto; }
+        .connect-links a { display: inline-block; margin: 0 10px; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; color: #888; border: 1px solid #333; padding: 8px 16px; border-radius: 4px; transition: 0.3s; text-decoration: none; }
         .connect-links a:hover { color: #fff; border-color: #888; }
 
         @media (max-width: 1050px) {
             .case-wrapper { display: flex; flex-direction: column; padding: 40px 20px 0 20px; }
             .vertical-line { display: none; }
-            .sidebar-bio { padding-top: 20px; padding-right: 0; align-items: center; text-align: center; border-bottom: 1px solid #222; padding-bottom: 40px; }
-            .projects-container { margin-top: 30vh; }
+            .sidebar-bio { padding-top: 20px; text-align: center; align-items: center; border-bottom: 1px solid #222; padding-bottom: 40px; margin-bottom: 40px; }
+            .oracle-spacer { height: 400px; }
             .project-row { grid-template-columns: 1fr; gap: 16px; }
-            #hero-text-overlay.exploded { transform: translate(0, 30vh) scale(0.7); } 
-            #hero-flex-container { top: 12vh; }
+            #hero-text-overlay.exploded { transform: translate(-50%, 15vh) scale(0.75); } 
         }
     </style>
 </head>
@@ -189,8 +212,7 @@
         </div>
     </nav>
 
-    <!-- Perfectly stacked, non-colliding container -->
-    <div id="hero-flex-container">
+    <div id="hero-container">
         <div id="hero-text-overlay">
             <h1>
                 <span class="highlight">ANALYST</span> <span class="muted">BY DAY</span><br>
@@ -199,12 +221,12 @@
             </h1>
         </div>
         <div class="hero-hint" id="hint">CLICK AND HOLD TO BLOW YOUR MIND</div>
+        <div id="magic-quote">- says the magic 8 ball</div>
     </div>
-    
-    <div id="magic-quote">- says the magic 8 ball</div>
 
     <div class="case-wrapper">
-        
+        <div class="oracle-spacer" id="oracle-anchor"></div>
+
         <div class="sidebar-bio">
             <img src="assets/user-portrait.jpg" alt="Priyash" class="sidebar-img" onerror="this.src='https://via.placeholder.com/120/111/444?text=PV'">
             <p>
@@ -249,7 +271,7 @@
         </div>
     </div>
 
-    <!-- SAFEST, BULLETPROOF INIT SCRIPT -->
+    <!-- MAIN CRASH-FREE SCRIPT -->
     <script>
         const bgCanvas = document.getElementById('bg-canvas');
         const bgCtx = bgCanvas.getContext('2d');
@@ -259,6 +281,7 @@
         const hintEl = document.getElementById('hint');
         const heroText = document.getElementById('hero-text-overlay');
         const quoteEl = document.getElementById('magic-quote');
+        const oracleAnchor = document.getElementById('oracle-anchor');
         
         let W, H, cx, cy; 
         
@@ -284,6 +307,15 @@
         const colors =['#00f3ff', '#b026ff', '#ffffff'];
         const mouse = { x: -1000, y: -1000 };
 
+        // THE MISSING FUNCTION THAT CAUSED THE CRASH
+        function updateOraclePosition() {
+            if (!oracleAnchor) return;
+            const rect = oracleAnchor.getBoundingClientRect();
+            // Perfectly centered horizontally on screen, dynamically mapped vertically
+            cx = window.innerWidth / 2;
+            cy = rect.top + (rect.height / 2) + window.scrollY; 
+        }
+
         class Star {
             constructor() {
                 this.x = Math.random() * window.innerWidth;
@@ -299,7 +331,7 @@
             draw() {
                 let screenY = this.docY - (window.scrollY * (0.3 + 0.7 * (100 / Math.max(this.z, 100))));
                 if (screenY < -50 || screenY > H) return;
-                let alpha = Math.min(1, W / this.z);
+                let alpha = Math.min(1, W / Math.max(this.z, 1));
                 if (state === 'charging') alpha = Math.max(0.1, 1 - chargeLevel);
                 bgCtx.fillStyle = this.color;
                 bgCtx.globalAlpha = alpha;
@@ -327,7 +359,7 @@
                     else { this.ox = x; this.oy = y; this.oz = z; }
                 }
                 
-                this.x = W/2; this.y = H*0.6; this.z = 0;
+                this.x = window.innerWidth/2; this.y = window.innerHeight*0.5; this.z = 0;
                 this.tx = 0; this.ty = 0; 
                 this.color = colors[Math.floor(Math.random() * colors.length)];
                 this.size = Math.random() * 1.5 + 0.5;
@@ -352,8 +384,9 @@
                     this.vx += (this.tx - this.x) * spring;
                     this.vy += (this.ty - this.y) * spring;
 
+                    // Hover Repel Logic
                     if (state === 'idle') {
-                        let mY = mouse.y + window.scrollY;
+                        let mY = mouse.y + window.scrollY; // Correct absolute Y calc
                         let mDist = Math.hypot(mouse.x - this.x, mY - this.y);
                         if (mDist < 120 && mDist > 0) {
                             let force = (120 - mDist) / 120;
@@ -366,7 +399,7 @@
                         this.vx += (this.tx - this.x) * 0.08;
                         this.vy += (this.ty - this.y) * 0.08;
                     } else if (this.isDebris) {
-                        this.vx *= 0.95; this.vy *= 0.95;
+                        this.vx *= 0.95; this.vy *= 0.95; // Extreme drag for slowmo
                         this.vx -= 0.08 * (W / Math.max(this.z, 1));
                         this.vy += (Math.random() - 0.5) * 0.1;
                     }
@@ -393,19 +426,18 @@
             }
         }
 
-        // --- CALCS ---
+        // --- MATH & LOGIC ---
+
         function init() {
             W = canvas.width = window.innerWidth;
             H = canvas.height = window.innerHeight;
             bgCanvas.width = cursorCanvas.width = W; 
             bgCanvas.height = cursorCanvas.height = H;
             
-            // Hardcode center relative to screen size (avoids DOM layout bugs entirely)
-            cx = W / 2;
-            cy = H * 0.65; 
-            
             baseRadius = Math.min(W, H) * 0.28;
             if(baseRadius > 230) baseRadius = 230;
+
+            updateOraclePosition();
 
             particles =[]; for (let i = 0; i < N; i++) particles.push(new Particle());
             stars =[]; for (let i = 0; i < 150; i++) stars.push(new Star());
@@ -420,19 +452,20 @@
             let size = Math.min(W/12, 65); if(W < 500) size = 35;
             tCtx.font = `900 ${size}px "Montserrat", sans-serif`;
             
+            // Text forms PERFECTLY IN THE TOP CENTER
             let lines = answerText.split("\n");
-            // Form specifically on top of Oracle 
             let startY = H * 0.25; 
             
             lines.forEach((line, i) => { tCtx.fillText(line, W/2, startY + (i * size * 1.1)); });
 
+            // HTML Quote positioning locks exactly below the answer
             let quoteY = startY + (lines.length * size * 1.1) + 20;
-            // Ensure Quote drops perfectly under the particles
+            // Uses viewport 'vh' translation to match absolute CSS positioning of UI element
             quoteEl.style.top = `${quoteY}px`; 
 
             const d = tCtx.getImageData(0, 0, W, H).data;
             const pts =[];
-            const step = Math.min(W, H) > 800 ? 5 : 4; 
+            const step = Math.min(W, H) > 800 ? 4 : 3; 
             for (let y = 0; y < H; y += step) {
                 for (let x = 0; x < W; x += step) {
                     if (d[(y * W + x) * 4 + 3] > 128) pts.push({ x, y: y + window.scrollY }); 
@@ -446,8 +479,7 @@
             hintEl.style.opacity = 0;
             heroText.classList.add('exploded'); 
             
-            // Wait a tiny bit before showing quote for suspense
-            setTimeout(() => { quoteEl.style.opacity = 1; }, 500);
+            setTimeout(() => { quoteEl.style.opacity = 1; }, 500); // 8-Ball quote slowly fades in
             
             const pts = getTextPoints(answers[Math.floor(Math.random() * answers.length)]);
             
@@ -470,6 +502,7 @@
                 quoteEl.style.opacity = 0;
                 heroText.classList.remove('exploded'); 
                 
+                // Infinite Loop Physics: Rebuilds atom gracefully
                 particles.forEach(p => {
                     if (p.isDebris) { p.x = cx; p.y = cy; p.vx = 0; p.vy = 0; }
                     p.isText = false; p.isDebris = false;
@@ -477,21 +510,34 @@
             }, 6500); 
         }
 
-        // --- INTERACTIONS ---
+        // --- BINDINGS ---
         window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+        
         window.addEventListener('mousedown', e => {
-            let mY = e.clientY + window.scrollY;
-            if (Math.hypot(e.clientX - cx, mY - cy) < baseRadius * 1.5 && state !== 'answering') {
+            let screenCy = cy - window.scrollY;
+            let dist = Math.hypot(e.clientX - cx, e.clientY - screenCy);
+            // Click radius protects navbar buttons
+            if (dist < baseRadius * 1.5 && state !== 'answering') {
                 state = 'charging'; hintEl.style.opacity = 0;
             }
         });
+
         window.addEventListener('mouseup', () => {
             if (state === 'charging') {
                 if (chargeLevel > 0.4) triggerAnswer(); else { state = 'idle'; hintEl.style.opacity = 0.8; }
                 chargeLevel = 0;
             }
         });
-        window.addEventListener('resize', () => { clearTimeout(window.resizeTimer); window.resizeTimer = setTimeout(init, 300); });
+
+        // The Fix: Binding the exact required functions dynamically!
+        window.addEventListener('scroll', () => {
+            if(oracleAnchor) updateOraclePosition();
+        });
+        
+        window.addEventListener('resize', () => { 
+            clearTimeout(window.resizeTimer); 
+            window.resizeTimer = setTimeout(init, 300); 
+        });
 
         // --- RENDER LOOP ---
         function loop() {
@@ -505,14 +551,14 @@
                 baseRadius += (Math.min(W, H) * 0.32 - baseRadius) * 0.1; 
                 if(baseRadius > 230) baseRadius = 230;
             } else if (state === 'charging') {
-                chargeLevel += 0.01; 
+                chargeLevel += 0.008; 
                 rotationY += 0.02 + (chargeLevel * 0.06); rotationX += 0.01 + (chargeLevel * 0.06);
                 baseRadius -= chargeLevel * 2; 
                 bgCtx.save(); bgCtx.translate(Math.random() * 4 - 2, Math.random() * 4 - 2);
             }
 
             bgCtx.save();
-            bgCtx.translate(0, -window.scrollY);
+            bgCtx.translate(0, -window.scrollY); // Parallax anchors everything to standard web scroll
 
             if (state !== 'answering') {
                 bgCtx.lineWidth = 0.4;
@@ -530,9 +576,9 @@
 
             particles.forEach(p => { p.update(); p.draw(); });
             bgCtx.restore(); 
-
             if (state === 'charging') bgCtx.restore(); 
 
+            // FOREGROUND CURSOR RENDER
             cursorCtx.clearRect(0, 0, W, H);
             if (mouse.x > 0 && mouse.y > 0) {
                 mouseTrail.push({x: mouse.x, y: mouse.y});
@@ -555,11 +601,10 @@
             requestAnimationFrame(loop);
         }
 
-        // Extremely safe boot system
+        // Start safely
         window.addEventListener('DOMContentLoaded', () => {
             init(); 
-            // Give fonts a tiny 150ms buffer to load in background before starting loop
-            setTimeout(() => { requestAnimationFrame(loop); }, 150);
+            requestAnimationFrame(loop);
         });
     </script>
 </body>
