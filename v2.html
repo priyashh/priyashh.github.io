@@ -56,7 +56,7 @@
         .navbar .nav-links a {
             font-family: 'Courier Prime', monospace;
             color: #00f3ff;
-            font-size: 12px;
+            font-size: 14px; /* Increased for readability */
             letter-spacing: 4px;
             text-transform: uppercase;
             text-shadow: 0 0 10px rgba(0, 243, 255, 0.5);
@@ -69,7 +69,7 @@
         /* --- HERO TEXT OVERLAY --- */
         #hero-text-overlay {
             position: absolute;
-            top: 18%; 
+            top: 10%; /* MOVED UP to avoid Oracle overlap */
             left: 50%;
             /* Starts Dead Center */
             transform: translate(-50%, 0) scale(1);
@@ -82,8 +82,8 @@
 
         /* The Animation Class triggered on Explosion */
         #hero-text-overlay.exploded {
-            /* Glides 24vw Right, 8vh Up, and shrinks slightly */
-            transform: translate(24vw, -8vh) scale(0.7);
+            /* Glides Right, doesn't go too far up since it's already high */
+            transform: translate(25vw, 2vh) scale(0.7);
         }
 
         #hero-text-overlay h1 {
@@ -108,7 +108,7 @@
 
         .hero-hint {
             position: absolute;
-            top: 72%; /* Adjusted to sit under the Oracle */
+            top: 85%; /* MOVED DOWN to give Oracle space */
             left: 50%;
             transform: translateX(-50%);
             color: #00f3ff;
@@ -139,7 +139,7 @@
         .oracle-spacer {
             grid-column: 2;
             grid-row: 1;
-            height: 600px; 
+            height: 750px; /* INCREASED to push Projects down further */
         }
 
         /* R1 C3: "Know more of me" starts to the right of the Oracle */
@@ -149,11 +149,11 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
-            padding-top: 150px; 
+            padding-top: 300px;  /* INCREASED to move Bio down */
         }
 
         .sidebar-img {
-            width: 100px; height: 100px; /* Increased 25% */
+            width: 100px; height: 100px; 
             border-radius: 4px; object-fit: cover;
             filter: grayscale(100%) contrast(1.2);
         }
@@ -161,22 +161,22 @@
         .sidebar-bio p { font-size: 0.8rem; line-height: 1.8; color: #888; margin: 0; }
         .sidebar-bio a { font-size: 0.75rem; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; color: #fff; text-transform: uppercase; letter-spacing: 0.05em; }
 
-        /* R2 C1: Features Work Line (Moved down, perfectly aligned to Projects) */
+        /* R2 C1: Features Work Line */
         .vertical-line {
             grid-column: 1;
-            grid-row: 2; /* Locked to the second row */
+            grid-row: 2; 
             writing-mode: vertical-rl;
             transform: rotate(180deg);
             font-size: 10px;
             letter-spacing: 4px;
             color: #666;
             text-align: right;
-            padding-top: 20px;
+            padding-top: 0px;
         }
 
-        /* R2 C2+3: Projects stretching across the void! */
+        /* R2 C2+3: Projects stretching across the void */
         .projects-container { 
-            grid-column: 2 / 4; /* Spans middle and right columns */
+            grid-column: 2 / 4; 
             grid-row: 2;
             display: flex; flex-direction: column; margin-bottom: 80px; 
         }
@@ -189,7 +189,7 @@
         .slide-tags { display: flex; gap: 8px; }
         .slide-tags span { font-size: 0.7rem; color: #fff; background: #111; padding: 4px 8px; border: 1px solid #333; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.05em; }
         
-        /* R3 C2+3: Connect section stretched as well */
+        /* R3 C2+3: Connect section */
         .connect-section { 
             grid-column: 2 / 4; 
             grid-row: 3;
@@ -205,7 +205,7 @@
             .sidebar-bio { padding-top: 20px; align-items: center; text-align: center; border-bottom: 1px solid #222; padding-bottom: 40px; margin-bottom: 40px; }
             .oracle-spacer { height: 400px; }
             .project-row { grid-template-columns: 1fr; gap: 16px; }
-            #hero-text-overlay.exploded { transform: translate(-50%, -12vh) scale(0.7); } /* Moves straight up on small phones */
+            #hero-text-overlay.exploded { transform: translate(-50%, -12vh) scale(0.7); } 
             .hero-hint { top: 65%; }
         }
     </style>
@@ -243,7 +243,7 @@
             <a href="who-am-i.html">Know more of me ↗</a>
         </div>
 
-        <!-- Row 2: Vertical Line & Projects (Span) -->
+        <!-- Row 2: Vertical Line & Projects -->
         <div class="vertical-line">FEATURED WORKS</div>
         
         <div id="projects" class="projects-container">
@@ -266,7 +266,7 @@
             </a>
         </div>
 
-        <!-- Row 3: Connect (Span) -->
+        <!-- Row 3: Connect -->
         <div id="connect" class="connect-section">
             <blockquote>
                 "In God we trust. All others must bring data."<br>
@@ -292,7 +292,7 @@
         
         let W, H, cx, cy; 
         
-        const N = 2600; 
+        const N = 4000; // GREATLY INCREASED for mass particle density
         let particles =[];
         let stars = [];
         let mouseTrail =[];
@@ -404,14 +404,9 @@
                         this.vx += (this.tx - this.x) * 0.08;
                         this.vy += (this.ty - this.y) * 0.08;
                     } else if (this.isDebris) {
-                        // NEW PHYSICS: Blast out, hit drag, then drift left joining background stars!
-                        this.vx *= 0.95; // High friction/drag
+                        this.vx *= 0.95; 
                         this.vy *= 0.95;
-                        
-                        // Add stellar current (drifts left)
                         this.vx -= 0.08 * (W / Math.max(this.z, 1));
-                        
-                        // Mild vertical float
                         this.vy += (Math.random() - 0.5) * 0.1;
                     }
                 }
@@ -426,16 +421,16 @@
                 
                 if (state === 'answering') {
                     if (this.isDebris) {
-                        // Fades out sequentially as it drifts left to mimic dying embers
                         depthAlpha = Math.max(0, 1 - (Math.abs(this.x - cx) / (W * 0.8)));
                     } else if (!this.isText) {
-                        depthAlpha = 0; // Hides any leftover rogue particles
+                        depthAlpha = 0; 
                     }
                 } else {
-                    depthAlpha = Math.max(0.05, (this.z + baseRadius) / (baseRadius * 2.5));
+                    // Improved alpha math, so back of atom is clearly visible
+                    depthAlpha = Math.max(0.1, (this.z + baseRadius) / (baseRadius * 2.2));
                 }
 
-                if (depthAlpha <= 0) return; // Save render performance
+                if (depthAlpha <= 0) return; 
                 
                 ctx.globalAlpha = depthAlpha;
                 ctx.fillStyle = this.color; 
@@ -449,7 +444,7 @@
         function updateOraclePosition() {
             const rect = oracleAnchor.getBoundingClientRect();
             cx = rect.left + (rect.width / 2);
-            cy = rect.top + (rect.height / 2) + window.scrollY; // Keeps Y absolute to document top
+            cy = rect.top + (rect.height / 2) + window.scrollY; 
         }
 
         function init() {
@@ -475,7 +470,6 @@
             tCtx.font = `900 ${size}px "Montserrat", sans-serif`;
             let lines = answerText.split("\n");
             
-            // Render text positioned absolutely to screen view
             let screenCy = cy - window.scrollY;
             let startY = screenCy - ((size * 1.1 * (lines.length - 1)) / 2) - 15;
             lines.forEach((line, i) => { tCtx.fillText(line, W/2, startY + (i * size * 1.1)); });
@@ -491,7 +485,7 @@
             const step = Math.min(W, H) > 800 ? 5 : 4; 
             for (let y = 0; y < H; y += step) {
                 for (let x = 0; x < W; x += step) {
-                    if (d[(y * W + x) * 4 + 3] > 128) pts.push({ x, y: y + window.scrollY }); // Correct target to absolute Y
+                    if (d[(y * W + x) * 4 + 3] > 128) pts.push({ x, y: y + window.scrollY }); 
                 }
             }
             return pts;
@@ -500,7 +494,6 @@
         function triggerAnswer() {
             state = 'answering';
             hintEl.style.opacity = 0;
-            // Triggers the animation to glide text to top right!
             heroText.classList.add('exploded');
             
             const pts = getTextPoints(answers[Math.floor(Math.random() * answers.length)]);
@@ -510,12 +503,11 @@
                     p.tx = pts[i].x; p.ty = pts[i].y; p.isText = true; p.isDebris = false;
                 } else {
                     p.isText = false; p.isDebris = true;
-                    // UNSTRUCTURED BLAST PHYSICS
                     let angle = Math.random() * Math.PI * 2;
                     let force = Math.random() * 80 + 20; 
                     p.vx = Math.cos(angle) * force;
                     p.vy = Math.sin(angle) * force;
-                    p.z = Math.random() * 800; // Scatters depth
+                    p.z = Math.random() * 800; 
                 }
             });
 
@@ -523,13 +515,10 @@
             answerTimer = setTimeout(() => {
                 state = 'idle';
                 hintEl.style.opacity = 0.8;
-                heroText.classList.remove('exploded'); // Text glides back
+                heroText.classList.remove('exploded'); 
                 
-                // Infinite Loop: Reset the debris invisibly to the core to regenerate
                 particles.forEach(p => {
-                    if (p.isDebris) {
-                        p.x = cx; p.y = cy; p.vx = 0; p.vy = 0;
-                    }
+                    if (p.isDebris) { p.x = cx; p.y = cy; p.vx = 0; p.vy = 0; }
                     p.isText = false; p.isDebris = false;
                 });
             }, 6500); 
@@ -579,7 +568,6 @@
                 ctx.save(); ctx.translate(Math.random() * 4 - 2, Math.random() * 4 - 2);
             }
 
-            // Move the whole context up based on scroll so Oracle physically scrolls with page!
             ctx.save();
             ctx.translate(0, -window.scrollY);
 
@@ -598,11 +586,10 @@
             }
 
             particles.forEach(p => { p.update(); p.draw(); });
-            ctx.restore(); // Undo scroll translation for mouse overlay
+            ctx.restore(); 
 
-            if (state === 'charging') ctx.restore(); // Undo shake
+            if (state === 'charging') ctx.restore(); 
 
-            // MOUSE TRAIL
             if (mouse.x > 0 && mouse.y > 0) {
                 mouseTrail.push({x: mouse.x, y: mouse.y});
                 if (mouseTrail.length > 20) mouseTrail.shift();
