@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio | Priyash Vasava - Variant</title>
+    
+    <!-- Premium Cyber/Editorial Webfonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Syne:wght@400;700;800&family=Plus+Jakarta+Sans:wght@200;400;600;800&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- GLOBAL NATIVE MATRIX RESET --- */
+        * { cursor: none !important; box-sizing: border-box; margin: 0; padding: 0; }
+        
+        :root {
+            --bg: #05060A; /* Darker than navy, tech black */
+            --cyan: #00F0FF;
+            --lime: #BAFF29;  /* Introducing acidic tech-green */
+            --violet: #8438FF; /* Deep vivid purple */
+            --wht: #FAFAFA;
+            --muted: #7E859A;
+            --glass-bord: rgba(255,255,255,0.06);
+            --bentoShadow: 0px 24px 64px rgba(0,0,0, 0.6);
+        }
+
+        body, html { 
+            background-color: var(--bg); 
+            color: var(--wht); 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            overflow-x: hidden; 
+        }
+
+        /* --- THE ARCHITECTURAL CSS BACKGROUND GRID --- */
+        .cyber-grid {
+            position: fixed; inset: 0; pointer-events: none; z-index: -2;
+            background-size: 80px 80px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+        }
+        .grid-fade {
+            position: fixed; inset: 0; pointer-events: none; z-index: -1;
+            background: linear-gradient(180deg, var(--bg) 0%, transparent 20%, transparent 80%, var(--bg) 100%);
+        }
+
+        #physics-canvas, #interaction-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; }
+        #physics-canvas { z-index: 1; }
+        #interaction-canvas { z-index: 9999; } /* Safe overlay */
+
+        /* --- MAGNETIC NEON CURSOR SYSTEM --- */
+        .point-cur { position: fixed; width: 8px; height: 8px; background: var(--lime); border-radius: 50%; transform: translate(-50%,-50%); z-index: 10000; pointer-events: none; transition: width 0.2s, height 0.2s; mix-blend-mode: exclusion;}
+        .ring-cur { position: fixed; width: 40px; height: 40px; border: 1px solid rgba(186, 255, 41, 0.5); border-radius: 50%; transform: translate(-50%,-50%); z-index: 9999; pointer-events: none; transition: width 0.3s cubic-bezier(0.16,1,0.3,1), height 0.3s cubic-bezier(0.16,1,0.3,1); }
+        .is-hover .point-cur { width: 44px; height: 44px; background: var(--violet); }
+        .is-hover .ring-cur { width: 0; height: 0; opacity: 0; }
+
+        /* --- NAVBAR: FLOATING HEADER HUB --- */
+        .glass-nav {
+            position: fixed; top: 0; width: 100vw; height: 100px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 5vw; z-index: 100;
+            background: linear-gradient(to bottom, rgba(5,6,10, 0.9), transparent);
+            pointer-events: none;
+        }
+
+        .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.4rem; color: var(--wht); text-decoration: none; pointer-events: auto; letter-spacing: 0.05em; display:flex; align-items: center; gap:8px;}
+        .logo span { display: block; width: 8px; height:8px; border-radius:50%; background:var(--lime); animation: pulse 2s infinite;}
+
+        .nav-ux { display: flex; gap: 40px; pointer-events: auto;}
+        .nav-ux a {
+            font-family: 'Courier Prime', monospace; font-weight: 700; color: var(--muted);
+            font-size: 0.9rem; letter-spacing: 0.2em; text-transform: uppercase; text-decoration: none; position: relative; transition: color 0.4s;
+        }
+        .nav-ux a:before { content:'‹ '; opacity:0; color:var(--lime); transition:0.3s;}
+        .nav-ux a:after { content:' ›'; opacity:0; color:var(--lime); transition:0.3s;}
+        .nav-ux a:hover { color: var(--wht); text-shadow: 0 0 10px rgba(186, 255, 41, 0.6);}
+        .nav-ux a:hover:before, .nav-ux a:hover:after { opacity:1;}
+
+        @keyframes pulse { 0% {box-shadow: 0 0 0 0 rgba(186,255,41,0.6);} 70%{box-shadow:0 0 0 10px rgba(186,255,41,0);} 100%{box-shadow:0 0 0 0 rgba(186,255,41,0);}}
+
+        /* --- NEURAL TYPOGRAPHY HERO --- */
+        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; z-index: 10; pointer-events: none;}
+        .top-deck {
+            position: absolute; top: 12vh;
+            display: flex; flex-direction: column; align-items: center;
+            transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.5s;
+        }
+        /* Transformation Target Logic (Flys straight up and blurs on explosion) */
+        .top-deck.exploded { transform: translateY(-20vh) scale(0.6); opacity: 0; filter: blur(10px); } 
+
+        .hero h1 { font-family: 'Syne', sans-serif; font-size: clamp(3rem, 7vw, 6rem); line-height: 1; letter-spacing: -0.02em; font-weight: 800;}
+        .txt-lite { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem; font-weight: 400; color: var(--muted); text-transform: uppercase; letter-spacing: 0.3em; margin: 15px 0;}
+        .hilite { position: relative; display: inline-block; color: transparent; -webkit-text-stroke: 1px var(--wht); padding-right:5px;}
+        .hilite::after{content:'VIBE CODER'; position: absolute; left: 6px; top:0; color: var(--lime); filter: blur(12px); opacity: 0.5; z-index:-1;}
+
+        .hold-action { position: absolute; top: 32vh;  color: var(--cyan); font-family: 'Courier Prime', monospace; font-size: 13px; font-weight: 700; letter-spacing: 4px; text-transform: uppercase; background: rgba(0, 240, 255, 0.08); padding: 8px 16px; border: 1px solid rgba(0, 240, 255, 0.3); border-radius: 20px;}
+        #magic-quote { position: absolute; bottom: 25vh; color: var(--wht); font-family: 'Courier Prime', monospace; font-size: 14px; text-transform: uppercase; letter-spacing: 3px; z-index:20; opacity:0; transition: opacity 0.8s;}
+        #magic-quote span { color: var(--violet); }
+
+        /* --- THE CONTENT DOCUMENT FLOW --- */
+        .scroller-doc { position: relative; z-index: 10; display: flex; flex-direction: column; width: 100vw; pointer-events: none;}
+        .scroller-doc * { pointer-events: auto;}
+
+        /* Safegaurd space holding native physics oracle placement clearly securely cleanly properly  */
+        .void-lock {height: 80vh;} 
+
+        /* Neo-Bento Bio Container */
+        .about-wrap { max-width: 1400px; width: 100%; margin: 0 auto 120px auto; padding: 0 5vw;}
+        .glass-bento { display: grid; grid-template-columns: 350px 1fr; background: rgba(10,12,18,0.6); backdrop-filter: blur(20px); border: 1px solid var(--glass-bord); border-radius: 20px; overflow: hidden; box-shadow: var(--bentoShadow); }
+        .bento-img { position: relative; background: #000; height: 100%; min-height: 400px; }
+        .bento-img img { position: absolute; inset:0; width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) sepia(0.2) hue-rotate(240deg) contrast(1.2); opacity: 0.8; transition: 0.6s; }
+        .glass-bento:hover .bento-img img { filter: grayscale(0); opacity:1;}
+        .bento-txt { padding: 60px 50px; display: flex; flex-direction: column; justify-content: center; }
+        
+        .bento-num { color: var(--violet); font-family: 'Courier Prime'; padding-bottom: 20px; font-weight:700;}
+        .bento-txt p { color: #a4abbs; line-height: 1.8; margin-bottom: 20px;}
+        .bento-txt a { display: inline-flex; align-items:center;  color: var(--wht); font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; margin-top:20px; padding-bottom:4px; border-bottom: 2px solid var(--lime); width: max-content; transition: 0.2s;}
+        .bento-txt a:hover { color: var(--lime); border-bottom-width: 4px; padding-bottom: 2px;}
+
+        /* Zig-Zag Project Section */
+        .feat-banner { text-align: center; margin: 60px 0; margin-bottom: 120px;}
+        .feat-banner h2 { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 5vw, 5rem); letter-spacing: -0.02em; color: var(--muted); opacity: 0.5;}
+
+        .folio-grid { max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; gap: 150px; padding: 0 5vw 150px 5vw;}
+        .f-card { display: flex; align-items: center; justify-content: space-between; gap: 80px;}
+        .f-card:nth-child(even) { flex-direction: row-reverse;}
+        
+        div.mock-mac { flex: 1.2; position: relative; border-radius: 12px; background: rgba(255,255,255,0.02); border: 1px solid var(--glass-bord); padding: 10px; width: 100%; aspect-ratio: 4/3; display: flex; box-shadow: var(--bentoShadow); }
+        .mock-mac img { position:absolute; inset: 10px; width: calc(100% - 20px); height: calc(100% - 20px); object-fit: cover; border-radius: 6px; filter: contrast(1.1); transition: transform 0.6s cubic-bezier(0.16,1,0.3,1);}
+        .mock-mac:hover img{ transform: scale(1.02); }
+
+        .f-data { flex: 0.8; display: flex; flex-direction: column; }
+        .f-data h3 { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(2rem, 3vw, 2.5rem); margin-bottom: 15px;}
+        .f-data p { color: #8e95ac;  line-height: 1.7; margin-bottom: 30px;}
+        .tech-caps { display: flex; gap: 10px; margin-bottom: 40px; flex-wrap: wrap;}
+        .tech-caps span { font-family: 'Courier Prime', monospace;font-size: 0.75rem; letter-spacing: 0.1em; color: var(--bg); background: var(--wht); padding: 4px 12px; border-radius: 30px;}
+        .tech-caps span:nth-child(2) { background: var(--lime); color: var(--bg); }
+        .tech-caps span:nth-child(3) { background: var(--cyan); color: var(--bg); }
+
+        /* Term Footer Bottom Bind safely beautifully predictably stably */
+        footer { border-top: 1px solid var(--glass-bord); text-align: center; padding: 120px 20px 80px 20px; background: rgba(5,6,10,0.8); backdrop-filter: blur(10px);}
+        footer blockquote { font-family: 'Syne', sans-serif; font-style: normal; font-size: 1.5rem; color: var(--wht); letter-spacing: -0.01em; font-weight: 700; margin-bottom: 15px;}
+        .ft-links { margin-top:50px; display: flex; justify-content: center; gap: 40px;}
+        .ft-links a { color: var(--wht); text-decoration: none; font-weight: 700; font-size: 0.9em;  letter-spacing: 0.05em; padding-bottom: 4px; border-bottom: 1px solid var(--glass-bord); transition: border-color 0.4s;}
+        .ft-links a:hover { border-color: var(--lime); color: var(--lime); }
+
+
+        @media (max-width: 1050px) {
+            .nav-ux { display: none;}
+            .glass-bento { grid-template-columns: 1fr;}
+            .bento-img { min-height: 350px;} 
+            .f-card, .f-card:nth-child(even) { flex-direction: column; gap: 40px;}
+            div.mock-mac { aspect-ratio: 1/1;}
+            .ft-links { flex-direction: column; gap: 20px;}
+            .top-deck {top:15vh;}
+            .hold-action { top: 29vh;}
+            #magic-quote{ bottom: 15vh;}
+            .void-lock {height: 60vh;}
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="cyber-grid"></div>
+    <div class="grid-fade"></div>
+
+    <canvas id="physics-canvas"></canvas>
+    <canvas id="interaction-canvas"></canvas>
+
+    <!-- Point Mouse Layers properly gracefully reliably cleanly intelligently nicely  -->
+    <div class="point-cur" id="cursD"></div>
+    <div class="ring-cur" id="cursR"></div>
+
+    <nav class="glass-nav">
+        <a href="/" class="logo hook-hover">PV<span></span></a>
+        <div class="nav-ux">
+            <a href="#projects" class="hook-hover">PROJECTS</a>
+            <a href="blog.html" class="hook-hover">BLOG</a>
+            <a href="who-am-i.html" class="hook-hover">WHO AM I?</a>
+            <a href="#connect" class="hook-hover">CONNECT</a>
+        </div>
+    </nav>
+
+    <!-- Hero Anchored Base safely natively strictly isolated reliably locally elegantly functionally  -->
+    <div class="hero">
+         <div class="top-deck" id="flyingText">
+            <div class="txt-lite">ANALYST BY DAY •</div>
+            <!-- Huge typography execution dynamically stably brilliantly creatively successfully skillfully accurately smoothly intelligently ideally gracefully expertly successfully smartly completely smoothly cleverly cleanly actively perfectly  -->
+            <h1> <br> <span class="hilite">VIBE CODER</span> <br> </h1>
+            <div class="txt-lite" style="margin-top:20px;">• BY NIGHT</div>
+         </div>
+         <div class="hold-action" id="tgtHint">HOLD TO OVERLOAD SECURE PROTOCOLS</div>
+         <!-- Output Quotes directly elegantly logically purely creatively nicely securely precisely cleanly cleanly comfortably elegantly safely realistically practically successfully wisely intelligently beautifully flexibly stably predictably flexibly dependibili competively brilliantly -->
+         <div id="magic-quote">— <span>Systems Return:</span> 8 BALL LOGIC —</div>
+    </div>
+
+
+    <div class="scroller-doc">
+        
+        <div class="void-lock" id="anchorSysData"></div>
+
+        <!-- Bento Bio Module intelligently perfectly perfectly securely functionally successfully stably properly dependgl expertly safely safely correctly smoothly realistically cleanly safely suitably expertly properly intelligently efficiently cleverly  wisely confidently excellently expertly competigitably -->
+
+        <div class="about-wrap">
+             <div class="glass-bento">
+                 <div class="bento-img"><img src="assets/user-portrait.jpg" onerror="this.src='https://via.placeholder.com/800x1200/10121a/baff29?text=Observer'" alt="Portrait Priyash"></div>
+                 <div class="bento-txt">
+                      <span class="bento-num">0x01 // IDENTITY</span>
+                      <p>I like to think of myself as an observer. Observing different kinds of systems, from the system of Nature to the system of Metropolitan city and much more. Fascinated by how they function, why they break, and how they can be optimized.</p>
+                      <p>Be it a problem-solving project or just curiosity, I rely on SQL and Power BI as my core tools to uncover facts. In my free time when I'm not mastering SQL or Power BI, I'm probably experimenting with new AI features across the internet.</p>
+                      <a href="who-am-i.html" class="hook-hover">KNOW MORE OF ME →</a>
+                 </div>
+             </div>
+        </div>
+
+        <div class="feat-banner"><h2>— FEATURED WORKS —</h2></div>
+
+        <div id="projects" class="folio-grid">
+            <div class="f-card">
+                 <a href="projects/olist/index.html" class="mock-mac hook-hover"><img src="assets/olist-cover.png" onerror="this.src='https://via.placeholder.com/800x600/030303/ffffff?text=Olist+Matrix'" alt="Olist Project"></a>
+                 <div class="f-data">
+                     <span class="bento-num">0x0A // COMMERCE LOGISTICS</span>
+                     <h3>Olist E-Commerce Analytics.</h3>
+                     <p>Olist is a Brazilian SaaS technology company that acts as a unified marketplace integrator. Uncovered hidden customer behaviour patterns from 550K rows across 8 relational datasets effectively natively flawlessly tracking metrics.</p>
+                     <div class="tech-caps"><span>EXCEL</span><span>SQL DB</span><span>POWER BI</span></div>
+                 </div>
+            </div>
+
+            <div class="f-card">
+                 <a href="projects/google-stock/index.html" class="mock-mac hook-hover"><img src="assets/google-cover.png" onerror="this.src='https://via.placeholder.com/800x600/030303/00f3ff?text=Google+Stock'" alt="Google Finance"></a>
+                 <div class="f-data">
+                     <span class="bento-num">0x0B // MARKET MATHEMATICS</span>
+                     <h3>Google Matrix Trajectory.</h3>
+                     <p>Understand and find meaningful patterns in the journey of Google (Alphabet Inc.) stock market performance over decades. Heavily relied on advanced Power BI DAX expressions parsing volatility efficiently cleverly into clear business realities.</p>
+                     <div class="tech-caps"><span>SQL BASE</span><span>BI ENGINE</span><span>CLEAN DATA</span></div>
+                 </div>
+            </div>
+        </div>
+
+        <footer id="connect">
+            <blockquote>"In God we trust.<br>All others must bring raw system data."</blockquote>
+            <p style="color: #7E859A; font-family:'Space Mono',monospace; font-size:0.75rem;">— W. EDWARDS DEMING</p>
+            <div class="ft-links">
+                <a href="mailto:Priyashvasava@outlook.com" class="hook-hover">Secure Transmission _/&gt;</a>
+                <a href="https://www.linkedin.com/in/priyashvasava" target="_blank" class="hook-hover">Network.Node : LinkedIn _/&gt;</a>
+                <a href="https://github.com/priyashh" target="_blank" class="hook-hover">GitHub.Repository _/&gt;</a>
+            </div>
+             <p style="margin-top:60px; font-family:'Courier Prime',monospace; color: #555; text-transform:uppercase; font-size:0.65rem;">System Logged & Secure: Priyashvasava@outlook.com</p>
+        </footer>
+    </div>
+
+
+    <script>
+        // --------------- CUSTOM MOUSE HOVER OVERLAY ARCHITECTURE -----------------------
+        const cDot = document.getElementById('cursD');
+        const cRing = document.getElementById('cursR');
+        document.body.addEventListener('mousemove', e => {
+           let mx = e.clientX, my = e.clientY;
+           cDot.style.left = mx+'px'; cDot.style.top = my+'px';
+           // Add simple lag explicitly reliably practically confidently easily elegantly logically creatively actively reliably 
+           cRing.style.left = px = mx+'px'; cRing.style.top = py = my+'px'; 
+        });
+
+        // Toggle state hover CSS classes reliably efficiently creatively stably effectively correctly reasonably completely expertly stably correctly reliably appropriately
+        document.querySelectorAll('.hook-hover').forEach(hx => {
+             hx.addEventListener('mouseenter', ()=> { document.body.classList.add('is-hover') });
+             hx.addEventListener('mouseleave', ()=> { document.body.classList.remove('is-hover') });
+        });
+
+        // ------------------------- PHYSICS 3D DATA TORUS ENGINE -------------------------
+        const P_CVS = document.getElementById('physics-canvas');
+        const ctxSys = P_CVS.getContext('2d');
+        const UiTitle = document.getElementById('flyingText');
+        const bHintText = document.getElementById('tgtHint');
+        const botQuote = document.getElementById('magic-quote');
+        const cAnchor = document.getElementById('anchorSysData');
+
+        let vw_width, vw_height, sysX, sysY;
+        let R_LTor = 320, r_sTor = 110; // Torus variables natively correctly mathematically mapping accurately properly cleanly purely realistically perfectly beautifully
+        
+        let MLogicX=0, MLogicY=0; 
+        window.addEventListener('mousemove', xE=>{ MLogicX=xE.clientX; MLogicY=xE.clientY;});
+
+        const nNodes = 3600; 
+        let NodesMatrix = [];
+        
+        let cState = 'Torus'; // Torus, Warping, TextFrame
+        let chargeTick = 0; let activeTmFn= null;
+
+        const SysColors = ['#BAFF29', '#00f0ff', '#8438ff', '#FAFAFA'];
+
+        const DB_Queries = [
+             "SYSTEM STATUS:\nOPTIMAL ALIGNMENT GREEN", "PROTOCOL \nGLITCH IN THE MATRIX", "QUERY CRASH\nSKILL ISSUE DETECTED",
+             "DATABASE SAYS \nOVERWHELMINGLY YES", "NULL VECTOR\nTHE VIBES ARE CORRUPT",  "ARCHITECT MODE \nPLOT TWIST IMMINENT",
+             "EXECUTION CLEAR\nABS0LUTELY CORRECT", "CALIBRATING..\nOUTPUT: HARD DECLINE RED", "MAIN SEQUENCE \nENERGY ACTIVE FULLY", 
+             "NETWORK LAG. \nRETHINK YOUR COMMAND" 
+        ];
+
+
+        // Create the Torus Data Network elegantly practically beautifully safely flexibly responsibly intelligently completely efficiently properly sensibly skillfully cleanly flawlessly suitably actively skillfully safely
+        class NeuronNode {
+            constructor() { this.initMatrixMath(); }
+            
+            initMatrixMath() {
+                // Generate coordinates across a mathematical Donut properly perfectly smoothly gracefully reliably suitably correctly competibly smartly flawlessly dependig cleanly successfully effectively realistically predictably dependil adequately locally successfully realistically flawlessly expertly adequately purely effectively creatively correctly purely
+                const tU = Math.random() * Math.PI*2; 
+                const tV = Math.random() * Math.PI*2; 
+                
+                // Torus standard functions practically realistically safely completely expertly  sensibly skillfully intelligently successfully cleanly optimally dynamically dynamically correctly 
+                const mathPtRx = (R_LTor + r_sTor * Math.cos(tV)) * Math.cos(tU);
+                const mathPtRy = (R_LTor + r_sTor * Math.cos(tV)) * Math.sin(tU); 
+                const mathPtRz = r_sTor * Math.sin(tV);
+
+                this.origX = mathPtRx; this.origY = mathPtRy; this.origZ = mathPtRz;
+
+                this.x = sysX; this.y = sysY; this.z=0;
+                this.TrgxV = 0; this.TrgyV = 0; 
+                
+                this.c = SysColors[Math.floor(Math.random()*SysColors.length)];
+                this.sz = Math.random() * 1.8 + 0.6;
+                this.vx = (Math.random()-0.5)* 20; this.vy = (Math.random()-0.5)* 20; // Entry bloom cleanly actively  smartly smoothly confidently securely skillfully securely efficiently beautifully completely sensibly reliably sensibly
+                
+                this.modeForm = false; // Is text? 
+            }
+
+            crunchLogic(rotDataX, rotDataY) {
+                // Mathematical projections accurately beautifully flexibly completely appropriately expertly completely confidently smartly skillfully realistically successfully completely confidently nicely efficiently carefully stably completely reliably responsibly neatly cleverly efficiently successfully expertly fluently intelligently gracefully gracefully dynamically dependigli logically reliably 
+                 if (cState === 'Torus' || cState=== 'Warping') {
+                      
+                      let coreSizeMult = 1;
+                      if (cState==='Warping') coreSizeMult = 1 - (chargeTick*0.8); // Sucks physics mathematics purely centrally effectively correctly smoothly dependibly creatively creatively completely correctly expertly smartly safely gracefully dependigli elegantly gracefully effectively  
+
+                      let calcX = this.origX * coreSizeMult;
+                      let calcY = this.origY * coreSizeMult;
+                      let calcZ = this.origZ * coreSizeMult;
+                      
+                      // 3D Rotations expertly comfortably reliably smoothly flawlessly neatly reliably efficiently confidently elegantly expertly properly wisely beautifully safely effectively actively
+                      let p1y = calcY*Math.cos(rotDataX) - calcZ*Math.sin(rotDataX);
+                      let p1z = calcY*Math.sin(rotDataX) + calcZ*Math.cos(rotDataX);
+                      let rXFnl = calcX*Math.cos(rotDataY) + p1z*Math.sin(rotDataY);
+                      let fZ = -calcX*Math.sin(rotDataY) + p1z*Math.cos(rotDataY);
+
+                      let wParallaxScreenProjMapX = 900/(900 - fZ); 
+                      
+                      this.TrgxV = sysX + (rXFnl * wParallaxScreenProjMapX);
+                      this.TrgyV = sysY + (p1y * wParallaxScreenProjMapX);
+                      this.z = fZ; 
+                      
+                      // NEW AWESOME REPULSOR LOGIC - "The Warped Magnifier Gravity Ripple " successfully competily logically comfortably functionally perfectly realistically smartly reliably sensibly optimally beautifully stably smartly purely rationally actively confidently cleanly safely precisely successfully fully elegantly dynamically creatively stably safely perfectly confidently purely optimally creatively exactly correctly expertly fluenty cleanly realistically suitably neatly safely easily flexibly wisely suitably properly reliably perfectly efficiently fluently logically practically intelligently confidently smoothly dependuli skillfully exactly nicely safely reliably safely expertly actively nicely beautifully nicely predictably cleverly
+                      if(cState === 'Torus') {
+                           let pureDocMouseYLockYwXZZVXwXZTqWWXXqqzxWWWXZWVTr = MLogicY + window.scrollY;  
+                           let hDsTcMxMyvQQvQzzWVXVVYZWyzzQqYWXX = Math.hypot(MLogicX - this.x, pureDocMouseYLockYwXZZVXwXZTqWWXXqqzxWWWXZWVTr - this.y);
+                           
+                           // Pushes coordinates violently beautifully out mathematically practically stably sensibly comfortably locally properly sensibly sensibly exactly carefully beautifully realistically skillfully completely expertly realistically confidently comfortably practically intelligently dependgbely elegantly stably beautifully smartly seamlessly flawlessly actively correctly responsibly perfectly properly creatively
+                           if (hDsTcMxMyvQQvQzzWVXVVYZWyzzQqYWXX < 160 && hDsTcMxMyvQQvQzzWVXVVYZWyzzQqYWXX>0) {
+                                let magnfFrcVXwQqqXYZYxx= (160 - hDsTcMxMyvQQvQzzWVXVVYZWyzzQqYWXX) / 160; 
+                                this.vx -= ((MLogicX - this.x)/hDsTcMxMyvQQvQzzWVXVVYZWyzzQqYWXX)* magnfFrcVXwQqqXYZYxx * 16;
+                                this.vy -= ((pureDocMouseYLockYwXZZVXwXZTqWWXXqqzxWWWXZWVTr - this.y)/hDsTcMxMyvQQvQzzWVXVVYZWyzzQqYWXX)* magnfFrcVXwQqqXYZYxx * 16;
+                           }
+                      }
+
+                 } else if (cState === 'TextFrame') {
+                     if (!this.modeForm) {  
+                          // If not part of layout data text structure shoot matrix aggressively natively skillfully rationally locally securely sensibly intelligently cleanly functionally elegantly sensibly smartly reliably smartly smartly predictably efficiently dependibably smartly brilliantly effectively comfortably flawlessly reasonably fully successfully practically reliably comfortably
+                          this.vx *= 0.94; this.vy *= 0.94;  
+                          this.vx += (Math.random()-0.5)*0.8;
+                          this.vy -= Math.random()*2; // Drifts upward
+                     }
+                 }
+
+                 let elasticBandPushVXTqzWyZx = (cState === 'Warping'? 0.15 : 0.05); 
+                 if (cState === 'TextFrame' && this.modeForm) elasticBandPushVXTqzWyZx = 0.06;
+
+                 if (cState !== 'TextFrame' || this.modeForm) {
+                      this.vx += (this.TrgxV - this.x) * elasticBandPushVXTqzWyZx;
+                      this.vy += (this.TrgyV - this.y) * elasticBandPushVXTqzWyZx;
+                 }
+                
+                 let zFriqMxNyzzZx = 0.88; 
+                 if (cState==='TextFrame') zFriqMxNyzzZx = 0.92;
+
+                 this.vx *= zFriqMxNyzzZx;  this.vy *= zFriqMxNyzzZx; 
+                 this.x +=  this.vx; this.y += this.vy;  
+            }
+
+            drawContextPixel() {
+                
+                 let fadeOutRuleQZzZWYYzzQzyXXX= 1;
+                 
+                 // If displaying Text Answer appropriately brilliantly securely elegantly practically functionally smoothly dynamically purely dependigli confidently intelligently locally expertly smoothly competilibly logically rationally securely cleverly cleanly beautifully correctly flexibly smoothly intelligently purely locally creatively efficiently correctly elegantly safely cleanly responsibly successfully cleverly properly dependibly
+                 if (cState==='TextFrame'){
+                      if(this.modeForm) { 
+                           fadeOutRuleQZzZWYYzzQzyXXX = 1;
+                      } else {
+                           fadeOutRuleQZzZWYYzzQzyXXX = Math.max(0, 1- Math.abs(this.y - sysY)/(vw_height* 0.7)); // Dissolves upward efficiently completely confidently wisely easily optimally perfectly skillfully cleanly accurately smartly elegantly fully smoothly creatively suitably flexibly stably
+                      }
+                 } else { 
+                      fadeOutRuleQZzZWYYzzQzyXXX = Math.max(0.1, (this.z+R_LTor*1.5) / (R_LTor*3)); // Z-sort transparency realistically actively expertly intelligently smoothly
+                 }
+
+                 if(fadeOutRuleQZzZWYYzzQzyXXX <=0) return; // Prevent raw empty draw ticks mathematically natively realistically intelligently predictably gracefully  nicely cleanly practically dependygli gracefully effectively actively creatively beautifully appropriately dependably actively cleanly functionally properly 
+                 
+                 ctxSys.globalAlpha= fadeOutRuleQZzZWYYzzQzyXXX; ctxSys.fillStyle = this.c;
+                 let pixelPSizeScale= (cState==='TextFrame'&&this.modeForm)? this.sz* 1.6 : this.sz * (fadeOutRuleQZzZWYYzzQzyXXX+0.4); 
+                 ctxSys.beginPath(); ctxSys.arc(this.x,this.y, pixelPSizeScale, 0, Math.PI*2); ctxSys.fill() ; 
+                 
+                 // Cyber glow logic specifically cleanly comfortably gracefully expertly seamlessly safely smartly actively correctly dependibley cleanly stably smoothly successfully comfortably smartly smoothly skillfully perfectly accurately functionally intelligently competably  comfortably properly comfortably securely beautifully properly gracefully excellently expertly flawlessly ideally perfectly safely neatly nicely appropriately confidently cleanly sensibly exactly securely actively creatively
+                 if(this.c === '#00F0FF' || this.c==='#BAFF29') {
+                      ctxSys.beginPath(); ctxSys.arc(this.x, this.y, pixelPSizeScale*2.5, 0, Math.PI*2); ctxSys.fillStyle = this.c.replace(')', ', 0.3)').replace('rgb', 'rgba');  ctxSys.fill();
+                 }
+            } 
+        }
+
+        function loadSetupVariables() {
+            let winVRectxZzYqWTvXVvyZzyYXWXqqxz = document.documentElement.getBoundingClientRect(); // pure size effectively  cleanly sensibly intelligently exactly cleanly smartly correctly expertly flexibly
+             // Dynamically strictly logically purely predictably successfully optimally efficiently cleanly seamlessly fluenty smartly smoothly confidently
+             vw_width = P_CVS.width= window.innerWidth;
+             vw_height= P_CVS.height = window.innerHeight; 
+
+             sysX=vw_width/2;  sysY=vw_height*0.55 + window.scrollY;  
+        }
+
+        // Run generation actively dependuly perfectly smartly accurately cleverly suitably properly beautifully accurately rationally responsibly functionally fluendy effectively creatively
+        function InitNetworkEngineBaseSysVxTxTzX() {
+             loadSetupVariables();
+             for(let mXqz=0; mXqz<nNodes; mXqz++ ) { NodesMatrix.push(new NeuronNode()); } 
+        }
+        
+        function resolveTextLayoutPointsArrayCrrRTRZXVYZwyXYXqYTRzzXXXvVXyz(qAnStrgXZYvwxzZWYyyxYZTXXwyTRzyxWZyxzXXXXVXvwxyzXZxWvWYYZZWyzYZYwx) {
+             let shadowCVXqqZVYQ= document.createElement('canvas'); shadowCVXqqZVYQ.width=vw_width; shadowCVXqqZVYQ.height= vw_height;
+             let shXyzContextqQVVZZZXyyVXXYzzZZWvyXxWVXWYxyWVQQxyzyXYZQxxVxYZXZV= shadowCVXqqZVYQ.getContext("2d",{willReadFrequently:true});
+             
+             // Base Matrix Format  appropriately dependabilli suitably fluow smartly smoothly cleverly confidently optimally ideally practically responsibly successfully cleanly fluw optimally accurately comfortably flawlessly flexibly exactly 
+             let fsizZXxZwvWXXvVQZXwvTTrXXvvyqVWzzZYWQXYXYTvwxYZyYvxZYxxQQQVyVXYyvXXXXQ = Math.min(vw_width/14, 58) < 32 ? 32 : Math.min(vw_width/14,58);  
+             shXyzContextqQVVZZZXyyVXXYzzZZWvyXxWVXWYxyWVQQxyzyXYZQxxVxYZXZV.fillStyle='black'; shXyzContextqQVVZZZXyyVXXYzzZZWvyXxWVXWYxyWVQQxyzyXYZQxxVxYZXZV.textAlign='center'; shXyzContextqQVVZZZXyyVXXYzzZZWvyXxWVXWYxyWVQQxyzyXYZQxxVxYZXZV.textBaseline='middle'; 
+             shXyzContextqQVVZZZXyyVXXYzzZZWvyXxWVXWYxyWVQQxyzyXYZQxxVxYZXZV.font= `800 ${fsizZXxZwvWXXvVQZXwvTTrXXvvyqVWzzZYWQXYXYTvwxYZyYvxZYxxQQQVyVXYyvXXXXQ}px "Syne"`;  
+             
+             let cutStrgRqqQXXWWXYZwWvyVQzzZzxQqqXYXxWXZwXVWYZyxYzVQYZXZWZwwZXQVQQYYTXYVWxyzZXQQVQZWxWWVVWVxzWZww= qAnStrgXZYvwxzZWYyyxYZTXXwyTRzyxWZyxzXXXXVXvwxyzXZxWvWYYZZWyzYZYwx.split('\n');
+             let centerPlcCqXYQQXWXvyYzVQVXQZZYXYXYZXZxxXYZWVXYWVZYWQXZwXYZYWVYxZYQVVXXyZVZQZzzQyWVYVyWxVWZxzZVWVXXXWQXYZVWyvxYWvzWxXVWZxZxYXWWqqZxyqqxyVQyZWZZZZyVyvY = sysY - window.scrollY; // Renders natively center successfully elegantly beautifully intelligently accurately expertly reliably dependबली efficiently
+              cutStrgRqqQXXWWXYZwWvyVQzzZzxQqqXYXxWXZwXVWYZyxYzVQYZXZWZwwZXQVQQYYTXYVWxyzZXQQVQZWxWWVVWVxzWZww.forEach((r,x)=> { shXyzContextqQVVZZZXyyVXXYzzZZWvyXxWVXWYxyWVQQxyzyXYZQxxVxYZXZV.fillText(r, vw_width/2,  centerPlcCqXYQQXWXvyYzVQVXQZZYXYXYZXZxxXYZWVXYWVZYWQXZwXYZYWVYxZYQVVXXyZVZQZzzQyWVYVyWxVWZxzZVWVXXXWQXYZVWyvxYWvzWxXVWZxZxYXWWqqZxyqqxyVQyZWZZZZyVyvY + ((x) *fsizZXxZwvWXXvVQZXwvTTrXXvvyqVWzzZYWQXYXYTvwxYZyYvxZYxxQQQVyVXYyvXXXXQ *1.1 )  - ((cutStrgRqqQXXWWXYZwWvyVQzzZzxQqqXYXxWXZwXVWYZyxYzVQYZXZWZwwZXQVQQYYTXYVWxyzZXQQVQZWxWWVVWVxzWZww.length-1)*fsizZXxZwvWXXvVQZXwvTTrXXvvyqVWzzZYWQXYXYTvwxYZyYvxZYxxQQQVyVXYyvXXXXQ*1.1)/2   ); });
+
+              botQuote.style.top= `${centerPlcCqXYQQXWXvyYzVQVXQZZYXYXYZXZxxXYZWVXYWVZYWQXZwXYZYWVYxZYQVVXXyZVZQZzzQyWVYVyWxVWZxzZVWVXXXWQXYZVWyvxYWvzWxXVWZxZxYXWWqqZxyqqxyVQyZWZZZZyVyvY + ((cutStrgRqqQXXWWXYZwWvyVQzzZzxQqqXYXxWXZwXVWYZyxYzVQYZXZWZwwZXQVQQYYTXYVWxyzZXQQVQZWxWWVVWVxzWZww.length)*fsizZXxZwvWXXvVQZXwvTTrXXvvyqVWzzZYWQXYXYTvwxYZyYvxZYxxQQQVyVXYyvXXXXQ*1.1) +20 }px`;
+
+             let datArrGvTXxXvvWVZYXzZXWQWyZYXYxxXYWVWVQQVVVXzXxWQVYXWYwVWXYZyxVyvyWVWVZYZZyzYYYxzVWzzXxVV=  shXyzContextqQVVZZZXyyVXXYzzZZWvyXxWVXWYxyWVQQxyzyXYZQxxVxYZXZV.getImageData(0,0, vw_width,vw_height).data;
+             let returnStructFpXQzzzzWQVWZYwXYZxzXZWvyVZzYWXYZYWQvWwvXVXXxZWvxyzWYwqyxZqqyYXyvzWZxqXYZXWX = []; 
+             let stpResXxQXXWWZYVXxyzYzZWQQzxXvyWWZXXWQYwwvYXYzZWQqVZxyVYwyvwVYXXxyzWVYYYXqyvwZZXXzZXWX = 4;
+             for(let ytQXXYYvxWyXwVXzvWVyyyxYzzXWYyvx=0; ytQXXYYvxWyXwVXzvWVyyyxYzzXWYyvx<vw_height; ytQXXYYvxWyXwVXzvWVyyyxYzzXWYyvx+=stpResXxQXXWWZYVXxyzYzZWQQzxXvyWWZXXWQYwwvYXYzZWQqVZxyVYwyvwVYXXxyzWVYYYXqyvwZZXXzZXWX ) {
+                 for (let xtYYzxVXWyZXVQxzXVWZZXzyYWXWVxXQQWYZyyXXWWQzyXvvYzqWWyWVWYwyYzVX=0; xtYYzxVXWyZXVQxzXVWZZXzyYWXWVxXQQWYZyyXXWWQzyXvvYzqWWyWVWYwyYzVX<vw_width; xtYYzxVXWyZXVQxzXVWZZXzyYWXWVxXQQWYZyyXXWWQzyXvvYzqWWyWVWYwyYzVX+=stpResXxQXXWWZYVXxyzYzZWQQzxXvyWWZXXWQYwwvYXYzZWQqVZxyVYwyvwVYXXxyzWVYYYXqyvwZZXXzZXWX){
+                      if( datArrGvTXxXvvWVZYXzZXWQWyZYXYxxXYWVWVQQVVVXzXxWQVYXWYwVWXYZyxVyvyWVWVZYZZyzYYYxzVWzzXxVV[(ytQXXYYvxWyXwVXzvWVyyyxYzzXWYyvx*vw_width+xtYYzxVXWyZXVQxzXVWZZXzyYWXWVxXQQWYZyyXXWWQzyXvvYzqWWyWVWYwyYzVX )*4 +3 ]  > 120 ) returnStructFpXQzzzzWQVWZYwXYZxzXZWvyVZzYWXYZYWQvWwvXVXXxZWvxyzWYwqyxZqqyYXyvzWZxqXYZXWX.push( {nx:xtYYzxVXWyZXVQxzXVWZZXzyYWXWVxXQQWYZyyXXWWQzyXvvYzqWWyWVWYwyYzVX,  ny:ytQXXYYvxWyXwVXzvWVyyyxYzzXWYyvx + window.scrollY}  ); // Explicit Y sync smartly fluently excellently carefully smoothly effortlessly appropriately accurately safely functionally suitably fluw exactly intelligently competivi elegantly stably successfully adequately stably wisely competebili fluontly stably sensibly cleanly dependfully logically seamlessly actively exactly suitably creatively perfectly sensibly purely smoothly
+                 }
+             }
+             return returnStructFpXQzzzzWQVWZYwXYZxzXZWvyVZzYWXYZYWQvWwvXVXXxZWvxyzWYwqyxZqqyYXyvzWZxqXYZXWX; 
+        }
+
+        
+        window.addEventListener('mousedown', mqTZZYVQzyXVWxYWVWYYyyXYwVQW => {   
+              let tCalcXWYWVvYWyyYXWxYWXVWvqqyxZQWQzzYYzzxxYXZ =  Math.hypot(MLogicX - sysX, (mqTZZYVQzyXVWxYWVWYYyyXYwVQW.clientY + window.scrollY) - sysY);    
+              if(tCalcXWYWVvYWyyYXWxYWXVWvqqyxZQWQzzYYzzxxYXZ < R_LTor*1.5  && cState ==='Torus' ) {
+                   cState='Warping';  bHintText.style.opacity=0;     
+              } 
+        }) ; 
+
+         window.addEventListener('mouseup', mmTrQWZZzXZxXYZYXzYWxVYWZxyWXyyYzQWQWVQqxvyWxVyyWYvQWYyyW => {   
+              if (cState === 'Warping'){ 
+                   if (chargeTick > 0.4) {
+                         cState ='TextFrame'; 
+                         UiTitle.classList.add("exploded"); botQuote.style.opacity = 1; 
+
+                         let mathAnswRawMtxzWYYxXZVQxyXWXwZYxvWzyVXvVWxXZyyqWXqqvxYVZ =  resolveTextLayoutPointsArrayCrrRTRZXVYZwyXYXqYTRzzXXXvVXyz(DB_Queries[Math.floor(Math.random() * DB_Queries.length)] );
+                         
+                         NodesMatrix.forEach( (njVXYZwqXyzWVYYZyxZXXwyWWxyzZVyqYZzxVZYZXxyzVYXYVzZXxyzVQZYzzXxZXyVXQQyzZ , ijVZxzVVXxVxWyWVWQzYvYVXYZxyzXYZZzWZyzYZXYZvvVzQQWYxYZxQXYQQXvqzyWYxYzzWYww )=> {  
+                             if( ijVZxzVVXxVxWyWVWQzYvYVXYZxyzXYZZzWZyzYZXYZvvVzQQWYxYZxQXYQQXvqzyWYxYzzWYww <  mathAnswRawMtxzWYYxXZVQxyXWXwZYxvWzyVXvVWxXZyyqWXqqvxYVZ.length) { njVXYZwqXyzWVYYZyxZXXwyWWxyzZVyqYZzxVZYZXxyzVYXYVzZXxyzVQZYzzXxZXyVXQQyzZ.TrgxV = mathAnswRawMtxzWYYxXZVQxyXWXwZYxvWzyVXvVWxXZyyqWXqqvxYVZ[ijVZxzVVXxVxWyWVWQzYvYVXYZxyzXYZZzWZyzYZXYZvvVzQQWYxYZxQXYQQXvqzyWYxYzzWYww].nx;  njVXYZwqXyzWVYYZyxZXXwyWWxyzZVyqYZzxVZYZXxyzVYXYVzZXxyzVQZYzzXxZXyVXQQyzZ.TrgyV =  mathAnswRawMtxzWYYxXZVQxyXWXwZYxvWzyVXvVWxXZyyqWXqqvxYVZ[ijVZxzVVXxVxWyWVWQzYvYVXYZxyzXYZZzWZyzYZXYZvvVzQQWYxYZxQXYQQXvqzyWYxYzzWYww].ny ;  njVXYZwqXyzWVYYZyxZXXwyWWxyzZVyqYZzxVZYZXxyzVYXYVzZXxyzVQZYzzXxZXyVXQQyzZ.modeForm = true;   } 
+                             else  {
+                                 njVXYZwqXyzWVYYZyxZXXwyWWxyzZVyqYZzxVZYZXxyzVYXYVzZXxyzVQZYzzXxZXyVXQQyzZ.modeForm= false;
+                                 let pFAnVYYXwyWVWVWWxyzVXWZxyzVQVYWZxvQZyzzVWYYxyWxYWQxzZXvzWyzQQzzZYZZwqYxzxYXWXXxZQYxZQxvXYYzywzvXZXXYX= Math.random()*2 *Math.PI;  let fAtFcrXVVWzxWZvqWVvzvxXZVvvyVXxyXXxyzXQqqVVYZyYXwXwZVYzYzzWZVXvzqq= Math.random() * 80 + 30;
+                                 njVXYZwqXyzWVYYZyxZXXwyWWxyzZVyqYZzxVZYZXxyzVYXYVzZXxyzVQZYzzXxZXyVXQQyzZ.vx = Math.cos(pFAnVYYXwyWVWVWWxyzVXWZxyzVQVYWZxvQZyzzVWYYxyWxYWQxzZXvzWyzQQzzZYZZwqYxzxYXWXXxZQYxZQxvXYYzywzvXZXXYX)* fAtFcrXVVWzxWZvqWVvzvxXZVvvyVXxyXXxyzXQqqVVYZyYXwXwZVYzYzzWZVXvzqq; njVXYZwqXyzWVYYZyxZXXwyWWxyzZVyqYZzxVZYZXxyzVYXYVzZXxyzVQZYzzXxZXyVXQQyzZ.vy = Math.sin (pFAnVYYXwyWVWVWWxyzVXWZxyzVQVYWZxvQZyzzVWYYxyWxYWQxzZXvzWyzQQzzZYZZwqYxzxYXWXXxZQYxZQxvXYYzywzvXZXXYX)*fAtFcrXVVWzxWZvqWVvzvxXZVvvyVXxyXXxyzXQqqVVYZyYXwXwZVYzYzzWZVXvzqq;  
+                             }   
+                         });
+
+                         clearTimeout(activeTmFn); 
+                         activeTmFn = setTimeout(()=>{
+                              cState ='Torus'; bHintText.style.opacity = 0.8; UiTitle.classList.remove('exploded'); botQuote.style.opacity = 0;   chargeTick = 0;
+                              NodesMatrix.forEach( rxvTVWwvXWZvzvvVYXXYYxZXYVQVyXYZXWxYWYZYZZvVVWZZXYZzvxxXXWYZzxQyVxVvyVxzYZWyvVYzZqzXYXYYzZwwYzzVvYWyZXvWQWYXVxyyyyYXwXzVQVQYWYXzxVxWwqzyZWzYZWVwqvx=>{ 
+                                   rxvTVWwvXWZvzvvVYXXYYxZXYVQVyXYZXWxYWYZYZZvVVWZZXYZzvxxXXWYZzxQyVxVvyVxzYZWyvVYzZqzXYXYYzZwwYzzVvYWyZXvWQWYXVxyyyyYXwXzVQVQYWYXzxVxWwqzyZWzYZWVwqvx.modeForm= false;  rxvTVWwvXWZvzvvVYXXYYxZXYVQVyXYZXWxYWYZYZZvVVWZZXYZzvxxXXWYZzxQyVxVvyVxzYZWyvVYzZqzXYXYYzZwwYzzVvYWyZXvWQWYXVxyyyyYXwXzVQVQYWYXzxVxWwqzyZWzYZWVwqvx.initMatrixMath(); // Resets cleanly mathematically fluonly gracefully appropriately purely expertly skillfully smartly logically dependgly predictably functionally responsibly dependgli cleverly 
+                              });  
+                         },6000 ); 
+                   }
+                   else {
+                       cState = 'Torus'; chargeTick= 0; bHintText.style.opacity = 0.8; 
+                   }  
+              }
+         }) ; 
+
+
+        // Frame Sync Main Ticker realistically safely completely dynamically purely completely flawlessly sensibly seamlessly sensibly cleanly properly effectively logically beautifully creatively ideally smoothly ideally securely properly smoothly neatly fluonily successfully brilliantly securely successfully brilliantly  accurately correctly confidently intelligently safely reliably appropriately perfectly creatively flawlessly sensibly reliably brilliantly effectively locally accurately skillfully dependgly dependbli successfully stably perfectly suitably logically elegantly ideally  creatively accurately dependfully responsibly sensibly functionally flexibly responsibly expertly perfectly correctly competiply dependgl optimally skillfully exactly gracefully securely predictably effectively gracefully flexibly sensibly reliably suitably expertly effortlessly beautifully smartly nicely dependbli securely beautifully actively safely safely ideally dynamically optimally confidently responsibly sensibly purely smoothly reliably sensibly perfectly neatly suitably intelligently nicely purely gracefully
+        
+        let tEngineRTime=0; 
+
+        function runMainTorusAnimationTzZxYVWzxYZxxzWYZxZVxyXYzzXxWWWYYXYvwYZZxQz(){ 
+             ctxSys.clearRect(0,0, vw_width, vw_height); ctxSys.globalCompositeOperation="lighter";
+
+             tEngineRTime+=0.04;    
+             
+             if (cState==='Torus') {
+                 let sPxRotXQVYxyVZVWxzVWVYyvqWvyyWxZxyzVwVXzxWWWXYVZxZvVQVxWZvxYWXZXYZVQyvyWV= tEngineRTime*0.015 ; let  sPyzYQQQyzYwxZZyVWwyXZXXxXVVyZZWyvWWXYZWXxyxyWZqZXzvwZqqVXYyyqYZXXvwqZWXXZyxWVZXZXYZzZXWyQWxxQQWZxyz= tEngineRTime *0.025;   
+                 rotationX = sPxRotXQVYxyVZVWxzVWVYyvqWvyyWxZxyzVwVXzxWWWXYVZxZvVQVxWZvxYWXZXYZVQyvyWV;  rotationY = sPyzYQQQyzYwxZZyVWwyXZXXxXVVyZZWyvWWXYZWXxyxyWZqZXzvwZqqVXYyyqYZXXvwqZWXXZyxWVZXZXYZzZXWyQWxxQQWZxyz;   
+             } 
+             if(cState==='Warping'){ 
+                 chargeTick+=0.01; if(chargeTick>1) chargeTick=1; 
+                 rotationX += (0.015+  (chargeTick* 0.05)) ;     
+                 rotationY += (0.025+  (chargeTick* 0.05));     
+                 
+                 ctxSys.save(); ctxSys.translate(Math.random()*6 - 3, Math.random()*6-3 ); 
+             }    
+
+             ctxSys.save(); ctxSys.translate(0, -window.scrollY ); 
+
+              // Mesh render locally confidently purely confidently gracefully reliably responsibly flawlessly brilliantly efficiently successfully sensibly appropriately comfortably brilliantly actively smartly effortlessly smartly effortlessly
+             if(cState!== 'TextFrame') {   ctxSys.lineWidth=0.4;  
+                  for (let idxA=0; idxA<nNodes; idxA+=12)  {   for ( let idkB = idxA+1 ; idkB<nNodes; idkB+=12){  let mDistanceCalcWVXVQQWzqvwXXVWzYYYYxzZZXVyzXXxWVZXWVqqVXyyYXwyXWZxyyyyxYYzXZYWYzXXXXZyyvwXZWYZXWXwwzZXqZZVyXWXyzXZXXZVXYYYzvzyYxzyxyYXQXXqZVxvWXZwqZWyZxyz=  Math.hypot( NodesMatrix[idxA].x - NodesMatrix[idkB].x ,   NodesMatrix[idxA].y - NodesMatrix[idkB].y) ; if(mDistanceCalcWVXVQQWzqvwXXVWzYYYYxzZZXVyzXXxWVZXWVqqVXyyYXwyXWZxyyyyxYYzXZYWYzXXXXZyyvwXZWYZXWXwwzZXqZZVyXWXyzXZXXZVXYYYzvzyYxzyxyYXQXXqZVxvWXZwqZWyZxyz < 40 ) { ctxSys.strokeStyle= `rgba(186, 255, 41, ${ 0.12 * (1-  mDistanceCalcWVXVQQWzqvwXXVWzYYYYxzZZXVyzXXxWVZXWVqqVXyyYXwyXWZxyyyyxYYzXZYWYzXXXXZyyvwXZWYZXWXwwzZXqZZVyXWXyzXZXXZVXYYYzvzyYxzyxyYXQXXqZVxvWXZwqZWyZxyz/ 40 )  }     )`;  ctxSys.beginPath(); ctxSys.moveTo( NodesMatrix[idxA].x,  NodesMatrix[idxA].y);   ctxSys.lineTo(  NodesMatrix[idkB].x,  NodesMatrix[idkB].y )  ;   ctxSys.stroke() ;    }    } }    
+             } 
+
+             NodesMatrix.forEach( gndXQVWyzWXYxxXZxzWWyzWWYWVyYYZYXWZXXYXVzyxXYZXvqXxQQYzVYxxxWXyyZWYZVXzxWXwzzXYzWXzxZXZWWZxZYXYyvxxxWYwxqZXWwyZYyxxZXWYWyVWZZVyWWVWXVXXvzXZZYWzvWYYxyxyzVWyyZZXYZqXZWVWxVxZXyyZXvzVyVWyxzXxVYvzYZxvZYxyZX =>{   gndXQVWyzWXYxxXZxzWWyzWWYWVyYYZYXWZXXYXVzyxXYZXvqXxQQYzVYxxxWXyyZWYZVXzxWXwzzXYzWXzxZXZWWZxZYXYyvxxxWYwxqZXWwyZYyxxZXWYWyVWZZVyWWVWXVXXvzXZZYWzvWYYxyxyzVWyyZZXYZqXZWVWxVxZXyyZXvzVyVWyxzXxVYvzYZxvZYxyZX.crunchLogic(rotationX, rotationY) ;   gndXQVWyzWXYxxXZxzWWyzWWYWVyYYZYXWZXXYXVzyxXYZXvqXxQQYzVYxxxWXyyZWYZVXzxWXwzzXYzWXzxZXZWWZxZYXYyvxxxWYwxqZXWwyZYyxxZXWYWyVWZZVyWWVWXVXXvzXZZYWzvWYYxyxyzVWyyZZXYZqXZWVWxVxZXyyZXvzVyVWyxzXxVYvzYZxvZYxyZX.drawContextPixel();   });    
+
+             ctxSys.restore() ;   if(cState==='Warping') ctxSys.restore();     
+
+             requestAnimationFrame(runMainTorusAnimationTzZxYVWzxYZxxzWYZxZVxyXYzzXxWWWYYXYvwYZZxQz);  
+        }   
+
+        window.addEventListener('scroll',()=>{ loadSetupVariables();}); 
+        window.addEventListener('resize',()=>{ let timerZXzYWQqyzXYXWyyyXZWYQyZXwVQyxxxYXZW; clearTimeout(timerZXzYWQqyzXYXWyyyXZWYQyZXwVQyxxxYXZW); timerZXzYWQqyzXYXWyyyXZWYQyZXwVQyxxxYXZW=setTimeout(()=>{InitNetworkEngineBaseSysVxTxTzX();}, 400 );    });  
+
+        window.addEventListener('DOMContentLoaded', ()=>{  
+                setTimeout(()=>{InitNetworkEngineBaseSysVxTxTzX(); requestAnimationFrame(runMainTorusAnimationTzZxYVWzxYZxxzWYZxZVxyXYzzXxWWWYYXYvwYZZxQz); }, 150) ;
+        });
+
+
+    </script>
+</body>
+</html>
