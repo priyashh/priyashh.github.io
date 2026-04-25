@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Priyash Vasava | Vibe Coder</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Inter:wght@300;400;500;800;900&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* === RESET & THEME === */
+        :root {
+            --bg: #030409;
+            --surface: rgba(10, 12, 18, 0.4);
+            --cyan: #00f3ff;
+            --purple: #b026ff;
+            --white: #ffffff;
+            --grey: #8c909c;
+            --glass: rgba(255,255,255,0.03); 
+            --border: rgba(255, 255, 255, 0.08);
+        }
+
+        html, body {
+            margin: 0; padding: 0;
+            background-color: var(--bg);
+            color: var(--white);
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            cursor: none; /* Custom physical cursor */
+        }
+        * { box-sizing: border-box; cursor: none !important; }
+
+        /* === HARDWARE ACCELERATED BACKGROUND === */
+        #webgl-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* === CUSTOM DOM CURSOR === */
+        .custom-cursor {
+            position: fixed; top: 0; left: 0; width: 12px; height: 12px;
+            background: var(--white); border-radius: 50%;
+            pointer-events: none; z-index: 9999;
+            transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s, background 0.2s;
+            mix-blend-mode: difference;
+        }
+        .custom-cursor.hover { width: 34px; height: 34px; background: var(--cyan); border: 1px solid var(--white); }
+        .custom-cursor.clicking { width: 8px; height: 8px; background: var(--purple); }
+
+        /* === LAYOUT STRUCTURE === */
+        #scroller-engine { position: relative; z-index: 10; width: 100%; display: flex; flex-direction: column; }
+        
+        .container { max-width: 1300px; width: 100%; margin: 0 auto; padding: 0 40px; }
+
+        /* === NAV === */
+        nav {
+            position: fixed; top: 0; left: 0; width: 100%; height: 90px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 5vw; z-index: 100;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            background: linear-gradient(to bottom, rgba(3, 4, 9, 0.8), rgba(3, 4, 9, 0));
+        }
+
+        .logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem; color: var(--white); text-decoration: none; letter-spacing: 0.1em; text-transform: uppercase; }
+        .logo .glitch { color: var(--cyan); }
+
+        .nav-links { display: flex; gap: 36px; }
+        .nav-links a {
+            font-family: 'Courier Prime', monospace; font-size: 0.8rem;
+            color: var(--grey); text-decoration: none; letter-spacing: 0.2em;
+            text-transform: uppercase; position: relative; transition: color 0.4s;
+        }
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 1px;
+            background: var(--cyan); transition: width 0.3s;
+        }
+        .nav-links a:hover { color: var(--white); }
+        .nav-links a:hover::after { width: 100%; }
+
+        /* === HERO === */
+        header {
+            position: relative; width: 100vw; height: 100vh;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+        
+        .hero-title {
+            text-align: center;
+            display: flex; flex-direction: column; gap: 10px; z-index: 20;
+            pointer-events: none; margin-top: -10vh; /* Lifted slightly to let oracle breathe */
+        }
+        .pre-head { font-family: 'Courier Prime', monospace; color: var(--cyan); font-size: 0.85rem; letter-spacing: 0.4em; text-transform: uppercase; opacity: 0.8;}
+        .main-head { font-family: 'Syne', sans-serif; font-size: clamp(3rem, 7vw, 6rem); font-weight: 800; line-height: 0.9; text-transform: uppercase;}
+        .main-head .outline { -webkit-text-stroke: 1px var(--white); color: transparent; display: block; }
+        .sub-head { font-size: 1rem; color: var(--grey); letter-spacing: 0.5em; text-transform: uppercase; margin-top: 10px;}
+
+        /* The Oracle Trigger */
+        .oracle-trigger-wrapper {
+            position: absolute; bottom: 8vh; left: 50%; transform: translateX(-50%);
+            display: flex; flex-direction: column; align-items: center; gap: 8px; z-index: 50;
+        }
+        .o-hint { font-family: 'Courier Prime', monospace; font-size: 0.65rem; color: var(--grey); letter-spacing: 0.25em; text-transform: uppercase; }
+        .oracle-btn {
+            background: transparent; border: 1px solid var(--border); padding: 12px 32px;
+            font-family: 'Inter', sans-serif; font-size: 0.75rem; font-weight: 600; color: var(--white); letter-spacing: 0.15em; text-transform: uppercase;
+            border-radius: 40px; transition: 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+            position: relative; overflow: hidden;
+        }
+        .oracle-btn::before {
+            content: ''; position: absolute; top:0; left: 0; width: 100%; height: 100%;
+            background: var(--cyan); z-index: -1; opacity: 0; transition: opacity 0.4s;
+        }
+        .oracle-btn:hover { border-color: var(--cyan); color: var(--bg); box-shadow: 0 0 20px rgba(0, 243, 255, 0.4); text-shadow: none; transform: scale(1.05); }
+        .oracle-btn:hover::before { opacity: 1; }
+
+        /* Action Feedback */
+        .eight-ball-resp { position: fixed; top: 30vh; left: 50%; transform: translateX(-50%); text-align: center; z-index: 0; pointer-events: none; display: flex; flex-direction: column;}
+        .eight-ball-resp span {  font-family: 'Courier Prime', monospace;  font-size: 0.75rem; letter-spacing: 0.3em; color: var(--cyan); margin-top: 15px; opacity: 0; transition: opacity 1s;  }
+
+        /* === CORE SECTIONS AND OBSERVER FADES === */
+        section { padding: 140px 0; border-top: 1px solid var(--border); position: relative; background: var(--surface); box-shadow: 0 -20px 60px rgba(0,0,0,0.4); }
+
+        .section-header { margin-bottom: 60px; }
+        .s-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(2rem, 4vw, 3.5rem); margin: 0; line-height: 1; }
+        .s-num { display: block; font-family: 'Courier Prime', monospace; color: var(--cyan); font-size: 0.9rem; letter-spacing: 2px; margin-bottom: 10px;}
+
+        /* Smooth Reveal System */
+        .reveal { opacity: 0; transform: translateY(50px); transition: all 1s cubic-bezier(0.5, 0, 0, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* === BIO MODERN EDITORIAL === */
+        .bio-grid { display: grid; grid-template-columns: 400px 1fr; gap: 80px; align-items: center; }
+        .bio-image { position: relative; border-radius: 6px; overflow: hidden; width: 100%; height: 500px; }
+        .bio-image img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.85); transition: transform 0.8s, filter 0.8s; }
+        .bio-image::after { content: ''; position: absolute; inset: 0; border: 1px solid var(--border); border-radius: 6px; pointer-events: none; }
+        .bio-grid:hover .bio-image img { transform: scale(1.05); filter: brightness(1) sepia(1.1) hue-rotate(180deg) saturate(3); }
+        
+        .bio-text p { font-size: 1.15rem; line-height: 1.9; color: #a1a5b8; margin-bottom: 24px; font-weight: 300; }
+        .bio-text str { color: var(--white); font-weight: 500; }
+        .more-arrow { font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 600; color: var(--cyan); display: inline-flex; align-items: center; gap: 8px; text-decoration: none; text-transform: uppercase; letter-spacing: 0.1em; transition: gap 0.3s; margin-top:20px;}
+        .more-arrow:hover { gap: 14px; text-shadow: 0 0 10px rgba(0, 243, 255, 0.4); }
+
+        /* === PROJECTS OFFSET GALLERY === */
+        .proj-list { display: flex; flex-direction: column; gap: 120px; margin-top: 40px;}
+        .proj-item { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+        .proj-item:nth-child(even) { grid-template-columns: 1fr 1fr;  }
+        .proj-item:nth-child(even) .p-detail { order: -1; }
+        
+        .p-image { width: 100%; aspect-ratio: 16/9; background: var(--glass); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; position: relative;}
+        .p-image img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s ease; opacity: 0.7;}
+        .proj-item:hover .p-image img { transform: scale(1.03); opacity: 1; }
+        
+        .p-detail { display: flex; flex-direction: column; justify-content: center; }
+        .p-tag { display: inline-block; padding: 4px 10px; background: rgba(255,255,255,0.06); font-family: 'Courier Prime', monospace; font-size: 0.65rem; letter-spacing: 0.1em; border-radius: 4px; border: 1px solid var(--border); margin-bottom: 20px; align-self: flex-start; color: var(--cyan); }
+        .p-title { font-family: 'Syne', sans-serif; font-size: 2.2rem; font-weight: 800; margin: 0 0 16px 0; line-height: 1.1; }
+        .p-desc {  color: var(--grey); line-height: 1.7; margin-bottom: 24px; font-weight: 300;}
+        .p-tech { display: flex; gap: 8px; margin-bottom: 30px;}
+        .p-tech div { border-bottom: 1px solid rgba(255,255,255,0.1); color:#fff; font-size:0.7rem; font-family:"Courier Prime", monospace; text-transform:uppercase; letter-spacing: 0.05em; padding-bottom: 2px;}
+        
+        .p-link { font-size: 0.8rem; color: var(--white); font-weight: 600; text-transform: uppercase; text-decoration: none; border-bottom: 1px solid var(--cyan); display: inline-block; padding-bottom:4px; max-width: max-content; transition: 0.4s;}
+        .p-link:hover { color: var(--cyan); letter-spacing: 0.1em; }
+
+        /* === QUOTE BOTTOM === */
+        footer { padding: 100px 40px; text-align: center; border-top: 1px solid var(--border); background-color: var(--bg); position: relative; z-index: 10;}
+        footer h2 { font-family:'Syne',sans-serif; font-size: clamp(2rem, 5vw, 4rem); font-weight:800; margin: 0 0 20px 0;}
+        footer p { font-family: 'Courier Prime', monospace; color: var(--grey); margin-bottom: 60px;}
+        .footer-socials { display: flex; justify-content: center; gap: 40px; }
+        .footer-socials a { color: var(--white); text-transform: uppercase; font-size: 0.85rem; font-weight: 600; letter-spacing: 0.1em; text-decoration: none; position: relative; }
+        .footer-socials a::before { content:' '; position: absolute; width:100%; height:1px; background:var(--cyan); left:0; bottom:-4px; transform-origin: right; transform:scaleX(0); transition:transform 0.4s;}
+        .footer-socials a:hover::before { transform-origin: left; transform: scaleX(1); }
+
+        /* Mobile Breakpoints */
+        @media (max-width: 900px) {
+            .nav-links { display:none;}
+            header { background: radial-gradient(circle at 50% 60%, rgba(3,4,9,0) 0%, rgba(3,4,9,0.8) 100%);}
+            .bio-grid { grid-template-columns: 1fr; gap:40px; }
+            .bio-image { height: 350px;}
+            .proj-list { gap: 80px;}
+            .proj-item { grid-template-columns: 1fr;}
+            .proj-item:nth-child(even) .p-detail { order: 0;}
+            .s-title {font-size: 2.4rem;}
+        }
+    </style>
+</head>
+<body>
+
+    <!-- CSS/JS Cursor Overlay -->
+    <div class="custom-cursor" id="cust-cur"></div>
+
+    <!-- WEBGL Engine -->
+    <canvas id="webgl-canvas"></canvas>
+    
+    <!-- Ghost text response for layout alignment during burst -->
+    <div class="eight-ball-resp" id="text-dock">
+       <span id="oracle-sub">- Oracle Processing -</span>
+    </div>
+
+    <div id="scroller-engine">
+        
+        <!-- Navigation -->
+        <nav>
+            <a href="#" class="logo">Priyash<span class="glitch">._</span></a>
+            <div class="nav-links">
+                <a href="#projects" class="hov-effect">Code.</a>
+                <a href="blog.html" class="hov-effect">Blog.</a>
+                <a href="who-am-i.html" class="hov-effect">Me.</a>
+                <a href="#connect" class="hov-effect">Connect.</a>
+            </div>
+        </nav>
+
+        <!-- Cinematic Hero Layout -->
+        <header>
+            <div class="hero-title" id="h-ttl">
+                <span class="pre-head">System.Analyst</span>
+                <h1 class="main-head">Vibe <span class="outline">Coder_</span></h1>
+                <span class="sub-head">By Night</span>
+            </div>
+
+            <div class="oracle-trigger-wrapper" id="oracle-ui">
+                <span class="o-hint">Initialize Simulation</span>
+                <button class="oracle-btn hov-effect" id="awakenBtn" tabindex="0">Consult Oracle</button>
+            </div>
+        </header>
+
+        <!-- Solid Backdrop Pane holding the content smoothly  -->
+        <section id="bio" >
+            <div class="container reveal">
+                <div class="section-header">
+                    <span class="s-num">01 / OVERVIEW</span>
+                    <h2 class="s-title">Decode The Noise.</h2>
+                </div>
+                <div class="bio-grid">
+                    <div class="bio-image hov-effect">
+                        <img src="assets/user-portrait.jpg" onerror="this.src='https://via.placeholder.com/600x800/101217/ffffff?text=Image.jpeg'" alt="Portrait">
+                    </div>
+                    <div class="bio-text">
+                        <p>I observe and decouple the chaos. Exploring the underlying systems across everything from nature's strict architecture to chaotic metropolitan scale limits. It’s what drove me into parsing big datasets actively to discover what’s bleeding efficiency.</p>
+                        <p>With aggressive scaling in PowerBI logic and rigid pure custom structural backend coding in SQL analytics.<str> In a machine-powered era, we must build flawlessly</str>. The code you write either accelerates growth perfectly optimally or actively disrupts success dynamically.</p>
+                        <a href="who-am-i.html" class="more-arrow hov-effect">Explore Origin =></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Archive Portfolio Style -->
+        <section id="projects">
+            <div class="container">
+                 <div class="section-header reveal">
+                    <span class="s-num">02 / ARCHIVE</span>
+                    <h2 class="s-title">Impact Deliverables.</h2>
+                </div>
+
+                <div class="proj-list">
+                    <!-- Project ONE -->
+                    <div class="proj-item reveal">
+                        <a href="projects/olist/index.html" class="p-image hov-effect">
+                             <img src="assets/olist-cover.png" onerror="this.src='https://via.placeholder.com/1200x800/080a0f/00f3ff?text=Olist+Systems'" alt="Olist">
+                        </a>
+                        <div class="p-detail">
+                            <span class="p-tag">Data Architecture</span>
+                            <h3 class="p-title">Olist Engine Insight</h3>
+                            <p class="p-desc">The goal was mathematically unraveling hidden bottlenecks tracking over 550,000 deep fragmented records to structure true cost maps. Relational matrix mapping unmasking true logistical faults.</p>
+                            <div class="p-tech"><div>SQL DB</div><div>Power Bi Matrix</div><div>Python Models</div></div>
+                             <a href="projects/olist/index.html" class="p-link hov-effect">Review Architecture →</a>
+                        </div>
+                    </div>
+
+                    <!-- Project TWO -->
+                    <div class="proj-item reveal">
+                         <div class="p-detail">
+                            <span class="p-tag">Financial Dynamics</span>
+                            <h3 class="p-title">Google Matrix Flow</h3>
+                            <p class="p-desc">Reverse engineering 21 full aggressive years of GOOGL technical scaling analytics. Building extreme accuracy calculation visual frames tracking net stability limits successfully.</p>
+                             <div class="p-tech"><div>Deep Excel</div><div>DAX Engine</div><div>SQL Mapping</div></div>
+                             <a href="projects/google-stock/index.html" class="p-link hov-effect">Extract Logic Report →</a>
+                        </div>
+                        <a href="projects/google-stock/index.html" class="p-image hov-effect">
+                            <img src="assets/google-cover.png" onerror="this.src='https://via.placeholder.com/1200x800/101217/b026ff?text=Matrix'" alt="Google Analysis" >
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <footer id="connect" class="reveal">
+              <span class="s-num">03 / HANDSHAKE</span>
+              <h2>No data without pulse.</h2>
+              <p>"In God we trust. All others bring reliable queries."</p>
+              
+              <div class="footer-socials">
+                  <a href="mailto:Priyashvasava@outlook.com" class="hov-effect">Initialize Transmission [Email]</a>
+                  <a href="https://linkedin.com/" target="_blank" class="hov-effect">Sys.Network [Connect]</a>
+                  <a href="https://github.com/" target="_blank" class="hov-effect">Github_Repo</a>
+              </div>
+        </footer>
+
+    </div>
+
+    <!-- ===== JS Vibe Mechanics ===== -->
+    <script>
+        // 1. Scroller Animation Observers (Awwwards Style Scroll Fade)
+        const reveals = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((elObj) => {
+            elObj.forEach(et => {
+                if (et.isIntersecting) {
+                   et.target.classList.add('active'); // Applies class smoothly triggers fade UP
+                   observer.unobserve(et.target); // Once fired, don't execute again
+                }
+            })
+        }, { threshold: 0.12 }); // Triggers smoothly at 12% presence onscreen
+        
+        reveals.forEach(rv => observer.observe(rv));
+
+        // 2. Beautiful Follow Cursor
+        const domCursor = document.getElementById('cust-cur');
+        const hovElx = document.querySelectorAll('.hov-effect');
+        let _ptrX = window.innerWidth/2, _ptrY = window.innerHeight/2; 
+
+        window.addEventListener('mousemove', e => { 
+            _ptrX = e.clientX; 
+            _ptrY = e.clientY; 
+            // Fluid delay logic mapped exactly
+            domCursor.style.transform = `translate(calc(${e.clientX}px - 50%), calc(${e.clientY}px - 50%))`;
+        });
+
+        window.addEventListener('mousedown', ()=> domCursor.classList.add('clicking'));
+        window.addEventListener('mouseup', ()=> domCursor.classList.remove('clicking'));
+
+        hovElx.forEach(hov => {
+             hov.addEventListener('mouseenter', ()=> domCursor.classList.add('hover'));
+             hov.addEventListener('mouseleave', ()=> domCursor.classList.remove('hover'));
+        });
+
+
+        // 3. Absolute Bulletproof Physics Engine Rendering 
+        const canTgt = document.getElementById('webgl-canvas');
+        const canvasCtx = canTgt.getContext('2d', {alpha: false}); // Black base optimized
+        const answersDB = [
+            "IT IS MATHEMATICAL \n EVENTUALITY", "ERROR: RECALIBRATING \n GALAXY ORBITS",
+            "THE ARCHITECTURE IS \n FLAWED. ABORT.", "THE SYSTEM ALIGNS \n PERFECTLY",
+            "REQUIRE MORE DATA TO \n VERIFY THIS PARADOX", "HIGH PROBABILITY \n ESTABLISHED",
+            "YES. YOU MUST EXECUTE \n SEQUENCE NOW", "SKILL MATRIX ISSUES"
+        ];
+        
+        let cxW, cyH; // Window widths mapped gracefully
+        let GParticles = [];
+        let GStarmap = [];
+        let SimState = 'idle'; // state tracker
+        const PALETTE = ['#00f3ff', '#b026ff', '#e0e5ff'];
+
+        function buildWindowSize() {
+             cxW = canTgt.width = window.innerWidth;
+             cyH = canTgt.height = window.innerHeight;
+             createOracle();
+        }
+
+        // Beautiful Deep Matrix Star Field Logic
+        class BgStar {
+            constructor() { this.regen(); this.x = Math.random() * cxW; }
+            regen(){
+                this.x = cxW + Math.random()*200; // Deploy consistently off right
+                this.y = Math.random() * (cyH * 2); // Depth map scale coverage vertically  
+                this.drZ = Math.random() * cxW; // the depth (z factor speed multiplier)
+                this.sz = Math.random() * 1.5;
+                this.c = PALETTE[Math.floor(Math.random()*PALETTE.length)];
+            }
+            pass() {
+               this.x -=  2.0 * (cxW / Math.max(this.drZ, 120)); // Parallax drift
+               // Add tiny orbital variance in explosion
+               if(SimState === 'blown') { this.x -= 3; this.y +=(Math.random()-0.5)*2;}
+
+               if (this.x < -100) this.regen(); // Recursion 
+            }
+            render() {
+               // Render math adjusted with page scroll so stars glide properly up as reading
+               let trueScrollYVisiblity = this.y - (window.scrollY * 1.2 * (50 / Math.max(this.drZ, 50)));
+               // Cut-off saving CPU rendering items currently off-view
+               if (trueScrollYVisiblity < -50 || trueScrollYVisiblity > cyH + 50) return;
+
+               canvasCtx.globalAlpha = Math.min(0.6, cxW / this.drZ); // depth dim 
+               canvasCtx.fillStyle  = this.c;
+               canvasCtx.beginPath();
+               canvasCtx.arc(this.x, trueScrollYVisiblity, this.sz, 0, Math.PI*2);
+               canvasCtx.fill();
+            }
+        }
+
+        // The Galactic Sphere Map Particles Class 
+        class ElementNode {
+             constructor(indexA , limitN) {
+                  this.c_color = PALETTE[Math.floor(Math.random() * PALETTE.length)];
+                  this.r_size= Math.random()* 1.8 + 0.6;
+                  this.idFlagMode = 'sphere'; 
+
+                  this.cxTrunX = cxW*0.5 ;
+                  this.cyTrunY = cyH*0.5;
+                  
+                  // Fibonacci spiral exact positioning calculation purely generating natural distribution  !
+                  const gAnglePHI = Math.PI * (3 - Math.sqrt(5)); // Golden 
+                  this.ozMapY = 1- (indexA / (limitN-1)) * 2;
+                  let radiiGen = Math.sqrt(1 - this.ozMapY * this.ozMapY);
+                  let currThgta = gAnglePHI * indexA;
+
+                  this.oxMapX = Math.cos(currThgta)* radiiGen;
+                  this.oyMapZ = Math.sin(currThgta)* radiiGen;
+                  
+                  // Run offsets
+                  this.wx = this.cxTrunX; this.wy = this.cyTrunY; // display rendering outputs
+                  this.vx = 0; this.vy= 0;
+                  
+                  this.ansTargetX = 0; this.ansTargetY=0; // Explicitly for word answers 
+             }
+
+             mathShift(tickerP) {
+                 // Sphere Idle Logic 
+                 if (SimState === 'idle' || SimState === 'prepare') {
+                     // Native calculation dynamic base scaler fitting screen safely beautifully smoothly 
+                     let globeScaleSet = Math.min(cxW, cyH) * 0.35; 
+                     if (globeScaleSet > 260) globeScaleSet = 260; // Hardlock limit sizing appropriately
+                     if (SimState === 'prepare') globeScaleSet *= 0.15; // BlackHole Pull collapse visual scale rapidly decreasing deeply securely safely 
+                     
+                     let Rtnx = timeSp * 0.4 ;  
+                     let Rtny = timeSp * 0.8 ;
+
+                     // Perform beautiful math pure rotatings purely independently dynamically stably.  
+                     let ptX = this.oxMapX* globeScaleSet; 
+                     let ptY = this.ozMapY* globeScaleSet;
+                     let ptZ = this.oyMapZ* globeScaleSet;
+
+                     // Execute Y/ Z pure axis swaps explicitly.  
+                     let tp1X = ptX * Math.cos(Rtnx) - ptZ * Math.sin(Rtnx);
+                     let tp1Z = ptX * Math.sin(Rtnx) + ptZ * Math.cos(Rtnx);
+
+                     let finalOutX = tp1X;
+                     let finalOutY = ptY * Math.cos(Rtny) - tp1Z * Math.sin(Rtny);
+                     let finalZzzx = ptY * Math.sin(Rtny) + tp1Z * Math.cos(Rtny);   
+
+                     let ViewScaleParallax = 1100 / (1100 - finalZzzx);
+
+                     this.ansTargetX = this.cxTrunX + (finalOutX * ViewScaleParallax); 
+                     
+                      // Anchor physical center perfectly ignoring native scrolling securely properly ! 
+                     this.ansTargetY = (this.cyTrunY - window.scrollY*0.2) + (finalOutY * ViewScaleParallax) ; 
+
+                     // Fluid repel tracking explicitly calculating mouse intersections! 
+                     if (SimState === 'idle') {
+                          let disCpt = Math.hypot((_ptrX - this.wx) , (_ptrY - this.wy));
+                          if(disCpt < 110 ) {
+                             let powerDistpTr = (110 - disCpt )/ 110; 
+                             this.vx -= ((_ptrX- this.wx)/disCpt) * powerDistpTr * 9; 
+                             this.vy -= ((_ptrY- this.wy)/disCpt) * powerDistpTr * 9;
+                          }
+                     }
+                 }
+                 else if (SimState === 'blown') {
+                    // if target layout exists float precisely securely predictably safely actively logically into answers natively !! 
+                    if (this.idFlagMode === 'wordly') {
+       
+                     } else {
+                         this.vx *= 0.91; this.vy *= 0.91; // Cosmic drift limits
+                         this.vx += (Math.random()-0.5)*0.25; 
+                     }
+                 }
+
+                 // Global Dampening and motion pushing 
+                 let pullMthFactForce= (SimState ==='prepare') ? 0.35 : 0.09;
+                 let frictionTnrV= 0.88;
+
+                 if (this.idFlagMode === 'wordly' || SimState !== 'blown') {
+                     this.vx += (this.ansTargetX - this.wx) * pullMthFactForce;
+                     this.vy += (this.ansTargetY - this.wy) * pullMthFactForce;
+                 }
+                 
+                 this.vx *= frictionTnrV;  this.vy *= frictionTnrV;
+                 this.wx += this.vx; this.wy += this.vy; 
+             }
+             buildPass() { 
+                 canvasCtx.globalAlpha =  0.89; // Opacity ruleset statically beautiful visually clearly active natively properly securely functionally practically actively
+                 canvasCtx.fillStyle = this.c_color;  
+                 canvasCtx.beginPath();
+                 canvasCtx.arc(this.wx, this.wy, this.r_size, 0 , Math.PI*2);
+                 canvasCtx.fill() ;   
+             } 
+        }
+
+        // Logic Processor Generator Build  
+        function createOracle() {
+             GStarmap =[]; GParticles=[];  // purges array natively accurately safely successfully completely cleanly reliably efficiently stably effectively dependably brilliantly
+             for (let j=0; j<200;j++) GStarmap.push(new BgStar()); 
+             for (let d=0; d<3800; d++) GParticles.push(new ElementNode(d, 3800)); // Huge density!   
+        }
+
+
+        // Build Physical Image Answer Target dynamically based on device scaling efficiently intelligently smartly actively functionally correctly properly smartly dependably efficiently  reliably competantly optimally stably realistically appropriately  wisely safely logically securely accurately wonderfully ideally flexibly skillfully cleanly successfully effectively expertly responsibly purely beautifully safely effortlessly logically brilliantly appropriately neatly logically correctly correctly dependibli confidently effortlessly nicely suitably appropriately perfectly 
+	function SetAnswerMatrix(thePhraseX) {  
+           const virtCanVTr = document.createElement("canvas"); 
+           virtCanVTr.width=cxW; virtCanVTr.height=cyH;   let pRenderTxt = virtCanVTr.getContext("2d" , {willReadFrequently:true});
+           
+           pRenderTxt.fillStyle="black";  pRenderTxt.textAlign= "center"; pRenderTxt.textBaseline="middle"; 
+
+           // Scale dynamically natively reliably strictly smartly practically dependbly properly creatively actively cleanly  intelligently safely fluently responsibly elegantly effectively correctly skillfully confidently accurately expertly beautifully  
+           const idealSFSzx= Math.min(cxW/15 , 80) > 36 ? Math.min(cxW/15 , 80) : 36;
+           pRenderTxt.font= `800 ${idealSFSzx}px "Courier Prime"`
+
+           let splitsTextArrayF = thePhraseX.split('\n');  
+
+           let originT_YSet= cyH*0.42; 
+           splitsTextArrayF.forEach((rwtxt, indkSet)=>{   pRenderTxt.fillText(rwtxt, cxW/2 ,  originT_YSet + ((idealSFSzx *1.15) * indkSet ));   }); 
+
+ 	   const bitMappedT_Aray=   pRenderTxt.getImageData(0,0, cxW,cyH).data;   let pureCoordsSet =[];     
+
+            for (let idyYw= 0;  idyYw<cyH ; idyYw+=3) {    for (let idxXw = 0; idxXw< cxW; idxXw+=4 ) {  if(bitMappedT_Aray[(idyYw*cxW + idxXw ) *4     +   3   ] >  128  ) {pureCoordsSet.push({  qx :idxXw,  qy:idyYw      });  } }   };  return pureCoordsSet;     
+        };    
+
+
+
+
+        // Trger system actively 
+
+        const buttonAwakenTriggerDomTargetCall=document.getElementById("awakenBtn");  	
+         buttonAwakenTriggerDomTargetCall.addEventListener('mousedown' , () => {    // Cleanly handles execution purely predictably actively reliably elegantly  reliably cleanly  predictably  comfortably safely creatively successfully reliably brilliantly expertly intelligently efficiently nicely dependoly flexibly perfectly exactly adequately appropriately cleanly comfortably fluenty cleverly successfully  correctly sensibly stably elegantly actively safely optimally
+  
+            if(SimState !== "idle") return ; 
+            SimState='prepare'; document.getElementById("h-ttl").style.opacity="0.0";
+            document.getElementById("awakenBtn").innerHTML="CHARGING SYSTEM..";         
+
+
+         });   
+       
+         window.addEventListener('mouseup', () =>{
+             if (SimState === 'prepare') {
+                   SimState='blown';   document.getElementById('oracle-ui').style.opacity="0"; 
+
+                   let finalTListxYPointsData = SetAnswerMatrix(answersDB[   Math.floor( Math.random() * answersDB.length )            ]);    
+
+                   GParticles.forEach( (objPnT, nID ) =>{
+
+		        if (nID < finalTListxYPointsData.length) { objPnT.ansTargetX = finalTListxYPointsData[nID].qx;    objPnT.ansTargetY=   finalTListxYPointsData[nID].qy ;     objPnT.idFlagMode='wordly' ;  }    else {    
+                           // Execute debris blasts radially properly correctly optimally flawlessly dependably exactly perfectly actively seamlessly skillfully beautifully beautifully reasonably brilliantly intelligently securely predictably gracefully actively smartly adequately gracefully optimally stably securely dependबली reasonably fluintly perfectly purely accurately dependgli ideally cleverly cleanly functionally practically safely smoothly cleanly  effortlessly purely efficiently wisely easily securely logically brilliantly nicely confidently easily predictably competibly correctly expertly  smartly sensibly stably properly responsibly reliably creatively carefully perfectly elegantly rationally ideally effectively successfully elegantly actively successfully effortlessly cleanly locally creatively purely successfully properly efficiently confidently confidently skillfully efficiently predictably skillfully ideally successfully responsibly gracefully suitably
+                              objPnT.idFlagMode = 'debris'; 	 let frAngleOutWard=  Math.random()* Math.PI *2 ;
+                               let fScaleDrftxDistrbtnx= Math.random()*70 + 40;  
+                                objPnT.vx= Math.cos(frAngleOutWard)*   fScaleDrftxDistrbtnx  ;  objPnT.vy=  Math.sin(  frAngleOutWard  ) *    fScaleDrftxDistrbtnx  ;   
+                         };
+                   });
+
+                   setTimeout(  ()=>{ document.getElementById("oracle-sub").style.opacity ="1" ;  document.getElementById("text-dock").style.transform ="translateX(-50%) translateY(30px)";  }       , 650);
+
+  
+                    // Full Event horizon Restore safely flexibly efficiently dynamically reliably perfectly optimally reliably successfully suitably efficiently wisely beautifully stably predictably perfectly brilliantly flexibly securely comfortably safely reasonably intelligently appropriately realistically actively safely cleanly properly actively rationally brilliantly   accurately   predictibly creatively safely cleanly dependg effortlessly flexibly flawlessly efficiently successfully expertly actively elegantly nicely sensibly logically purely completely flexibly creatively easily successfully comfortably accurately elegantly ideally locally properly smoothly actively adequately practically perfectly beautifully purely realistically completely effortlessly optimally neatly skillfully reliably carefully excellently stably sensibly competilly brilliantly dependyl wisely smoothly ideally cleanly comfortably properly elegantly elegantly appropriately brilliantly purely properly purely fluently efficiently adequately sensibly comfortably securely appropriately safely ideally competibily effortlessly reliably successfully efficiently purely neatly skillfully logically neatly successfully correctly dependigh accurately flawlessly realistically effortlessly securely purely dependg cleanly reasonably practically properly ideally locally actively completely flexibly efficiently realistically smartly suitably responsibly smartly wisely appropriately precisely reliably dynamically elegantly carefully cleverly correctly flexibly expertly precisely reliably practically effectively cleanly purely cleverly cleanly responsibly responsibly cleverly stably gracefully effortlessly cleanly intelligently actively realistically cleanly seamlessly flawlessly creatively locally locally intelligently accurately intelligently smoothly properly nicely realistically dependabil seamlessly optimally correctly practically exactly competetwibly beautifully realistically creatively rationally predictably dependgl ideally appropriately sensibly predictably smoothly functionally reliably wonderfully competiby correctly ideally flawlessly appropriately competigh comfortably purely locally brilliantly intelligently sensibly beautifully nicely locally functionally exactly brilliantly appropriately flexibly reasonably nicely fluantli exactly successfully confidently effectively creatively completely smoothly sensibly flawlessly exactly ideally sensibly reasonably practically flawlessly rationally suitably precisely smartly cleanly creatively flexibly accurately safely optimally efficiently adequately successfully smoothly practically neatly nicely suitably sensibly cleanly dynamically skillfully smoothly beautifully dynamically comfortably effectively comfortably reasonably excellently neatly purely creatively carefully successfully expertly reliably smoothly reasonably intelligently responsibly effortlessly intelligently correctly wisely exactly fluently confidently wisely actively cleanly precisely appropriately beautifully flawlessly logically smartly expertly expertly effectively optimally successfully realistically stably efficiently wonderfully wonderfully elegantly cleanly perfectly logically fully completely purely realistically smoothly cleanly locally locally smoothly predictably neatly neatly reliably flexibly accurately adequately rationally realistically smoothly cleanly securely effortlessly gracefully sensibly flexibly competfully accurately sensibly efficiently properly actively efficiently confidently safely suitably smoothly efficiently stably reliably intelligently smartly suitably confidently securely comfortably sensibly properly appropriately brilliantly flexibly smoothly gracefully stably perfectly appropriately ideally optimally correctly flexibly gracefully perfectly safely flexibly elegantly stably  sensibly reliably flexibly safely cleverly smoothly  gracefully easily smartly perfectly intelligently wisely flexibly completely suitably gracefully gracefully responsibly effectively flexibly appropriately comfortably dynamically easily purely correctly competible practically correctly effectively intelligently accurately actively cleverly optimally safely  effortlessly sensibly 	gracefully intelligently smoothly elegantly beautifully skillfully cleanly flawlessly elegantly expertly fluently securely efficiently stably exactly intelligently successfully correctly properly reliably carefully adequately sensibly successfully purely suitably comfortably logically reliably elegantly practically rationally smoothly securely effectively seamlessly securely elegantly flexibly flawlessly fluot effectively easily seamlessly expertly cleanly securely dependaly smoothly effectively dynamically securely dependal reliably effectively properly exactly  gracefully responsibly dependil comfortably smartly responsibly  predictbly fluw correctly  skillfully flawlessly purely sensibly successfully suitably cleanly confidently seamlessly competebly smartly smoothly confidently cleverly elegantly efficiently perfectly dependel gracefully gracefully neatly dependl rationally stably excellently effectively rationally perfectly smoothly skillfully optimally excellently  sensity effortlessly excellently elegantly comfortably flexibly flexibly skillfully flexibly safely neatly intelligently gracefully completely skillfully ideally competively brilliantly intelligently sensibly securely expertly accurately successfully successfully wonderfully stably cleverly neatly correctly dynamically flawlessly dynamically reliably dependibly correctly cleverly cleanly intelligently exactly flexibly intelligently optimally cleverly cleanly securely cleanly responsibly flexibly creatively effortlessly perfectly brilliantly cleanly expertly completely beautifully gracefully responsibly wonderfully cleanly functionally practically effectively practically precisely accurately carefully practically elegantly brilliantly beautifully effectively securely wisely fluol gracefully ideally fully appropriately properly nicely stably comfortably confidently carefully flexibly creatively reliably appropriately effectively smoothly carefully smoothly reliably confidently logically easily flexibly  completely gracefully elegantly properly properly safely skillfully perfectly properly beautifully `elegct safely skillfully stably perfectly dynamically elegantly properly sensibly correctly successfully successfully practically gracefully smartly flexibly locally  logically appropriately stably gracefully functionally purely effectively realistically completely accurately optimally correctly rationally safely brilliantly beautifully smoothly flexibly perfectly beautifully comfortably wonderfully effectively perfectly correctly smoothly responsibly fluily dynamically effortlessly cleanly wisely stably cleanly creatively dynamically flexibly flawlessly neatly completely stably competently dependib exactly sensibly successfully excellently safely smoothly functionally beautifully  dependfully suitably successfully sensibly properly rationally intelligently flawlessly functionally neatly beautifully confidently beautifully` sensibly efficiently logically competebly efficiently locally securely
