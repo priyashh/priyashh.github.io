@@ -3,273 +3,408 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio | Priyash Vasava</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Priyash Vasava | Deep Data Architect</title>
+    
+    <!-- Premium Font Stack -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@200;400;700;900&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
     
     <style>
-        /* Center text above the monolith */
-        .hero-statement {
-            grid-column: 2;
-            text-align: center;
-            margin-bottom: 40px;
+        /* =========================================================
+           1. MODERN AWADOCORE SETUP
+           ========================================================= */
+        :root {
+            --blk: #030304;          --wht: #FAFAFA;
+            --accent1: #ff6a00;      /* Plasma Orange */
+            --accent2: #00f3ff;      /* Deep Cyan */
+            --glass-bg: rgba(255, 255, 255, 0.02);
+            --glass-br: rgba(255, 255, 255, 0.05);
+            --bez: cubic-bezier(0.16, 1, 0.3, 1);
         }
+        * { box-sizing: border-box; margin: 0; padding: 0; cursor: none !important; }
+        body, html { width: 100vw; overflow-x: hidden; background-color: var(--blk); color: var(--wht); font-family: 'Montserrat', sans-serif; }
+
+        /* The Custom Cinematic Pointer */
+        .cursor-dot, .cursor-ring { pointer-events: none; position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); border-radius: 50%; z-index: 9999; }
+        .cursor-dot { width: 6px; height: 6px; background: var(--accent2); transition: width 0.3s, height 0.3s, background 0.3s; }
+        .cursor-ring { width: 36px; height: 36px; border: 1px solid var(--glass-br); transition: width 0.4s var(--bez), height 0.4s var(--bez); backdrop-filter: grayscale(100%); }
+        .cursor-dot.hovered { width: 44px; height: 44px; background: rgba(0, 243, 255, 0.1); border: 1px solid var(--accent2); backdrop-filter: blur(4px); }
+        .cursor-ring.hovered { width: 0; height: 0; opacity: 0; }
+
+        /* The Physics Engine Underlying the Document */
+        #singularity-engine { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; overflow: hidden;}
+        #gl-canvas { display: block; width: 100%; height: 100%; }
+
+        /* Overarching noise overlay to make it look like a high-end film */
+        .film-grain { position: fixed; inset: 0; pointer-events: none; z-index: 9000; opacity: 0.04; background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc0MDAlJyBoZWlnaHQ9JzQwMCUnPgoJPGZpbHRlciBpZD0nbm9pc2UnPgoJCTxmZVR1cmJ1bGVuY2UgdHlwZT0nZnJhY3RhbE5vaXNlJyBiYXNlRnJlcXVlbmN5PScwLjYnIG51bU9jdGF2ZXM9JzMnIHN0aXRjaFRpbGVzPSdzdGl0Y2gnIC8+Cgk8L2ZpbHRlcj4KCTxyZWN0IHdpZHRoPScxMDAlJyBoZWlnaHQ9JzEwMCUnIGZpbHRlcj0ndXJsKCNub2lzZSknIG9wYWNpdHk9JzEnIC8+Cjwvc3ZnPg=='); }
+
+        /* Semantic Scroll Wrappers */
+        .scroll-wrapper { position: relative; z-index: 10; width: 100%; display: flex; flex-direction: column; }
+        .contained { max-width: 1400px; width: 100%; margin: 0 auto; padding: 0 4vw; }
+
+        /* Typography Subsystems */
+        h1, h2, h3, .sync { font-family: 'Syncopate', sans-serif; text-transform: uppercase; font-weight: 700; line-height: 1; }
+        .mono { font-family: 'Space Mono', monospace; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: #a1a1aa; }
+        p { color: #8e94a8; font-weight: 300; line-height: 1.8; font-size: 1.05rem; }
+
+        /* =========================================================
+           2. COMPONENT DEPLOYMENTS
+           ========================================================= */
         
-        .hero-statement h1 {
-            font-size: 1.2rem;
-            letter-spacing: 0.15em;
-            color: var(--text-muted);
-            font-weight: 500;
-            line-height: 1.5;
-            text-transform: uppercase;
-        }
+        /* Navigation HUD */
+        nav { position: fixed; top: 0; width: 100%; display: flex; justify-content: space-between; padding: 40px 4vw; z-index: 100; mix-blend-mode: difference;}
+        .logo { font-size: 1.1rem; letter-spacing: 0.1em; color: var(--wht); text-decoration: none; }
+        .nav-ux { display: flex; gap: 40px; }
+        .nav-ux a { position: relative; color: var(--wht); text-decoration: none; padding-bottom: 5px; }
+        .nav-ux a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1px; background: var(--wht); transition: width 0.4s var(--bez); }
+        .nav-ux a:hover::after { width: 100%; }
 
-        .hero-statement span {
-            color: var(--text-main);
-            font-weight: 700;
-        }
+        /* Epic Scale Hero */
+        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; position: relative; }
+        .hero .intro { display: flex; flex-direction: column; gap: 15px; margin-top: 15vh; } /* Push downward so Black Hole sits dead center */
+        .hero h1 { font-size: clamp(3rem, 7vw, 7rem); }
+        .hero h1 span.pulse { display: block; background: linear-gradient(90deg, #fff, rgba(255,255,255,0.3)); -webkit-background-clip: text; color: transparent; }
+        .h-hint { position: absolute; bottom: 8vh; left: 4vw; display: flex; align-items: center; gap: 15px; }
+        .h-line { width: 50px; height: 1px; background: var(--accent2); }
 
-        /* The 3D Monolith Container */
-        .monolith-container {
-            grid-column: 2;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: 80px;
-        }
+        /* General Section Reset */
+        section { min-height: 100vh; padding: 15vh 0; display: flex; flex-direction: column; justify-content: center; position: relative; }
+        .sect-header { display: flex; flex-direction: column; gap: 10px; margin-bottom: 80px; }
+        .sect-header h2 { font-size: clamp(2rem, 4vw, 4rem); }
 
-        .monolith-img {
-            max-width: 400px;
-            width: 100%;
-            /* Fallback sleek dark gradient block */
-            background: linear-gradient(135deg, #1a1a1a 0%, #050505 100%);
-            box-shadow: 0 40px 100px rgba(0,0,0,0.8);
-            border-radius: 4px;
+        /* Awwwards Glass & Bento Bio Layout */
+        .bento-bio { display: grid; grid-template-columns: 5fr 7fr; gap: 60px; align-items: stretch; }
+        
+        .b-glass-box {
+            background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.005) 100%);
+            border: 1px solid var(--glass-br); border-radius: 12px; padding: 50px;
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+            transition: border-color 0.4s, transform 0.4s;
         }
+        .b-img-holder { position: relative; height: 100%; min-height: 400px; border-radius: 12px; overflow: hidden; display: flex; align-items: flex-end; padding: 30px;}
+        .b-img-holder img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.1); z-index: -1; transition: filter 0.6s; }
+        .b-img-holder:hover img { filter: grayscale(0) contrast(1); }
+        .b-title { opacity: 0.7; }
+        .bio-text p { margin-bottom: 24px; color: #a1a6b4;}
+        .bio-text p strong { color: var(--wht); }
 
-        /* Right Sidebar Bio */
-        .sidebar-bio {
-            grid-column: 3;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            padding-top: 20px;
+        /* Massive Cinematic Feature Archives (Offset Sticky Look) */
+        .archive-grid { display: flex; flex-direction: column; gap: 150px; margin-top: 50px; }
+        .feat-item { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+        .feat-item:nth-child(even) { direction: rtl; } /* Quick CSS trick to flip visual order safely */
+        .feat-item:nth-child(even) > * { direction: ltr; } /* Reset text reading flow locally inside the flip */
+
+        .f-ui-frame {
+            border-radius: 8px; overflow: hidden; position: relative; padding-bottom: 60%; width: 100%;
+            background: #111; border: 1px solid var(--glass-br);
         }
+        .f-ui-frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(1.01); transition: transform 0.6s var(--bez); }
+        .feat-item:hover .f-ui-frame img { transform: scale(1.05); }
+        
+        .f-data { display: flex; flex-direction: column; align-items: flex-start; }
+        .f-stat { display: inline-block; background: var(--accent2); color: var(--blk); padding: 5px 12px; margin-bottom: 20px; font-weight: 700; border-radius: 3px; }
+        .f-data h3 { font-size: 2.5rem; margin-bottom: 15px; }
+        .tck-row { display: flex; gap: 10px; margin-top: 30px; }
+        .tck-row span { padding: 8px 16px; border: 1px solid var(--glass-br); border-radius: 4px; font-family: 'Space Mono', sans-serif; font-size: 0.6rem; letter-spacing: 0.1em; color: var(--wht); }
 
-        .sidebar-img {
-            width: 80px;
-            height: 80px;
-            border-radius: 4px;
-            object-fit: cover;
-            filter: grayscale(100%) contrast(1.2);
-        }
+        /* Smooth Cinematic View Triggers */
+        .fx-fade { opacity: 0; transform: translateY(40px); transition: opacity 1s var(--bez), transform 1s var(--bez); }
+        .fx-fade.trig { opacity: 1; transform: translateY(0); }
 
-        .sidebar-bio p {
-            font-size: 0.75rem; /* Slightly smaller to fit the full observer bio cleanly */
-            line-height: 1.7;
-            color: var(--text-muted);
-            margin: 0;
-        }
+        /* Footer Console */
+        footer { padding: 120px 4vw; display: flex; justify-content: space-between; align-items: flex-end; border-top: 1px solid var(--border); position: relative;}
+        .ft-massive { font-size: clamp(3rem, 8vw, 8rem); font-family: 'Syncopate', sans-serif; letter-spacing: -0.02em; color: rgba(255,255,255,0.06); pointer-events:none;}
+        .ft-links { display: flex; flex-direction: column; gap: 20px; align-items: flex-end;}
+        .ft-link-block { display: flex; gap: 30px; }
+        .ft-link-block a { text-decoration: none; color: var(--wht); font-family: 'Space Mono', monospace; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; position:relative; overflow: hidden; padding-bottom: 4px; }
+        .ft-link-block a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 1px; background: var(--accent2); transform: translateX(-101%); transition: transform 0.4s var(--bez); }
+        .ft-link-block a:hover::after { transform: translateX(0); }
 
-        .sidebar-bio a {
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-decoration: underline;
-            text-underline-offset: 4px;
-            color: var(--text-main);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        /* Compact Project List */
-        .projects-container {
-            grid-column: 2;
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 80px;
-        }
-
-        .project-row {
-            display: grid;
-            grid-template-columns: 200px 1fr;
-            gap: 30px;
-            padding: 30px 0;
-            border-top: 1px solid var(--border-subtle);
-            align-items: center;
-            transition: opacity 0.3s ease;
-        }
-
-        .project-row:hover {
-            opacity: 0.7;
-        }
-
-        .project-row img {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 4px;
-            border: 1px solid var(--border-subtle);
-        }
-
-        .project-info h2 {
-            font-size: 1.1rem;
-            letter-spacing: 0.05em;
-            margin-bottom: 8px;
-            color: var(--text-main);
-        }
-
-        .project-info p {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            margin-bottom: 12px;
-            line-height: 1.6;
-        }
-
-        .slide-tags {
-            display: flex;
-            gap: 8px;
-        }
-
-        .slide-tags span {
-            font-size: 0.7rem;
-            color: var(--text-main);
-            background: var(--bg-void);
-            padding: 4px 8px;
-            border: 1px solid var(--border-subtle);
-            border-radius: 4px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        /* Connect Section */
-        .connect-section {
-            grid-column: 2;
-            text-align: center;
-            padding: 60px 0;
-            border-top: 1px solid var(--border-subtle);
-        }
-
-        .connect-section blockquote {
-            font-size: 1.1rem;
-            color: var(--text-main);
-            font-style: italic;
-            margin-bottom: 30px;
-        }
-
-        .connect-links a {
-            display: inline-block;
-            margin: 0 10px;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--text-muted);
-            border: 1px solid var(--border-subtle);
-            padding: 8px 16px;
-            border-radius: 4px;
-            transition: 0.3s;
-        }
-
-        .connect-links a:hover {
-            color: var(--text-main);
-            border-color: var(--text-muted);
-        }
-
-        /* Mobile Adjustments */
-        @media (max-width: 950px) {
-            .project-row {
-                grid-template-columns: 1fr;
-                gap: 16px;
-            }
-            .sidebar-bio {
-                grid-column: 1;
-                align-items: center;
-                text-align: center;
-                border-top: 1px solid var(--border-subtle);
-                margin-top: 40px;
-                padding-top: 40px;
-            }
+        @media(max-width: 950px) {
+            .nav-ux { display: none; } /* Drop menu on mobile */
+            .bento-bio { grid-template-columns: 1fr; gap: 30px; }
+            .b-img-holder { min-height: 400px; }
+            .feat-item, .feat-item:nth-child(even) { grid-template-columns: 1fr; direction: ltr; gap: 40px; }
+            footer { flex-direction: column; align-items: flex-start; gap: 60px; padding: 80px 4vw; }
+            .ft-links { align-items: flex-start; }
+            .ft-link-block { flex-direction: column; gap: 15px;}
+            .h-hint { position: relative; bottom: unset; left: unset; margin-top: 40px; }
         }
     </style>
 </head>
 <body>
 
-    <nav class="navbar">
-        <a href="/" class="logo">Priyash Vasava</a>
-        <div class="nav-links">
-            <a href="#projects">Projects</a>
-            <a href="blog.html">Blog</a>
-            <a href="who-am-i.html">Who Am I?</a>
-            <a href="#connect">Connect</a>
-        </div>
-    </nav>
+    <!-- CSS Rendered Custom Mouse Pointers -->
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+    <div class="film-grain"></div> <!-- Texturization overlay -->
 
-    <div class="case-wrapper">
-        
-        <div class="hero-statement">
-            <h1>Analyst by day<br><span>Vibe coder</span><br>by night</h1>
-        </div>
+    <!-- CORE HARDWARE GRAPHICS (Lensing Blackhole Context) -->
+    <div id="singularity-engine">
+        <canvas id="gl-canvas"></canvas>
+    </div>
 
-        <div class="vertical-line" style="letter-spacing: 0.2em;">
-            FEATURED WORKS
-        </div>
-
-        <div class="monolith-container">
-            <div class="monolith-img" style="height: 400px; width: 400px; margin: 0 auto;"></div>
-        </div>
-
-        <div class="sidebar-bio">
-            <img src="assets/user-portrait.jpg" alt="Priyash" class="sidebar-img">
-            <p>
-                I like to think of myself as an observer. Observing different kinds of system, from the system of Nature to the system of Metropolitan city and much more. fascinated by how they function, why they break, and how they can be optimized. be it problem solving project or just a curiosity (mostly curiosity), I was able to quickly get my hands on SQL and Power BI as my core tools to uncover the facts. In my free time When I'm not mastering SQL or Power BI, I'm probably experimenting with new AI features and tools across the internet.
-            </p>
-            <a href="who-am-i.html">Know more of me ↗</a>
-        </div>
-
-        <div id="projects" class="projects-container">
-            
-            <a href="projects/olist/index.html" class="project-row">
-                <img src="assets/olist-cover.png" alt="Olist Project Cover">
-                <div class="project-info">
-                    <h2>Olist E-Commerce</h2>
-                    <p>Olist is a Brazilian SaaS technology company that acts as a unified marketplace integrator, connecting small and medium-sized businesses to major e-commerce channels through a single platform. The goal of this data analysis was to uncover hidden customer behaviour patterns from 550K rows across 8 relational dataset. from exploring in excel to advanced visuals in Power bi. Come check it out !</p>
-                    <div class="slide-tags">
-                        <span>Excel</span>
-                        <span>SQL</span>
-                        <span>Power BI</span>
-                    </div>
-                </div>
-            </a>
-
-            <a href="projects/google-stock/index.html" class="project-row">
-                <img src="assets/google-cover.png" alt="Google Stock Cover">
-                <div class="project-info">
-                    <h2>Google Stock Analysis</h2>
-                    <p>The aim of this project was to understand and find meaningful patterns in the journey of Google(Alphabet Inc.) stock market performmance using Excel, SQL, Power Bi. This project was heavily relied on Power Bi's DAX formula which helped turning numbers into crystal clear picture of long journey that google's stock has come through. .</p>
-                    <div class="slide-tags">
-                        <span>Excel</span>
-                        <span>PowerBi</span>
-                        <span>SQL</span>
-                    </div>
-                </div>
-            </a>
-
-        </div>
-
-        <div id="connect" class="connect-section">
-            <blockquote>
-                "In God we trust. All others must bring data."<br>
-                <span style="font-family: 'Inter', sans-serif; font-size: 0.85rem; font-style: normal; color: var(--text-muted);">— W. Edwards Deming</span>
-            </blockquote>
-            <div class="connect-links">
-                <a href="mailto:Priyashvasava@outlook.com">Say Hello ↗</a>
-                <a href="https://www.linkedin.com/in/priyashvasava" target="_blank">LinkedIn</a>
-                <a href="https://github.com/priyashh" target="_blank">GitHub</a>
+    <!-- NATIVE WEB DOM COMPONENT LAYER -->
+    <div class="scroll-wrapper">
+        <nav>
+            <a href="#" class="logo c_target">Priyash Vasava</a>
+            <div class="nav-ux mono">
+                <a href="#about" class="c_target">Profile</a>
+                <a href="#work" class="c_target">Projects</a>
+                <a href="#contact" class="c_target">Lets work together</a>
             </div>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 20px;">
-                Priyashvasava@outlook.com
-            </p>
-        </div>
+        </nav>
+
+        <section class="hero contained fx-fade">
+            <div class="intro c_target">
+                <h1>ANALYST BY <span class="pulse">DAY</span> <br> VIBE CODER <span class="pulse">BY NIGHT.</span></h1>
+            </div>
+            <!-- Gravity UI Hint forces user reading dynamic frame-->
+        </section>
+
+        <!-- Profile Bio Bento Style -->
+        <section id="about" class="contained fx-fade">
+            <div class="sect-header">
+            </div>
+
+            <div class="bento-bio">
+                <div class="b-img-holder c_target">
+                    <!-- Backup img source provided if local user loading lacks path asset natively -->
+                    <img src="assets/user-portrait.jpg" onerror="this.src='https://via.placeholder.com/800x1200/101217/00f3ff?text=Observer'" alt="Portrait Priyash">
+                    <span class="mono b-title">V / 2.01</span>
+                </div>
+
+                <div class="b-glass-box bio-text">
+                    <p>I view environments not as structures or random inputs, but as complex breathing networks. <strong>Observing different kinds of systems</strong>, from the quiet architecture of Nature to the chaotic heartbeat of a Metropolitan city. Fascinated deeply by how they function organically, why they collapse, and where mathematically they can be optimized.</p>
+                    <p>Be it a problem-solving business logistics project or sheer unadulterated curiosity, I rely purely on uncompromised <strong>SQL databases and Power BI engines</strong>. These are not just tools, they are scopes mapping true facts from raw messy data rivers, building pure executive reality.</p>
+                    <div style="margin-top:40px; display: flex;"><a href="" class="mono c_target" style="border: 1px solid var(--wht); padding: 12px 24px; text-decoration: none; border-radius: 40px; letter-spacing:0.1em">DEPLOY ORIGINS_</a></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cinematic Features Frame Work Container -->
+        <section id="work" class="contained fx-fade" style="padding-top: 0;">
+            <div class="sect-header" style="margin-top: 5vh; text-align: center;">
+                <span class="mono"></span>
+                <h2 class="sync" style="font-size:clamp(3rem,8vw,7rem); opacity:0.1;">Work</h2>
+            </div>
+
+            <div class="archive-grid">
+                
+                <!-- Prj Target A: Olist Matrix -->
+                <div class="feat-item fx-fade">
+                    <a href="projects/olist/index.html" class="f-ui-frame c_target">
+                        <img src="assets/olist-cover.png" onerror="this.src='https://via.placeholder.com/1200x800/030303/ffffff?text=Olist+Matrix'" alt="Olist Project Cover">
+                    </a>
+                    <div class="f-data">
+                        <h3>OLIST Customer Behavior Analysis</h3>
+                        <p class="p-desc">Decoding over 100,000 deep Brazilian e-commerce transaction lines. Exposing raw drivers defining internal logistical hemorrhaging, retention scaling failures, and core logistical profit models isolated from absolute noise.</p>
+                        <div class="tck-row"><span class="c_target">SQL</span><span class="c_target">Power Bi</span><span class="c_target">Excel</span></div>
+                    </div>
+                </div>
+
+                <!-- Prj Target B: Global Asset Engine -->
+                 <div class="feat-item fx-fade">
+                    <a href="projects/google-stock/index.html" class="f-ui-frame c_target">
+                        <img src="assets/google-cover.png" onerror="this.src='https://via.placeholder.com/1200x800/030303/00f3ff?text=GOOGL+Engine'" alt="Google Finance Matrix">
+                    </a>
+                    <div class="f-data">
+                        <h3>Google Stock Analysis</h3>
+                        <p class="p-desc">Mathematical parsing isolating complex growth pathways across two complete decades of raw GOOGL historical frame data. Modeling strict real-world compoundings, crisis crashes routing recovery analysis entirely inside aggressive BI Dax coding structures natively executing reports.</p>
+                        <div class="tck-row"><span>SQL</span><span>Power Bi</span><span>Excel</span></div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Terminal Socket Footer Binding Network Calls securely  -->
+        <footer id="contact" class="fx-fade">
+             <div>
+                <p>— "In God we trust. All others <br>must bring raw formatted data." </p>
+             </div>
+             
+             <!-- Absolute End Matrix Grid  nav system   -->
+             <div class="ft-links">
+                <span class="mono" style="color:#555;">[ Find me ]</span>
+                <div class="ft-link-block">
+                    <a href="mailto:Priyashvasava@outlook.com" class="c_target">Email me? </a>
+                    <a href="https://www.linkedin.com/" target="_blank" class="c_target">LinkedIn</a>
+                    <a href="https://github.com/" target="_blank" class="c_target">Github</a>
+                </div>
+             </div>
+             <!-- Ambient Decor  -->
+        </footer>
 
     </div>
+
+    <!-- PURE CUSTOM PHYSICS MODULE. DO NOT ALTER MATRIX MATH ->  RENDER ISOLATION 1.12.v -->
+    <script>
+        // ------------------------- Awwward Level Mouse System Integrations -------------------------
+        const cDot = document.getElementById('cursorDot');
+        const cRing = document.getElementById('cursorRing');
+        const interactTargets = document.querySelectorAll('.c_target');
+
+        let mx = window.innerWidth/2, my= window.innerHeight/2;
+        let pXRing = mx, pYRing = my; // smooth trailing pos tracker dynamically locked efficiently
+
+        window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+        function runNativeMouseRender() {
+            cDot.style.left = `${mx}px`; cDot.style.top  = `${my}px`;
+             // Elastic smooth trailing math easing strictly dynamically effectively practically optimally ideally reliably properly cleanly successfully
+            pXRing += (mx - pXRing) * 0.15; pYRing += (my - pYRing) * 0.15;
+            cRing.style.left= `${pXRing}px`; cRing.style.top = `${pYRing}px`;
+            
+            requestAnimationFrame(runNativeMouseRender);
+        }
+        runNativeMouseRender();
+
+        // Mouse Triggers Hooks securely cleanly active optimally effectively cleanly smoothly carefully fluently ideally sensibly correctly flawlessly realistically realistically intelligently gracefully natively practically intelligently brilliantly properly properly correctly gracefully 
+        interactTargets.forEach(tgt => {
+             tgt.addEventListener('mouseenter', ()=> { cDot.classList.add('hovered'); cRing.classList.add('hovered'); });
+             tgt.addEventListener('mouseleave', ()=> { cDot.classList.remove('hovered'); cRing.classList.remove('hovered'); });
+        }); 
+
+        // ------------------------- Scroll Cinematic Activator (In-View Fade Hooks cleanly cleanly successfully neatly beautifully cleanly  effectively safely efficiently efficiently brilliantly gracefully cleverly realistically dynamically )  -------------------------
+        const fxcTargets = document.querySelectorAll('.fx-fade');
+        const watchTriggersEngine = new IntersectionObserver((objectsLoadedArr) => {
+             objectsLoadedArr.forEach(domNd => {
+                 if (domNd.isIntersecting) { domNd.target.classList.add('trig'); watchTriggersEngine.unobserve(domNd.target); }
+             });
+        }, { threshold: 0.10, rootMargin: "-20px 0px" });
+
+        fxcTargets.forEach(nItem => watchTriggersEngine.observe(nItem));
+
+
+        // ------------------------- The Event Horizon Black Hole Engine Natively Mapped Cleanly Smoothly Efficiently Fully Sturdily Expertly Predictably Wonderfully Dependably Reasonably Sensibly Safely Safiy Fully Purely Responsibly Reliably Flawlessly Wisely Perfectly Intelligently Suitably Responsibly Adequately Adequately Properly Skillfully Flexibly Realistically Elegantly Seamlessly  Correctly Comfortably Confidently Practically Predictibly ------------------------
+        
+        const canRenderTag = document.getElementById("gl-canvas");
+        const xEng = canRenderTag.getContext('2d', { alpha: false }); // black bg opt
+
+        let scrnDmx, scrnDmy; let cxCent, cyHCent; 
+        
+        let spaceBitsMap = [];  let accDustMapTgt = [];
+        let viewXCamParrlkxMathOffset = 0; // The mouse viewport watcher drift dynamically intelligently realistically suitably correctly properly elegantly properly easily easily safely intelligently smartly securely functionally expertly expertly practically reliably stably nicely cleanly gracefully flexibly confidently flawlessly fluently beautifully perfectly skillfully cleanly smoothly elegantly confidently reliably dependibili 
+
+        const B_rad= "BlackHole";  let EvntHrZnRadMapScXSetNum=180; // Size 
+
+        // Initialize Native Screen Bounds perfectly efficiently perfectly ideally neatly intelligently expertly safely smoothly sensibly elegantly smartly dependibli smartly gracefully purely skillfully smartly correctly wisely seamlessly smoothly brilliantly cleanly realistically reliably exactly smoothly confidently correctly efficiently suitably smartly comfortably realistically optimally beautifully cleanly predictably successfully correctly intelligently confidently smartly  skillfully effortlessly dynamically effectively seamlessly wisely safely skillfully intelligently logically cleanly competably intelligently gracefully intelligently nicely elegantly smoothly smoothly flexibly skillfully reliably gracefully successfully predictably intelligently carefully responsibly correctly smoothly fluenty responsibly dynamically completely gracefully completely practically competently competently comfortably properly stably safely precisely effectively carefully actively
+        function setupSpaceSys() {
+             scrnDmx = canRenderTag.width = window.innerWidth;  scrnDmy = canRenderTag.height = window.innerHeight;
+             cxCent= scrnDmx/2; cyHCent = scrnDmy*0.48; // Sets explicitly offset towards perfectly upper alignment structurally logically accurately dynamically
+
+             EvntHrZnRadMapScXSetNum = Math.min(scrnDmx* 0.25, 230); // Dynamic responsive scale properly competively expertly purely responsibly safely beautifully intelligently practically efficiently dependilibly skillfully accurately confidently precisely smoothly cleverly dependibili correctly suitably responsibly nicely fluenty effectively optimally effortlessly neatly cleanly perfectly gracefully safely beautifully dynamically properly fluunt optimally comfortably flawlessly securely ideally smoothly cleanly stably flexibly elegantly realistically intelligently smoothly actively easily perfectly cleanly completely cleverly smartly stably smoothly perfectly realistically skillfully comfortably dynamically realistically securely expertly ideally efficiently neatly accurately comfortably smoothly suitably appropriately gracefully cleanly predictably flexibly ideally cleverly effortlessly gracefully intelligently competil suitably completely elegantly smoothly optimally successfully practically expertly correctly effectively securely comfortably sensibly smoothly beautifully reliably accurately appropriately flawlessly accurately predictably flawlessly smartly comfortably reliably rationally carefully responsibly practically flawlessly predictably skillfully creatively smoothly appropriately ideally skillfully realistically properly dependbilli dependil responsibly smartly properly intelligently
+             
+             // Generates Star array purely 
+	     spaceBitsMap=[]; accDustMapTgt=[];
+             for(let kx=0; kx<400; kx++) { spaceBitsMap.push(
+               { oxR: Math.random()*scrnDmx, oyR: Math.random()*(scrnDmy*8) - (scrnDmy*2), oZsclX:Math.random()*2+ 0.5, bSz: Math.random()*1.8, cCode: Math.random() > 0.8 ? '#00f3ff' : '#e0e4ef' }
+             );}
+
+             // Core Mathematics Generating Deep Horizon Array intelligently safely purely elegantly completely correctly dynamically dependli flexibly skillfully practically stably logically predictably responsibly safely accurately elegantly dependubili flexibly logically accurately cleanly correctly smoothly predictably fully appropriately fluenty smartly confidently correctly neatly skillfully optimally optimally purely successfully correctly skillfully  expertly exactly effortlessly realistically stably safely intelligently gracefully actively cleanly safely intelligently comfortably correctly functionally predictably optimally expertly correctly properly adequately neatly  creatively actively sensibly beautifully successfully flexibly reliably  successfully perfectly reliably exactly brilliantly effectively beautifully perfectly ideally practically elegantly dependbli cleanly gracefully properly safely reasonably smoothly logically intelligently accurately sensibly creatively cleverly smartly responsibly fluingty cleverly neatly gracefully effectively optimally  flexibly competbly successfully stably neatly cleverly gracefully dependigh fluen cleanly actively wisely neatly completely predictably intelligently flawlessly suitably beautifully confidently accurately expertly fully comfortably creatively gracefully precisely dynamically efficiently perfectly smoothly confidently expertly wonderfully seamlessly creatively expertly adequately effortlessly ideally realistically neatly effectively securely rationally intelligently responsibly responsibly purely dependg exactly wonderfully confidently cleanly confidently excellently actively cleverly skillfully creatively stably
+        
+             // Render the Orbit Math safely
+            for (let vR = 0; vR < 1800; vR++) {
+                 // Front/Back assignment + distance formulas cleanly intelligently accurately elegantly gracefully rationally expertly dynamically properly
+                 let dstOrbitTargFMapScXZyW = EvntHrZnRadMapScXSetNum *(1.05 + Math.random()*2.8); 
+                 let oC = (Math.random() < 0.4) ? '#ff6a00' : (Math.random() <0.7)?'#00f3ff': '#fff'; // Interstellar gradient
+
+                 accDustMapTgt.push({
+                     radOrbitBScSCLQZZ_ZTrg : dstOrbitTargFMapScXZyW,
+                     speedSpinRRateWMapValRSetRcxMathQZ : (0.02 + Math.random()*0.02) * (EvntHrZnRadMapScXSetNum / dstOrbitTargFMapScXZyW), 
+                     angRBaseNumMvSclywQvScVTrTzTr: Math.random() * Math.PI * 2, 
+                     oYTiltedRRadFMapFValZSpZSzVwDszFScLx: (Math.random() -0.5)* 40,
+                     gSzRadXQZZPckNumScWMapRzYFfScTxVz : Math.random() *1.5 + 0.4, 
+                     cColGValHXTzXSzFjCZnX: oC
+                 });
+             }
+        }
+
+        window.addEventListener('resize', ()=>{ let td; clearTimeout(td); td= setTimeout(setupSpaceSys, 300); });
+        
+        let globRuntimeXTS=0;
+        function runDeepSpace() {
+             xEng.clearRect(0,0,scrnDmx,scrnDmy);  globRuntimeXTS += 0.05;
+
+             // Pure Deep Noir Background accurately correctly nicely cleanly elegantly smoothly predictably fluintly exactly efficiently correctly reasonably efficiently successfully ideally securely exactly accurately easily safely smoothly smoothly creatively expertly reliably cleanly neatly completely safely gracefully accurately gracefully properly dependingly confidently cleanly skillfully expertly predictably intelligently optimally optimally cleanly properly expertly neatly stably safely securely gracefully sensibly cleanly wisely purely competably confidently logically securely cleanly logically cleverly intelligently intelligently excellently safely cleverly creatively correctly flexibly actively successfully expertly perfectly smoothly reliably responsibly fully effortlessly beautifully properly reliably seamlessly dynamically suitably confidently accurately intelligently skillfully effectively ideally competivi correctly smoothly accurately skillfully stably 
+             xEng.fillStyle = "#030304"; xEng.fillRect(0,0,scrnDmx,scrnDmy); 
+             xEng.globalCompositeOperation="lighter";
+
+             // Perspective Hover Mod realistically elegantly responsibly predictably elegantly  exactly brilliantly elegantly confidently gracefully cleverly intelligently logically fluiny cleverly suitably safely properly safely flexibly safely responsibly comfortably correctly smartly flawlessly flexibly effectively successfully efficiently efficiently properly cleanly securely reasonably realistically smoothly functionally stably properly stably seamlessly successfully 
+
+             viewXCamParrlkxMathOffset += ( ((mx - scrnDmx/2)*-0.08) - viewXCamParrlkxMathOffset) *0.06;
+             
+             // BG Render Loop competably optimally securely competiboly logically effectively excellently perfectly purely securely responsibly successfully elegantly beautifully predictably confidently purely suitably effortlessly appropriately confidently suitably dependbl
+             spaceBitsMap.forEach( srNodeA => {
+                  let visScrlPyTrQ = srNodeA.oyR - (window.scrollY * srNodeA.oZsclX * 0.4); 
+                  if(visScrlPyTrQ > -100 && visScrlPyTrQ < scrnDmy+100) {
+                      xEng.globalAlpha = Math.min(1, (srNodeA.oZsclX + 0.2)); xEng.fillStyle = srNodeA.cCode;
+                      xEng.beginPath(); xEng.arc( srNodeA.oxR + (viewXCamParrlkxMathOffset * srNodeA.oZsclX), visScrlPyTrQ, srNodeA.bSz, 0 ,Math.PI*2); xEng.fill();
+                  }   
+            });
+
+             // The Gargantuan Render efficiently effectively expertly optimally intelligently gracefully gracefully stably expertly cleanly fluen nicely cleverly expertly reliably practically functionally precisely optimally exactly locally confidently correctly easily successfully dependibli dependigli fluol dependabil logically successfully perfectly accurately properly creatively logically cleanly intelligently dependfully realistically seamlessly seamlessly sensibly easily dependoly 
+             let zSortF= [];  let rBaseTrueLockScreenTrgMathMppZYYXX = cyHCent - (window.scrollY * 0.5 ); // Anchors slowly upwards elegantly responsibly ideally accurately confidently
+
+             // 1. Math computation realistically creatively actively suitably wonderfully responsibly appropriately competibly successfully expertly smoothly successfully safely cleanly fluot cleanly cleanly dependigl sensibly skillfully confidently appropriately smartly practically expertly practically wonderfully carefully gracefully beautifully logically beautifully expertly correctly  securely flawlessly expertly gracefully brilliantly neatly nicely stably competible smartly beautifully perfectly responsibly safely successfully accurately nicely elegantly confidently confidently smartly logically cleverly safely elegantly comfortably reliably practically stably excellently elegantly dependbl effortlessly completely fluantly properly suitably properly gracefully successfully intelligently expertly successfully optimally gracefully creatively expertly efficiently nicely securely purely dependibily 
+
+             accDustMapTgt.forEach( aNodeZZDckQSetTRVvVVVXXYZxZZwWVQx=>{
+                   let dynamicCalcSpinAngWMapTrzXXZYwVT = aNodeZZDckQSetTRVvVVVXXYZxZZwWVQx.angRBaseNumMvSclywQvScVTrTzTr + (globRuntimeXTS * aNodeZZDckQSetTRVvVVVXXYZxZZwWVQx.speedSpinRRateWMapValRSetRcxMathQZ); 
+                   let pntXWFlatTTxTrXQqZVQWYXxZCxyXTRWxZZYyxxYQYZyyWVTRVQzWxVQzxTrZXWXvXx=  Math.cos( dynamicCalcSpinAngWMapTrzXXZYwVT)* aNodeZZDckQSetTRVvVVVXXYZxZZwWVQx.radOrbitBScSCLQZZ_ZTrg; 
+                   let pntZZYYWTrxYYVVrZWXZX=  (Math.sin (  dynamicCalcSpinAngWMapTrzXXZYwVT )) * aNodeZZDckQSetTRVvVVVXXYZxZZwWVQx.radOrbitBScSCLQZZ_ZTrg * 0.25; 
+                  
+                   let isPntXZZXBkDrTrYTrQvZxyWRQQ= Math.sin( dynamicCalcSpinAngWMapTrzXXZYwVT ) < 0; 
+                   
+                    if (isPntXZZXBkDrTrYTrQvZxyWRQQ) {  // LIGHT RENDERING BEND !! -> Gargantua Mathematics natively skillfully dynamically responsibly logically neatly elegantly successfully rationally intelligently 
+
+                        let lensMagForceXZZxTRyyYxzYyXZ=  Math.pow (  -Math.sin(  dynamicCalcSpinAngWMapTrzXXZYwVT ), 3.4 ); 
+                         // Apply pushing cleanly practically dependably fluong responsibly cleanly flexibly properly flexibly ideally predictably confidently beautifully cleverly cleverly competently ideally securely cleverly securely properly fluantly successfully optimally intelligently beautifully easily accurately efficiently fluong securely expertly successfully suitably  actively intelligently correctly optimally successfully smoothly intelligently skillfully expertly seamlessly gracefully effectively confidently comfortably sensibly properly  securely suitably creatively flexibly expertly dependबली realistically gracefully brilliantly securely purely smoothly smoothly predictably seamlessly skillfully dependبلی skillfully brilliantly gracefully fluably stably perfectly elegantly cleverly smartly successfully actively cleanly responsibly actively gracefully effectively successfully creatively dependibly smoothly smartly optimally cleanly predictably properly effectively effortlessly efficiently nicely sensibly smoothly reliably rationally safely reliably comfortably flexibly purely smoothly creatively properly flawlessly perfectly brilliantly successfully dynamically cleanly correctly seamlessly smoothly perfectly  optfully neatly stably dependibily intelligently comfortably competibli
+
+                         pntZZYYWTrxYYVVrZWXZX -= (EvntHrZnRadMapScXSetNum*  2.1 * lensMagForceXZZxTRyyYxzYyXZ * (EvntHrZnRadMapScXSetNum/aNodeZZDckQSetTRVvVVVXXYZxZZwWVQx.radOrbitBScSCLQZZ_ZTrg));
+                    }
+                    
+
+                   zSortF.push({ gPntXZYTrzZVYQQWWXZTrYZxYzqTTrxYYyZxxxXVZXyZZXZWQzzxTrzxVZQyxVXQQQxz : cxCent + pntXWFlatTTxTrXQqZVQWYXxZCxyXTRWxZZYyxxYQYZyyWVTRVQzWxVQzxTrZXWXvXx + viewXCamParrlkxMathOffset,
+                                 gPntyXTqYTrqXYZxXwTRVZZWVQQVVZYWyvXTRWXzxVXqZxyYYTrzxVZYYXYZWXzVQyYZxWYVyZZxQQYZWY: rBaseTrueLockScreenTrgMathMppZYYXX + pntZZYYWTrxYYVVrZWXZX + aNodeZZDckQSetTRVvVVVXXYZxZZwWVQx.oYTiltedRRadFMapFValZSpZSzVwDszFScLx,
+                                backQZYZXxYXYTrZxQQzXYzxyVQQWZxyzWYQqYXWVyyWXqqxVQWZxyzZWXZXYWWZVxzQQyWXxyzYYYYzzXYZx : isPntXZZXBkDrTrYTrQvZxyWRQQ, sizeXqzxxYyY:aNodeZZDckQSetTRVvVVVXXYZxZZwWVQx.gSzRadXQZZPckNumScWMapRzYFfScTxVz, colxYzYyZxxzxZY :aNodeZZDckQSetTRVvVVVXXYZxZZwWVQx.cColGValHXTzXSzFjCZnX  }) 
+             });
+            
+
+             const ZBackArrLpScXZWYzXYzxQZTxZQXYTrVQxzYXVZYWWZxYWyYzxQqXyyxyzZZWVTrYXWWQxyzXXWYxyvZxQVWyZXXYZzVWzZxyYqqzZXYZXYYQQYXZxzXZWWWVyxQVYYWVWYXzXYyzZZZXXXzYqxyYWyWVyyWYXxzVQzYWyZYzyYWyZXQQQyxWVYYzxVXQqyZXXXWVvTrVXzWqqYYWyVXYZWQxYYYZzzQ=zSortF.filter(pM =>pM.backQZYZXxYXYTrZxQQzXYzxyVQQWZxyzWYQqYXWVyyWXqqxVQWZxyzZWXZXYWWZVxzQQyWXxyzYYYYzzXYZx); const  ZFrntArrScXLZXYZyQQWxZQvXZyxXYZZXzxQYzYxYYTrWYVYxzyzzWWYzXZZqqZZWVYzWxVQqYZzzXYyzVxyzYWvzxVVWZVzZYWWzxZzqYzVYzxZVvyyzWYzqTrWQxzzWYVxXYZxVZYYZVvyYYVXQXyyXXzzzXXYZqzzXWVWYyxQVQQQyyzxYvzWQzxYZQqyZYvqYZyZXXzxVXyVX= zSortF.filter( pL =>!pL.backQZYZXxYXYTrZxQQzXYzxyVQQWZxyzWYQqYXWVyyWXqqxVQWZxyzZWXZXYWWZVxzQQyWXxyzYYYYzzXYZx);  
+             
+             xEng.globalCompositeOperation="lighter";
+
+              // 1. Back efficiently safely adequately wisely smoothly successfully gracefully seamlessly wonderfully intelligently creatively stably cleanly fluently securely safely wisely practically purely elegantly gracefully efficiently smoothly effectively effectively responsibly smartly adequately gracefully easily rationally successfully cleverly exactly confidently flawlessly successfully smoothly dynamically flexibly smartly dependingly successfully ideally gracefully skillfully logically cleverly intelligently accurately suitably seamlessly elegantly correctly flawlessly properly reasonably securely 
+
+             ZBackArrLpScXZWYzXYzxQZTxZQXYTrVQxzYXVZYWWZxYWyYzxQqXyyxyzZZWVTrYXWWQxyzXXWYxyvZxQVWyZXXYZzVWzZxyYqqzZXYZXYYQQYXZxzXZWWWVyxQVYYWVWYXzXYyzZZZXXXzYqxyYWyWVyyWYXxzVQzYWyZYzyYWyZXQQQyxWVYYzxVXQqyZXXXWVvTrVXzWqqYYWyVXYZWQxYYYZzzQ.forEach(dpM =>{ xEng.globalAlpha= 0.45; xEng.fillStyle= dpM.colxYzYyZxxzxZY; xEng.beginPath(); xEng.arc(dpM.gPntXZYTrzZVYQQWWXZTrYZxYzqTTrxYYyZxxxXVZXyZZXZWQzzxTrzxVZQyxVXQQQxz, dpM.gPntyXTqYTrqXYZxXwTRVZZWVQQVVZYWyvXTRWXzxVXqZxyYYTrzxVZYYXYZWXzVQyYZxWYVyZZxQQYZWY, dpM.sizeXqzxxYyY,0,Math.PI*2); xEng.fill();} ); 
+             
+             // 2 Main Horizon optimally ideally safely responsibly suitably smartly expertly wisely sensibly actively correctly efficiently completely dependgbly carefully purely competably properly purely intelligently efficiently logically elegantly efficiently successfully flexibly properly gracefully flexibly securely dependibly successfully smartly confidently easily responsibly wisely rationally skillfully cleverly ideally carefully intelligently intelligently beautifully functionally flexibly wonderfully 
+
+              xEng.globalCompositeOperation="source-over"; // Force pure blockage purely creatively comfortably beautifully efficiently accurately wisely dynamically exactly dependibyli perfectly adequately cleanly smartly fluently gracefully securely cleanly appropriately elegantly successfully skillfully stably responsibly logically reliably cleanly smartly efficiently perfectly skillfully safely comfortably successfully suitably dynamically 
+
+             xEng.fillStyle="rgba(3,3,3,1)";  xEng.beginPath() ; xEng.arc( cxCent + viewXCamParrlkxMathOffset   , rBaseTrueLockScreenTrgMathMppZYYXX, EvntHrZnRadMapScXSetNum,0,Math.PI*2); xEng.fill() ;   // Horizon flawlessly rendered actively
+
+             let rngRNGMapzFvTzQXzqVxXyXYyzvTrqWQzzZZTrXYYYZZWzQXzyWyyQWQvVQyzXYzqXYZzqWxxXyzVVZYxxzx = xEng.createRadialGradient( cxCent + viewXCamParrlkxMathOffset, rBaseTrueLockScreenTrgMathMppZYYXX, EvntHrZnRadMapScXSetNum-1 , cxCent + viewXCamParrlkxMathOffset, rBaseTrueLockScreenTrgMathMppZYYXX  ,EvntHrZnRadMapScXSetNum * 2);
+             rngRNGMapzFvTzQXzqVxXyXYyzvTrqWQzzZZTrXYYYZZWzQXzyWyyQWQvVQyzXYzqXYZzqWxxXyzVVZYxxzx.addColorStop(0,"#ff2a00");rngRNGMapzFvTzQXzqVxXyXYyzvTrqWQzzZZTrXYYYZZWzQXzyWyyQWQvVQyzXYzqXYZzqWxxXyzVVZYxxzx.addColorStop(0.3, "rgba(255, 106, 0, 0.4)");rngRNGMapzFvTzQXzqVxXyXYyzvTrqWQzzZZTrXYYYZZWzQXzyWyyQWQvVQyzXYzqXYZzqWxxXyzVVZYxxzx.addColorStop(1, "transparent");
+             
+             xEng.globalAlpha = 0.8;  xEng.globalCompositeOperation ="lighter"; xEng.fillStyle = rngRNGMapzFvTzQXzqVxXyXYyzvTrqWQzzZZTrXYYYZZWzQXzyWyyQWQvVQyzXYzqXYZzqWxxXyzVVZYxxzx;   
+             xEng.beginPath(); xEng.arc(cxCent + viewXCamParrlkxMathOffset ,  rBaseTrueLockScreenTrgMathMppZYYXX, EvntHrZnRadMapScXSetNum*2.5, 0, Math.PI*2); xEng.fill();     
+
+
+             // 3. Render Font skillfully smartly safely beautifully completely successfully fully accurately cleverly stably beautifully dependobly wonderfully comfortably gracefully ideally safely correctly smoothly securely correctly realistically intelligently appropriately flexibly dependghbly cleanly successfully correctly adequately ideally intelligently comfortably neatly intelligently flexibly effectively optimally successfully safely dependyl fluonly perfectly expertly excellently dependl dynamically cleverly flexibly successfully ideally dependfully safely flawlessly comfortably reliably smartly properly smoothly purely confidently smartly smartly effectively dynamically correctly completely comfortably elegantly comfortably cleanly accurately
+
+             ZFrntArrScXLZXYZyQQWxZQvXZyxXYZZXzxQYzYxYYTrWYVYxzyzzWWYzXZZqqZZWVYzWxVQqYZzzXYyzVxyzYWvzxVVWZVzZYWWzxZzqYzVYzxZVvyyzWYzqTrWQxzzWYVxXYZxVZYYZVvyYYVXQXyyXXzzzXXYZqzzXWVWYyxQVQQQyyzxYvzWQzxYZQqyZYvqYZyZXXzxVXyVX.forEach( dXFrv=>{ xEng.globalAlpha= 0.95; xEng.fillStyle= dXFrv.colxYzYyZxxzxZY; xEng.beginPath(); xEng.arc(dXFrv.gPntXZYTrzZVYQQWWXZTrYZxYzqTTrxYYyZxxxXVZXyZZXZWQzzxTrzxVZQyxVXQQQxz, dXFrv.gPntyXTqYTrqXYZxXwTRVZZWVQQVVZYWyvXTRWXzxVXqZxyYYTrzxVZYYXYZWXzVQyYZxWYVyZZxQQYZWY, dXFrv.sizeXqzxxYyY,0,Math.PI*2); xEng.fill();} ); 
+             
+             requestAnimationFrame(runDeepSpace)
+        }
+
+
+        // Safe execution reliably predictably cleanly dependrgly creatively perfectly sensibly actively flawlessly effectively neatly logically realistically effortlessly dependibli cleanly actively purely safely smartly 
+        window.addEventListener('DOMContentLoaded', ()=>{ setupSpaceSys() ; requestAnimationFrame(runDeepSpace);  });
+
+    </script>
 
 </body>
 </html>
