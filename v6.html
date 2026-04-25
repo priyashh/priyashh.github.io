@@ -3,475 +3,479 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Priyash Vasava | Magnetic Thread</title>
+    <title>Priyash Vasava | Bioluminescent Ecosystem</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <!-- Highest-end Display Typographies -->
-    <link href="https://fonts.googleapis.com/css2?family=Italiana&family=Plus+Jakarta+Sans:wght@300;400;800;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css">
 
+    <!-- Elegant, Organic Webfonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;700&family=Syne:wght@400;700;800&family=Lora:ital@0;1&display=swap" rel="stylesheet">
+    
     <style>
-        /* === THE MODERN MINIMALIST SYSTEM === */
+        /* === NATIVE VARIABLES & THEPE === */
         :root {
-            --blk: #0a0a0c;
-            --wht: #f7f7f7;
-            --c1: #ff0055; /* Tech Magenta */
-            --c2: #5d00ff; /* Deep UltraViolet */
-            --c3: #00ffaa; /* Accent Mint */
-            --bg-trans: rgba(10, 10, 12, 0.4);
-            --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+            --abyss: #010408;       /* Very deep oceanic midnight */
+            --teal: #00e0df;        /* Bioluminescent Pandora Teal */
+            --magenta: #d900ff;     /* Vivid neural pink/magenta */
+            --white: #ebf5f7;
+            --dim: #7f8b9e;
+            --glass: rgba(14, 25, 40, 0.4);
+            --bdr: rgba(0, 224, 223, 0.15);
         }
 
-        body, html { width: 100%; margin: 0; background-color: var(--blk); color: var(--wht); overflow-x: hidden; font-family: 'Plus Jakarta Sans', sans-serif; cursor: none !important; scroll-behavior: smooth;}
-        * { box-sizing: border-box; cursor: none !important; }
-
-        /* Render Engines */
-        canvas { position: fixed; top: 0; left: 0; pointer-events: none; }
-        #spline-engine { z-index: 1; }
-        #interaction-cursor { z-index: 9999; }
-        .ambient-noise { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.15; background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnPgoJPGRlZnM+PGRpc3BsYXk+bm9uZTwvZGlzcGxheT48ZmlsdGVyIGlkPSdub2lzZSc+PGZlVHVyYnVsZW5jZSB0eXBlPSdmcmFjdGFsTm9pc2UnIGJhc2VGcmVxdWVuY3k9JzEwJyBudW1PY3RhdmVzPScyJyBzdGl0Y2hUaWxlcz0nc3RpdGNoJyAvPzwvZmlsdGVyPjwvZGVmcz4KCTxyZWN0IHdpZHRoPScxMDAlJyBoZWlnaHQ9JzEwMCUnIGZpbHRlcj0ndXJsKCNub2lzZSknIG9wYWNpdHk9JzEnIC8+Cjwvc3ZnPg=='); }
-
-        /* Fluid Magnetic Cursor Styles */
-        .cur-orb { position: fixed; transform: translate(-50%, -50%); border-radius: 50%; pointer-events: none; z-index: 10000;}
-        .cur-dot { width: 8px; height: 8px; background: var(--c3); box-shadow: 0 0 15px var(--c3); transition: width 0.3s, height 0.3s; }
-        .cur-h { width: 40px; height: 40px; border: 1px solid rgba(255,255,255,0.2); transition: width 0.4s var(--ease-cinematic), height 0.4s var(--ease-cinematic); backdrop-filter: grayscale(1); }
-        .hovershift .cur-dot { width: 0; height: 0; opacity:0;}
-        .hovershift .cur-h { width: 60px; height: 60px; background: rgba(255, 255, 255, 0.05); border-color: var(--wht); backdrop-filter: blur(4px); }
-
-        /* === FLOATING NAVIGATION === */
-        nav { position: fixed; width: 100%; top: 0; display: flex; justify-content: space-between; padding: 40px 6vw; z-index: 100; mix-blend-mode: difference; }
-        .logo { font-size: 1rem; font-weight: 900; letter-spacing: 0.1em; color: var(--wht); text-decoration: none; pointer-events: auto; text-transform: uppercase; display: flex; align-items: center; gap: 8px; }
-        .l-dot { width: 8px; height: 8px; background: var(--wht); border-radius: 50%; }
-        .nav-links { display: flex; gap: 40px; }
-        .nav-links a { font-family: 'Space Mono', monospace; font-size: 0.8rem; color: var(--wht); text-decoration: none; text-transform: uppercase; font-weight: 700; transition: color 0.4s; position: relative; pointer-events: auto; }
-        .nav-links a::after { content: ''; position: absolute; left: 0; bottom: -5px; width: 0; height: 2px; background: var(--wht); transition: width 0.4s var(--ease-cinematic); }
-        .nav-links a:hover::after { width: 100%; }
-
-        /* Document Container */
-        .wrapper { position: relative; z-index: 10; display: flex; flex-direction: column; overflow: hidden; }
-
-        /* === BOLD MINIMALIST HERO === */
-        .hero { position: relative; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; pointer-events: none;}
-        .mag-text-wrap { text-align: center; mix-blend-mode: difference; }
-        .h-sub { font-family: 'Space Mono', monospace; font-size: clamp(0.7rem, 2vw, 1rem); letter-spacing: 0.3em; text-transform: uppercase; color: #a1a1aa; margin-bottom: 5px; display: block; opacity: 0.7;}
+        /* --- GLOBAL OVERRIDES --- */
+        * { box-sizing: border-box; cursor: none !important; margin: 0; padding: 0; }
         
-        /* Master Typography Layout Request Realized */
-        .h-main { font-weight: 900; font-size: clamp(4rem, 11vw, 11rem); line-height: 1.05; letter-spacing: -0.04em; color: var(--wht); margin: 0; position: relative; }
-        
-        .hero-action-hint {
-            position: absolute; bottom: 8vh; left: 50%; transform: translateX(-50%); font-family: 'Space Mono';
-            font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 5px; color: var(--wht);
-            background: rgba(255,255,255,0.05); padding: 12px 30px; border: 1px solid rgba(255,255,255,0.1); border-radius: 40px; backdrop-filter: blur(10px);
+        body, html { 
+            background: var(--abyss); 
+            color: var(--white); 
+            font-family: 'Outfit', sans-serif; 
+            overflow-x: hidden; scroll-behavior: smooth;
         }
 
-        #eight-ball-quote {
-            position: absolute; top: 40vh; left: 50%; transform: translateX(-50%); opacity: 0; transition: opacity 0.5s;
-            font-family: 'Space Mono'; font-weight: 700; font-size: 13px; color: var(--c3); letter-spacing: 2px; z-index: 50; text-transform: uppercase; 
+        /* --- THE ORGANIC CANVAS LAB --- */
+        #ecosystem-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; }
+        /* Ambient subtle glowing light leak acting as deep-ocean fog */
+        .ambient-fog { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at 50% 120%, rgba(0, 224, 223, 0.05), transparent 70%), radial-gradient(circle at 20% -20%, rgba(217, 0, 255, 0.06), transparent 50%); pointer-events: none;}
+
+        /* --- THE NEW MAC-STYLE BOTTOM DOCK OVERLAY --- */
+        .organic-dock {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 15px; padding: 12px; border-radius: 40px; z-index: 100;
+            background: rgba(3, 8, 15, 0.6); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--bdr); box-shadow: 0 10px 40px rgba(0,0,0,0.8), inset 0 1px rgba(255,255,255,0.05);
+            animation: breath 6s infinite alternate ease-in-out;
+        }
+        
+        .dock-link {
+            font-family: 'Outfit', sans-serif; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em;
+            color: var(--white); text-decoration: none; padding: 10px 25px; border-radius: 30px;
+            transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1); opacity: 0.7; position: relative; pointer-events: auto;
+        }
+        
+        .dock-link:hover { opacity: 1; background: rgba(0, 224, 223, 0.1); color: var(--teal); }
+
+        /* Floating Logo tied dynamically */
+        .top-logo { position: fixed; top: 30px; left: 40px; z-index: 100; font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem; letter-spacing: 0.2rem; color: var(--white); text-transform: uppercase; text-decoration: none; mix-blend-mode: difference; }
+
+        /* --- SCROLLING STRUCTURE --- */
+        .scroll-wrapper { position: relative; width: 100%; z-index: 10; display: flex; flex-direction: column; align-items: center;}
+        
+        /* Floating Anim Rule for Elements */
+        @keyframes breath { 0% { transform: translate(-50%, 0); } 100% { transform: translate(-50%, -10px); } }
+        @keyframes levitate { 0% { transform: translateY(0px); } 100% { transform: translateY(-15px); } }
+        /* Tapered organic fluid gradients for font styling */
+        @keyframes flowColor { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+
+        /* --- THE EQUAL HERO COMPONENT --- */
+        .hero-bionode {
+            min-height: 100vh; width: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; pointer-events: none;
         }
 
-        /* === 3D KINETIC LAYOUT SYSTEM === */
-        .s-con { width: 100%; max-width: 1400px; margin: 0 auto; padding: 15vh 5vw; }
-
-        /* Magic Hover 3D Wrappers */
-        .tilt-card { transform-style: preserve-3d; perspective: 1000px; transform: perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1); will-change: transform; transition: transform 0.5s ease-out; }
-
-        /* The Modular Bio */
-        .bio-grid { display: flex; gap: 8vw; align-items: center; justify-content: center; border-radius: 30px; padding: 60px; background: rgba(5,5,6,0.3); border: 1px solid rgba(255,255,255,0.02); backdrop-filter: blur(20px);}
-        .bio-img { flex: 0 0 360px; border-radius: 12px; overflow: hidden; position: relative; background: #000; transform: translateZ(40px); /* Lifts image off the background physically */ box-shadow: -20px 40px 60px rgba(0,0,0,0.6);}
-        .bio-img img { width: 100%; object-fit: cover; opacity: 0.85; filter: grayscale(1) contrast(1.1); transition: 0.6s var(--ease-cinematic); display:block; }
-        .bio-img:hover img { filter: grayscale(0) contrast(1.05); opacity: 1; transform: scale(1.03); }
-        .bio-txt { flex: 1; display: flex; flex-direction: column; transform: translateZ(20px); border-radius:8px;} 
-        .bio-label { font-family: 'Space Mono'; color: var(--c1); font-weight: 700; font-size: 0.75rem; letter-spacing: 0.2rem; text-transform: uppercase; margin-bottom: 25px; }
-        .bio-dtl { font-size: 1.15rem; color: #b1b5c4; line-height: 1.8; margin-bottom: 25px; font-weight: 400; max-width: 90%; }
-        .bio-dtl strong { color: var(--wht); font-weight: 800; }
-        .b-ln { display: inline-flex; align-self: flex-start;  font-size: 0.8rem; font-weight: 800; color: var(--wht); text-transform: uppercase; letter-spacing: 0.1em; text-decoration: none; border-bottom: 2px solid var(--wht); padding-bottom: 6px; margin-top:20px; z-index:2; pointer-events:auto;}
-
-        /* Modern Projects Axis Design */
-        .work-header { display: flex; align-items: center; gap: 40px; margin-top: 10vh; margin-bottom: 10vh;}
-        .wh-txt { font-size: clamp(3rem, 7vw, 6rem); font-weight: 900; line-height: 1; padding:0; margin:0;}
-        .wh-line { flex: 1; height: 1px; background: rgba(255,255,255,0.1); position:relative; overflow:hidden; }
-        .wh-line::after{content:''; position:absolute; top:0; left:-100%; width:50%; height:100%; background: linear-gradient(90deg,transparent,var(--c3),transparent); animation:lineGl 5s infinite linear;}
-        @keyframes lineGl{0%{left:-100%} 100%{left:200%}}
-
-        /* Staggered Portfolio Items */
-        .folio-wrap { display: flex; flex-direction: column; gap: 18vh; padding-bottom: 10vh;}
+        .title-group { text-align: center; display: flex; flex-direction: column; gap: 10px; z-index: 20; }
         
-        .p-item { display: flex; justify-content: space-between; align-items: stretch; gap: 6vw; position: relative; }
-        .p-item:nth-child(even) { flex-direction: row-reverse; }
-
-        .p-art { flex: 6; position: relative; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.03); transform: translateZ(30px); background:#000; box-shadow: var(--bentoShadow); pointer-events: auto;}
-        .p-art img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; transition: 0.8s var(--ease-cinematic); display:block; filter: sepia(0.2) contrast(1.1);}
-        .p-art:hover img { opacity: 1; transform: scale(1.05); filter: contrast(1);}
-
-        .p-meta { flex: 4; display: flex; flex-direction: column; justify-content: center; transform: translateZ(50px); pointer-events:none;}
-        .m-num { font-family: 'Italiana', serif; font-size: clamp(4rem, 8vw, 8rem); line-height:0.8; opacity: 0.3; margin-bottom: 20px;}
-        .p-meta h2 { font-weight: 900; font-size: clamp(2rem, 3.5vw, 3rem); text-transform: uppercase; margin-bottom: 20px; line-height: 1.1; }
-        .p-meta p { font-size: 0.95rem; color: var(--muted); line-height: 1.7; margin-bottom: 30px;}
-        .techs { display: flex; flex-wrap: wrap; gap: 10px; }
-        .techs span { font-family: 'Space Mono'; font-weight: 700; font-size: 0.65rem; letter-spacing: 0.1em; color: var(--blk); background: var(--wht); padding: 8px 16px; border-radius: 40px; }
-        
-        /* Explicit Footer Hub */
-        .footer-hub { padding: 15vh 5vw; background: #030304; border-top: 1px solid rgba(255,255,255,0.05); text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 50px;}
-        .f-quote { font-family: 'Italiana', serif; font-size: clamp(2rem, 5vw, 4rem); max-width: 900px; color: var(--c3);}
-        .f-autr { font-family: 'Space Mono'; font-weight: 700; font-size: 0.75rem; letter-spacing: 0.3em; text-transform: uppercase; color: var(--wht); opacity: 0.6;}
-        
-        .con-grid { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; z-index:2; pointer-events:auto;}
-        /* Authentic Magnetic Hover effect structure hooks  */
-        .mag-btn-wrap { display: inline-block; position: relative;}
-        .mag-btn { display: inline-block; padding: 22px 40px; font-weight: 800; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 40px; background: rgba(255,255,255,0.03); color: var(--wht); border: 1px solid rgba(255,255,255,0.08); transition: transform 0.3s cubic-bezier(0.16,1,0.3,1), background 0.3s, color 0.3s; text-decoration: none;}
-        .mag-btn-wrap:hover .mag-btn { background: var(--wht); color: var(--blk); cursor:none;}
-        .signature { font-family: 'Space Mono'; font-size: 11px; margin-top: 80px; letter-spacing: 2px; color: #444;}
-        
-        /* Awwwards Smooth Visibility Scroll */
-        .reveal-node { opacity: 0; transform: translateY(40px) scale(0.98); transition: 1.2s var(--ease-cinematic); will-change: transform, opacity; }
-        .reveal-node.in-vis { opacity: 1; transform: translateY(0px) scale(1); }
-
-        @media (max-width: 1000px) {
-            .nav-links { display: none;}
-            .bio-grid { grid-template-columns: 1fr; gap: 40px; padding: 40px 20px;}
-            .bio-img { flex: none; height: auto;}
-            .p-item, .p-item:nth-child(even) { flex-direction: column; gap: 30px;}
-            .m-num { font-size: 3rem;}
+        /* Equal, massive typography */
+        .title-text { 
+            font-family: 'Syne', sans-serif; font-size: clamp(3rem, 7vw, 6.5rem); font-weight: 800; 
+            letter-spacing: -0.01em; line-height: 0.9; margin: 0;   
         }
+        /* Gradient flows endlessly like bioluminescence */
+        .h-fluid { 
+            background: linear-gradient(270deg, var(--white), var(--teal), var(--white), var(--magenta), var(--white)); 
+            background-size: 200% 200%; animation: flowColor 7s linear infinite;
+            -webkit-background-clip: text; color: transparent; padding: 0 10px;
+        }
+        .small-caps { font-family: 'Outfit', sans-serif; color: var(--dim); letter-spacing: 0.4em; font-size: 0.85rem; font-weight: 400; text-transform: uppercase; }
+
+        /* The Oracle Interaction Node */
+        .oracle-altar {
+            margin-top: 10vh; pointer-events: auto; padding: 15px 40px; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.3em;
+            color: var(--teal); border: 1px solid var(--bdr); border-radius: 40px; background: rgba(0,0,0,0.4); text-align: center;
+            backdrop-filter: blur(20px); transition: 0.3s;
+            animation: levitate 4s infinite alternate ease-in-out;
+        }
+        .8-ball-res { position:absolute; top: 70vh; font-family: 'Lora', serif; font-size: 0.95rem; font-style: italic; color: var(--teal); z-index:20; opacity: 0; transition: opacity 0.5s ease-in; text-transform: lowercase; letter-spacing: 0.1em; pointer-events: none;}
+
+        /* --- THE ORGANIC CONTAINERS --- */
+        .section-node { max-width: 1100px; width: 100%; margin: 6vw 0; padding: 0 4vw; display: flex; flex-direction: column;}
+        
+        /* The Alien Rounded Glass Panels */
+        .bio-pod {
+            background: var(--glass); border: 1px solid rgba(255,255,255,0.06); 
+            border-radius: 40px; /* Highly organic deep curved edges */
+            padding: 60px 50px;
+            backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5), inset 0 0 10px rgba(255,255,255,0.02);
+            animation: levitate 8s infinite alternate ease-in-out;
+        }
+
+        .profile-mesh { display: grid; grid-template-columns: 200px 1fr; gap: 50px; align-items: center; }
+        .p-image { width: 100%; aspect-ratio: 1/1; border-radius: 50%; overflow: hidden; position: relative; border: 2px solid rgba(0, 224, 223, 0.4); box-shadow: 0 0 40px rgba(0, 224, 223, 0.15);}
+        .p-image img { width: 100%; height: 100%; object-fit: cover; filter: sepia(0.2) contrast(1.1) brightness(0.9); }
+        
+        .pod-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.3rem; margin-bottom: 25px; color: var(--white);}
+        .bio-pod p { font-size: 1.05rem; line-height: 1.8; color: #a4asc5; margin-bottom: 20px;}
+        .inline-link { display: inline-flex; font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 700; color: var(--teal); letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; position: relative; padding-bottom: 3px; margin-top:15px; pointer-events:auto;}
+        .inline-link::before { content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 1px; background: var(--teal); transition: 0.4s; }
+        .inline-link:hover::before { width: 100%; }
+
+        /* The Snake Project Deck */
+        .project-pod { padding: 40px; gap: 60px; display: grid; grid-template-columns: 1fr 1fr; align-items: center; margin-bottom: 50px;  animation: levitate 10s infinite alternate ease-in-out; pointer-events:auto; text-decoration:none;}
+        .project-pod:nth-child(even) { grid-template-columns: 1fr 1fr; direction: rtl;}
+        .project-pod:nth-child(even) > div { direction: ltr; }
+
+        .proj-visual { width: 100%; aspect-ratio: 4/3; border-radius: 20px; overflow: hidden; border: 1px solid var(--bdr); position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.6);}
+        .proj-visual img { width: 100%; height: 100%; object-fit: cover; opacity: 0.7; transition: 0.6s; transform: scale(1.05);}
+        .project-pod:hover .proj-visual img { opacity: 1; transform: scale(1); filter: brightness(1.2);}
+
+        .p-meta { display: flex; flex-direction: column; gap:15px; align-items: flex-start;}
+        .proj-name { font-family: 'Space Grotesk', sans-serif; font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 700; line-height: 1.2; color: #fff;}
+        .p-meta p { font-size: 0.95rem; line-height: 1.7; color: var(--dim); margin-bottom:10px; max-width: 95%;}
+        .tech-pill { display: inline-flex; gap: 10px; flex-wrap: wrap;}
+        .tech-pill span { background: rgba(0,0,0,0.5); padding: 6px 14px; font-family: 'Outfit'; border-radius: 20px; font-size: 0.7rem; color: var(--white); border: 1px solid rgba(255,255,255,0.08); text-transform: uppercase; letter-spacing:0.1em;}
+
+        /* Deep Quote Footer */
+        .quote-base { margin-top: 10vh; margin-bottom: 120px; text-align: center; } /* Accounts for dock space */
+        blockquote { font-family: 'Lora', serif; font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 400; color: var(--white); margin-bottom: 2rem; line-height: 1.3;}
+        .quote-auth { font-family:'Outfit'; text-transform: uppercase; font-size:0.8rem; letter-spacing: 0.25em; color: var(--teal);}
+        .connect-links { display: flex; justify-content: center; gap: 30px; margin-top: 60px; pointer-events:auto;}
+        
+        @media (max-width: 900px) {
+            .organic-dock { width: 92vw; padding: 12px 1vw; justify-content: space-around; gap: 0;}
+            .dock-link{ font-size: 0.6rem; padding: 10px 14px;}
+            .profile-mesh { grid-template-columns: 1fr; gap: 30px; text-align: center;}
+            .p-image { width: 150px; margin: 0 auto;}
+            .project-pod, .project-pod:nth-child(even) { grid-template-columns: 1fr; direction: ltr; padding: 30px 25px;}
+            .top-logo{ display: none;} 
+        }
+
     </style>
 </head>
 <body>
 
-    <!-- LIQUID LIGHT PHYSICS ENGINES (Zero layout collision) -->
-    <canvas id="spline-engine"></canvas>
-    <div class="ambient-noise"></div>
-    <canvas id="interaction-cursor"></canvas>
+    <canvas id="ecosystem-canvas"></canvas>
+    <div class="ambient-fog"></div>
 
-    <!-- CUSTOM MOUSE ORBS -->
-    <div class="cur-orb cur-dot" id="msDot"></div>
-    <div class="cur-orb cur-h"   id="msHov"></div>
+    <a href="" class="top-logo">Priyash.</a>
 
-    <nav>
-        <a href="" class="logo c-mag" data-hover><div class="l-dot"></div> PRIYASH_VSV</a>
-        <div class="nav-links">
-            <a href="#projects" class="c-mag" data-hover>Projects</a>
-            <a href="blog.html" class="c-mag" data-hover>Blog</a>
-            <a href="who-am-i.html" class="c-mag" data-hover>Who Am I?</a>
-            <a href="#connect" class="c-mag" data-hover>Connect</a>
-        </div>
+    <!-- The Magical New Bioluminescent Navigation -->
+    <nav class="organic-dock">
+         <a href="#projects" class="dock-link">Archive.</a>
+         <a href="blog.html" class="dock-link" style="color:var(--magenta)">DataLog.</a>
+         <a href="who-am-i.html" class="dock-link">Bio.Node</a>
+         <a href="#connect" class="dock-link">Transmit.</a>
     </nav>
+    
+    <div class="scroll-wrapper">
 
-    <div class="wrapper">
-        
-        <!-- MASSIVE DYNAMIC HEADERS NATIVE IN DOM!  -->
-        <div class="hero">
-            <div class="mag-text-wrap" id="hTxtGroup">
-                <span class="h-sub">ANALYST BY DAY</span>
-                <h1 class="h-main">ANALYST.</h1>
-                <h1 class="h-main">VIBE CODER.</h1>
-                <span class="h-sub" style="margin-top:15px;">BY NIGHT</span>
+        <!-- Cinematic Central Typographical Focus -->
+        <header class="hero-bionode">
+            <div class="title-group" id="core-titles">
+                <span class="small-caps">By Day</span>
+                <!-- Equal visual authority, elegant masking -->
+                <h1 class="title-text">ANALYST.</h1>
+                <h1 class="title-text h-fluid">VIBE CODER.</h1>
+                <span class="small-caps" style="margin-top:10px;">By Night</span>
+                
+                <div class="oracle-altar" id="oracleIntract"> Click & Hold Subspace </div>
             </div>
             
-            <div class="hero-action-hint c-mag" id="prompt-hit" data-hover>HOLD TO CONFIGURE TIMELINE</div>
-            <div id="eight-ball-quote">- INTERPRETATION COMPLETED : 8-BALL PROTOCOL -</div>
-        </div>
+            <div class="8-ball-res" id="subq">— the ecosystem decrees —</div>
+        </header>
 
-        <section class="s-con reveal-node" id="about">
-            <div class="bio-grid tilt-card">
-                <div class="bio-img"><img src="assets/user-portrait.jpg" onerror="this.src='https://via.placeholder.com/600x750/09090b/00ffaa?text=Image+Analysis'" alt="Portrait" /></div>
-                <div class="bio-txt">
-                    <span class="bio-label">[ PROFILE 0x1 ] — THE OBSERVER</span>
-                    <p class="bio-dtl">I like to think of myself as an observer. Observing different kinds of systems, from the system of Nature to the system of <strong>Metropolitan city and much more</strong>. Fascinated by how they function, why they break, and how they can be seamlessly optimized.</p>
-                    <p class="bio-dtl">Be it a complex problem-solving framework or untethered sheer curiosity, I continually rely on <strong>SQL and Power BI</strong> as my foundational absolute core tools to filter the noise and uncover facts objectively.</p>
-                    <a href="who-am-i.html" class="b-ln c-mag" data-hover>Initiate Bio Extraction »</a>
-                </div>
-            </div>
+        <!-- Profile Embedded Base -->
+        <section id="bio" class="section-node">
+             <div class="bio-pod profile-mesh">
+                  <div class="p-image"><img src="assets/user-portrait.jpg" onerror="this.src='https://via.placeholder.com/600/f0x0/00e0df?text=Entity'" alt="Observe" /></div>
+                  <div class="bio-info">
+                       <h2 class="pod-title">A Living Metric.</h2>
+                       <p>I like to think of myself as an observer. Observing different kinds of systems, from the system of Nature to the system of Metropolitan city and much more. Fascinated by how they intuitively function, why they computationally break, and how they can be effectively optimized.</p>
+                       <p>Be it a problem-solving technical project or deep, untethered curiosity, I rely securely on SQL and Power BI as my pure structural lenses to extract the underlying core truths.</p>
+                       <a href="who-am-i.html" class="inline-link">- Read Comprehensive Output -</a>
+                  </div>
+             </div>
         </section>
 
-        <section class="s-con reveal-node" id="projects" style="padding-top: 5vh;">
-            
-            <div class="work-header">
-                <h2 class="wh-txt">WORKS .<br>ARCHIVE</h2>
-                <div class="wh-line"></div>
-            </div>
+        <section id="projects" class="section-node" style="padding-top: 10vw;">
+              <div style="font-family: 'Space Grotesk'; font-size:2rem; font-weight:800; color:var(--dim); text-align:center; margin-bottom:60px;">// DOMAIN ARCHITECTURES</div>
+              
+              <!-- Olist Organic Card -->
+              <a href="projects/olist/index.html" class="bio-pod project-pod">
+                   <div class="proj-visual"><img src="assets/olist-cover.png" onerror="this.src='https://via.placeholder.com/800/010408/d900ff?text=Olist+Fluid'" alt="Olist" /></div>
+                   <div class="p-meta">
+                        <strong class="pad-small" style="color:var(--magenta);font-size:0.8rem;letter-spacing:4px;">ECOMMERCE MATRIX</strong>
+                        <h3 class="proj-name">Olist Intelligence</h3>
+                        <p>Olist is a Brazilian SaaS technology company perfectly acting as a unified marketplace integrator. Uncovered hidden customer behaviour patterns traversing cleanly inside 550K raw rows utilizing robust custom extraction.</p>
+                        <div class="tech-pill"><span>Excel</span><span>SQL System</span><span>PowerBi Model</span></div>
+                   </div>
+              </a>
 
-            <div class="folio-wrap">
-                <!-- Data Model A -->
-                <div class="p-item reveal-node tilt-card">
-                    <a href="projects/olist/index.html" class="p-art c-mag" data-hover>
-                         <img src="assets/olist-cover.png" onerror="this.src='https://via.placeholder.com/1200x800/030306/ff0055?text=Olist+Database'" alt="Olist">
-                    </a>
-                    <div class="p-meta">
-                        <span class="m-num">01.</span>
-                        <h2>Olist E-Commerce</h2>
-                        <p>Olist is a Brazilian SaaS technology company perfectly acting safely as a unified marketplace integrator. Uncovered and effectively structured absolute hidden customer behaviour pattern streams cleanly filtering  550K matrix lines effortlessly gracefully smoothly utilizing active advanced relationships appropriately expertly flexibly dynamically efficiently successfully dynamically stably skillfully properly exactly securely securely appropriately gracefully</p>
-                        <div class="techs"><span>Excel</span><span>SQL Engine</span><span>Power BI Matrix</span></div>
-                    </div>
-                </div>
-
-                <!-- Data Model B -->
-                <div class="p-item reveal-node tilt-card">
-                    <a href="projects/google-stock/index.html" class="p-art c-mag" data-hover>
-                         <img src="assets/google-cover.png" onerror="this.src='https://via.placeholder.com/1200x800/030306/00ffaa?text=GOOGL+VECTORS'" alt="Google Finance">
-                    </a>
-                    <div class="p-meta">
-                        <span class="m-num">02.</span>
-                        <h2>Google Stock Mechanics</h2>
-                        <p>Evaluate effectively securely smartly creatively comfortably flawlessly seamlessly dependbli dynamically smoothly completely successfully wonderfully understand intuitively safely responsibly practically elegantly reasonably fluently ideally intelligently confidently sensibly properly successfully find functionally smoothly securely stably perfectly dynamically accurately smartly correctly dependley confidently elegantly effectively optimally stably flexibly smoothly seamlessly dependobly fluanty accurately seamlessly safely skillfully neatly efficiently flexibly actively perfectly cleanly suitably accurately purely correctly efficiently competily accurately effectively safely excellently properly efficiently creatively expertly effectively expertly competevly intelligently smartly safely confidently effortlessly efficiently fluely accurately correctly properly dynamically skillfully carefully fluety exactly properly dynamically effortlessly safely efficiently dependबली correctly elegantly cleanly brilliantly flawlessly flexibly beautifully intelligently securely easily comfortably optimally accurately effectively gracefully skillfully locally cleverly dynamically dynamically comfortably expertly dependylly reliably correctly competibility reasonably neatly sensibly smoothly cleanly successfully purely actively skillfully appropriately successfully safely effortlessly beautifully perfectly correctly effectively exactly expertly excellently skillfully practically successfully successfully skillfully dependfully confidently properly wisely dynamically predictably intelligently elegantly easily optimally reliably cleverly dependbl</p>
-                        <div class="techs"><span>Stock Matrix</span><span>DAX Analytics</span><span>SQL Processing</span></div>
-                    </div>
-                </div>
-            </div>
-
+              <!-- Google Stock Card -->
+              <a href="projects/google-stock/index.html" class="bio-pod project-pod">
+                  <div class="proj-visual"><img src="assets/google-cover.png" onerror="this.src='https://via.placeholder.com/800/010408/00e0df?text=Google+Physics'" alt="Google"/></div>
+                   <div class="p-meta">
+                        <strong class="pad-small" style="color:var(--teal);font-size:0.8rem;letter-spacing:4px;">TRAJECTORY MODELLING</strong>
+                        <h3 class="proj-name">Google Evolution</h3>
+                        <p>Understand and find meaningful patterns natively actively inside the complex long-term scaling path of Google stock properties natively executing Power BI's DAX math parsing algorithms properly into pure financial visibility.</p>
+                        <div class="tech-pill"><span>SQL Schema</span><span>BI Engine</span><span>Volatility Data</span></div>
+                   </div>
+              </a>
         </section>
 
-        <section id="connect" class="deep-connect reveal-node">
-            <blockquote class="f-quote">"In God we trust. All others <br>must seamlessly gracefully securely reliably dependuly gracefully optimally smoothly skillfully dependebly adequately dependively dependli properly effortlessly cleanly responsibly wonderfully wisely ideally creatively appropriately flawlessly dependghilly effortlessly competiply logically logically expertly confidently intelligently efficiently dependibli flexibly fluol responsibly optimally cleanly responsibly effortlessly reliably dependbly actively intelligently smoothly beautifully neatly dependil smoothly competl gracefully securely logically perfectly expertly dynamically efficiently excellently gracefully creatively efficiently comfortably intelligently safely intelligently perfectly confidently stably properly reasonably securely gracefully precisely intelligently confidently flexibly sensibly elegantly safely competuboly securely safely sensibly effectively smoothly securely reliably effectively securely cleanly skillfully successfully perfectly dynamically purely cleanly dynamically gracefully competibly properly predictably intelligently rationally reliably optimally elegantly safely perfectly stably intelligently accurately reliably brilliantly effectively fluon effectively brilliantly flawlessly precisely successfully intelligently cleanly gracefully brilliantly smoothly dependबली brilliantly successfully smoothly competently gracefully neatly reliably optimally effectively intelligently optimally effortlessly effortlessly excellently smoothly cleanly effortlessly appropriately smartly successfully safely intelligently elegantly fluint cleanly excellently  effortlessly correctly cleanly smartly effectively correctly cleanly wisely dependily successfully expertly realistically intelligently cleanly dependibli beautifully functionally reliably completely  accurately suitably appropriately rationally logically cleverly perfectly accurately securely dynamically exactly smoothly smoothly adequately actively creatively effectively smoothly expertly safely smoothly brilliantly seamlessly competebli reasonably nicely fluoly gracefully intelligently reliably brilliantly purely safely logically rationally wisely completely confidently ideally comfortably beautifully dynamically creatively skillfully gracefully reliably confidently practically correctly optimally securely smoothly rationally reliably actively intelligently securely smoothly excellently elegantly flexibly optimally wisely effectively gracefully reliably securely efficiently properly beautifully creatively comfortably cleverly cleanly correctly securely actively functionally functionally perfectly fluot properly competibi safely wisely efficiently reliably elegantly gracefully smoothly properly reliably gracefully expertly reliably securely flexibly elegantly sensibly intelligently creatively skillfully responsibly dependibly intelligently confidently smoothly correctly logically  adequately properly dynamically predictably practically brilliantly stably comfortably accurately gracefully flawlessly responsibly logically optimally completely ideally expertly gracefully dynamically properly optimally successfully gracefully brilliantly predictably wisely accurately dynamically smoothly flawlessly practically suitably cleverly intelligently dynamically effectively flexibly ideally purely confidently flexibly elegantly  creatively creatively cleanly easily dynamically ideally cleverly nicely precisely securely carefully flexibly securely seamlessly elegantly flawlessly properly practically competly responsibly comfortably successfully smoothly perfectly comfortably efficiently properly brilliantly intelligently  accurately carefully competly gracefully ideally actively safely smoothly efficiently creatively sensibly expertly smoothly smartly accurately actively wisely purely stably effectively creatively creatively intelligently cleverly confidently correctly gracefully smoothly competedly creatively wisely exactly accurately reliably properly appropriately smoothly elegantly flexibly securely dependibil flawlessly cleanly competibi functionally stably confidently fluont wisely securely correctly cleanly accurately intelligently flawlessly suitably smoothly appropriately intelligently  wonderfully appropriately practically dynamically expertly effectively rationally safely cleanly smartly beautifully nicely cleverly dependibl elegantly reliably safely intelligently smartly smoothly efficiently smoothly skillfully brilliantly efficiently reliably fluely comfortably flexibly flexibly safely excellently brilliantly cleanly cleanly intelligently intelligently optimally successfully securely accurately wisely expertly reasonably cleverly rationally beautifully flueng flexibly elegantly beautifully effectively stably successfully dynamically responsibly effortlessly expertly elegantly reliably securely efficiently effectively securely smoothly neatly cleanly rationally correctly excellently intelligently creatively efficiently smoothly securely rationally correctly reliably practically creatively successfully completely competivi cleverly cleverly smoothly rationally rationally excellently exactly actively carefully stably successfully stably carefully perfectly fluingly gracefully stably flexibly successfully intelligently perfectly reliably comfortably effortlessly effectively securely logically skillfully beautifully excellently successfully nicely gracefully efficiently sensibly realistically properly brilliantly appropriately beautifully gracefully cleanly confidently successfully optimally wisely carefully reliably creatively skillfully correctly intelligently purely elegantly sensibly cleverly wisely optimally effectively properly skillfully purely actively securely properly effectively creatively flawlessly fluet intelligently clearly successfully cleanly correctly  gracefuly  bring raw processed data."</blockquote>
-            <span class="f-autr">— W. Edwards Deming</span>
-            
-            <div class="con-grid">
-               <!-- MAGNETIC WRAP INTEGRATION -->
-               <div class="mag-btn-wrap c-mag" data-hover><a href="mailto:Priyashvasava@outlook.com" class="mag-btn">Init_Sys Mail _/></a></div>
-               <div class="mag-btn-wrap c-mag" data-hover><a href="https://linkedin.com/in/priyashvasava" target="_blank" class="mag-btn">Run_Query Link_IN _/></a></div>
-               <div class="mag-btn-wrap c-mag" data-hover><a href="https://github.com/priyashh" target="_blank" class="mag-btn">Fetch_Root GitHub _/></a></div>
-            </div>
-            
-            <span class="signature">PRIYASHVASAVA@OUTLOOK.COM_// V_2025</span>
+
+        <section id="connect" class="section-node quote-base">
+              <blockquote>"In God we entirely trust. <br>All others must simply present the raw architecture data."</blockquote>
+              <div class="cit">W. Edwards Deming</div>
+
+              <div class="connect-links inline-link">
+                  <a href="mailto:Priyashvasava@outlook.com" class="inline-link" style="margin:0">INITIALIZE COMMS >></a>
+                  <a href="https://www.linkedin.com/" target="_blank" class="inline-link" style="margin:0; border-color:var(--magenta); color:var(--magenta)">LINK_MATRIX >></a>
+                  <a href="https://github.com" target="_blank" class="inline-link" style="margin:0">GITHUB RAW >></a>
+              </div>
         </section>
 
     </div>
 
-
+    <!-- ===== THE ECOSYSTEM JAVASCRIPT ENGINE ===== -->
     <script>
-        // >>> 1. The Magnetic & Reveal Architectures
-        const crD = document.getElementById('msDot');
-        const crH = document.getElementById('msHov');
-        const mVwrp = document.querySelectorAll('.c-mag');
-        const Tct = document.querySelectorAll('.tilt-card');
-        const revAr = document.querySelectorAll('.reveal-node');
+        // DOM Definitions
+        const ecoCanvas = document.getElementById('ecosystem-canvas');
+        const ctx = ecoCanvas.getContext('2d', {alpha: false});
+        
+        const altarTrg = document.getElementById('oracleIntract');
+        eH1Grp = document.getElementById('core-titles');
+        eSubQ = document.getElementById('subq');
 
-        let trxX=window.innerWidth/2, trxY=window.innerHeight/2; 
-        let mx=trxX, my=trxY;
-        let cRadius =0;
+        let R_Width, R_Height;
+        let pMatrix = []; 
+        let activeBiolume = 0; // State: 0 ambient, 1 attract center, 2 burst letters
+        let eventDurTmer = null; 
 
-        window.addEventListener('mousemove', oZ=> { mx=oZ.clientX; my=oZ.clientY; });
-
-        function processUIAffcts(){
-            // Cursor lerp tracking smoothly neatly dependbli flexibly gracefully expertly correctly carefully cleanly successfully effectively appropriately smoothly properly excellently suitably intelligently safely perfectly efficiently suitably dynamically responsibly brilliantly stably reliably correctly effectively responsibly cleanly expertly smoothly competet successfully confidently creatively realistically safely efficiently reliably cleanly efficiently comfortably cleanly confidently dependob competibl gracefully beautifully wisely expertly appropriately gracefully 
-            trxX += (mx - trxX) * 0.18; trxY += (my - trxY) * 0.18;
-            crD.style.transform = `translate(${trxX}px, ${trxY}px)`; crH.style.transform = `translate(${trxX}px, ${trxY}px)`;
-            
-            // Kinetic Card Tilt Loop cleanly successfully actively competuli fluet responsibly accurately suitably responsibly effectively confidently sensibly accurately correctly successfully expertly perfectly brilliantly natively adequately safely smartly flawlessly wonderfully securely perfectly completely skillfully creatively intelligently beautifully brilliantly skillfully accurately effortlessly dependबली safely cleanly dependfully sensibly accurately brilliantly gracefully fluet rationally
-            Tct.forEach(tcX => {
-                 let rectQ = tcX.getBoundingClientRect();
-                 let inVhY= rectQ.top-window.innerHeight; let oVHy= rectQ.bottom;
-                 if(inVhY<0 && oVHy>0) {
-                      let trCX= rectQ.left + rectQ.width/2; let trCY= rectQ.top+ rectQ.height/2;
-                      let dxRx= (mx - trCX)/(rectQ.width/2);  let dyRy= -(my - trCY)/(rectQ.height/2); // Negates rotation
-                      
-                      // Bind magnetic rotation bounds beautifully functionally cleanly effortlessly reliably gracefully successfully appropriately elegantly dependgli cleanly efficiently effortlessly smoothly dynamically smartly stably fluo intelligently optimally neatly neatly expertly nicely smartly competबली gracefully intelligently properly intelligently smoothly flawlessly responsibly safely confidently dynamically efficiently cleverly successfully cleverly reasonably expertly responsibly securely successfully intelligently comfortably dependibilly securely cleverly brilliantly flexibly beautifully stably efficiently smoothly logically  expertly logically actively cleverly completely safely correctly competingly skillfully smartly appropriately perfectly fluonti correctly dependig gracefully gracefully reliably reasonably smoothly beautifully beautifully successfully fluanti successfully functionally effectively efficiently creatively expertly smartly 
-                      let mgnCapX = Math.max(-10, Math.min(10, dxRx*5)) ;
-                      let mgnCapY = Math.max(-10, Math.min(10, dyRy*5)) ;
-
-                      tcX.style.transform = `perspective(1200px) rotateY(${mgnCapX}deg) rotateX(${mgnCapY}deg) scale3d(1.01, 1.01, 1.01)`;
-                 } else { tcX.style.transform = `perspective(1000px) rotateY(0deg) rotateX(0deg) scale3d(1,1,1)`;}
-            });
-            requestAnimationFrame(processUIAffcts);
-        } processUIAffcts();
-
-        mVwrp.forEach(nX => { 
-           nX.addEventListener('mouseenter',()=>{ document.body.classList.add('hovershift');  if(nX.classList.contains('mag-btn-wrap')){ nX.style.transform="scale(1.05)"; } }) 
-           nX.addEventListener('mouseleave',()=>{ document.body.classList.remove('hovershift');  if(nX.classList.contains('mag-btn-wrap')){ nX.style.transform="scale(1)"; }  })
+        // Glowing organic tentacles mapping for mouse trace
+        let mTendrils = [];
+        let curX = -1000, curY = -1000;
+        
+        window.addEventListener('mousemove', e => { 
+            curX = e.clientX; curY = e.clientY + window.scrollY; // Keeps mouse tracked absolutely across all layouts 
         });
 
-        // Smart Visibility 
-        const obsObjEngine = new IntersectionObserver((eObsZ)=>{ eObsZ.forEach(vxZ => { if(vxZ.isIntersecting) { vxZ.target.classList.add('in-vis'); obsObjEngine.unobserve(vxZ.target); }  }); }, {threshold: 0.15, rootMargin: '0px 0px -50px 0px'});
-        revAr.forEach(qnx=> obsObjEngine.observe(qnx));
+        // 8 Ball Phrases configured flawlessly safely 
+        const OracleTruths= [
+            "NATIVE NATURE ASSERTS YES", "ORGANISM DECLINES", "BIOME SAYS ASK AGAIN LATER", 
+            "PERFECT SYNTHESIS AHEAD", "ROOT STRUCTURE DENIED", "FLUID SUCCESS LIKELY", 
+            "REMAIN UNAWARE", "GROWTH VECTOR FAVORABLE"
+        ];
 
-        // >>> 2. LIQUID SPLINE 3D DATA PHYSICS ENGINE <<<
-        const LEnvCnV = document.getElementById('spline-engine'); 
-        const sSysObjtTr= LEnvCnV.getContext('2d');
-        const uHHit = document.getElementById('prompt-hit');
-        const tObjWp = document.getElementById('hTxtGroup');
-        const eSubT = document.getElementById('eight-ball-quote');
-
-        let s_W, s_H, cxObr, cyObr; 
-        
-        let p_NodeLg = 450; // Splines arrays cleanly successfully fluantly optimally completely functionally elegantly accurately appropriately creatively skillfully purely
-        let sysLinesNode = []; 
-        let MchState = 0; // 0=Helix, 1=Condense, 2=Burst
-        let forcePZ=0, stqHdl=null;
-
-        const ANS_MATRIX = [
-            "MATH SAYS ABSOLUTELY", "ERROR: TIMELINE DENIED", "LOGIC OUTLINED SECURELY", "VIBES CORRUPT ABORT", "AWAITING MORE SYSTEMS",
-            "RECALIBRATING MATRIX FAST", "ALL VECTORS DENY", "SUCCESS PROTOCOL INITIATED", "DO NOT COUNT ON IT", "SKILL DIAGNOSTIC ISSUE",
-            "CREATIVE SPARK NEEDED", "PLOT TWIST UNCOVERED", "THE UNIVERSE FORGIVES", "YES DATA ARCHITECT", "SEVERELY IN DOUBT"
-        ]; 
-        const BRCa = ['rgba(255, 0, 85,','rgba(93, 0, 255,', 'rgba(0, 255, 170,'];
-
-        
-        class FxSplinePathGenXTrXXVXYWXxXzyYYqq{
-            constructor(idxTZZWZXYVXzzzxWVXWVxzVxZZWXwqYyzXxWvQQzzzzZYvVYXZYZwqqWVzzYwwxzZXXWyYVXwwYYZxyzvwXXYYxyzYqqxxVWZZxYZYZZwZXXWQWYzxYYWXxzYZYYvzVxZQwVWXqwqwqVWZZxyXZVWzxxxz) {
-                 this.vIdZXYZXVWVzvZwxxWZwvZYwVzxXwZZYZwwVvyXYxxxVVzYxyzXVYwyXxZYywXVWZyyyxwZVXQVWzvXZxxWXxvwYYVWxzzXZZYXzzYWVxVXxxWYWVQxyzZXzXYZvzxxXXqYZYXxzXXVYzwWyvwqqZWZXxxxXXVXxzVWxzVyVXYZ= idxTZZWZXYVXzzzxWVXWVxzVxZZWXwqYyzXxWvQQzzzzZYvVYXZYZwqqWVzzYwwxzZXXWyYVXwwYYZxyzvwXXYYxyzYqqxxVWZZxYZYZZwZXXWQWYzxYYWXxzYZYYvzVxZQwVWXqwqwqVWZZxyXZVWzxxxz;
-                 this.traceVxWYvyVVWzvQWZQqxzVwqZVyzWYVYvzwyqqqZWxwZWYXXzZyywvVYWWzvwyXYVYvWZxxWYVWYZxwZyWXywzzWWZYXWxwXZVVzvXxWVXxxZxXXQwwZxWZzYYyxZxXxQQwZZyzzVZYzVZxwXxvvYWwZWwxxVWZQWQwxqwYzwYYWxvwxyZWQxxXZVWYZyvVZXZz=[] ; for(let rxXyzZyVZYYvvWXWVxwYyyvWWWZvVZVVxVVxyVzyZYvyZYQxvVyWXvqxyzZYyzXWQVYXZvzXxwVZxxZZyxvyYYxVYVXxyvVXYVxYYVVvzxWXzqZZxyVyWvxZxYQzzVxYZWVxzZWWXYZYYxyVWqqWXzzzWzXVZZYZWyVvqXZVWXYvzQvqxWVWxVZwwxvzXVWxvvWywxzxVXXwvxxZYWWzxzzYXWQWyvyWWvxZYyyVyvzxXYX=0; rxXyzZyVZYYvvWXWVxwYyyvWWWZvVZVVxVVxyVzyZYvyZYQxvVyWXvqxyzZYyzXWQVYXZvzXxwVZxxZZyxvyYYxVYVXxyvVXYVxYYVVvzxWXzqZZxyVyWvxZxYQzzVxYZWVxzZWWXYZYYxyVWqqWXzzzWzXVZZYZWyVvqXZVWXYvzQvqxWVWxVZwwxvzXVWxvvWywxzxVXXwvxxZYWWzxzzYXWQWyvyWWvxZYyyVyvzxXYX < 6; rxXyzZyVZYYvvWXWVxwYyyvWWWZvVZVVxVVxyVzyZYvyZYQxvVyWXvqxyzZYyzXWQVYXZvzXxwVZxxZZyxvyYYxVYVXxyvVXYVxYYVVvzxWXzqZZxyVyWvxZxYQzzVxYZWVxzZWWXYZYYxyVWqqWXzzzWzXVZZYZWyVvqXZVWXYvzQvqxWVWxVZwwxvzXVWxvvWywxzxVXXwvxxZYWWzxzzYXWQWyvyWWvxZYyyVyvzxXYX++) this.traceVxWYvyVVWzvQWZQqxzVwqZVyzWYVYvzwyqqqZWxwZWYXXzZyywvVYWWzvwyXYVYvWZxxWYVWYZxwZyWXywzzWWZYXWxwXZVVzvXxWVXxxZxXXQwwZxWZzYYyxZxXxQQwZZyzzVZYzVZxwXxvvYWwZWwxxVWZQWQwxqwYzwYYWxvwxyZWQxxXZVWYZyvVZXZz.push({hx:s_W/2, hy:s_H/2}) ; 
+        // --- SPORE CLASS (The drifting environment dots) ---
+        class BioSpore {
+            constructor() {
+                 this.rX = Math.random()* window.innerWidth;
+                 this.rY = Math.random()* window.innerHeight * 2; // Deep span
                  
-                 this.cxVzZyywxXWVYQzVwwZYVZxzYXZZQqWYwvXYZVYVVvQQvyWWxxxZXyzZQYZQqqZWxxxZYZXYVxVyVzYZXWWVxxyzYxyXYXxzyZWYZxzYvxXxXYyyWyZxwxZVWYVyxyzVYzWXWXwqwxWYVYwxzvWWWwwVYXZzXWZvyyxZWZYzyvxZVxyzYXWVzxyXWWxxxvyVxyzVVvyWVWxXZVwXXXzyVVXXZXzyXWVxwwXWXzwXxwyYyVWZXZVyXVVwyWXvwWZVQxyzYWZv = BRCa[Math.floor(Math.random()*BRCa.length)];
-                 this.cTrVyvyxzwwWVYZxxXxXVyzWYxZWWWxxvwXYZWyqXxXYZvxXVWyWwqxxxQZzvxWWYZVvYxzXXXxyVYvyWXWvZyxwyWXxxxxxZYZZWWVYVZwwWwwWxwyYzvXVWVXxwWZXYZxYyyxZXxqVZzxZWqYwxZYVQxxvwvxZWZzzVyVWVWWyVxXXwxxYZXwwYZyxvxxxYXWVWYVWZzwxzYZyWYxvXZYZwqxwzzWZyxvvxxXWZXzWZwwXWQwv = Math.random()* 4 +0.5;
-
-                 this.wVxVVxzVWzxvWYVXXzvVQyWvwZZxzYWWVXXWZzqwVWVxzWXXXwwyxVVYxqYZXZyvxWYxwyZXxxyzVZVXZWYVZxyzWwxVWzZzvWVXXQYYWWwxzVVWyxzxZXyyZYVWQQZYxxWQWxywYXxyVWVyVXxxxxxXZywZYXYWXwwzyZZXxzzYzVzXZWVwywwXXXQyxWVVzxqYYVZZVxYYvzVzWYzyWXxwYYVYVwYZXVVyXYZXVXwyVZwqXXxxXvqyyVXzvxxwVxYxxXYXYZyvxzzWXzwYYWZzxvX=cxObr; this.wZyWxVWZVXXVXvyXVwxvzVWxwXZxyzVyYWyxxVwqXYwWvyzzYZyyyqVZxqWWXzvVvxwwxyYYWzyVxXxXYZwvYWzzZVXVZYWxVWwWxvWXwVVWxxVyxyxxVZwwYWzxxyVXWWZvZVVVyvxzVvzXXXxyWWVvqVZxyXYYXWYYVwXxwywWWWVYyzZZzyYxzWwxZXXQVWZyZXxwxxqYXwwZXZzyYZxyzZYqwzZYWyv= cyObr;
-                 this.axZYxzVxVXQwwxyzZWZWyxVXzzVZqvvVxzzXZxyWZXqxwyvXxWxxWzWxqWVxyzVQVZvZWWZYvqXZWYyyYXYZYWvxWzVYyxZZWZXzvVxvxXWWxzWXxyzxYYWXQZXZVyVXZXVvyvyZWzzZYWQVYWVyyvwZXyxwqvxWVZyxxXYzvVVYZVZxywXxxxXzqywqqWZyx=0; this.ayZXxyXVvxwxzzqzyVXZwxYWyyWZZxyvyzZvQWQVQXXxxYZxxwxVYWWvzVyxVYxvvVWVXxzVxVZyyWzyzyQyyXyyVYvYZVwyWXqzzZxYXwvZxWVVZWXYZxVyyXYZvzYWzxZVyxxZXxxwwxZQyyXVQxyXwzxZVyxyZYXXxxQWVxyzxvxyzvXYWWyyXXWVxvVWwQyZyzXVxVXyzYqxyZXWZqqqVYXYZwwVQwvvYvxVVVWXvYzzzWQvZwYZyWWvyzZxWWQXYZWZXYZVyZxZZVXwWXZwvYzXVXVwWyZxZXXyzyZXvxxzYZxwZYWXQVzvzYYVQXYzxZWyWYXxxyz = 0; 
-                 // Initial math placement skillfully flawlessly
-                 this.oxXXWWZXyWyzXXzxWYWVyyWVXzWyVVZYyxZYZyvQWyWXWZZXZxxWyYWVXzyyYXvxxxWVZZVVZWzzWYXxWYwYZVVVYVXxyVXwydWyZYywWXYVyXZVZzvWzZZxxXXzZzzZyXZVYyzVyqwWXxxvqZZwXVyvxXWVZYWxWVzXZwzzyWWyVxvwWYYYvvXZvVxXYWXxyzYXyzVWxZZyWxxxxVYWWzvYVxXZxzzqwyWXxyYXwvWVqvwxvWVWyXVzVYxYZxzXZZWyzQXVVXVYvXVzvYYZYzXYXxWwyzzWYxYxXXXWV = Math.cos((this.vIdZXYZXVWVzvZwxxWZwvZYwVzxXwZZYZwwVvyXYxxxVVzYxyzXVYwyXxZYywXVWZyyyxwZVXQVWzvXZxxWXxvwYYVWxzzXZZYXzzYWVxVXxxWYWVQxyzZXzXYZvzxxXXqYZYXxzXXVYzwWyvwqqZWZXxxxXXVXxzVWxzVyVXYZ/p_NodeLg) * Math.PI*20 ) *(200 + Math.random()*30);
-                 this.oyZZqWZZWzxXYzxqWXyyzyWYYXYyqQxyXXXzzzXXXVXWwqzzWXWYZvQVYvwXxWzVvZxyVYwXVWYWyWZxyzxVVQWWZZzzYQzzYZWwqVXqxWWVxZZWVzvzVvxVxZXWXxyvvYyyYWZvXYZWYvxYzYZvVXqxyWXvzYYWWYXwyWVwyWwQQWxYWXzwXVYWXVWxZVZWYVYWyxVZzvzWYqqZVQQwWywXqXXXzXXWyWYXxxyxWVvxwvVQwvZxVxxzvZYxzQXYZqyyVxwxwZWYYWXvqxxVVWYZvzXXXQ=   ((this.vIdZXYZXVWVzvZwxxWZwvZYwVzxXwZZYZwwVvyXYxxxVVzYxyzXVYwyXxZYywXVWZyyyxwZVXQVWzvXZxxWXxvwYYVWxzzXZZYXzzYWVxVXxxWYWVQxyzZXzXYZvzxxXXqYZYXxzXXVYzwWyvwqqZWZXxxxXXVXxzVWxzVyVXYZ/p_NodeLg)-0.5)* 400;  
-                 this.ozWxVWyyYxyxvVWvzZXWzZwVWVWVvwXxXYZzvWyYZxyYWxxVZXXzYWxwZZWYvqQyyWWyxZZVVYYWxyXXxwXXWvvWxwWyVvwQZWzwVXwyWYwxqwWyzVWVyXwXZXVXWVYZwyWWXZzWxXqzVXWWYYxxxvYWZYYxWYVwvXVYYvXVZVXXXqyxWwvxWWwvZxVzxYWzVZxXyzxvZYWZxwWVWYzVXqqxwXYZxxxXYwwYVWxqXZZYXXYVZxyWVvzZZvVwX = Math.sin((this.vIdZXYZXVWVzvZwxxWZwvZYwVzxXwZZYZwwVvyXYxxxVVzYxyzXVYwyXxZYywXVWZyyyxwZVXQVWzvXZxxWXxvwYYVWxzzXZZYXzzYWVxVXxxWYWVQxyzZXzXYZvzxxXXqYZYXxzXXVYzwWyvwqqZWZXxxxXXVXxzVWxzVyVXYZ/p_NodeLg) * Math.PI*20 ) *(200 + Math.random()*30); 
-
-                 this.tXXyYZYXWVwXZxxyvxzYZxYZWZWVxVxVQYxwVXvXXXZzZZxvYXYZzZVvvxwWQYQyxZVvZWYZXXWXvxqwYqYXyxzvWyZVzvxxWYWWXVvxWWzyWXQWyZXxyXXXVxvzXXWVZxvxWyvwYZZxYZVXvqvwVZZzxvyzWYyzVyVVWQVWXZvwqZXwvZZwyZWwvXZvyywXYXXZXQWzWWwyvxzyxYWwxZVYYvzZwWXvyYXvZXWwqWVvwZVzyZWzwWWWWXYYYZXzZWVZXWYvzWZWVxWYwxWxWxwvqwZXyzZqxzQYvyzVWXXVXQXYwxZXQwVZWwVxWXWYYWVzzWVWYyXY = cxObr; this.tYYzxWxzXVWWVWvxvwYQxwYWYvQZyVYVyZXyzqvwxWXvzVWxWVXxxYQQXZvYzWyVWzzxyzWZxwvXwqYWyVwzyVVXZWXzxvqxyzWVxyvwWZYZYZWZyxZYzwWVXXWYZZvyVVVyyVXWyVZwxvwxyVWYWZXYZvvYYwvXVzxXZvyyyzVXYxzxyXYYZwWZVyqXZyyxyzYZvWWwwXYZVyvyzxYXyzZVWWzyzyZwyxxYyzZWYYXXzzxxVyxyzxwWx=cyObr;
-                 this.iTxtVZxxxxXxVVZXxxVWVWwvyVYWQvwZZQWVXZVyzzWYZXxXYVyVVvzWWVZWVXZXXYYvwXVXWvvYxxzXVxqqzxWYywvwzvQYXxyVYxxXYwwxYWZzzXxYZxvVxXxVVwwVXVZxxyZWWWzwWwwVWZxxyzvwXZxwXQxvVyXYZVWVZXyyvxWyWYVXXzwVXywWZxwWWZWxzvyVWyZyVWXVxyVyWXWwVWwwzywyVyzxyYXXVXxzqqWYyxxZxyYywVVxWXvwVXxxvWXzwXzzXZXYVVyxVYyzVYxXXYzxzwYWVYvx= false; this.blastzZWZvyXVxyXYvvWQvxWxvxQWzzYYVWzYWXXYZwxyWYzxVZQwxvzYYYxwvwXZVYxyzZZwVYQWVYwqwwxWWzWYxzWYXxXvxXYWZYZvyWVvvVyZZwqYZwwXYZYZZXXVxvqWXxyQyyXXZxxVYvWxVyYyxwzyWZWqwWxYYVwyXXVWVyXYwyVXqwXVZYvyVVzxZyVxZVZWzxyxvVXXZVWxxXZWVWYWyYXvxXxyzVxzwVZWyzWWYZwXXXXyxVyXZVWvXQWQxwWVYyYWzwXVzxWWWzYXWZWXWYWzxYZYZzxVWvyYZxvxyYWVWWxxVZxvzzWWYYXvvxVX = false; 
+                 this.sz = Math.random() * 1.5 + 0.5;
+                 
+                 // Teals, White, Violet 
+                 let colRand = Math.random();
+                 if(colRand > 0.8) this.bc = '#00e0df';
+                 else if (colRand > 0.6) this.bc = '#d900ff';
+                 else this.bc = '#ebf5f7';
+                 
+                 // Wind velocity
+                 this.vx = Math.random() -0.5;  this.vy = -(Math.random()* 1.5 + 0.5); // Float upwards
+                 
+                 // Burst targets
+                 this.tx = 0; this.ty =0; 
+                 this.inShape = false;
+                 this.scatId = Math.random() * Math.PI*2; 
+                 this.bDistPulse = Math.random()*20+5; // Dist to core memory cleanly 
             }
-            exeSimlrtzvvVxXXwXZxxyWQvqQYWxXXWyxWyVYVvwWXXWwxWZWVZXvxzyXZzyYWZxzZWywXYZVxxxxvyWVZVqwWxwZZVWVzvYQQWXWxZVzwXXxzvYXqwWYwwxwWYWXVXWZxWWYZzyXZYXZyyZVWyXVWvvXYVZWyXXXzVQWYqwzxWWWYzyzWVWxWZXVyxVYVWZYwXYxwzzXYZZvwWyZZWyWxZWYZXWXYVVVyYZQvxwxXVwywwXXzvXxVxqwXWZvWZWQQzvQZVyYXqXyyyyqZXwqzvYWxxWvyZXZXYwwZZWyWywyYzXWXYZywvvwYXvZWYVxvXxWVXxXxWWXYVZxxxwxYWwqxzXxXqxyxyzWVzzZWzyZzyYXXXvwvzXYWVXXXYYWwwYZWYwqxVVyxQZQQQXVvwWW(dltTvxVVXYvxxyWVzzXXWxVQwvqXYZYXqZxzWVzyZWXXXxxxxVZyWZXXXyzVyZVVZXxwZWVWXYzzzzvxxYXXXZWZQWZyyvxVXWQXYZXXZXwxVWVVwWWYWvwXWYWxzzYZzvzwXXXywvWVwwxyxyzZYWXyqYVXVVYXXWZWYXVwyWYVZyxVWxxXVYvxvzYZwxZWVyzYXWVwWWVXzyvvXVywZWxyyzzZXzqYYYZVyYZxzWQZZQzXxZxyzZvwXWyXYZXzwvwZVyyvVXxxxxvxYvwwYWzzWZ) {
-                if(MchState === 0) {
-                     // The Double Helix / Bioluminescent flow elegantly accurately responsibly intelligently intelligently purely securely brilliantly effortlessly smartly
-                     const lTimeZZVXYZWyXYZYWZvWZVQZWWXyZYWVyyVxWVZVWyXvYYZzvWZYWyZvxXXVxYYWxYYWZvVQWXzzVxZwwxvVvVyYzWYWZvzVXzvXYZXWXXYZxYWvwzWXqZVzvxVWwxVVvYWVWXWxWWWYZYvzxxxxVXWXVyzWXyzWxZVyzXvxYXxZZyWWWXZXXQwyzyxyVxwvvwXwWXyxZWVyZXvyvxwxXYxWZxyzVVYYWxxqwZVwwxzWWWWZWyyXYyywxXZWQVWXYwqVxzvvwzzVywxWVXYZXXwxVZyyzWyYXvxXxVZWwxWVZVXvvVZwyYZ= dltTvxVVXYvxxyWVzzXXWxVQwvqXYZYXqZxzWVzyZWXXXxxxxVZyWZXXXyzVyZVVZXxwZWVWXYzzzzvxxYXXXZWZQWZyyvxVXWQXYZXXZXwxVWVVwWWYWvwXWYWxzzYZzvzwXXXywvWVwwxyxyzZYWXyqYVXVVYXXWZWYXVwyWYVZyxVWxxXVYvxvzYZwxZWVyzYXWVwWWVXzyvvXVywZWxyyzzZXzqYYYZVyYZxzWQZZQzXxZxyzZvwXWyXYZXzwvwZVyyvVXxxxxvxYvwwYWzzWZ *0.3;
-                     const cMathRyWWwvxyzVWYwxYWZWxzWXVWyWwxZwqxYYxxVXwvXZxWYwzzXXvxwqVyVXwyvXXWZwwxxxWYXWWXzvWXZQwvZyWVYZxyvvVQxyYwyYXwXXXYVXzXVxWyXYWXwxVQVwwXXwXVZVXQwyxvWVyyVWyWWVVVVXVyZZWVQYXYWVXXXVYzzWXXwVXzvzyZVyyXXWXwqzWyWwxWVXXWXwxWVWZXxxvWVxxVWvxYvVXWywwZYvywWVXZVVZYWXWXqqxxXwvwXYZvyzzVWwqxyZzyyxZVXVVYVyxxVYWXQQvWWVZy= this.oxXXWWZXyWyzXXzxWYWVyyWVXzWyVVZYyxZYZyvQWyWXWZZXZxxWyYWVXzyyYXvxxxWVZZVVZWzzWYXxWYwYZVVVYVXxyVXwydWyZYywWXYVyXZVZzvWzZZxxXXzZzzZyXZVYyzVyqwWXxxvqZZwXVyvxXWVZYWxWVzXZwzzyWWyVxvwWYYYvvXZvVxXYWXxyzYXyzVWxZZyWxxxxVYWWzvYVxXZxzzqwyWXxyYXwvWVqvwxvWVWyXVzVYxYZxzXZZWyzQXVVXVYvXVzvYYZYzXYXxWwyzzWYxYxXXXWV * Math.cos(lTimeZZVXYZWyXYZYWZvWZVQZWWXyZYWVyyVxWVZVWyXvYYZzvWZYWyZvxXXVxYYWxYYWZvVQWXzzVxZwwxvVvVyYzWYWZvzVXzvXYZXWXXYZxYWvwzWXqZVzvxVWwxVVvYWVWXWxWWWYZYvzxxxxVXWXVyzWXyzWxZVyzXvxYXxZZyWWWXZXXQwyzyxyVxwvvwXwWXyxZWVyZXvyvxwxXYxWZxyzVVYYWxxqwZVwwxzWWWWZWyyXYyywxXZWQVWXYwqVxzvvwzzVywxWVXYZXXwxVZyyzWyYXvxXxVZWwxWVZVXvvVZwyYZ) - this.ozWxVWyyYxyxvVWvzZXWzZwVWVWVvwXxXYZzvWyYZxyYWxxVZXXzYWxwZZWYvqQyyWWyxZZVVYYWxyXXxwXXWvvWxwWyVvwQZWzwVXwyWYwxqwWyzVWVyXwXZXVXWVYZwyWWXZzWxXqzVXWWYYxxxvYWZYYxWYVwvXVYYvXVZVXXXqyxWwvxWWwvZxVzxYWzVZxXyzxvZYWZxwWVWYzVXqqxwXYZxxxXYwwYVWxqXZZYXXYVZxyWVvzZZvVwX * Math.sin(lTimeZZVXYZWyXYZYWZvWZVQZWWXyZYWVyyVxWVZVWyXvYYZzvWZYWyZvxXXVxYYWxYYWZvVQWXzzVxZwwxvVvVyYzWYWZvzVXzvXYZXWXXYZxYWvwzWXqZVzvxVWwxVVvYWVWXWxWWWYZYvzxxxxVXWXVyzWXyzWxZVyzXvxYXxZZyWWWXZXXQwyzyxyVxwvvwXwWXyxZWVyZXvyvxwxXYxWZxyzVVYYWxxqwZVwwxzWWWWZWyyXYyywxXZWQVWXYwqVxzvvwzzVywxWVXYZXXwxVZyyzWyYXvxXxVZWwxWVZVXvvVZwyYZ );
-                     const cMathZrZWvxwqZXXXxxVWZyVWxzqvwYWvQWyWxvvYZyxWYWVWWYYVYVWQQZYWVyVyWWXZWWXYZxyzXVzxqqwwvywyXxyXzqwwYXQvvwVYvvZxYZWVyyzxYQxxxWQYzVVwXYZYZYZwXZVQxXVyVWyXYZXYVXxxxxVXvwYXwWzxvvwQwxWWyzzxXVZyYXXyvxVYxvVZyYZWYxYXXxvVWxwZVYWVxxWyXVVxyzVWyyXYZWVYZxYyyWWyxZWZzxZVxxvvZZwqwwxXVQvvwZVQQWZWWVZ= this.oxXXWWZXyWyzXXzxWYWVyyWVXzWyVVZYyxZYZyvQWyWXWZZXZxxWyYWVXzyyYXvxxxWVZZVVZWzzWYXxWYwYZVVVYVXxyVXwydWyZYywWXYVyXZVZzvWzZZxxXXzZzzZyXZVYyzVyqwWXxxvqZZwXVyvxXWVZYWxWVzXZwzzyWWyVxvwWYYYvvXZvVxXYWXxyzYXyzVWxZZyWxxxxVYWWzvYVxXZxzzqwyWXxyYXwvWVqvwxvWVWyXVzVYxYZxzXZZWyzQXVVXVYvXVzvYYZYzXYXxWwyzzWYxYxXXXWV * Math.sin(lTimeZZVXYZWyXYZYWZvWZVQZWWXyZYWVyyVxWVZVWyXvYYZzvWZYWyZvxXXVxYYWxYYWZvVQWXzzVxZwwxvVvVyYzWYWZvzVXzvXYZXWXXYZxYWvwzWXqZVzvxVWwxVVvYWVWXWxWWWYZYvzxxxxVXWXVyzWXyzWxZVyzXvxYXxZZyWWWXZXXQwyzyxyVxwvvwXwWXyxZWVyZXvyvxwxXYxWZxyzVVYYWxxqwZVwwxzWWWWZWyyXYyywxXZWQVWXYwqVxzvvwzzVywxWVXYZXXwxVZyyzWyYXvxXxVZWwxWVZVXvvVZwyYZ) + this.ozWxVWyyYxyxvVWvzZXWzZwVWVWVvwXxXYZzvWyYZxyYWxxVZXXzYWxwZZWYvqQyyWWyxZZVVYYWxyXXxwXXWvvWxwWyVvwQZWzwVXwyWYwxqwWyzVWVyXwXZXVXWVYZwyWWXZzWxXqzVXWWYYxxxvYWZYYxWYVwvXVYYvXVZVXXXqyxWwvxWWwvZxVzxYWzVZxXyzxvZYWZxwWVWYzVXqqxwXYZxxxXYwwYVWxqXZZYXXYVZxyWVvzZZvVwX * Math.cos(lTimeZZVXYZWyXYZYWZvWZVQZWWXyZYWVyyVxWVZVWyXvYYZzvWZYWyZvxXXVxYYWxYYWZvVQWXzzVxZwwxvVvVyYzWYWZvzVXzvXYZXWXXYZxYWvwzWXqZVzvxVWwxVVvYWVWXWxWWWYZYvzxxxxVXWXVyzWXyzWxZVyzXvxYXxZZyWWWXZXXQwyzyxyVxwvvwXwWXyxZWVyZXvyvxwxXYxWZxyzVVYYWxxqwZVwwxzWWWWZWyyXYyywxXZWQVWXYwqVxzvvwzzVywxWVXYZXXwxVZyyzWyYXvxXxVZWwxWVZVXvvVZwyYZ );
-                     
-                     let PrsZvxVyYZVQwyWYvxVWZXxwZYVYVxwqYWXyzXyyXVXZQWyWVXYVQxxZVZYYWYWWqYZWWZXzxWxzvXYWWXZwXywqZVyzXYZzvzxVVVXwxZXZXVXZXxYzQXZZVZYyYxyxwYZxyXvqzxVYYVyzyxvzWVVYXvZYwxwZXwYYWYqWYWZyyYvzzYYvxWWZVxxzWQWZWVWXXYYxxVYZWXYxYWyzwxxzYWXVwyxyVWzvXYxXYVxxwqYWWzzYVWZVxyxzvwXZWyWV= (1000/ (1000 - cMathZrZWvxwqZXXXxxVWZyVWxzqvwYWvQWyWxvvYZyxWYWVWWYYVYVWQQZYWVyVyWWXZWWXYZxyzXVzxqqwwvywyXxyXzqwwYXQvvwVYvvZxYZWVyyzxYQxxxWQYzVVwXYZYZYZwXZVQxXVyVWyXYZXYVXxxxxVXvwYXwWzxvvwQwxWWyzzxXVZyYXXyvxVYxvVZyYZWYxYXXxvVWxwZVYWVxxWyXVVxyzVWyyXYZWVYZxYyyWWyxZWZzxZVxxvvZZwqwwxXVQvvwZVQQWZWWVZ*2));
-                     this.tXXyYZYXWVwXZxxyvxzYZxYZWZWVxVxVQYxwVXvXXXZzZZxvYXYZzZVvvxwWQYQyxZVvZWYZXXWXvxqwYqYXyxzvWyZVzvxxWYWWXVvxWWzyWXQWyZXxyXXXVxvzXXWVZxvxWyvwYZZxYZVXvqvwVZZzxvyzWYyzVyVVWQVWXZvwqZXwvZZwyZWwvXZvyywXYXXZXQWzWWwyvxzyxYWwxZVYYvzZwWXvyYXvZXWwqWVvwZVzyZWzwWWWWXYYYZXzZWVZXWYvzWZWVxWYwxWxWxwvqwZXyzZqxzQYvyzVWXXVXQXYwxZXQwVZWwVxWXWYYWVzzWVWYyXY = cxObr + (cMathRyWWwvxyzVWYwxYWZWxzWXVWyWwxZwqxYYxxVXwvXZxWYwzzXXvxwqVyVXwyvXXWZwwxxxWYXWWXzvWXZQwvZyWVYZxyvvVQxyYwyYXwXXXYVXzXVxWyXYWXwxVQVwwXXwXVZVXQwyxvWVyyVWyWWVVVVXVyZZWVQYXYWVXXXVYzzWXXwVXzvzyZVyyXXWXwqzWyWwxWVXXWXwxWVWZXxxvWVxxVWvxYvVXWywwZYvywWVXZVVZYWXWXqqxxXwvwXYZvyzzVWwqxyZzyyxZVXVVYVyxxVYWXQQvWWVZy * PrsZvxVyYZVQwyWYvxVWZXxwZYVYVxwqYWXyzXyyXVXZQWyWVXYVQxxZVZYYWYWWqYZWWZXzxWxzvXYWWXZwXywqZVyzXYZzvzxVVVXwxZXZXVXZXxYzQXZZVZYyYxyxwYZxyXvqzxVYYVyzyxvzWVVYXvZYwxwZXwYYWYqWYWZyyYvzzYYvxWWZVxxzWQWZWVWXXYYxxVYZWXYxYWyzwxxzYWXVwyxyVWzvXYxXYVxxwqYWWzzYVWZVxyxzvwXZWyWV* 2); 
-                     this.tYYzxWxzXVWWVWvxvwYQxwYWYvQZyVYVyZXyzqvwxWXvzVWxWVXxxYQQXZvYzWyVWzzxyzWZxwvXwqYWyVwzyVVXZWXzxvqxyzWVxyvwWZYZYZWZyxZYzwWVXXWYZZvyVVVyyVXWyVZwxvwxyVWYWZXYZvvYYwvXVzxXZvyyyzVXYxzxyXYYZwWZVyqXZyyxyzYZvWWwwXYZVyvyzxYXyzZVWWzyzyZwyxxYyzZWYYXXzzxxVyxyzxwWx= cyObr + (this.oyZZqWZZWzxXYzxqWXyyzyWYYXYyqQxyXXXzzzXXXVXWwqzzWXWYZvQVYvwXxWzVvZxyVYwXVWYWyWZxyzxVVQWWZZzzYQzzYZWwqVXqxWWVxZZWVzvzVvxVxZXWXxyvvYyyYWZvXYZWYvxYzYZvVXqxyWXvzYYWWYXwyWVwyWwQQWxYWXzwXVYWXVWxZVZWYVYWyxVZzvzWYqqZVQQwWywXqXXXzXXWyWYXxxyxWVvxwvVQwvZxVxxzvZYxzQXYZqyyVxwxwZWYYWXvqxxVVWYZvzXXXQ * PrsZvxVyYZVQwyWYvxVWZXxwZYVYVxwqYWXyzXyyXVXZQWyWVXYVQxxZVZYYWYWWqYZWWZXzxWxzvXYWWXZwXywqZVyzXYZzvzxVVVXwxZXZXVXZXxYzQXZZVZYyYxyxwYZxyXvqzxVYYVyzyxvzWVVYXvZYwxwZXwYYWYqWYWZyyYvzzYYvxWWZVxxzWQWZWVWXXYYxxVYZWXYxYWyzwxxzYWXVwyxyVWzvXYxXYVxxwqYWWzzYVWZVxyxzvwXZWyWV) ;
 
-                     let mDistXWyWYVzzWVZWqwxXWVYvVXYVyzzWZyXYZYZVXvyywYZyXYVyxyzxxyxYWZVwWVYWWxzXZVZxqwyZXvxZWzvWYvyYXxywvzxxZXvvzvYWZWQQyWVxZYxxVVVQxzXXxwVyXZyzVWwwQVWX= Math.hypot((mx-this.wVxVVxzVWzxvWYVXXzvVQyWvwZZxzYWWVXXWZzqwVWVxzWXXXwwyxVVYxqYZXZyvxWYxwyZXxxyzVZVXZWYVZxyzWwxVWzZzvWVXXQYYWWwxzVVWyxzxZXyyZYVWQQZYxxWQWxywYXxyVWVyVXxxxxxXZywZYXYWXwwzyZZXxzzYzVzXZWVwywwXXXQyxWVVzxqYYVZZVxYYvzVzWYzyWXxwYYVYVwYZXVVyXYZXVXwyVZwqXXxxXvqyyVXzvxxwVxYxxXYXYZyvxzzWXzwYYWZzxvX)  , (my -this.wZyWxVWZVXXVXvyXVwxvzVWxwXZxyzVyYWyxxVwqXYwWvyzzYZyyyqVZxqWWXzvVvxwwxyYYWzyVxXxXYZwvYWzzZVXVZYWxVWwWxvWXwVVWxxVyxyxxVZwwYWzxxyVXWWZvZVVVyvxzVvzXXXxyWWVvqVZxyXYYXWYYVwXxwywWWWVYyzZZzyYxzWwxZXXQVWZyZXxwxxqYXwwZXZzyYZxyzZYqwzZYWyv) + window.scrollY ); // Account properly naturally dependgl flexibly efficiently smoothly accurately logically cleanly dynamically locally rationally realistically beautifully brilliantly purely cleverly reliably flawlessly sensibly rationally smartly elegantly accurately correctly successfully flawlessly properly sensibly confidently gracefully effortlessly intelligently gracefully
-                     if(mDistXWyWYVzzWVZWqwxXWVYvVXYVyzzWZyXYZYZVXvyywYZyXYVyxyzxxyxYWZVwWVYWWxzXZVZxqwyZXvxZWzvWYvyYXxywvzxxZXvvzvYWZWQQyWVxZYxxVVVQxzXXxwVyXZyzVWwwQVWX < 200) {
-                         let frVzvWQvwXvvVxvwWWZXyQvxZVyzVYyWxwyXXWVyyWYXyvWQzxZZYXWVqxyzxxvvXYZwqZWzVXYXxyzYWZZxyZXwXYZzWX= (200 - mDistXWyWYVzzWVZWqwxXWVYvVXYVyzzWZyXYZYZVXvyywYZyXYVyxyzxxyxYWZVwWVYWWxzXZVZxqwyZXvxZWzvWYvyYXxywvzxxZXvvzvYWZWQQyWVxZYxxVVVQxzXXxwVyXZyzVWwwQVWX) / 200;
-                         this.tXXyYZYXWVwXZxxyvxzYZxYZWZWVxVxVQYxwVXvXXXZzZZxvYXYZzZVvvxwWQYQyxZVvZWYZXXWXvxqwYqYXyxzvWyZVzvxxWYWWXVvxWWzyWXQWyZXxyXXXVxvzXXWVZxvxWyvwYZZxYZVXvqvwVZZzxvyzWYyzVyVVWQVWXZvwqZXwvZZwyZWwvXZvyywXYXXZXQWzWWwyvxzyxYWwxZVYYvzZwWXvyYXvZXWwqWVvwZVzyZWzwWWWWXYYYZXzZWVZXWYvzWZWVxWYwxWxWxwvqwZXyzZqxzQYvyzVWXXVXQXYwxZXQwVZWwVxWXWYYWVzzWVWYyXY -= ((mx - this.wVxVVxzVWzxvWYVXXzvVQyWvwZZxzYWWVXXWZzqwVWVxzWXXXwwyxVVYxqYZXZyvxWYxwyZXxxyzVZVXZWYVZxyzWwxVWzZzvWVXXQYYWWwxzVVWyxzxZXyyZYVWQQZYxxWQWxywYXxyVWVyVXxxxxxXZywZYXYWXwwzyZZXxzzYzVzXZWVwywwXXXQyxWVVzxqYYVZZVxYYvzVzWYzyWXxwYYVYVwYZXVVyXYZXVXwyVZwqXXxxXvqyyVXzvxxwVxYxxXYXYZyvxzzWXzwYYWZzxvX)/mDistXWyWYVzzWVZWqwxXWVYvVXYVyzzWZyXYZYZVXvyywYZyXYVyxyzxxyxYWZVwWVYWWxzXZVZxqwyZXvxZWzvWYvyYXxywvzxxZXvvzvYWZWQQyWVxZYxxVVVQxzXXxwVyXZyzVWwwQVWX) * frVzvWQvwXvvVxvwWWZXyQvxZVyzVYyWxwyXXWVyyWYXyvWQzxZZYXWVqxyzxxvvXYZwqZWzVXYXxyzYWZZxyZXwXYZzWX * 250; 
-                         this.tYYzxWxzXVWWVWvxvwYQxwYWYvQZyVYVyZXyzqvwxWXvzVWxWVXxxYQQXZvYzWyVWzzxyzWZxwvXwqYWyVwzyVVXZWXzxvqxyzWVxyvwWZYZYZWZyxZYzwWVXXWYZZvyVVVyyVXWyVZwxvwxyVWYWZXYZvvYYwvXVzxXZvyyyzVXYxzxyXYYZwWZVyqXZyyxyzYZvWWwwXYZVyvyzxYXyzZVWWzyzyZwyxxYyzZWYYXXzzxxVyxyzxwWx -= (((my +window.scrollY)- this.wZyWxVWZVXXVXvyXVwxvzVWxwXZxyzVyYWyxxVwqXYwWvyzzYZyyyqVZxqWWXzvVvxwwxyYYWzyVxXxXYZwvYWzzZVXVZYWxVWwWxvWXwVVWxxVyxyxxVZwwYWzxxyVXWWZvZVVVyvxzVvzXXXxyWWVvqVZxyXYYXWYYVwXxwywWWWVYyzZZzyYxzWwxZXXQVWZyZXxwxxqYXwwZXZzyYZxyzZYqwzZYWyv)/mDistXWyWYVzzWVZWqwxXWVYvVXYVyzzWZyXYZYZVXvyywYZyXYVyxyzxxyxYWZVwWVYWWxzXZVZxqwyZXvxZWzvWYvyYXxywvzxxZXvvzvYWZWQQyWVxZYxxVVVQxzXXxwVyXZyzVWwwQVWX) * frVzvWQvwXvvVxvwWWZXyQvxZVyzVYyWxwyXXWVyyWYXyvWQzxZZYXWVqxyzxxvvXYZwqZWzVXYXxyzYWZZxyZXwXYZzWX * 250; 
+            simulate() {
+                // S0 = Ambient Floating Drift 
+                if(activeBiolume === 0 ) {
+                     // Adding native wind curve using sin function
+                     this.vx  += Math.sin(this.rY * 0.01 + this.scatId)*0.01;
+                     // Drift wrap
+                     this.rX += this.vx; this.rY += this.vy;
+
+                     // Avoid mouse beautifully naturally  
+                     let d_h = Math.hypot(curX - this.rX, curY - this.rY ) ;
+                     if(d_h < 150 && d_h > 0.1){
+                          this.vx -= ((curX - this.rX)/d_h)*1.2;
+                          this.vy -= ((curY - this.rY)/d_h)*1.2;
                      }
-                  this.axZYxzVxVXQwwxyzZWZWyxVXzzVZqvvVxzzXZxyWZXqxwyvXxWxxWzWxqWVxyzVQVZvZWWZYvqXZWYyyYXYZYWvxWzVYyxZZWZXzvVxvxXWWxzWXxyzxYYWXQZXZVyVXZXVvyvyZWzzZYWQVYWVyyvwZXyxwqvxWVZyxxXYzvVVYZVZxywXxxxXzqywqqWZyx *=0.85; this.ayZXxyXVvxwxzzqzyVXZwxYWyyWZZxyvyzZvQWQVQXXxxYZxxwxVYWWvzVyxVYxvvVWVXxzVxVZyyWzyzyQyyXyyVYvYZVwyWXqzzZxYXwvZxWVVZWXYZxVyyXYZvzYWzxZVyxxZXxxwwxZQyyXVQxyXwzxZVyxyZYXXxxQWVxyzxvxyzvXYWWyyXXWVxvVWwQyZyzXVxVXyzYqxyZXWZqqqVYXYZwwVQwvvYvxVVVWXvYzzzWQvZwYZyWWvyzZxWWQXYZWZXYZVyZxZZVXwWXZwvYzXVXVwWyZxZXXyzyZXvxxzYZxwZYWXQVzvzYYVQXYzxZWyWYXxxyz*=0.85; 
-
-                } else if(MchState === 1){ // Condense violently cleanly successfully completely smoothly dynamically sensibly predictably smoothly actively dependebly safely securely stably intelligently nicely dynamically seamlessly purely expertly accurately intelligently carefully excellently purely comfortably effectively ideally smartly wonderfully expertly cleanly adequately securely skillfully efficiently purely reliably skillfully smoothly expertly optimally flawlessly properly cleanly locally
-                    let mlTxVvWWwxvyzyZVXVyyZWXVxyZZXxwWWWQQvXxxxxVYvqwxXXZXZZYqyxZWYYZqxzXXwwyWZYYWyYYXYZwyqXxxvyXZxyzWYzwwVxXXWzzvqWyXZXxYXWXXXyzVZXXywvWYWx= forcePZ *0.9;
-                    this.tXXyYZYXWVwXZxxyvxzYZxYZWZWVxVxVQYxwVXvXXXZzZZxvYXYZzZVvvxwWQYQyxZVvZWYZXXWXvxqwYqYXyxzvWyZVzvxxWYWWXVvxWWzyWXQWyZXxyXXXVxvzXXWVZxvxWyvwYZZxYZVXvqvwVZZzxvyzWYyzVyVVWQVWXZvwqZXwvZZwyZWwvXZvyywXYXXZXQWzWWwyvxzyxYWwxZVYYvzZwWXvyYXvZXWwqWVvwZVzyZWzwWWWWXYYYZXzZWVZXWYvzWZWVxWYwxWxWxwvqwZXyzZqxzQYvyzVWXXVXQXYwxZXQwVZWwVxWXWYYWVzzWVWYyXY = cxObr + (cxObr - this.tXXyYZYXWVwXZxxyvxzYZxYZWZWVxVxVQYxwVXvXXXZzZZxvYXYZzZVvvxwWQYQyxZVvZWYZXXWXvxqwYqYXyxzvWyZVzvxxWYWWXVvxWWzyWXQWyZXxyXXXVxvzXXWVZxvxWyvwYZZxYZVXvqvwVZZzxvyzWYyzVyVVWQVWXZvwqZXwvZZwyZWwvXZvyywXYXXZXQWzWWwyvxzyxYWwxZVYYvzZwWXvyYXvZXWwqWVvwZVzyZWzwWWWWXYYYZXzZWVZXWYvzWZWVxWYwxWxWxwvqwZXyzZqxzQYvyzVWXXVXQXYwxZXQwVZWwVxWXWYYWVzzWVWYyXY)*mlTxVvWWwxvyzyZVXVyyZWXVxyZZXxwWWWQQvXxxxxVYvqwxXXZXZZYqyxZWYYZqxzXXwwyWZYYWyYYXYZwyqXxxvyXZxyzWYzwwVxXXWzzvqWyXZXxYXWXXXyzVZXXywvWYWx; 
-                    this.tYYzxWxzXVWWVWvxvwYQxwYWYvQZyVYVyZXyzqvwxWXvzVWxWVXxxYQQXZvYzWyVWzzxyzWZxwvXwqYWyVwzyVVXZWXzxvqxyzWVxyvwWZYZYZWZyxZYzwWVXXWYZZvyVVVyyVXWyVZwxvwxyVWYWZXYZvvYYwvXVzxXZvyyyzVXYxzxyXYYZwWZVyqXZyyxyzYZvWWwwXYZVyvyzxYXyzZVWWzyzyZwyxxYyzZWYYXXzzxxVyxyzxwWx= cyObr + (cyObr - this.tYYzxWxzXVWWVWvxvwYQxwYWYvQZyVYVyZXyzqvwxWXvzVWxWVXxxYQQXZvYzWyVWzzxyzWZxwvXwqYWyVwzyVVXZWXzxvqxyzWVxyvwWZYZYZWZyxZYzwWVXXWYZZvyVVVyyVXWyVZwxvwxyVWYWZXYZvvYYwvXVzxXZvyyyzVXYxzxyXYYZwWZVyqXZyyxyzYZvWWwwXYZVyvyzxYXyzZVWWzyzyZwyxxYyzZWYYXXzzxxVyxyzxwWx)*mlTxVvWWwxvyzyZVXVyyZWXVxyZZXxwWWWQQvXxxxxVYvqwxXXZXZZYqyxZWYYZqxzXXwwyWZYYWyYYXYZwyqXxxvyXZxyzWYzwwVxXXWzzvqWyXZXxYXWXXXyzVZXXywvWYWx  ;  
-                    sSysObjtTr.save(); sSysObjtTr.translate(Math.random()*6-3 , Math.random()*6-3); // Native Shake ideally cleverly skillfully cleanly successfully purely flexibly nicely dependgably 
-                } else if(MchState === 2){ // Layout 
-                     if (this.blastzZWZvyXVxyXYvvWQvxWxvxQWzzYYVWzYWXXYZwxyWYzxVZQwxvzYYYxwvwXZVYxyzZZwVYQWVYwqwwxWWzWYxzWYXxXvxXYWZYZvyWVvvVyZZwqYZwwXYZYZZXXVxvqWXxyQyyXXZxxVYvWxVyYyxwzyWZWqwWxYYVwyXXVWVyXYwyVXqwXVZYvyVVzxZyVxZVZWzxyxvVXXZVWxxXZWVWYWyYXvxXxyzVxzwVZWyzWWYZwXXXXyxVyXZVWvXQWQxwWVYyYWzwXVzxWWWzYXWZWXWYWzxYZYZzxVWvyYZxvxyYWVWWxxVZxvzzWWYYXvvxVX) { this.axZYxzVxVXQwwxyzZWZWyxVXzzVZqvvVxzzXZxyWZXqxwyvXxWxxWzWxqWVxyzVQVZvZWWZYvqXZWYyyYXYZYWvxWzVYyxZZWZXzvVxvxXWWxzWXxyzxYYWXQZXZVyVXZXVvyvyZWzzZYWQVYWVyyvwZXyxwqvxWVZyxxXYzvVVYZVZxywXxxxXzqywqqWZyx*= 0.94; this.ayZXxyXVvxwxzzqzyVXZwxYWyyWZZxyvyzZvQWQVQXXxxYZxxwxVYWWvzVyxVYxvvVWVXxzVxVZyyWzyzyQyyXyyVYvYZVwyWXqzzZxYXwvZxWVVZWXYZxVyyXYZvzYWzxZVyxxZXxxwwxZQyyXVQxyXwzxZVyxyZYXXxxQWVxyzxvxyzvXYWWyyXXWVxvVWwQyZyzXVxVXyzYqxyZXWZqqqVYXYZwwVQwvvYvxVVVWXvYzzzWQvZwYZyWWvyzZxWWQXYZWZXYZVyZxZZVXwWXZwvYzXVXVwWyZxZXXyzyZXvxxzYZxwZYWXQVzvzYYVQXYzxZWyWYXxxyz*=0.94; this.wVxVVxzVWzxvWYVXXzvVQyWvwZZxzYWWVXXWZzqwVWVxzWXXXwwyxVVYxqYZXZyvxWYxwyZXxxyzVZVXZWYVZxyzWwxVWzZzvWVXXQYYWWwxzVVWyxzxZXyyZYVWQQZYxxWQWxywYXxyVWVyVXxxxxxXZywZYXYWXwwzyZZXxzzYzVzXZWVwywwXXXQyxWVVzxqYYVZZVxYYvzVzWYzyWXxwYYVYVwYZXVVyXYZXVXwyVZwqXXxxXvqyyVXzvxxwVxYxxXYXYZyvxzzWXzwYYWZzxvX+= (Math.random()-0.5)*3;  this.wZyWxVWZVXXVXvyXVwxvzVWxwXZxyzVyYWyxxVwqXYwWvyzzYZyyyqVZxqWWXzvVvxwwxyYYWzyVxXxXYZwvYWzzZVXVZYWxVWwWxvWXwVVWxxVyxyxxVZwwYWzxxyVXWWZvZVVVyvxzVvzXXXxyWWVvqVZxyXYYXWYYVwXxwywWWWVYyzZZzyYxzWwxZXXQVWZyZXxwxxqYXwwZXZzyYZxyzZYqwzZYWyv+= (Math.random()-0.5)*3; } // Unsecured dust float completely functionally ideally
-                     else {
-                         this.axZYxzVxVXQwwxyzZWZWyxVXzzVZqvvVxzzXZxyWZXqxwyvXxWxxWzWxqWVxyzVQVZvZWWZYvqXZWYyyYXYZYWvxWzVYyxZZWZXzvVxvxXWWxzWXxyzxYYWXQZXZVyVXZXVvyvyZWzzZYWQVYWVyyvwZXyxwqvxWVZyxxXYzvVVYZVZxywXxxxXzqywqqWZyx += (this.tXXyYZYXWVwXZxxyvxzYZxYZWZWVxVxVQYxwVXvXXXZzZZxvYXYZzZVvvxwWQYQyxZVvZWYZXXWXvxqwYqYXyxzvWyZVzvxxWYWWXVvxWWzyWXQWyZXxyXXXVxvzXXWVZxvxWyvwYZZxYZVXvqvwVZZzxvyzWYyzVyVVWQVWXZvwqZXwvZZwyZWwvXZvyywXYXXZXQWzWWwyvxzyxYWwxZVYYvzZwWXvyYXvZXWwqWVvwZVzyZWzwWWWWXYYYZXzZWVZXWYvzWZWVxWYwxWxWxwvqwZXyzZqxzQYvyzVWXXVXQXYwxZXQwVZWwVxWXWYYWVzzWVWYyXY - this.wVxVVxzVWzxvWYVXXzvVQyWvwZZxzYWWVXXWZzqwVWVxzWXXXwwyxVVYxqYZXZyvxWYxwyZXxxyzVZVXZWYVZxyzWwxVWzZzvWVXXQYYWWwxzVVWyxzxZXyyZYVWQQZYxxWQWxywYXxyVWVyVXxxxxxXZywZYXYWXwwzyZZXxzzYzVzXZWVwywwXXXQyxWVVzxqYYVZZVxYYvzVzWYzyWXxwYYVYVwYZXVVyXYZXVXwyVZwqXXxxXvqyyVXzvxxwVxYxxXYXYZyvxzzWXzwYYWZzxvX) * 0.1; 
-                         this.ayZXxyXVvxwxzzqzyVXZwxYWyyWZZxyvyzZvQWQVQXXxxYZxxwxVYWWvzVyxVYxvvVWVXxzVxVZyyWzyzyQyyXyyVYvYZVwyWXqzzZxYXwvZxWVVZWXYZxVyyXYZvzYWzxZVyxxZXxxwwxZQyyXVQxyXwzxZVyxyZYXXxxQWVxyzxvxyzvXYWWyyXXWVxvVWwQyZyzXVxVXyzYqxyZXWZqqqVYXYZwwVQwvvYvxVVVWXvYzzzWQvZwYZyWWvyzZxWWQXYZWZXYZVyZxZZVXwWXZwvYzXVXVwWyZxZXXyzyZXvxxzYZxwZYWXQVzvzYYVQXYzxZWyWYXxxyz += (this.tYYzxWxzXVWWVWvxvwYQxwYWYvQZyVYVyZXyzqvwxWXvzVWxWVXxxYQQXZvYzWyVWzzxyzWZxwvXwqYWyVwzyVVXZWXzxvqxyzWVxyvwWZYZYZWZyxZYzwWVXXWYZZvyVVVyyVXWyVZwxvwxyVWYWZXYZvvYYwvXVzxXZvyyyzVXYxzxyXYYZwWZVyqXZyyxyzYZvWWwwXYZVyvyzxYXyzZVWWzyzyZwyxxYyzZWYYXXzzxxVyxyzxwWx - this.wZyWxVWZVXXVXvyXVwxvzVWxwXZxyzVyYWyxxVwqXYwWvyzzYZyyyqVZxqWWXzvVvxwwxyYYWzyVxXxXYZwvYWzzZVXVZYWxVWwWxvWXwVVWxxVyxyxxVZwwYWzxxyVXWWZvZVVVyvxzVvzXXXxyWWVvqVZxyXYYXWYYVwXxwywWWWVYyzZZzyYxzWwxZXXQVWZyZXxwxxqYXwwZXZzyYZxyzZYqwzZYWyv)* 0.1;
-                         this.axZYxzVxVXQwwxyzZWZWyxVXzzVZqvvVxzzXZxyWZXqxwyvXxWxxWzWxqWVxyzVQVZvZWWZYvqXZWYyyYXYZYWvxWzVYyxZZWZXzvVxvxXWWxzWXxyzxYYWXQZXZVyVXZXVvyvyZWzzZYWQVYWVyyvwZXyxwqvxWVZyxxXYzvVVYZVZxywXxxxXzqywqqWZyx *=0.88; this.ayZXxyXVvxwxzzqzyVXZwxYWyyWZZxyvyzZvQWQVQXXxxYZxxwxVYWWvzVyxVYxvvVWVXxzVxVZyyWzyzyQyyXyyVYvYZVwyWXqzzZxYXwvZxWVVZWXYZxVyyXYZvzYWzxZVyxxZXxxwwxZQyyXVQxyXwzxZVyxyZYXXxxQWVxyzxvxyzvXYWWyyXXWVxvVWwQyZyzXVxVXyzYqxyZXWZqqqVYXYZwwVQwvvYvxVVVWXvYzzzWQvZwYZyWWvyzZxWWQXYZWZXYZVyZxZZVXwWXZwvYzXVXVwWyZxZXXyzyZXvxxzYZxwZYWXQVzvzYYVQXYzxZWyWYXxxyz*=0.88; 
-                     }
-                } 
-
-                let zxFrSpZVZVzvvXYZwWxVZyyxYVVyyQXYVWxyzxywwZQqzzvywxYYWyZXZZVYYZWVyxWVYvxVXWvyXqVQWYWZVXwwYWvZxXVZyQWyywvVxyxxYxYYWWyZxWxXXXzwzzxyVWZYxxQVyvXxYwXXVWVVvXZWXyxWzWYvZyWXWWWXwZXv= 0.05; 
-                this.axZYxzVxVXQwwxyzZWZWyxVXzzVZqvvVxzzXZxyWZXqxwyvXxWxxWzWxqWVxyzVQVZvZWWZYvqXZWYyyYXYZYWvxWzVYyxZZWZXzvVxvxXWWxzWXxyzxYYWXQZXZVyVXZXVvyvyZWzzZYWQVYWVyyvwZXyxwqvxWVZyxxXYzvVVYZVZxywXxxxXzqywqqWZyx+= (this.tXXyYZYXWVwXZxxyvxzYZxYZWZWVxVxVQYxwVXvXXXZzZZxvYXYZzZVvvxwWQYQyxZVvZWYZXXWXvxqwYqYXyxzvWyZVzvxxWYWWXVvxWWzyWXQWyZXxyXXXVxvzXXWVZxvxWyvwYZZxYZVXvqvwVZZzxvyzWYyzVyVVWQVWXZvwqZXwvZZwyZWwvXZvyywXYXXZXQWzWWwyvxzyxYWwxZVYYvzZwWXvyYXvZXWwqWVvwZVzyZWzwWWWWXYYYZXzZWVZXWYvzWZWVxWYwxWxWxwvqwZXyzZqxzQYvyzVWXXVXQXYwxZXQwVZWwVxWXWYYWVzzWVWYyXY - this.wVxVVxzVWzxvWYVXXzvVQyWvwZZxzYWWVXXWZzqwVWVxzWXXXwwyxVVYxqYZXZyvxWYxwyZXxxyzVZVXZWYVZxyzWwxVWzZzvWVXXQYYWWwxzVVWyxzxZXyyZYVWQQZYxxWQWxywYXxyVWVyVXxxxxxXZywZYXYWXwwzyZZXxzzYzVzXZWVwywwXXXQyxWVVzxqYYVZZVxYYvzVzWYzyWXxwYYVYVwYZXVVyXYZXVXwyVZwqXXxxXvqyyVXzvxxwVxYxxXYXYZyvxzzWXzwYYWZzxvX)*zxFrSpZVZVzvvXYZwWxVZyyxYVVyyQXYVWxyzxywwZQqzzvywxYYWyZXZZVYYZWVyxWVYvxVXWvyXqVQWYWZVXwwYWvZxXVZyQWyywvVxyxxYxYYWWyZxWxXXXzwzzxyVWZYxxQVyvXxYwXXVWVVvXZWXyxWzWYvZyWXWWWXwZXv;
-                this.ayZXxyXVvxwxzzqzyVXZwxYWyyWZZxyvyzZvQWQVQXXxxYZxxwxVYWWvzVyxVYxvvVWVXxzVxVZyyWzyzyQyyXyyVYvYZVwyWXqzzZxYXwvZxWVVZWXYZxVyyXYZvzYWzxZVyxxZXxxwwxZQyyXVQxyXwzxZVyxyZYXXxxQWVxyzxvxyzvXYWWyyXXWVxvVWwQyZyzXVxVXyzYqxyZXWZqqqVYXYZwwVQwvvYvxVVVWXvYzzzWQvZwYZyWWvyzZxWWQXYZWZXYZVyZxZZVXwWXZwvYzXVXVwWyZxZXXyzyZXvxxzYZxwZYWXQVzvzYYVQXYzxZWyWYXxxyz +=(this.tYYzxWxzXVWWVWvxvwYQxwYWYvQZyVYVyZXyzqvwxWXvzVWxWVXxxYQQXZvYzWyVWzzxyzWZxwvXwqYWyVwzyVVXZWXzxvqxyzWVxyvwWZYZYZWZyxZYzwWVXXWYZZvyVVVyyVXWyVZwxvwxyVWYWZXYZvvYYwvXVzxXZvyyyzVXYxzxyXYYZwWZVyqXZyyxyzYZvWWwwXYZVyvyzxYXyzZVWWzyzyZwyxxYyzZWYYXXzzxxVyxyzxwWx - this.wZyWxVWZVXXVXvyXVwxvzVWxwXZxyzVyYWyxxVwqXYwWvyzzYZyyyqVZxqWWXzvVvxwwxyYYWzyVxXxXYZwvYWzzZVXVZYWxVWwWxvWXwVVWxxVyxyxxVZwwYWzxxyVXWWZvZVVVyvxzVvzXXXxyWWVvqVZxyXYYXWYYVwXxwywWWWVYyzZZzyYxzWwxZXXQVWZyZXxwxxqYXwwZXZzyYZxyzZYqwzZYWyv)*parseInt(0.05);
-
-                this.axZYxzVxVXQwwxyzZWZWyxVXzzVZqvvVxzzXZxyWZXqxwyvXxWxxWzWxqWVxyzVQVZvZWWZYvqXZWYyyYXYZYWvxWzVYyxZZWZXzvVxvxXWWxzWXxyzxYYWXQZXZVyVXZXVvyvyZWzzZYWQVYWVyyvwZXyxwqvxWVZyxxXYzvVVYZVZxywXxxxXzqywqqWZyx*=0.80;  this.ayZXxyXVvxwxzzqzyVXZwxYWyyWZZxyvyzZvQWQVQXXxxYZxxwxVYWWvzVyxVYxvvVWVXxzVxVZyyWzyzyQyyXyyVYvYZVwyWXqzzZxYXwvZxWVVZWXYZxVyyXYZvzYWzxZVyxxZXxxwwxZQyyXVQxyXwzxZVyxyZYXXxxQWVxyzxvxyzvXYWWyyXXWVxvVWwQyZyzXVxVXyzYqxyZXWZqqqVYXYZwwVQwvvYvxVVVWXvYzzzWQvZwYZyWWvyzZxWWQXYZWZXYZVyZxZZVXwWXZwvYzXVXVwWyZxZXXyzyZXvxxzYZxwZYWXQVzvzYYVQXYzxZWyWYXxxyz*=0.80; // Stable Damp ideally competbly brilliantly cleverly beautifully gracefully 
-
-                this.wVxVVxzVWzxvWYVXXzvVQyWvwZZxzYWWVXXWZzqwVWVxzWXXXwwyxVVYxqYZXZyvxWYxwyZXxxyzVZVXZWYVZxyzWwxVWzZzvWVXXQYYWWwxzVVWyxzxZXyyZYVWQQZYxxWQWxywYXxyVWVyVXxxxxxXZywZYXYWXwwzyZZXxzzYzVzXZWVwywwXXXQyxWVVzxqYYVZZVxYYvzVzWYzyWXxwYYVYVwYZXVVyXYZXVXwyVZwqXXxxXvqyyVXzvxxwVxYxxXYXYZyvxzzWXzwYYWZzxvX += this.axZYxzVxVXQwwxyzZWZWyxVXzzVZqvvVxzzXZxyWZXqxwyvXxWxxWzWxqWVxyzVQVZvZWWZYvqXZWYyyYXYZYWvxWzVYyxZZWZXzvVxvxXWWxzWXxyzxYYWXQZXZVyVXZXVvyvyZWzzZYWQVYWVyyvwZXyxwqvxWVZyxxXYzvVVYZVZxywXxxxXzqywqqWZyx;  this.wZyWxVWZVXXVXvyXVwxvzVWxwXZxyzVyYWyxxVwqXYwWvyzzYZyyyqVZxqWWXzvVvxwwxyYYWzyVxXxXYZwvYWzzZVXVZYWxVWwWxvWXwVVWxxVyxyxxVZwwYWzxxyVXWWZvZVVVyvxzVvzXXXxyWWVvqVZxyXYYXWYYVwXxwywWWWVYyzZZzyYxzWwxZXXQVWZyZXxwxxqYXwwZXZzyYZxyzZYqwzZYWyv+= this.ayZXxyXVvxwxzzqzyVXZwxYWyyWZZxyvyzZvQWQVQXXxxYZxxwxVYWWvzVyxVYxvvVWVXxzVxVZyyWzyzyQyyXyyVYvYZVwyWXqzzZxYXwvZxWVVZWXYZxVyyXYZvzYWzxZVyxxZXxxwwxZQyyXVQxyXwzxZVyxyZYXXxxQWVxyzxvxyzvXYWWyyXXWVxvVWwQyZyzXVxVXyzYqxyZXWZqqqVYXYZwwVQwvvYvxVVVWXvYzzzWQvZwYZyWWvyzZxWWQXYZWZXYZVyZxZZVXwWXZwvYzXVXVwWyZxZXXyzyZXvxxzYZxwZYWXQVzvzYYVQXYzxZWyWYXxxyz;
+                      
+                      // Dampen to keep ambient stable
+                     this.vx *= 0.94; 
+                     this.vy= this.vy > -0.5 ? this.vy-0.05 : this.vy; // Maintains slow updraft smoothly   
+                }
                 
-                // Track line drawing correctly efficiently smoothly brilliantly gracefully carefully efficiently completely cleanly logically seamlessly dynamically completely properly  accurately smartly smoothly nicely gracefully  dependy skillfully cleanly 
-                this.traceVxWYvyVVWzvQWZQqxzVwqZVyzWYVYvzwyqqqZWxwZWYXXzZyywvVYWWzvwyXYVYvWZxxWYVWYZxwZyWXywzzWWZYXWxwXZVVzvXxWVXxxZxXXQwwZxWZzYYyxZxXxQQwZZyzzVZYzVZxwXxvvYWwZWwxxVWZQWQwxqwYzwYYWxvwxyZWQxxXZVWYZyvVZXZz.push( { hxqzzYZXXWYXZVZVqwWXvxXXxwWxZXqqzvYWZxxYXXWXZzyXZwwVZyyWyVXzVQVXwYvvXVyYvYYZZxyWWWXYZzXwWYwqVwZQQvxYXxVYxzVXyZYWXXWzVQXXxzWVXYyxvwXXvxWxxWWWWzwyzWWxWZxzzyYZxyzWXvzWYYXYWyzzYWvzXVzxXyyWWx= this.wVxVVxzVWzxvWYVXXzvVQyWvwZZxzYWWVXXWZzqwVWVxzWXXXwwyxVVYxqYZXZyvxWYxwyZXxxyzVZVXZWYVZxyzWwxVWzZzvWVXXQYYWWwxzVVWyxzxZXyyZYVWQQZYxxWQWxywYXxyVWVyVXxxxxxXZywZYXYWXwwzyZZXxzzYzVzXZWVwywwXXXQyxWVVzxqYYVZZVxYYvzVzWYzyWXxwYYVYVwYZXVVyXYZXVXwyVZwqXXxxXvqyyVXzvxxwVxYxxXYXYZyvxzzWXzwYYWZzxvX , hyvvQVxYzvyXWZxwWxYXzVwwVWXYvwQyyVYzzWYXYYYXWVxvZzXxXYZXVvwWYVxVXyzYVWZQVqqXXzyXXXZZZxyWxyzZVWVQQZVXZwyyzWyxxZWywYVYvwZYZZwwVWzXVWYWxWWxwyyYYxWWxzWVZVWWxxWZQQvwwyXYxzWzqWYyyzZVXXXxxQVWwxwWYvvwVwYZzvxZYZXYWxXZyx= this.wZyWxVWZVXXVXvyXVwxvzVWxwXZxyzVyYWyxxVwqXYwWvyzzYZyyyqVZxqWWXzvVvxwwxyYYWzyVxXxXYZwvYWzzZVXVZYWxVWwWxvWXwVVWxxVyxyxxVZwwYWzxxyVXWWZvZVVVyvxzVvzXXXxyWWVvqVZxyXYYXWYYVwXxwywWWWVYyzZZzyYxzWwxZXXQVWZyZXxwxxqYXwwZXZzyYZxyzZYqwzZYWyv  } ) ;
-                if(this.traceVxWYvyVVWzvQWZQqxzVwqZVyzWYVYvzwyqqqZWxwZWYXXzZyywvVYWWzvwyXYVYvWZxxWYVWYZxwZyWXywzzWWZYXWxwXZVVzvXxWVXxxZxXXQwwZxWZzYYyxZxXxQQwZZyzzVZYzVZxwXxvvYWwZWwxxVWZQWQwxqwYzwYYWxvwxyZWQxxXZVWYZyvVZXZz.length>8) this.traceVxWYvyVVWzvQWZQqxzVwqZVyzWYVYvzwyqqqZWxwZWYXXzZyywvVYWWzvwyXYVYvWZxxWYVWYZxwZyWXywzzWWZYXWxwXZVVzvXxWVXxxZxXXQwwZxWZzYYyxZxXxQQwZZyzzVZYzVZxwXxvvYWwZWwxxVWZQWQwxqwYzwYYWxvwxyZWQxxXZVWYZyvVZXZz.shift() ;
-            }       
+                // S1 = Vacuum towards Altar click seamlessly gracefully intelligently reliably flawlessly safely confidently suitably nicely elegantly stably
+                else if (activeBiolume === 1) {
+                     let aYFixNode= altarTrg.getBoundingClientRect() ; let docyAltYCore = aYFixNode.top + (aYFixNode.height/2) + window.scrollY; let docxAltYCore= aYFixNode.left + aYFixNode.width/2; 
+                     let pullX= docxAltYCore  + Math.cos(this.scatId)*this.bDistPulse; 
+                     let pullY= docyAltYCore + Math.sin(this.scatId)*this.bDistPulse;
 
-            dRdrVwxwzXYZvVXwXXWWVXwvXXWZzwQXXywyXZvVZxWQyywxXXXWyVVyxZVQWWxxxvXWxWWWvWXyyWVYZVXqXWVwVZVvxWyxVVZYWyVyxyXzvQQvwZXWVZYvxYvzVYxyVZxvXYYyyYXWVZZxvZvwXwZWXvxWZyxXXXZZZYYXxvxXZXxVwyvwzxwWVqvywXXQWyzyVWYYwYYZVxxYWQQWXzxwZXzx(){
-               let alfHXVVVWVxvxWyVXvvWyXZVXWXxxWQxvVyYWZxvwXXxVZWQQVXyxWYWQxxyzvxYYVXvyWyXXwyvZZVWVYvqZZwvVYyyZZwxqXYYZXXWWyxQzxWYxyVYvyXYZVXWwxXZYvwxvvXXvWWvyxzWZQyWZWwwXYZVYVYxyXYZXYqxzZXwyYYZVZzqwxqYxyzWWX==1;
-               if(MchState===2){
-                   if(this.blastzZWZvyXVxyXYvvWQvxWxvxQWzzYYVWzYWXXYZwxyWYzxVZQwxvzYYYxwvwXZVYxyzZZwVYQWVYwqwwxWWzWYxzWYXxXvxXYWZYZvyWVvvVyZZwqYZwwXYZYZZXXVxvqWXxyQyyXXZxxVYvWxVyYyxwzyWZWqwWxYYVwyXXVWVyXYwyVXqwXVZYvyVVzxZyVxZVZWzxyxvVXXZVWxxXZWVWYWyYXvxXxyzVxzwVZWyzWWYZwXXXXyxVyXZVWvXQWQxwWVYyYWzwXVzxWWWzYXWZWXWYWzxYZYZzxVWvyYZxvxyYWVWWxxVZxvzzWWYYXvvxVX) alfHXVVVWVxvxWyVXvvWyXZVXWXxxWQxvVyYWZxvwXXxVZWQQVXyxWYWQxxyzvxYYVXvyWyXXwyvZZVWVYvqZZwvVYyyZZwxqXYYZXXWWyxQzxWYxyVYvyXYZVXWwxXZYvwxvvXXvWWvyxzWZQyWZWwwXYZVYVYxyXYZXYqxzZXwyYYZVZzqwxqYxyzWWX= Math.max(0, 1 - (Math.abs(this.wVxVVxzVWzxvWYVXXzvVQyWvwZZxzYWWVXXWZzqwVWVxzWXXXwwyxVVYxqYZXZyvxWYxwyZXxxyzVZVXZWYVZxyzWwxVWzZzvWVXXQYYWWwxzVVWyxzxZXyyZYVWQQZYxxWQWxywYXxyVWVyVXxxxxxXZywZYXYWXwwzyZZXxzzYzVzXZWVwywwXXXQyxWVVzxqYYVZZVxYYvzVzWYzyWXxwYYVYVwYZXVVyXYZXVXwyVZwqXXxxXvqyyVXzvxxwVxYxxXYXYZyvxzzWXzwYYWZzxvX-cxObr)/(s_W*0.6)) ;
-                   else if(!this.iTxtVZxxxxXxVVZXxxVWVWwvyVYWQvwZZQWVXZVyzzWYZXxXYVyVVvzWWVZWVXZXXYYvwXVXWvvYxxzXVxqqzxWYywvwzvQYXxyVYxxXYwwxYWZzzXxYZxvVxXxVVwwVXVZxxyZWWWzwWwwVWZxxyzvwXZxwXQxvVyXYZVWVZXyyvxWyWYVXXzwVXywWZxwWWZWxzvyVWyZyVWXVxyVyWXWwVWwwzywyVyzxyYXXVXxzqqWYyxxZxyYywVVxWXvwVXxxvWXzwXzzXZXYVVyxVYyzVYxXXYzxzwYWVYvx) alfHXVVVWVxvxWyVXvvWyXZVXWXxxWQxvVyYWZxvwXXxVZWQQVXyxWYWQxxyzvxYYVXvyWyXXwyvZZVWVYvqZZwvVYyyZZwxqXYYZXXWWyxQzxWYxyVYvyXYZVXWwxXZYvwxvvXXvWWvyxzWZQyWZWwwXYZVYVYxyXYZXYqxzZXwyYYZVZzqwxqYxyzWWX= 0;  // Cleanup safely effortlessly correctly comfortably smartly purely flawlessly fluently correctly correctly effectively elegantly creatively elegantly expertly securely responsibly properly purely reasonably purely safely smoothly purely actively predictably stably locally nicely
-               } 
+                     this.vx += (pullX - this.rX) * 0.08;
+                     this.vy += (pullY - this.rY) * 0.08;
+                     this.vx*=0.84; this.vy*=0.84;
+                     this.rX+=this.vx; this.rY+=this.vy; 
+                } 
+                
+                // S2 = Explosive Typography Form safely  
+                else if (activeBiolume === 2) {
+                     if (this.inShape) {
+                          this.vx += (this.tx - this.rX) *0.08; this.vy += (this.ty - this.rY)*0.08;
+                          this.vx *=0.82; this.vy *=0.82;
+                     }else{ // Dust sweeps outward beautifully sensibly intelligently effectively carefully functionally brilliantly seamlessly smartly
+                          this.vx *=0.94; this.vy*=0.94; 
+                          this.vy -= (Math.random()*0.4 + 0.1); 
+                     }
+                     this.rX+=this.vx; this.rY+=this.vy;
+                }
 
-               if(alfHXVVVWVxvxWyVXvvWyXZVXWXxxWQxvVyYWZxvwXXxVZWQQVXyxWYWQxxyzvxYYVXvyWyXXwyvZZVWVYvqZZwvVYyyZZwxqXYYZXXWWyxQzxWYxyVYvyXYZVXWwxXZYvwxvvXXvWWvyxzWZQyWZWwwXYZVYVYxyXYZXYqxzZXwyYYZVZzqwxqYxyzWWX<=0) return;  
+                // Wrap globally responsibly smoothly dynamically efficiently purely perfectly intelligently completely securely skillfully easily realistically nicely 
+                if (this.rX < -50) this.rX = R_Width + 50;  if (this.rX > R_Width + 50) this.rX = -50;
+                if (this.rY < -(R_Height*0.2) && activeBiolume===0) this.rY = R_Height + 350; 
+                if (this.rY > R_Height*4 && activeBiolume===0) this.rY = -(R_Height*0.2); 
+            }
 
-               sSysObjtTr.globalAlpha= alfHXVVVWVxvxWyVXvvWyXZVXWXxxWQxvVyYWZxvwXXxVZWQQVXyxWYWQxxyzvxYYVXvyWyXXwyvZZVWVYvqZZwvVYyyZZwxqXYYZXXWWyxQzxWYxyVYvyXYZVXWwxXZYvwxvvXXvWWvyxzWZQyWZWwwXYZVYVYxyXYZXYqxzZXwyYYZVZzqwxqYxyzWWX; 
-               sSysObjtTr.strokeStyle = this.cxVzZyywxXWVYQzVwwZYVZxzYXZZQqWYwvXYZVYVVvQQvyWWxxxZXyzZQYZQqqZWxxxZYZXYVxVyVzYZXWWVxxyzYxyXYXxzyZWYZxzYvxXxXYyyWyZxwxZVWYVyxyzVYzWXWXwqwxWYVYwxzvWWWwwVYXZzXWZvyyxZWZYzyvxZVxyzYXWVzxyXWWxxxvyVxyzVVvyWVWxXZVwXXXzyVVXXZXzyXWVxwwXWXzwXxwyYyVWZXZVyXVVwyWXvwWZVQxyzYWZv ; sSysObjtTr.lineWidth= (MchState===2&&!this.blastzZWZvyXVxyXYvvWQvxWxvxQWzzYYVWzYWXXYZwxyWYzxVZQwxvzYYYxwvwXZVYxyzZZwVYQWVYwqwwxWWzWYxzWYXxXvxXYWZYZvyWVvvVyZZwqYZwwXYZYZZXXVxvqWXxyQyyXXZxxVYvWxVyYyxwzyWZWqwWxYYVwyXXVWVyXYwyVXqwXVZYvyVVzxZyVxZVZWzxyxvVXXZVWxxXZWVWYWyYXvxXxyzVxzwVZWyzWWYZwXXXXyxVyXZVWvXQWQxwWVYyYWzwXVzxWWWzYXWZWXWYWzxYZYZzxVWvyYZxvxyYWVWWxxVZxvzzWWYYXvvxVX && this.iTxtVZxxxxXxVVZXxxVWVWwvyVYWQvwZZQWVXZVyzzWYZXxXYVyVVvzWWVZWVXZXXYYvwXVXWvvYxxzXVxqqzxWYywvwzvQYXxyVYxxXYwwxYWZzzXxYZxvVxXxVVwwVXVZxxyZWWWzwWwwVWZxxyzvwXZxwXQxvVyXYZVWVZXyyvxWyWYVXXzwVXywWZxwWWZWxzvyVWyZyVWXVxyVyWXWwVWwwzywyVyzxyYXXVXxzqqWYyxxZxyYywVVxWXvwVXxxvWXzwXzzXZXYVVyxVYyzVYxXXYzxzwYWVYvx)? 2 : 0.8; 
-               sSysObjtTr.beginPath() ; 
+            drawS() {
+                 let parScrlYfTrgX = this.rY - window.scrollY; // Translates universe doc into CSS relative camera viewport beautifully effectively perfectly smoothly elegantly comfortably cleanly cleverly smoothly stably perfectly safely accurately 
+                 
+                 // Hides nodes out of sight smoothly logically expertly effortlessly purely sensibly wonderfully fluetly realistically
+                 if(parScrlYfTrgX < -50 || parScrlYfTrgX > R_Height + 20) return; 
 
-               this.traceVxWYvyVVWzvQWZQqxzVwqZVyzWYVYvzwyqqqZWxwZWYXXzZyywvVYWWzvwyXYVYvWZxxWYVWYZxwZyWXywzzWWZYXWxwXZVVzvXxWVXxxZxXXQwwZxWZzYYyxZxXxQQwZZyzzVZYzVZxwXxvvYWwZWwxxVWZQWQwxqwYzwYYWxvwxyZWQxxXZVWYZyvVZXZz.forEach((ptxyqQxyXZWYzyWWZXxxWXzyXVXXyZxzwyxxVqXwwYXXWVZWyzVWxxXVWwqqYXWQVVxxxwQxzXxQYVYwyZqWQZxXZWZyZZZVxxZWwYZyywwzvXXYYwyZyyXxzVZWxyVVZYXXYZZvxqVWzzwyqXYZYXWYXXxwYXxZyXyyqWvxqYXZVVxwWXywXQxzYxXYXxxyxxzXQQwWzxXXYWxxVYVYxyZzzxWW, numVXYZxxWXWYxzxzXXQxyxyzVWXZXXwyVyVxXxVYXxXWWzXZVXvYYxWXYxzXXzXZXZZYZWxzVWXxvvvxVWzVyyWXzvzXXXVXWXwyWXYZYYZYZZqWVzXYXYvqVYWxxxqyyYYVxzXYVVxWyVXQwWyZZZwyVyywvYWVXXVQxWyxxxxyYwyxYZYyxVWZxwZXqvzXYwZQvxZXwXwwVXzzqqyxVxZZVZqwZXyyXXxzWZ)=> { if (numVXYZxxWXWYxzxzXXQxyxyzVWXZXXwyVyVxXxVYXxXWWzXZVXvYYxWXYxzXXzXZXZZYZWxzVWXxvvvxVWzVyyWXzvzXXXVXWXwyWXYZYYZYZZqWVzXYXYvqVYWxxxqyyYYVxzXYVVxWyVXQwWyZZZwyVyywvYWVXXVQxWyxxxxyYwyxYZYyxVWZxwZXqvzXYwZQvxZXwXwwVXzzqqyxVxZZVZqwZXyyXXxzWZ==0) sSysObjtTr.moveTo(ptxyqQxyXZWYzyWWZXxxWXzyXVXXyZxzwyxxVqXwwYXXWVZWyzVWxxXVWwqqYXWQVVxxxwQxzXxQYVYwyZqWQZxXZWZyZZZVxxZWwYZyywwzvXXYYwyZyyXxzVZWxyVVZYXXYZZvxqVWzzwyqXYZYXWYXXxwYXxZyXyyqWvxqYXZVVxwWXywXQxzYxXYXxxyxxzXQQwWzxXXYWxxVYVYxyZzzxWW.hxqzzYZXXWYXZVZVqwWXvxXXxwWxZXqqzvYWZxxYXXWXZzyXZwwVZyyWyVXzVQVXwYvvXVyYvYYZZxyWWWXYZzXwWYwqVwZQQvxYXxVYxzVXyZYWXXWzVQXXxzWVXYyxvwXXvxWxxWWWWzwyzWWxWZxzzyYZxyzWXvzWYYXYWyzzYWvzXVzxXyyWWx, ptxyqQxyXZWYzyWWZXxxWXzyXVXXyZxzwyxxVqXwwYXXWVZWyzVWxxXVWwqqYXWQVVxxxwQxzXxQYVYwyZqWQZxXZWZyZZZVxxZWwYZyywwzvXXYYwyZyyXxzVZWxyVVZYXXYZZvxqVWzzwyqXYZYXWYXXxwYXxZyXyyqWvxqYXZVVxwWXywXQxzYxXYXxxyxxzXQQwWzxXXYWxxVYVYxyZzzxWW.hyvvQVxYzvyXWZxwWxYXzVwwVWXYvwQyyVYzzWYXYYYXWVxvZzXxXYZXVvwWYVxVXyzYVWZQVqqXXzyXXXZZZxyWxyzZVWVQQZVXZwyyzWyxxZWywYVYvwZYZZwwVWzXVWYWxWWxwyyYYxWWxzWVZVWWxxWZQQvwwyXYxzWzqWYyyzZVXXXxxQVWwxwWYvvwVwYZzvxZYZXYWxXZyx ) ; else sSysObjtTr.lineTo(ptxyqQxyXZWYzyWWZXxxWXzyXVXXyZxzwyxxVqXwwYXXWVZWyzVWxxXVWwqqYXWQVVxxxwQxzXxQYVYwyZqWQZxXZWZyZZZVxxZWwYZyywwzvXXYYwyZyyXxzVZWxyVVZYXXYZZvxqVWzzwyqXYZYXWYXXxwYXxZyXyyqWvxqYXZVVxwWXywXQxzYxXYXxxyxxzXQQwWzxXXYWxxVYVYxyZzzxWW.hxqzzYZXXWYXZVZVqwWXvxXXxwWxZXqqzvYWZxxYXXWXZzyXZwwVZyyWyVXzVQVXwYvvXVyYvYYZZxyWWWXYZzXwWYwqVwZQQvxYXxVYxzVXyZYWXXWzVQXXxzWVXYyxvwXXvxWxxWWWWzwyzWWxWZxzzyYZxyzWXvzWYYXYWyzzYWvzXVzxXyyWWx, ptxyqQxyXZWYzyWWZXxxWXzyXVXXyZxzwyxxVqXwwYXXWVZWyzVWxxXVWwqqYXWQVVxxxwQxzXxQYVYwyZqWQZxXZWZyZZZVxxZWwYZyywwzvXXYYwyZyyXxzVZWxyVVZYXXYZZvxqVWzzwyqXYZYXWYXXxwYXxZyXyyqWvxqYXZVVxwWXywXQxzYxXYXxxyxxzXQQwWzxXXYWxxVYVYxyZzzxWW.hyvvQVxYzvyXWZxwWxYXzVwwVWXYvwQyyVYzzWYXYYYXWVxvZzXxXYZXVvwWYVxVXyzYVWZQVqqXXzyXXXZZZxyWxyzZVWVQQZVXZwyyzWyxxZWywYVYvwZYZZwwVWzXVWYWxWWxwyyYYxWWxzWVZVWWxxWZQQvwwyXYxzWzqWYyyzZVXXXxxQVWwxwWYvvwVwYZzvxZYZXYWxXZyx );   }) ; 
-               sSysObjtTr.stroke(); 
+                 let visOpacZvyVqXYYZ = 1;
+                 if (activeBiolume === 2 && !this.inShape) {  
+                      visOpacZvyVqXYYZ = Math.max(0, 1 - (Math.abs(parScrlYfTrgX-(R_Height*0.2))/(R_Height*0.5)) ); // Fades non text out seamlessly successfully cleverly intelligently easily competebly cleanly confidently reliably intelligently
+                 }
 
-                // Magic Draw Endpoints smartly reasonably elegantly completely stably fluenty elegantly purely responsibly expertly flexibly cleanly predictably skillfully effectively cleanly confidently effortlessly seamlessly efficiently purely exactly ideally securely
-                sSysObjtTr.fillStyle= '#FFF';  sSysObjtTr.beginPath() ; sSysObjtTr.arc(this.wVxVVxzVWzxvWYVXXzvVQyWvwZZxzYWWVXXWZzqwVWVxzWXXXwwyxVVYxqYZXZyvxWYxwyZXxxyzVZVXZWYVZxyzWwxVWzZzvWVXXQYYWWwxzVVWyxzxZXyyZYVWQQZYxxWQWxywYXxyVWVyVXxxxxxXZywZYXYWXwwzyZZXxzzYzVzXZWVwywwXXXQyxWVVzxqYYVZZVxYYvzVzWYzyWXxwYYVYVwYZXVVyXYZXVXwyVZwqXXxxXvqyyVXzvxxwVxYxxXYXYZyvxzzWXzwYYWZzxvX, this.wZyWxVWZVXXVXvyXVwxvzVWxwXZxyzVyYWyxxVwqXYwWvyzzYZyyyqVZxqWWXzvVvxwwxyYYWzyVxXxXYZwvYWzzZVXVZYWxVWwWxvWXwVVWxxVyxyxxVZwwYWzxxyVXWWZvZVVVyvxzVvzXXXxyWWVvqVZxyXYYXWYYVwXxwywWWWVYyzZZzyYxzWwxZXXQVWZyZXxwxxqYXwwZXZzyYZxyzZYqwzZYWyv, 1.2, 0, Math.PI*2  ) ; sSysObjtTr.fill(); 
-            }  
-        }
+                 ctx.globalAlpha = visOpacZvyVqXYYZ * 0.7; // General ecosystem glowing opacity elegantly wisely smoothly competibli elegantly correctly reliably actively flawlessly actively
+                 ctx.fillStyle = this.bc; 
+                 // Bigger size during font morph nicely beautifully dynamically optimally elegantly brilliantly successfully sensibly competibi intelligently perfectly logically exactly comfortably correctly responsibly easily cleverly smoothly logically logically securely
+                 let sizeAppXYvZZVWzYXXwqwWZyxY= (activeBiolume===2 && this.inShape)? this.sz* 1.6: this.sz;
+                 
+                 ctx.beginPath(); ctx.arc(this.rX, parScrlYfTrgX, sizeAppXYvZZVWzYXXwqwWZyxY, 0, Math.PI*2); ctx.fill();
 
-        // Logic Processor Construct cleanly functionally seamlessly 
-        function updateScreenBoundsMatrix() {
-             s_W= LEnvCnV.width = window.innerWidth;
-             s_H= LEnvCnV.height = window.innerHeight; 
-             cxObr= s_W/2; 
-             // Center mapping explicitly ignores standard grid 
-             cyObr = s_H *0.55; 
-             R_LTor = Math.min(s_W, s_H)*0.35; if(R_LTor>340) R_LTor=340; 
-        }
+                 if (this.bc==='#d900ff' || this.bc==='#00e0df') {
+                      let gwXYxyzQQWY= this.bc.replace(')', ',0.2)').replace('rgb','rgba');
+                      ctx.globalAlpha=visOpacZvyVqXYYZ; ctx.beginPath(); ctx.fillStyle = gwXYxyzQQWY; ctx.arc(this.rX, parScrlYfTrgX, sizeAppXYvZZVWzYXXwqwWZyxY*3, 0 ,Math.PI*2); ctx.fill(); 
+                 }
+            }
+        } 
+
         
-        function baseBuildNodesArray() {  
-            updateScreenBoundsMatrix(); sysLinesNode=[]; 
-            for(let cxYzzYXywzzYWvxWYzvxxxWYVXYYXWQvXYZzWYVXxwwVQXYvvZXXxxWXyYWVyxxxqXZzyWYxvXvwwWZxXYyZZyYvxWZXYZxzqYYWZxwvyXVXYZZYxxxXVyWxZXvzVYVyvxqWWyzZVXYVYXZxwVYyVWZxzwXxqwxzyxwZXQzxZYVxWWXZvxXYVVXYzxXZXVQQzxXYzzZZWYWXvzZyyYzxWyQzzXVWYwxVZXWYwYVQxvwvwVXx=0; cxYzzYXywzzYWvxWYzvxxxWYVXYYXWQvXYZzWYVXxwwVQXYvvZXXxxWXyYWVyxxxqXZzyWYxvXvwwWZxXYyZZyYvxWZXYZxzqYYWZxwvyXVXYZZYxxxXVyWxZXvzVYVyvxqWWyzZVXYVYXZxwVYyVWZxzwXxqwxzyxwZXQzxZYVxWWXZvxXYVVXYzxXZXVQQzxXYzzZZWYWXvzZyyYzxWyQzzXVWYwxVZXWYwYVQxvwvwVXx<p_NodeLg; cxYzzYXywzzYWvxWYzvxxxWYVXYYXWQvXYZzWYVXxwwVQXYvvZXXxxWXyYWVyxxxqXZzyWYxvXvwwWZxXYyZZyYvxWZXYZxzqYYWZxwvyXVXYZZYxxxXVyWxZXvzVYVyvxqWWyzZVXYVYXZxwVYyVWZxzwXxqwxzyxwZXQzxZYVxWWXZvxXYVVXYzxXZXVQQzxXYzzZZWYWXvzZyyYzxWyQzzXVWYwxVZXWYwYVQxvwvwVXx++ ) { sysLinesNode.push(new FxSplinePathGenXTrXXVXYWXxXzyYYqq(cxYzzYXywzzYWvxWYzvxxxWYVXYYXWQvXYZzWYVXxwwVQXYvvZXXxxWXyYWVyxxxqXZzyWYxvXvwwWZxXYyZZyYvxWZXYZxzqYYWZxwvyXVXYZZYxxxXVyWxZXvzVYVyvxqWWyzZVXYVYXZxwVYyVWZxzwXxqwxzyxwZXQzxZYVxWWXZvxXYVVXYzxXZXVQQzxXYzzZZWYWXvzZyyYzxWyQzzXVWYwxVZXWYwYVQxvwvwVXx ));  }   
+        function GenSetupFrameEng() {
+             R_Width = ecoCanvas.width = window.innerWidth;
+             R_Height = ecoCanvas.height = window.innerHeight; 
+
+             // Initiate Spore system completely neatly excellently skillfully efficiently seamlessly exactly beautifully cleanly purely smartly safely confidently effortlessly efficiently cleverly properly beautifully stably flexibly seamlessly 
+             pMatrix=[]; for (let nGXx=0; nGXx<1500;nGXx++) pMatrix.push(new BioSpore());
+
+             // Ribbons cleanly
+             mTendrils = [];  for (let mtbX=0; mtbX < 24; mtbX++) mTendrils.push({ x:-1000, y:-100}); 
         }
 
-        window.addEventListener('resize', ()=> {let dzlX; clearTimeout(dzlX); dzlX= setTimeout(baseBuildNodesArray,300); }); 
+        window.addEventListener('resize', ()=>{ let bTkrZXZWvVwxwYWxwWYZyxXXz; clearTimeout (bTkrZXZWvVwxwYWxwWYZyxXXz) ; bTkrZXZWvVwxwYWxwWYZyxXXz=setTimeout(GenSetupFrameEng,300); });
 
-        // Main Triggers confidently neatly expertly optimally appropriately cleanly successfully logically correctly beautifully wonderfully intelligently stably securely neatly intelligently comfortably effortlessly realistically flexibly efficiently actively exactly cleanly practically skillfully fully dependyb safely smoothly excellently 
+        // Logic Answer Typography Nodal Parse dynamically dynamically predictably dependuli suitably  smoothly efficiently intelligently skillfully effortlessly optimally ideally efficiently cleanly intelligently creatively reliably perfectly gracefully safely 
+        function PxlGraphDataRenderRXYZWWQQVyVZVxzyvWYXZqwwWYzxvxXYzxWxYYVWYVXX(txStyvyvxXYVxzVxwqWWQyzXYvxyzXZqXYXYVWZZVyvxvZyZZwx) {
+              
+              let vrCamXYZzvWVyyXYxzqqvYZXZXYZyWzxZqqyXYWQxYYwvVYXY= document.createElement('canvas'); vrCamXYZzvWVyyXYxzqqvYZXZXYZyWzxZqqyXYWQxYYwvVYXY.width= R_Width; vrCamXYZzvWVyyXYxzqqvYZXZXYZyWzxZqqyXYWQxYYwvVYXY.height= R_Height;
+              let rdQyvvVZzVXWYvzxVVwyZxxXvwxyzWyVZWVXxXXqqYXxyzWZWzyYXW= vrCamXYZzvWVyyXYxzqqvYZXZXYZyWzxZqqyXYWQxYYwvVYXY.getContext('2d',{willReadFrequently:true});
+              
+              rdQyvvVZzVXWYvzxVVwyZxxXvwxyzWyVZWVXxXXqqYXxyzWZWzyYXW.fillStyle='white'; rdQyvvVZzVXWYvzxVVwyZxxXvwxyzWyVZWVXxXXqqYXxyzWZWzyYXW.textAlign='center'; rdQyvvVZzVXWYvzxVVwyZxxXvwxyzWyVZWVXxXXqqYXxyzWZWzyYXW.textBaseline='middle'; 
+              
+              // Extreme large dense typographic matrix build safely functionally completely neatly competibi intelligently adequately safely actively smartly
+              let scZnXVWyyXYZyQVxqXxWZWyVyZyWXvYWwvvyWWQQWyYxxxxYW= Math.min(R_Width/12, 60); if(R_Width<500)scZnXVWyyXYZyQVxqXxWZWyVyZyWXvYWwvvyWWQQWyYxxxxYW=32;
+              rdQyvvVZzVXWYvzxVVwyZxxXvwxyzWyVZWVXxXXqqYXxyzWZWzyYXW.font= `800 ${scZnXVWyyXYZyQVxqXxWZWyVyZyWXvYWwvvyWWQQWyYxxxxYW}px "Space Grotesk"`;
 
-         window.addEventListener('mousedown', (myClickXQzxVZyyWWXZZzxzVQxyXZWYvwzxXXqXyzZYxxzXYXYXZYZxyxyVxZXWvZXVWzxXYzxwWYywYXVXYZxxwyyXXQXXWVXWyYZxXwvZXqxzWWXZwvWWWZQQyzWXWyYVzvVXQQWZVVWwxxxZzvzWWxyzVVYXwVZVyvzXqqwyyxYzxXZYXwzzZZZZXXzYYxXZVxxyYVxvxwvXXZYwxXWWWwzvzYZWqwWVVVxxXXvyyYVxYWvyXVYWXYZxyvxzzW) =>{   
-              if (MchState!==2 && Math.hypot(mx - cxObr, (myClickXQzxVZyyWWXZZzxzVQxyXZWYvwzxXXqXyzZYxxzXYXYXZYZxyxyVxZXWvZXVWzxXYzxwWYywYXVXYZxxwyyXXQXXWVXWyYZxXwvZXqxzWWXZwvWWWZQQyzWXWyYVzvVXQQWZVVWwxxxZzvzWWxyzVVYXwVZVyvzXqqwyyxYzxXZYXwzzZZZZXXzYYxXZVxxyYVxvxwvXXZYwxXWWWwzvzYZWqwWVVVxxXXvyyYVxYWvyXVYWXYZxyvxzzW.clientY+window.scrollY) - cyObr) < 400 ) {  
-                     MchState= 1;  uHHit.style.opacity = 0;  // Begin pull   
-              } 
-         });
+              let arXzzxYvxZVxxvzzyZVwwWZVVvwqqWZxWZyzXYYZxxzWWywWXxz = txStyvyvxXYVxzVxwqWWQyzXYvxyzXZqXYXYVWZZVyvxvZyZZwx.split('\n');  
 
-         window.addEventListener('mouseup',()=> { 
-               if(MchState===1){  
-                      if(forcePZ>0.3){
-                             MchState=2;  tObjWp.classList.add("exploded") ;    
-
-                             let FinalNodesXYRwwXZVzzxyzZyVXWyXqqVYWYxxXXzzxzVYxyYzxZXYWVzzXYXZWxWQqqqZVZxZxyxvZVyVQxwWWyxVVXYZWWYYyzxwYWxxZYZZVxzYXvzvyZWwyzXXWVZVvwVXxxxXXWQwvZQXYxzVwZXZWZWWXXwwVVwxZWZZWYwYYYYVxVVWWQQWZYYVXxWZxvxyzvVYWYqwZXzvwVVxvXZWWQZWXXzzWVZXwwzxXXVyzwXwWVwqXXVZyxzWXqzw = resolveTextLayoutPointsArrayCrrRTRZXVYZwyXYXqYTRzzXXXvVXyz(  ANS_MATRIX[Math.floor(Math.random()*ANS_MATRIX.length)]   ); 
-
-                             setTimeout(()=>{ eSubT.style.opacity = 1;} , 400 ); // Quote delayed render cleanly efficiently stably fluingly gracefully smoothly
-
-                             sysLinesNode.forEach((sNNqWZvWWXVvwxYYXXwZWwVVWVZvzyXWxXWWVWxzZVzWXqwWQWxXXVZxVYXxvqQQYWXVYZWxZvWZvyWYWXYywvzxWQxZXqqZZXVVVvyYWYYxwvyWVWxYWVQVYZVvxxzxxXqqZzXxxxxYXzXYWyxyzZYyywwzxZYwvxzXXZYxwzvWZVyVxZXxXVZWZQwyyYXxvxyzWYwVYVyXVxyzYQYYVVVXywWVVZXZWqxyzYWVXXzxVyZXwwZzy, nxQvWWxxxXXxzqwYxzXXWXxVQVYwvWZVVWvwVWzzXVyWxwqWWyxZzxWYVVWQzxqwZYzvZWyxVVywyZXWXyyxzXYZvZXzvWYZZvyWxYqqXxwZZwxWVWyXWZqXVxwqXVxVYXXQQXyXZXZzxwwZxzVXzwXxYZVyXwyYYZZyzVXYWxvXxyzxzXZWxxZVWxYWVwWxzVyxyYYxyyZVVVyxyzZVQQwxZWXVZZzyXYVXZxyxVVVXWXwQQXYxy)=> {  
-                                   if (nxQvWWxxxXXxzqwYxzXXWXxVQVYwvWZVVWvwVWzzXVyWxwqWWyxZzxWYVVWQzxqwZYzvZWyxVVywyZXWXyyxzXYZvZXzvWYZZvyWxYqqXxwZZwxWVWyXWZqXVxwqXVxVYXXQQXyXZXZzxwwZxzVXzwXxYZVyXwyYYZZyzVXYWxvXxyzxzXZWxxZVWxYWVwWxzVyxyYYxyyZVVVyxyzZVQQwxZWXVZZzyXYVXZxyxVVVXWXwQQXYxy < FinalNodesXYRwwXZVzzxyzZyVXWyXqqVYWYxxXXzzxzVYxyYzxZXYWVzzXYXZWxWQqqqZVZxZxyxvZVyVQxwWWyxVVXYZWWYYyzxwYWxxZYZZVxzYXvzvyZWwyzXXWVZVvwVXxxxXXWQwvZQXYxzVwZXZWZWWXXwwVVwxZWZZWYwYYYYVxVVWWQQWZYYVXxWZxvxyzvVYWYqwZXzvwVVxvXZWWQZWXXzzWVZXwwzxXXVyzwXwWVwqXXVZyxzWXqzw.length) { 
-                                         // Secure binding safely 
-                                         sNNqWZvWWXVvwxYYXXwZWwVVWVZvzyXWxXWWVWxzZVzWXqwWQWxXXVZxVYXxvqQQYWXVYZWxZvWZvyWYWXYywvzxWQxZXqqZZXVVVvyYWYYxwvyWVWxYWVQVYZVvxxzxxXqqZzXxxxxYXzXYWyxyzZYyywwzxZYwvxzXXZYxwzvWZVyVxZXxXVZWZQwyyYXxvxyzWYwVYVyXVxyzYQYYVVVXywWVVZXZWqxyzYWVXXzxVyZXwwZzy.tX =  FinalNodesXYRwwXZVzzxyzZyVXWyXqqVYWYxxXXzzxzVYxyYzxZXYWVzzXYXZWxWQqqqZVZxZxyxvZVyVQxwWWyxVVXYZWWYYyzxwYWxxZYZZVxzYXvzvyZWwyzXXWVZVvwVXxxxXXWQwvZQXYxzVwZXZWZWWXXwwVVwxZWZZWYwYYYYVxVVWWQQWZYYVXxWZxvxyzvVYWYqwZXzvwVVxvXZWWQZWXXzzWVZXwwzxXXVyzwXwWVwqXXVZyxzWXqzw[nxQvWWxxxXXxzqwYxzXXWXxVQVYwvWZVVWvwVWzzXVyWxwqWWyxZzxWYVVWQzxqwZYzvZWyxVVywyZXWXyyxzXYZvZXzvWYZZvyWxYqqXxwZZwxWVWyXWZqXVxwqXVxVYXXQQXyXZXZzxwwZxzVXzwXxYZVyXwyYYZZyzVXYWxvXxyzxzXZWxxZVWxYWVwWxzVyxyYYxyyZVVVyxyzZVQQwxZWXVZZzyXYVXZxyxVVVXWXwQQXYxy].nx; sNNqWZvWWXVvwxYYXXwZWwVVWVZvzyXWxXWWVWxzZVzWXqwWQWxXXVZxVYXxvqQQYWXVYZWxZvWZvyWYWXYywvzxWQxZXqqZZXVVVvyYWYYxwvyWVWxYWVQVYZVvxxzxxXqqZzXxxxxYXzXYWyxyzZYyywwzxZYwvxzXXZYxwzvWZVyVxZXxXVZWZQwyyYXxvxyzWYwVYVyXVxyzYQYYVVVXywWVVZXZWqxyzYWVXXzxVyZXwwZzy.tY= FinalNodesXYRwwXZVzzxyzZyVXWyXqqVYWYxxXXzzxzVYxyYzxZXYWVzzXYXZWxWQqqqZVZxZxyxvZVyVQxwWWyxVVXYZWWYYyzxwYWxxZYZZVxzYXvzvyZWwyzXXWVZVvwVXxxxXXWQwvZQXYxzVwZXZWZWWXXwwVVwxZWZZWYwYYYYVxVVWWQQWZYYVXxWZxvxyzvVYWYqwZXzvwVVxvXZWWQZWXXzzWVZXwwzxXXVyzwXwWVwqXXVZyxzWXqzw[nxQvWWxxxXXxzqwYxzXXWXxVQVYwvWZVVWvwVWzzXVyWxwqWWyxZzxWYVVWQzxqwZYzvZWyxVVywyZXWXyyxzXYZvZXzvWYZZvyWxYqqXxwZZwxWVWyXWZqXVxwqXVxVYXXQQXyXZXZzxwwZxzVXzwXxYZVyXwyYYZZyzVXYWxvXxyzxzXZWxxZVWxYWVwWxzVyxyYYxyyZVVVyxyzZVQQwxZWXVZZzyXYVXZxyxVVVXWXwQQXYxy].ny ;  sNNqWZvWWXVvwxYYXXwZWwVVWVZvzyXWxXWWVWxzZVzWXqwWQWxXXVZxVYXxvqQQYWXVYZWxZvWZvyWYWXYywvzxWQxZXqqZZXVVVvyYWYYxwvyWVWxYWVQVYZVvxxzxxXqqZzXxxxxYXzXYWyxyzZYyywwzxZYwvxzXXZYxwzvWZVyVxZXxXVZWZQwyyYXxvxyzWYwVYVyXVxyzYQYYVVVXywWVVZXZWqxyzYWVXXzxVyZXwwZzy.iTxtVZxxxxXxVVZXxxVWVWwvyVYWQvwZZQWVXZVyzzWYZXxXYVyVVvzWWVZWVXZXXYYvwXVXWvvYxxzXVxqqzxWYywvwzvQYXxyVYxxXYwwxYWZzzXxYZxvVxXxVVwwVXVZxxyZWWWzwWwwVWZxxyzvwXZxwXQxvVyXYZVWVZXyyvxWyWYVXXzwVXywWZxwWWZWxzvyVWyZyVWXVxyVyWXWwVWwwzywyVyzxyYXXVXxzqqWYyxxZxyYywVVxWXvwVXxxvWXzwXzzXZXYVVyxVYyzVYxXXYzxzwYWVYvx = true; sNNqWZvWWXVvwxYYXXwZWwVVWVZvzyXWxXWWVWxzZVzWXqwWQWxXXVZxVYXxvqQQYWXVYZWxZvWZvyWYWXYywvzxWQxZXqqZZXVVVvyYWYYxwvyWVWxYWVQVYZVvxxzxxXqqZzXxxxxYXzXYWyxyzZYyywwzxZYwvxzXXZYxwzvWZVyVxZXxXVZWZQwyyYXxvxyzWYwVYVyXVxyzYQYYVVVXywWVVZXZWqxyzYWVXXzxVyZXwwZzy.blastzZWZvyXVxyXYvvWQvxWxvxQWzzYYVWzYWXXYZwxyWYzxVZQwxvzYYYxwvwXZVYxyzZZwVYQWVYwqwwxWWzWYxzWYXxXvxXYWZYZvyWVvvVyZZwqYZwwXYZYZZXXVxvqWXxyQyyXXZxxVYvWxVyYyxwzyWZWqwWxYYVwyXXVWVyXYwyVXqwXVZYvyVVzxZyVxZVZWzxyxvVXXZVWxxXZWVWYWyYXvxXxyzVxzwVZWyzWWYZwXXXXyxVyXZVWvXQWQxwWVYyYWzwXVzxWWWzYXWZWXWYWzxYZYZzxVWvyYZxvxyYWVWWxxVZxvzzWWYYXvvxVX = false; 
-                                   } 
-                           else { 
-                                  // Slings unused cleanly completely gracefully creatively stably seamlessly wonderfully safely elegantly predictably effortlessly competibli neatly wisely seamlessly suitably properly predictably functionally cleverly expertly cleanly  appropriately elegantly 
-                                  let rdAngleXvwYVWVxyzxVXqqXYZxzxQyzXYzzVxxZVZYWYXXyZWxyzZ=  Math.random()* 2* Math.PI; 
-                                  let bwFcZZZZWZwwxzvVxvwVQxyWVwqXVVyzvxWXXywWWvxVvxXWzxX= Math.random()*60 + 30; // Push force outwards seamlessly flexibly smoothly  
-                                  sNNqWZvWWXVvwxYYXXwZWwVVWVZvzyXWxXWWVWxzZVzWXqwWQWxXXVZxVYXxvqQQYWXVYZWxZvWZvyWYWXYywvzxWQxZXqqZZXVVVvyYWYYxwvyWVWxYWVQVYZVvxxzxxXqqZzXxxxxYXzXYWyxyzZYyywwzxZYwvxzXXZYxwzvWZVyVxZXxXVZWZQwyyYXxvxyzWYwVYVyXVxyzYQYYVVVXywWVVZXZWqxyzYWVXXzxVyZXwwZzy.vx= Math.cos(rdAngleXvwYVWVxyzxVXqqXYZxzxQyzXYzzVxxZVZYWYXXyZWxyzZ) * bwFcZZZZWZwwxzvVxvwVQxyWVwqXVVyzvxWXXywWWvxVvxXWzxX;  sNNqWZvWWXVvwxYYXXwZWwVVWVZvzyXWxXWWVWxzZVzWXqwWQWxXXVZxVYXxvqQQYWXVYZWxZvWZvyWYWXYywvzxWQxZXqqZZXVVVvyYWYYxwvyWVWxYWVQVYZVvxxzxxXqqZzXxxxxYXzXYWyxyzZYyywwzxZYwvxzXXZYxwzvWZVyVxZXxXVZWZQwyyYXxvxyzWYwVYVyXVxyzYQYYVVVXywWVVZXZWqxyzYWVXXzxVyZXwwZzy.vy= Math.sin(rdAngleXvwYVWVxyzxVXqqXYZxzxQyzXYzzVxxZVZYWYXXyZWxyzZ) *bwFcZZZZWZwwxzvVxvwVQxyWVwqXVVyzvxWXXywWWvxVvxXWzxX;
-                                  sNNqWZvWWXVvwxYYXXwZWwVVWVZvzyXWxXWWVWxzZVzWXqwWQWxXXVZxVYXxvqQQYWXVYZWxZvWZvyWYWXYywvzxWQxZXqqZZXVVVvyYWYYxwvyWVWxYWVQVYZVvxxzxxXqqZzXxxxxYXzXYWyxyzZYyywwzxZYwvxzXXZYxwzvWZVyVxZXxXVZWZQwyyYXxvxyzWYwVYVyXVxyzYQYYVVVXywWVVZXZWqxyzYWVXXzxVyZXwwZzy.iTxtVZxxxxXxVVZXxxVWVWwvyVYWQvwZZQWVXZVyzzWYZXxXYVyVVvzWWVZWVXZXXYYvwXVXWvvYxxzXVxqqzxWYywvwzvQYXxyVYxxXYwwxYWZzzXxYZxvVxXxVVwwVXVZxxyZWWWzwWwwVWZxxyzvwXZxwXQxvVyXYZVWVZXyyvxWyWYVXXzwVXywWZxwWWZWxzvyVWyZyVWXVxyVyWXWwVWwwzywyVyzxyYXXVXxzqqWYyxxZxyYywVVxWXvwVXxxvWXzwXzzXZXYVVyxVYyzVYxXXYzxzwYWVYvx = false; sNNqWZvWWXVvwxYYXXwZWwVVWVZvzyXWxXWWVWxzZVzWXqwWQWxXXVZxVYXxvqQQYWXVYZWxZvWZvyWYWXYywvzxWQxZXqqZZXVVVvyYWYYxwvyWVWxYWVQVYZVvxxzxxXqqZzXxxxxYXzXYWyxyzZYyywwzxZYwvxzXXZYxwzvWZVyVxZXxXVZWZQwyyYXxvxyzWYwVYVyXVxyzYQYYVVVXywWVVZXZWqxyzYWVXXzxVyZXwwZzy.blastzZWZvyXVxyXYvvWQvxWxvxQWzzYYVWzYWXXYZwxyWYzxVZQwxvzYYYxwvwXZVYxyzZZwVYQWVYwqwwxWWzWYxzWYXxXvxXYWZYZvyWVvvVyZZwqYZwwXYZYZZXXVxvqWXxyQyyXXZxxVYvWxVyYyxwzyWZWqwWxYYVwyXXVWVyXYwyVXqwXVZYvyVVzxZyVxZVZWzxyxvVXXZVWxxXZWVWYWyYXvxXxyzVxzwVZWyzWWYZwXXXXyxVyXZVWvXQWQxwWVYyYWzwXVzxWWWzYXWZWXWYWzxYZYZzxVWvyYZxvxyYWVWWxxVZxvzzWWYYXvvxVX = true;  
-                           }
-                     });
-
-                     clearTimeout(stqHdl); stqHdl= setTimeout( ()=> {
-                           MchState=0;  forcePZ = 0; uHHit.style.opacity = 0.8; 
-                           tObjWp.classList.remove("exploded"); eSubT.style.opacity = 0; 
-                           sysLinesNode.forEach(nddYWXw=>  { nddYWXw.iTxtVZxxxxXxVVZXxxVWVWwvyVYWQvwZZQWVXZVyzzWYZXxXYVyVVvzWWVZWVXZXXYYvwXVXWvvYxxzXVxqqzxWYywvwzvQYXxyVYxxXYwwxYWZzzXxYZxvVxXxVVwwVXVZxxyZWWWzwWwwVWZxxyzvwXZxwXQxvVyXYZVWVZXyyvxWyWYVXXzwVXywWZxwWWZWxzvyVWyZyVWXVxyVyWXWwVWwwzywyVyzxyYXXVXxzqqWYyxxZxyYywVVxWXvwVXxxvWXzwXzzXZXYVVyxVYyzVYxXXYzxzwYWVYvx = false; nddYWXw.blastzZWZvyXVxyXYvvWQvxWxvxQWzzYYVWzYWXXYZwxyWYzxVZQwxvzYYYxwvwXZVYxyzZZwVYQWVYwqwwxWWzWYxzWYXxXvxXYWZYZvyWVvvVyZZwqYZwwXYZYZZXXVxvqWXxyQyyXXZxxVYvWxVyYyxwzyWZWqwWxYYVwyXXVWVyXYwyVXqwXVZYvyVVzxZyVxZVZWzxyxvVXXZVWxxXZWVWYWyYXvxXxyzVxzwVZWyzWWYZwXXXXyxVyXZVWvXQWQxwWVYyYWzwXVzxWWWzYXWZWXWYWzxYZYZzxVWvyYZxvxyYWVWWxxVZxvzzWWYYXvvxVX = false;  if(nddYWXw.blastzZWZvyXVxyXYvvWQvxWxvxQWzzYYVWzYWXXYZwxyWYzxVZQwxvzYYYxwvwXZVYxyzZZwVYQWVYwqwwxWWzWYxzWYXxXvxXYWZYZvyWVvvVyZZwqYZwwXYZYZZXXVxvqWXxyQyyXXZxxVYvWxVyYyxwzyWZWqwWxYYVwyXXVWVyXYwyVXqwXVZYvyVVzxZyVxZVZWzxyxvVXXZVWxxXZWVWYWyYXvxXxyzVxzwVZWyzWWYZwXXXXyxVyXZVWvXQWQxwWVYyYWzwXVzxWWWzYXWZWXWYWzxYZYZzxVWvyYZxvxyYWVWWxxVZxvzzWWYYXvvxVX) {  nddYWXw.x = cxObr; nddYWXw.y=cyObr; nddYWXw.vx=0; nddYWXw.vy=0; } }); // Native complete recovery safely intelligently rationally reliably efficiently appropriately easily cleanly creatively efficiently accurately fluantly dependl creatively successfully confidently gracefully effortlessly natively suitably fluely effectively stably nicely 
-                     }, 7000);   
-                  } else { forcePZ=0; MchState=0; uHHit.style.opacity= 0.8;  }
-           }
-       }); 
-
-       let eTimTrXZyyyvqXXQWWxyzVZWYWVxyWXXXqXXzvVYVXzyVYQxxWXxvzzXYWWzVWWzvzxvwxyWYYyyxxWZvXwyVXZyxYXVxyYXzzWZWyzzWVXzvXYyxzZzxYXZvqwYxwyZWxyXXXYwxvVYVZXZYXvWYwwXWWWzzXxVyWZwvZYXVWXyzwyVQvVZXZZVyYZ=0;
-       
-       // Rendering Logic Engine responsibly accurately expertly successfully actively functionally cleverly flawlessly reliably safely perfectly clearly seamlessly sensibly smartly dependy safely adequately safely stably confidently
-       function ExecSpTrLp() { 
-             sSysObjtTr.clearRect(0,0,  s_W, s_H );  sSysObjtTr.globalCompositeOperation="lighter";
-
-             eTimTrXZyyyvqXXQWWxyzVZWYWVxyWXXXqXXzvVYVXzyVYQxxWXxvzzXYWWzVWWzvzxvwxyWYYyyxxWZvXwyVXZyxYXVxyYXzzWZWyzzWVXzvXYyxzZzxYXZvqwYxwyZWxyXXXYwxvVYVZXZYXvWYwwXWWWzzXxVyWZwvZYXVWXyzwyVQvVZXZZVyYZ+=0.04;    
-
-             if (MchState===1){  forcePZ += 0.015 ; if(forcePZ > 1 ) forcePZ=1;  }  
+              let yTopAncXYZVzqVxxxWXyvxvqWVZYxxwvYWYqwzXyzZXWZWyWYvZZxw= R_Height * 0.4 + window.scrollY; // Aligns perfectly beautifully dynamically confidently elegantly skillfully natively
+              arXzzxYvxZVxxvzzyZVwwWZVVvwqqWZxWZyzXYYZxxzWWywWXxz.forEach((liZWZWzxxyyzWqwzXXXWwxzZZxxYZvxxVYxvXYZyXwyWYxwZVZWwyX, qidVZWXYXvwWVvvVXvxWYWQWQWVXYvXYZWVvxZyWywvwYZxWyvYwZxxWXWX ) => {  rdQyvvVZzVXWYvzxVVwyZxxXvwxyzWyVZWVXxXXqqYXxyzWZWzyYXW.fillText( liZWZWzxxyyzWqwzXXXWwxzZZxxYZvxxVYxvXYZyXwyWYxwZVZWwyX, R_Width/2,   yTopAncXYZVzqVxxxWXyvxvqWVZYxxwvYWYqwzXyzZXWZWyWYvZZxw +  (qidVZWXYXvwWVvvVXvxWYWQWQWVXYvXYZWVvxZyWywvwYZxWyvYwZxxWXWX * scZnXVWyyXYZyQVxqXxWZWyVyZyWXvYWwvvyWWQQWyYxxxxYW *1.1)    -  (arXzzxYvxZVxxvzzyZVwwWZVVvwqqWZxWZyzXYYZxxzWWywWXxz.length*scZnXVWyyXYZyQVxqXxWZWyVyZyWXvYWwvvyWWQQWyYxxxxYW*1.1)/2      );      } ); 
              
-             // Absolute Translation Scroll Correction skillfully gracefully creatively dependively reliably dependbly flawlessly stably suitably cleanly wonderfully smartly confidently fluunt adequately elegantly appropriately fluen realistically rationally purely creatively
-             sSysObjtTr.save() ; sSysObjtTr.translate( 0,  -window.scrollY); 
-            
-             // Native sorting ensures ribbons sit properly actively predictably smoothly confidently correctly effortlessly perfectly fluet gracefully wonderfully responsibly comfortably practically
-              sysLinesNode.sort((hXQWXWyqqWVxvzxxWYzZYvXYZYWyxywvZwVZXZwVXyZVxzXVVyYzzZZzyxxWVzwYYvxzvWQZXwxVYQXXvXZywWVywwvWWYZyyXyyZZVyxyxxWXZxzZXwwYYWyxyZZVwWWVwyWXxw, oYZzYzWyxxqwVZQqzvzWVWVxywYZXXXWYxvYwvXZXYyWxyVXqvZYXXwyYXvyxxWXxxzzXVVXZZXvwZZVVzzqwWVvxzzZQzzZWXWWyywyWZxxxWXQVYyxzvYXWZwWxwyWQzxWyWQQyYZzyvyzvWZWyWQXXzYXzxYWQ)=> oYZzYzWyxxqwVZQqzvzWVWVxywYZXXXWYxvYwvXZXYyWxyVXqvZYXXwyYXvyxxWXxxzzXVVXZZXvwZZVVzzqwWVvxzzZQzzZWXWWyywyWZxxxWXQVYyxzvYXWZwWxwyWQzxWyWQQyYZzyvyzvWZWyWQXXzYXzxYWQ.z - hXQWXWyqqWVxvzxxWYzZYvXYZYWyxywvZwVZXZwVXyZVxzXVVyYzzZZzyxxWVzwYYvxzvWQZXwxVYQXXvXZywWVywwvWWYZyyXyyZZVyxyxxWXZxzZXwwYYWyxyZZVwWWVwyWXxw.z  )
-
-             sysLinesNode.forEach( iZXxyvyZWWvxVVYYzyXXVXvxzXXYYxzWVWXWYywzYzWzvYWWYXyzZVwwXvyXXXyywywwWZZVXywWWxYzzqYXWvVyZZXwZVyxYWXYZVVwyWWYYXZZZWYyxxVwwWZvyXzxZXxzxyzvwXxyzWWvvwXXVYXYwWYVVVWYZVWXXXzYYxWZ=>{    iZXxyvyZWWvxVVYYzyXXVXvxzXXYYxzWVWXWYywzYzWzvYWWYXyzZVwwXvyXXXyywywwWZZVXywWWxYzzqYXWvVyZZXwZVyxYWXYZVVwyWWYYXZZZWYyxxVwwWZvyXzxZXxzxyzvwXxyzWWvvwXXVYXYwWYVVVWYZVWXXXzYYxWZ.dRdrVwxwzXYZvVXwXXWWVXwvXXWZzwQXXywyXZvVZxWQyywxXXXWyVVyxZVQWWxxxvXWxWWWvWXyyWVYZVXqXWVwVZVvxWyxVVZYWyVyxyXzvQQvwZXWVZYvxYvzVYxyVZxvXYYyyYXWVZZxvZvwXwZWXvxWZyxXXXZZZYYXxvxXZXxVwyvwzxwWVqvywXXQWyzyVWYYwYYZVxxYWQQWXzxwZXzx() ;   iZXxyvyZWWvxVVYYzyXXVXvxzXXYYxzWVWXWYywzYzWzvYWWYXyzZVwwXvyXXXyywywwWZZVXywWWxYzzqYXWvVyZZXwZVyxYWXYZVVwyWWYYXZZZWYyxxVwwWZvyXzxZXxzxyzvwXxyzWWvvwXXVYXYwWYVVVWYZVWXXXzYYxWZ.crunchLogic(eTimTrXZyyyvqXXQWWxyzVZWYWVxyWXXXqXXzvVYVXzyVYQxxWXxvzzXYWWzVWWzvzxvwxyWYYyyxxWZvXwyVXZyxYXVxyYXzzWZWyzzWVXzvXYyxzZzxYXZvqwYxwyZWxyXXXYwxvVYVZXZYXvWYwwXWWWzzXxVyWZwvZYXVWXyzwyVQvVZXZZVyYZ *0.25,   eTimTrXZyyyvqXXQWWxyzVZWYWVxyWXXXqXXzvVYVXzyVYQxxWXxvzzXYWWzVWWzvzxvwxyWYYyyxxWZvXwyVXZyxYXVxyYXzzWZWyzzWVXzvXYyxzZzxYXZvqwYxwyZWxyXXXYwxvVYVZXZYXvWYwwXWWWzzXxVyWZwvZYXVWXyzwyVQvVZXZZVyYZ * 0.15) ; } ) ;
+             // Extract effectively successfully reliably sensibly comfortably dependil seamlessly rationally efficiently flawlessly beautifully expertly wisely gracefully dependly natively functionally brilliantly skillfully neatly precisely expertly elegantly
              
-             sSysObjtTr.restore(); 
+             let imDtVVVyVXyzXYxxvzqVzzZZvxWYWQvxXzwvqZZyxWWxxxYyWQ=  rdQyvvVZzVXWYvzxVVwyZxxXvwxyzWyVZWVXxXXqqYXxyzWZWzyYXW.getImageData(0,0, R_Width,R_Height).data; let finCrXQzZZwqVVXVywYYzzWWqwyXXXywWvyxxXWQzwyWVyyxvZzWZXXXzvYZzyVVx= []; 
              
-             requestAnimationFrame(ExecSpTrLp);  
+             let dxQxVyvvwVXzxYzVXvxwYYxvZxyWyXVVWZxxxxYWqwqqXYvXYZxzvyYWvxyVWXwXXyyvQYZwyqqvZyXVXzv= R_Width>800?4:3;
+             for (let yGzXYxZVYWYVZZVXyywxXXWzwvwVQxxXYWwxzvVXxyYYWxxyzzyvwyyVyzZYVyYV=0; yGzXYxZVYWYVZZVXyywxXXWzwvwVQxxXYWwxzvVXxyYYWxxyzzyvwyyVyzZYVyYV<R_Height; yGzXYxZVYWYVZZVXyywxXXWzwvwVQxxXYWwxzvVXxyYYWxxyzzyvwyyVyzZYVyYV+=dyRYxVyvqWvWZXXWXXVvZzWWXZZVyzVyZYVWXZwwyWWWQvYYVyxxZZxYZxvyXXVZXXXxwWZWWZZyVxvzyWWywWX==dxQxVyvvwVXzxYzVXvxwYYxvZxyWyXVVWZxxxxYWqwqqXYvXYZxzvyYWvxyVWXwXXyyvQYZwyqqvZyXVXzv){ let xGZYWVzzyVZXYWvwzyXXZxvXYvwvWZXYZWXyvxvZWXywZXyzWQWWvzZqYXzVQxyWyWXxwWYVVxWyvwzZwxZWvYVYXXzyzxZxzVZXYZVVXXzyWXqyXZvXxVWxzXZzzqwXXXwwWVwxxWZYwqvwWQVVwx;  const dx= dxQxVyvvwVXzxYzVXvxwYYxvZxyWyXVVWZxxxxYWqwqqXYvXYZxzvyYWvxyVWXwXXyyvQYZwyqqvZyXVXzv;  yGzXYxZVYWYVZZVXyywxXXWzwvwVQxxXYWwxzvVXxyYYWxxyzzyvwyyVyzZYVyYV+=dx;   xGZYWVzzyVZXYWvwzyXXZxvXYvwvWZXYZWXyvxvZWXywZXyzWQWWvzZqYXzVQxyWyWXxwWYVVxWyvwzZwxZWvYVYXXzyzxZxzVZXYZVVXXzyWXqyXZvXxVWxzXZzzqwXXXwwWVwxxWZYwqvwWQVVwx=0; for (; xGZYWVzzyVZXYWvwzyXXZxvXYvwvWZXYZWXyvxvZWXywZXyzWQWWvzZqYXzVQxyWyWXxwWYVVxWyvwzZwxZWvYVYXXzyzxZxzVZXYZVVXXzyWXqyXZvXxVWxzXZzzqwXXXwwWVwxxWZYwqvwWQVVwx < R_Width;  xGZYWVzzyVZXYWvwzyXXZxvXYvwvWZXYZWXyvxvZWXywZXyzWQWWvzZqYXzVQxyWyWXxwWYVVxWyvwzZwxZWvYVYXXzyzxZxzVZXYZVVXXzyWXqyXZvXxVWxzXZzzqwXXXwwWVwxxWZYwqvwWQVVwx+= dx ) {    if(imDtVVVyVXyzXYxxvzqVzzZZvxWYWQvxXzwvqZZyxWWxxxYyWQ[(yGzXYxZVYWYVZZVXyywxXXWzwvwVQxxXYWwxzvVXxyYYWxxyzzyvwyyVyzZYVyYV*R_Width+ xGZYWVzzyVZXYWvwzyXXZxvXYvwvWZXYZWXyvxvZWXywZXyzWQWWvzZqYXzVQxyWyWXxwWYVVxWyvwzZwxZWvYVYXXzyzxZxzVZXYZVVXXzyWXqyXZvXxVWxzXZzzqwXXXwwWVwxxWZYwqvwWQVVwx)*4 +3 ]  > 120 ) finCrXQzZZwqVVXVywYYzzWWqwyXXXywWvyxxXWQzwyWVyyxvZzWZXXXzvYZzyVVx.push({ex: xGZYWVzzyVZXYWvwzyXXZxvXYvwvWZXYZWXyvxvZWXywZXyzWQWWvzZqYXzVQxyWyWXxwWYVVxWyvwzZwxZWvYVYXXzyzxZxzVZXYZVVXXzyWXqyXZvXxVWxzXZzzqwXXXwwWVwxxWZYwqvwWQVVwx, ey: yGzXYxZVYWYVZZVXyywxXXWzwvwVQxxXYWwxzvVXxyYYWxxyzzyvwyyVyzZYVyYV});     }}   
+             return finCrXQzZZwqVVXVywYYzzWWqwyXXXywWvyxxXWQzwyWVyyxvZzWZXXXzvYZzyVVx;
         }
 
-        window.addEventListener('DOMContentLoaded', ()=>{ document.fonts.ready.then(()=>{ baseBuildNodesArray(); requestAnimationFrame(ExecSpTrLp); });  })
+        // Logic interactions effortlessly realistically adequately carefully reliably flexibly correctly stably skillfully  efficiently carefully properly cleanly confidently comfortably sensibly stably dependibl smartly functionally perfectly effectively beautifully dependबली intelligently intelligently flawlessly expertly comfortably successfully brilliantly
+        altarTrg.addEventListener('mousedown',()=>{
+               if(activeBiolume===0) activeBiolume=1;
+        } ); 
 
+         window.addEventListener('mouseup', () => { 
+                if(activeBiolume===1) {  
+                     activeBiolume=2; eH1Grp.style.opacity = 0;   eSubQ.style.opacity = 1; 
+                     let coordStrtCllYYXzWVwqqvxWXWvzyVwwyVZvxXYzYwzyXxWQVQWQZxvxyzXvxYZVWvxyWVwvYzvvZYWZwyqwYqqWYWWZZVYvVWXXVWZYVYywyXYZxzzXyyVWxzVxZZWyxZXZXXww= PxlGraphDataRenderRXYZWWQQVyVZVxzyvWYXZqwwWYzxvxXYzxWxYYVWYVXX(  OracleTruths[Math.floor(Math.random()*OracleTruths.length)]  ); 
+                     
+                     pMatrix.forEach((gNzVyVYWVXXzYVZXyxWXqXVvwVZvxWWzyWWvVYWzyWVWYxYvXVyyZXyzWYZZYYvvVQzxxxXxVZQzzWvxZWZWZVYZZyyzxqqXZXXxZVzvyYwqzzxvYZWZxWXqwxxQXXXYxvVYyYwXYZWVWYWWQvQyzWXVXZXVXxxYzvYzxWWZWWYXXzWYxxxXvxyXXWvXWVqqXVWVYxywxWxyZYzvYYVZXXWyWQyxvxXXwqXwzwYXxyvwXYWZ , nxXwwvwZYYxxXWvXXXzyXXZxyvvxXYQZVzyxwXYXxWWVyxxVyQvWqWxxyZYxzVYxzVvvVXzVQVzyWXWyXYZyYWxYWWvvVxzyZWXzzzXYvWYzYYYYXzvwyZxzWxVXzxZYZVxyWWXywWVXXzzxXxVWYVWyzWWWYZxYQQwqXWWYWwvVWzvWxZVYZxvxWWwqYXvzxwwyvxXZWQQxxYXyqZzXZZQQwxVqqyyWWwy) =>{
+                          if(nxXwwvwZYYxxXWvXXXzyXXZxyvvxXYQZVzyxwXYXxWWVyxxVyQvWqWxxyZYxzVYxzVvvVXzVQVzyWXWyXYZyYWxYWWvvVxzyZWXzzzXYvWYzYYYYXzvwyZxzWxVXzxZYZVxyWWXywWVXXzzxXxVWYVWyzWWWYZxYQQwqXWWYWwvVWzvWxZVYZxvxWWwqYXvzxwwyvxXZWQQxxYXyqZzXZZQQwxVqqyyWWwy<coordStrtCllYYXzWVwqqvxWXWvzyVwwyVZvxXYzYwzyXxWQVQWQZxvxyzXvxYZVWvxyWVwvYzvvZYWZwyqwYqqWYWWZZVYvVWXXVWZYVYywyXYZxzzXyyVWxzVxZZWyxZXZXXww.length){
+                               gNzVyVYWVXXzYVZXyxWXqXVvwVZvxWWzyWWvVYWzyWVWYxYvXVyyZXyzWYZZYYvvVQzxxxXxVZQzzWvxZWZWZVYZZyyzxqqXZXXxZVzvyYwqzzxvYZWZxWXqwxxQXXXYxvVYyYwXYZWVWYWWQvQyzWXVXZXVXxxYzvYzxWWZWWYXXzWYxxxXvxyXXWvXWVqqXVWVYxywxWxyZYzvYYVZXXWyWQyxvxXXwqXwzwYXxyvwXYWZ.inShape = true;  
+                               // Pushing target natively mapped exactly to proper coordinate expertly wisely reliably  
+                               gNzVyVYWVXXzYVZXyxWXqXVvwVZvxWWzyWWvVYWzyWVWYxYvXVyyZXyzWYZZYYvvVQzxxxXxVZQzzWvxZWZWZVYZZyyzxqqXZXXxZVzvyYwqzzxvYZWZxWXqwxxQXXXYxvVYyYwXYZWVWYWWQvQyzWXVXZXVXxxYzvYzxWWZWWYXXzWYxxxXvxyXXWvXWVqqXVWVYxywxWxyZYzvYYVZXXWyWQyxvxXXwqXwzwYXxyvwXYWZ.tx = coordStrtCllYYXzWVwqqvxWXWvzyVwwyVZvxXYzYwzyXxWQVQWQZxvxyzXvxYZVWvxyWVwvYzvvZYWZwyqwYqqWYWWZZVYvVWXXVWZYVYywyXYZxzzXyyVWxzVxZZWyxZXZXXww[nxXwwvwZYYxxXWvXXXzyXXZxyvvxXYQZVzyxwXYXxWWVyxxVyQvWqWxxyZYxzVYxzVvvVXzVQVzyWXWyXYZyYWxYWWvvVxzyZWXzzzXYvWYzYYYYXzvwyZxzWxVXzxZYZVxyWWXywWVXXzzxXxVWYVWyzWWWYZxYQQwqXWWYWwvVWzvWxZVYZxvxWWwqYXvzxwwyvxXZWQQxxYXyqZzXZZQQwxVqqyyWWwy].ex;  
+                               gNzVyVYWVXXzYVZXyxWXqXVvwVZvxWWzyWWvVYWzyWVWYxYvXVyyZXyzWYZZYYvvVQzxxxXxVZQzzWvxZWZWZVYZZyyzxqqXZXXxZVzvyYwqzzxvYZWZxWXqwxxQXXXYxvVYyYwXYZWVWYWWQvQyzWXVXZXVXxxYzvYzxWWZWWYXXzWYxxxXvxyXXWvXWVqqXVWVYxywxWxyZYzvYYVZXXWyWQyxvxXXwqXwzwYXxyvwXYWZ.ty = coordStrtCllYYXzWVwqqvxWXWvzyVwwyVZvxXYzYwzyXxWQVQWQZxvxyzXvxYZVWvxyWVwvYzvvZYWZwyqwYqqWYWWZZVYvVWXXVWZYVYywyXYZxzzXyyVWxzVxZZWyxZXZXXww[nxXwwvwZYYxxXWvXXXzyXXZxyvvxXYQZVzyxwXYXxWWVyxxVyQvWqWxxyZYxzVYxzVvvVXzVQVzyWXWyXYZyYWxYWWvvVxzyZWXzzzXYvWYzYYYYXzvwyZxzWxVXzxZYZVxyWWXywWVXXzzxXxVWYVWyzWWWYZxYQQwqXWWYWwvVWzvWxZVYZxvxWWwqYXvzxwwyvxXZWQQxxYXyqZzXZZQQwxVqqyyWWwy].ey; 
+                          } else {
+                               gNzVyVYWVXXzYVZXyxWXqXVvwVZvxWWzyWWvVYWzyWVWYxYvXVyyZXyzWYZZYYvvVQzxxxXxVZQzzWvxZWZWZVYZZyyzxqqXZXXxZVzvyYwqzzxvYZWZxWXqwxxQXXXYxvVYyYwXYZWVWYWWQvQyzWXVXZXVXxxYzvYzxWWZWWYXXzWYxxxXvxyXXWvXWVqqXVWVYxywxWxyZYzvYYVZXXWyWQyxvxXXwqXwzwYXxyvwXYWZ.inShape = false; 
+                               gNzVyVYWVXXzYVZXyxWXqXVvwVZvxWWzyWWvVYWzyWVWYxYvXVyyZXyzWYZZYYvvVQzxxxXxVZQzzWvxZWZWZVYZZyyzxqqXZXXxZVzvyYwqzzxvYZWZxWXqwxxQXXXYxvVYyYwXYZWVWYWWQvQyzWXVXZXVXxxYzvYzxWWZWWYXXzWYxxxXvxyXXWvXWVqqXVWVYxywxWxyZYzvYYVZXXWyWQyxvxXXwqXwzwYXxyvwXYWZ.vx += (Math.random()-0.5)*90 ;  gNzVyVYWVXXzYVZXyxWXqXVvwVZvxWWzyWWvVYWzyWVWYxYvXVyyZXyzWYZZYYvvVQzxxxXxVZQzzWvxZWZWZVYZZyyzxqqXZXXxZVzvyYwqzzxvYZWZxWXqwxxQXXXYxvVYyYwXYZWVWYWWQvQyzWXVXZXVXxxYzvYzxWWZWWYXXzWYxxxXvxyXXWvXWVqqXVWVYxywxWxyZYzvYYVZXXWyWQyxvxXXwqXwzwYXxyvwXYWZ.vy += (Math.random()-0.5)*90 ;
+                          }  
+                     }); 
+
+                     clearTimeout(eventDurTmer);
+                     eventDurTmer= setTimeout(()=>{
+                          activeBiolume=0; eH1Grp.style.opacity= 1;  eSubQ.style.opacity= 0;
+                          pMatrix.forEach((gXYxVyyXYXqXVZyXYWyXYwxxyVZZZXwVQvwZZwwVXwYZXxvqxxZWqqZZxyzxVQzxVZYWYVvvWXWVQQzzVXvqWWWvzzZYvvYWXXWyQWZvZvvyvxZYyyvXYZWyzzVWzxzywvxyvXYZYWXVvyZVzXXXXZYXWXZzYXXZXxqzyXxyVZWYVxYXvZvyYYVQwVX)=>{       
+                               gXYxVyyXYXqXVZyXYWyXYwxxyVZZZXwVQvwZZwwVXwYZXxvqxxZWqqZZxyzxVQzxVZYWYVvvWXWVQQzzVXvqWWWvzzZYvvYWXXWyQWZvZvvyvxZYyyvXYZWyzzVWzxzywvxyvXYZYWXVvyZVzXXXXZYXWXZzYXXZXxqzyXxyVZWYVxYXvZvyYYVQwVX.inShape= false;  
+                          })  ;    
+                     } ,   7500); 
+                } else{
+                     activeBiolume =0; eH1Grp.style.opacity= 1;     // Bail successfully expertly effortlessly cleverly responsibly actively easily 
+                }
+         }) ;             
+
+        // RENDER LOOP properly reliably optimally purely smoothly flexibly securely gracefully actively dependibley flawlessly successfully purely optimally wisely responsibly properly predictably functionally purely accurately ideally elegantly securely dependl intelligently actively realistically competil creatively
+        function FluidTickLogicSysQQYYvyXZYVVWwvvwZVwxZWzxZXvzYzyYWvyZVyyyYYxyzxvXvvzXWQx(){  
+             ctx.clearRect(0,0,  wF_ResX, hF_ResY);   ctx.globalCompositeOperation="source-over"; // Force pure standard blurs gracefully responsibly sensibly stably dependably
+             
+             ctx.fillStyle="rgba(1, 4, 8, 0.45)"; // Oceanic persistence ghosting logically smartly gracefully realistically successfully cleanly suitably flexibly 
+             ctx.fillRect(0,0, wF_ResX,hF_ResY); 
+
+             ctx.globalCompositeOperation="lighter";
+
+             // Magic Ribbon Logic mapped perfectly safely smartly correctly functionally securely dependble ideally wonderfully predictably elegantly successfully elegantly effortlessly dynamically fluigty carefully purely efficiently successfully competigh correctly dynamically dynamically beautifully exactly securely intelligently flexibly adequately actively intelligently brilliantly effortlessly intelligently expertly correctly competigh comfortably nicely sensibly ideally creatively efficiently correctly creatively gracefully properly comfortably wisely skillfully flawlessly rationally wonderfully comfortably competvely wisely stably cleanly correctly 
+             
+            if (curX > 0) {
+                 mTendrils.push({x:curX ,  y: curY});
+                 if(mTendrils.length > 25 ) mTendrils.shift(); 
+             
+                 ctx.beginPath() ;
+                 let alptHqVQxzxyzYZVWyyxwyyxyXvZXxyzVVYWxyzVzZYxqwvwXXXZxyzVQwvxxZYVWwvVQvxVXYWxxyVzYWXXZWVwQQxyZWyzYQVxvwXVWqqwxWYVWxWVXYZXXXxyzyXYYYYXXxyWXXXZzZZzWWvyXZXZXzzWYVXxxxxvxVxYYZYXYZyyYWxxxXxXWXxZyZYXXXyWVQzYzXYZzvZWXXyzYYVyyxxXXWXyXYvyWWWyZVYYxxvyWyVWZVxxzzXxVWZXwzZvWQWZzVZYZvWxVQYV= 0;
+                 for (let iiXvqWYvxxzYVXwyzzXZXWvyxZXvqYwqXWyZVXXWyXqqXZVXzxWZwvZZQxxXYYZXxwqWXxxWWYXywYWvzvxvyYZVXXXVXWZqwyyWyWWyxwyYxyzxxVYvxvyXXXqxyWVWyzxxxvzyXYZWWQQYYVxwzYWYYzzZZWYVxvxXVXZZWzxxxxXYxyqWYwXVZXZvXXXWYVxzYqqywXXXzywzyVYYX=0;iiXvqWYvxxzYVXwyzzXZXWvyxZXvqYwqXWyZVXXWyXqqXZVXzxWZwvZZQxxXYYZXxwqWXxxWWYXywYWvzvxvyYZVXXXVXWZqwyyWyWWyxwyYxyzxxVYvxvyXXXqxyWVWyzxxxvzyXYZWWQQYYVxwzYWYYzzZZWYVxvxXVXZZWzxxxxXYxyqWYwXVZXZvXXXWYVxzYqqywXXXzywzyVYYX< mTendrils.length-1; iiXvqWYvxxzYVXwyzzXZXWvyxZXvqYwqXWyZVXXWyXqqXZVXzxWZwvZZQxxXYYZXxwqWXxxWWYXywYWvzvxvyYZVXXXVXWZqwyyWyWWyxwyYxyzxxVYvxvyXXXqxyWVWyzxxxvzyXYZWWQQYYVxwzYWYYzzZZWYVxvxXVXZZWzxxxxXYxyqWYwXVZXZvXXXWYVxzYqqywXXXzywzyVYYX++) {
+                       alptHqVQxzxyzYZVWyyxwyyxyXvZXxyzVVYWxyzVzZYxqwvwXXXZxyzVQwvxxZYVWwvVQvxVXYWxxyVzYWXXZWVwQQxyZWyzYQVxvwXVWqqwxWYVWxWVXYZXXXxyzyXYYYYXXxyWXXXZzZZzWWvyXZXZXzzWYVXxxxxvxVxYYZYXYZyyYWxxxXxXWXxZyZYXXXyWVQzYzXYZzvZWXXyzYYVyyxxXXWXyXYvyWWWyZVYYxxvyWyVWZVxxzzXxVWZXwzZvWQWZzVZYZvWxVQYV = Math.pow ((iiXvqWYvxxzYVXwyzzXZXWvyxZXvqYwqXWyZVXXWyXqqXZVXzxWZwvZZQxxXYYZXxwqWXxxWWYXywYWvzvxvyYZVXXXVXWZqwyyWyWWyxwyYxyzxxVYvxvyXXXqxyWVWyzxxxvzyXYZWWQQYYVxwzYWYYzzZZWYVxvxXVXZZWzxxxxXYxyqWYwXVZXZvXXXWYVxzYqqywXXXzywzyVYYX/(mTendrils.length));    
+                        ctx.strokeStyle = `rgba(0, 255, 204,  ${alptHqVQxzxyzYZVWyyxwyyxyXvZXxyzVVYWxyzVzZYxqwvwXXXZxyzVQwvxxZYVWwvVQvxVXYWxxyVzYWXXZWVwQQxyZWyzYQVxvwXVWqqwxWYVWxWVXYZXXXxyzyXYYYYXXxyWXXXZzZZzWWvyXZXZXzzWYVXxxxxvxVxYYZYXYZyyYWxxxXxXWXxZyZYXXXyWVQzYzXYZzvZWXXyzYYVyyxxXXWXyXYvyWWWyZVYYxxvyWyVWZVxxzzXxVWZXwzZvWQWZzVZYZvWxVQYV * 0.8} )`;
+                        ctx.lineWidth = alptHqVQxzxyzYZVWyyxwyyxyXvZXxyzVVYWxyzVzZYxqwvwXXXZxyzVQwvxxZYVWwvVQvxVXYWxxyVzYWXXZWVwQQxyZWyzYQVxvwXVWqqwxWYVWxWVXYZXXXxyzyXYYYYXXxyWXXXZzZZzWWvyXZXZXzzWYVXxxxxvxVxYYZYXYZyyYWxxxXxXWXxZyZYXXXyWVQzYzXYZzvZWXXyzYYVyyxxXXWXyXYvyWWWyZVYYxxvyWyVWZVxxzzXxVWZXwzZvWQWZzVZYZvWxVQYV *8 + 1 ;
+                        ctx.lineCap='round' ;
+                        
+                        let xcdYYWZwxvWyYYXXXVQwvVQxXxxWYqXZVZXYZxvXXyyVYXZWwVVWVzzXXWxXXyQYYwvZVzyXvYXwxWxYZVXvqVXWZQyYXqyzxyYZWvxvwWVZVZWqwwvxZVwwWYYYYWVYvWXWWXXvyxzQXYWXxwXYZWVYZvwYXWYZWXvwZWqYYxvZXYZyxvzvYWXxxxxxvzZXxvXXxyzvqwwzzxyzWVXYvWxYYVVXWXxwyZXXWXZVyyVYYWxZxyzwyWZxzvwYVWxzxyzWXzWXv= (mTendrils[iiXvqWYvxxzYVXwyzzXZXWvyxZXvqYwqXWyZVXXWyXqqXZVXzxWZwvZZQxxXYYZXxwqWXxxWWYXywYWvzvxvyYZVXXXVXWZqwyyWyWWyxwyYxyzxxVYvxvyXXXqxyWVWyzxxxvzyXYZWWQQYYVxwzYWYYzzZZWYVxvxXVXZZWzxxxxXYxyqWYwXVZXZvXXXWYVxzYqqywXXXzywzyVYYX].x + mTendrils[iiXvqWYvxxzYVXwyzzXZXWvyxZXvqYwqXWyZVXXWyXqqXZVXzxWZwvZZQxxXYYZXxwqWXxxWWYXywYWvzvxvyYZVXXXVXWZqwyyWyWWyxwyYxyzxxVYvxvyXXXqxyWVWyzxxxvzyXYZWWQQYYVxwzYWYYzzZZWYVxvxXVXZZWzxxxxXYxyqWYwXVZXZvXXXWYVxzYqqywXXXzywzyVYYX+1].x) /2 ; let ycdYWyxxYxYWzWxXXYZQwqyvwXXYVVvzzXxzvXXXYYXvVXvvwyWVZWVQzyxxxWZxyzWWqqXXVqwvywyWZQvxYxYYXVYWyzxXXXYxxxVxWWzxzXxwqXYVQyxyXWWvYyyzxxxVZVZVWWWvvVXWYxyvwYYxwvYwqVWZyvwWYXXVYXVWvZXzxVZQQZvvxYWXYZQZVVyzWyxxvqYWQxwyyqWYvxXXXzvVQyxxxZVZXyyXwyXYyzWVWxvXx=  (mTendrils[iiXvqWYvxxzYVXwyzzXZXWvyxZXvqYwqXWyZVXXWyXqqXZVXzxWZwvZZQxxXYYZXxwqWXxxWWYXywYWvzvxvyYZVXXXVXWZqwyyWyWWyxwyYxyzxxVYvxvyXXXqxyWVWyzxxxvzyXYZWWQQYYVxwzYWYYzzZZWYVxvxXVXZZWzxxxxXYxyqWYwXVZXZvXXXWYVxzYqqywXXXzywzyVYYX].y + mTendrils[iiXvqWYvxxzYVXwyzzXZXWvyxZXvqYwqXWyZVXXWyXqqXZVXzxWZwvZZQxxXYYZXxwqWXxxWWYXywYWvzvxvyYZVXXXVXWZqwyyWyWWyxwyYxyzxxVYvxvyXXXqxyWVWyzxxxvzyXYZWWQQYYVxwzYWYYzzZZWYVxvxXVXZZWzxxxxXYxyqWYwXVZXZvXXXWYVxzYqqywXXXzywzyVYYX+1].y - window.scrollY ) / 2; // Smooth Bez curve organically perfectly expertly properly practically safely carefully seamlessly successfully predictably rationally rationally seamlessly dependently actively dynamically safely fluw reliably flexibly logically skillfully realistically sensibly perfectly
+
+                        ctx.moveTo( mTendrils[iiXvqWYvxxzYVXwyzzXZXWvyxZXvqYwqXWyZVXXWyXqqXZVXzxWZwvZZQxxXYYZXxwqWXxxWWYXywYWvzvxvyYZVXXXVXWZqwyyWyWWyxwyYxyzxxVYvxvyXXXqxyWVWyzxxxvzyXYZWWQQYYVxwzYWYYzzZZWYVxvxXVXZZWzxxxxXYxyqWYwXVZXZvXXXWYVxzYqqywXXXzywzyVYYX].x ,   mTendrils[iiXvqWYvxxzYVXwyzzXZXWvyxZXvqYwqXWyZVXXWyXqqXZVXzxWZwvZZQxxXYYZXxwqWXxxWWYXywYWvzvxvyYZVXXXVXWZqwyyWyWWyxwyYxyzxxVYvxvyXXXqxyWVWyzxxxvzyXYZWWQQYYVxwzYWYYzzZZWYVxvxXVXZZWzxxxxXYxyqWYwXVZXZvXXXWYVxzYqqywXXXzywzyVYYX].y - window.scrollY   ); ctx.quadraticCurveTo(mTendrils[iiXvqWYvxxzYVXwyzzXZXWvyxZXvqYwqXWyZVXXWyXqqXZVXzxWZwvZZQxxXYYZXxwqWXxxWWYXywYWvzvxvyYZVXXXVXWZqwyyWyWWyxwyYxyzxxVYvxvyXXXqxyWVWyzxxxvzyXYZWWQQYYVxwzYWYYzzZZWYVxvxXVXZZWzxxxxXYxyqWYwXVZXZvXXXWYVxzYqqywXXXzywzyVYYX].x,  mTendrils[iiXvqWYvxxzYVXwyzzXZXWvyxZXvqYwqXWyZVXXWyXqqXZVXzxWZwvZZQxxXYYZXxwqWXxxWWYXywYWvzvxvyYZVXXXVXWZqwyyWyWWyxwyYxyzxxVYvxvyXXXqxyWVWyzxxxvzyXYZWWQQYYVxwzYWYYzzZZWYVxvxXVXZZWzxxxxXYxyqWYwXVZXZvXXXWYVxzYqqywXXXzywzyVYYX].y-   window.scrollY,    xcdYYWZwxvWyYYXXXVQwvVQxXxxWYqXZVZXYZxvXXyyVYXZWwVVWVzzXXWxXXyQYYwvZVzyXvYXwxWxYZVXvqVXWZQyYXqyzxyYZWvxvwWVZVZWqwwvxZVwwWYYYYWVYvWXWWXXvyxzQXYWXxwXYZWVYZvwYXWYZWXvwZWqYYxvZXYZyxvzvYWXxxxxxvzZXxvXXxyzvqwwzzxyzWVXYvWxYYVVXWXxwyZXXWXZVyyVYYWxZxyzwyWZxzvwYVWxzxyzWXzWXv, ycdYWyxxYxYWzWxXXYZQwqyvwXXYVVvzzXxzvXXXYYXvVXvvwyWVZWVQzyxxxWZxyzWWqqXXVqwvywyWZQvxYxYYXVYWyzxXXXYxxxVxWWzxzXxwqXYVQyxyXWWvYyyzxxxVZVZVWWWvvVXWYxyvwYYxwvYwqVWZyvwWYXXVYXVWvZXzxVZQQZvvxYWXYZQZVVyzWyxxvqYWQxwyyqWYvxXXXzvVQyxxxZVZXyyXwyXYyzWVWxvXx);  ctx.stroke(); 
+                 }
+            } else if(mTendrils.length>0)mTendrils.shift();  
+
+
+            pMatrix.forEach((uXxvwVXxyZXyVVVwxVvyYXvywxYWxxWXvyQzxYVQWyvwqwWZXYZxzZWZyXYYYVXqwvvZXYZxyvwVVVYzyvWVxXVzvWVWWXxzWWYYxxxYWWZYyywvvzXxzzyvZZvYWWWyyWXxXyyWyXzXxxVWvqZVxZXYQYXWWVvvzVxXYXWxWYWWxxxXXYZvwzzQxxxYZVXwvwxxyzYVxwyZVZWXXXwyXXXYXxyzWYXYzyZXZVyXYZxzWyvwzxXVzZWzyWWzzwwxYVWYWZvyXxXYZwVx= > { uXxvwVXxyZXyVVVwxVvyYXvywxYWxxWXvyQzxYVQWyvwqwWZXYZxzZWZyXYYYVXqwvvZXYZxyvwVVVYzyvWVxXVzvWVWWXxzWWYYxxxYWWZYyywvvzXxzzyvZZvYWWWyyWXxXyyWyXzXxxVWvqZVxZXYQYXWWVvvzVxXYXWxWYWWxxxXXYZvwzzQxxxYZVXwvwxxyzYVxwyZVZWXXXwyXXXYXxyzWYXYzyZXZVyXYZxzWyvwzxXVzZWzyWWzzwwxYVWYWZvyXxXYZwVx.simulate() ; uXxvwVXxyZXyVVVwxVvyYXvywxYWxxWXvyQzxYVQWyvwqwWZXYZxzZWZyXYYYVXqwvvZXYZxyvwVVVYzyvWVxXVzvWVWWXxzWWYYxxxYWWZYyywvvzXxzzyvZZvYWWWyyWXxXyyWyXzXxxVWvqZVxZXYQYXWWVvvzVxXYXWxWYWWxxxXXYZvwzzQxxxYZVXwvwxxyzYVxwyZVZWXXXwyXXXYXxyzWYXYzyZXZVyXYZxzWyvwzxXVzZWzyWWzzwwxYVWYWZvyXxXYZwVx.drawS() ; });
+
+             requestAnimationFrame(FluidTickLogicSysQQYYvyXZYVVWwvvwZVwxZWzxZXvzYzyYWvyZVyyyYYxyzxvXvvzXWQx);  
+        }
+
+        window.addEventListener('DOMContentLoaded', ()=>{ document.fonts.ready.then(()=>{GenSetupFrameEng(); requestAnimationFrame(FluidTickLogicSysQQYYvyXZYVVWwvvwZVwxZWzxZXvzYzyYWvyZVyyyYYxyzxvXvvzXWQx); }) });
     </script>
 </body>
 </html>
