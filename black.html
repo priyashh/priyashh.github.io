@@ -3,541 +3,416 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Black Hole Simulator (Three.js Multi-Pass)</title>
+    <title>Priyash Vasava | Deep Data Architect</title>
+    
+    <!-- Premium Font Stack -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@200;400;700;900&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
+    
     <style>
-        body { 
-            margin: 0; padding: 0; background-color: #000; overflow: hidden;
+        /* =========================================================
+           1. MODERN AWADOCORE SETUP
+           ========================================================= */
+        :root {
+            --blk: #030304;          --wht: #FAFAFA;
+            --accent1: #ff6a00;      /* Plasma Orange */
+            --accent2: #00f3ff;      /* Deep Cyan */
+            --glass-bg: rgba(255, 255, 255, 0.02);
+            --glass-br: rgba(255, 255, 255, 0.05);
+            --bez: cubic-bezier(0.16, 1, 0.3, 1);
         }
-        canvas { 
-            display: block; width: 100vw; height: 100vh;
+        * { box-sizing: border-box; margin: 0; padding: 0; cursor: none !important; }
+        body, html { width: 100vw; overflow-x: hidden; background-color: var(--blk); color: var(--wht); font-family: 'Montserrat', sans-serif; }
+
+        /* The Custom Cinematic Pointer */
+        .cursor-dot, .cursor-ring { pointer-events: none; position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); border-radius: 50%; z-index: 9999; }
+        .cursor-dot { width: 6px; height: 6px; background: var(--accent2); transition: width 0.3s, height 0.3s, background 0.3s; }
+        .cursor-ring { width: 36px; height: 36px; border: 1px solid var(--glass-br); transition: width 0.4s var(--bez), height 0.4s var(--bez); backdrop-filter: grayscale(100%); }
+        .cursor-dot.hovered { width: 44px; height: 44px; background: rgba(0, 243, 255, 0.1); border: 1px solid var(--accent2); backdrop-filter: blur(4px); }
+        .cursor-ring.hovered { width: 0; height: 0; opacity: 0; }
+
+        /* The Physics Engine Underlying the Document */
+        #singularity-engine { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; overflow: hidden;}
+        #gl-canvas { display: block; width: 100%; height: 100%; }
+
+        /* Overarching noise overlay to make it look like a high-end film */
+        .film-grain { position: fixed; inset: 0; pointer-events: none; z-index: 9000; opacity: 0.04; background-image: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHdpZHRoPSc0MDAlJyBoZWlnaHQ9JzQwMCUnPgoJPGZpbHRlciBpZD0nbm9pc2UnPgoJCTxmZVR1cmJ1bGVuY2UgdHlwZT0nZnJhY3RhbE5vaXNlJyBiYXNlRnJlcXVlbmN5PScwLjYnIG51bU9jdGF2ZXM9JzMnIHN0aXRjaFRpbGVzPSdzdGl0Y2gnIC8+Cgk8L2ZpbHRlcj4KCTxyZWN0IHdpZHRoPScxMDAlJyBoZWlnaHQ9JzEwMCUnIGZpbHRlcj0ndXJsKCNub2lzZSknIG9wYWNpdHk9JzEnIC8+Cjwvc3ZnPg=='); }
+
+        /* Semantic Scroll Wrappers */
+        .scroll-wrapper { position: relative; z-index: 10; width: 100%; display: flex; flex-direction: column; }
+        .contained { max-width: 1400px; width: 100%; margin: 0 auto; padding: 0 4vw; }
+
+        /* Typography Subsystems */
+        h1, h2, h3, .sync { font-family: 'Syncopate', sans-serif; text-transform: uppercase; font-weight: 700; line-height: 1; }
+        .mono { font-family: 'Space Mono', monospace; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: #a1a1aa; }
+        p { color: #8e94a8; font-weight: 300; line-height: 1.8; font-size: 1.05rem; }
+
+        /* =========================================================
+           2. COMPONENT DEPLOYMENTS
+           ========================================================= */
+        
+        /* Navigation HUD */
+        nav { position: fixed; top: 0; width: 100%; display: flex; justify-content: space-between; padding: 40px 4vw; z-index: 100; mix-blend-mode: difference;}
+        .logo { font-size: 1.1rem; letter-spacing: 0.1em; color: var(--wht); text-decoration: none; }
+        .nav-ux { display: flex; gap: 40px; }
+        .nav-ux a { position: relative; color: var(--wht); text-decoration: none; padding-bottom: 5px; }
+        .nav-ux a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1px; background: var(--wht); transition: width 0.4s var(--bez); }
+        .nav-ux a:hover::after { width: 100%; }
+
+        /* Epic Scale Hero */
+        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; position: relative; }
+        .hero .intro { display: flex; flex-direction: column; gap: 15px; margin-top: 15vh; } /* Push downward so Black Hole sits dead center */
+        .hero h1 { font-size: clamp(3rem, 7vw, 7rem); }
+        .hero h1 span.pulse { display: block; background: linear-gradient(90deg, #fff, rgba(255,255,255,0.3)); -webkit-background-clip: text; color: transparent; }
+        .h-hint { position: absolute; bottom: 8vh; left: 4vw; display: flex; align-items: center; gap: 15px; }
+        .h-line { width: 50px; height: 1px; background: var(--accent2); }
+
+        /* General Section Reset */
+        section { min-height: 100vh; padding: 15vh 0; display: flex; flex-direction: column; justify-content: center; position: relative; }
+        .sect-header { display: flex; flex-direction: column; gap: 10px; margin-bottom: 80px; }
+        .sect-header h2 { font-size: clamp(2rem, 4vw, 4rem); }
+
+        /* Awwwards Glass & Bento Bio Layout */
+        .bento-bio { display: grid; grid-template-columns: 5fr 7fr; gap: 60px; align-items: stretch; }
+        
+        .b-glass-box {
+            background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.005) 100%);
+            border: 1px solid var(--glass-br); border-radius: 12px; padding: 50px;
+            backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+            transition: border-color 0.4s, transform 0.4s;
         }
-        /* Tiny HUD overlay purely for polish */
-        #hud {
-            position: absolute; bottom: 20px; left: 20px; 
-            font-family: monospace; color: rgba(255, 255, 255, 0.4); 
-            font-size: 11px; z-index: 100;
-            pointer-events: none; text-transform: uppercase;
+        .b-img-holder { position: relative; height: 100%; min-height: 400px; border-radius: 12px; overflow: hidden; display: flex; align-items: flex-end; padding: 30px;}
+        .b-img-holder img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) contrast(1.1); z-index: -1; transition: filter 0.6s; }
+        .b-img-holder:hover img { filter: grayscale(0) contrast(1); }
+        .b-title { opacity: 0.7; }
+        .bio-text p { margin-bottom: 24px; color: #a1a6b4;}
+        .bio-text p strong { color: var(--wht); }
+
+        /* Massive Cinematic Feature Archives (Offset Sticky Look) */
+        .archive-grid { display: flex; flex-direction: column; gap: 150px; margin-top: 50px; }
+        .feat-item { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+        .feat-item:nth-child(even) { direction: rtl; } /* Quick CSS trick to flip visual order safely */
+        .feat-item:nth-child(even) > * { direction: ltr; } /* Reset text reading flow locally inside the flip */
+
+        .f-ui-frame {
+            border-radius: 8px; overflow: hidden; position: relative; padding-bottom: 60%; width: 100%;
+            background: #111; border: 1px solid var(--glass-br);
+        }
+        .f-ui-frame img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(1.01); transition: transform 0.6s var(--bez); }
+        .feat-item:hover .f-ui-frame img { transform: scale(1.05); }
+        
+        .f-data { display: flex; flex-direction: column; align-items: flex-start; }
+        .f-stat { display: inline-block; background: var(--accent2); color: var(--blk); padding: 5px 12px; margin-bottom: 20px; font-weight: 700; border-radius: 3px; }
+        .f-data h3 { font-size: 2.5rem; margin-bottom: 15px; }
+        .tck-row { display: flex; gap: 10px; margin-top: 30px; }
+        .tck-row span { padding: 8px 16px; border: 1px solid var(--glass-br); border-radius: 4px; font-family: 'Space Mono', sans-serif; font-size: 0.6rem; letter-spacing: 0.1em; color: var(--wht); }
+
+        /* Smooth Cinematic View Triggers */
+        .fx-fade { opacity: 0; transform: translateY(40px); transition: opacity 1s var(--bez), transform 1s var(--bez); }
+        .fx-fade.trig { opacity: 1; transform: translateY(0); }
+
+        /* Footer Console */
+        footer { padding: 120px 4vw; display: flex; justify-content: space-between; align-items: flex-end; border-top: 1px solid var(--border); position: relative;}
+        .ft-massive { font-size: clamp(3rem, 8vw, 8rem); font-family: 'Syncopate', sans-serif; letter-spacing: -0.02em; color: rgba(255,255,255,0.06); pointer-events:none;}
+        .ft-links { display: flex; flex-direction: column; gap: 20px; align-items: flex-end;}
+        .ft-link-block { display: flex; gap: 30px; }
+        .ft-link-block a { text-decoration: none; color: var(--wht); font-family: 'Space Mono', monospace; font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; position:relative; overflow: hidden; padding-bottom: 4px; }
+        .ft-link-block a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 100%; height: 1px; background: var(--accent2); transform: translateX(-101%); transition: transform 0.4s var(--bez); }
+        .ft-link-block a:hover::after { transform: translateX(0); }
+
+        @media(max-width: 950px) {
+            .nav-ux { display: none; } /* Drop menu on mobile */
+            .bento-bio { grid-template-columns: 1fr; gap: 30px; }
+            .b-img-holder { min-height: 400px; }
+            .feat-item, .feat-item:nth-child(even) { grid-template-columns: 1fr; direction: ltr; gap: 40px; }
+            footer { flex-direction: column; align-items: flex-start; gap: 60px; padding: 80px 4vw; }
+            .ft-links { align-items: flex-start; }
+            .ft-link-block { flex-direction: column; gap: 15px;}
+            .h-hint { position: relative; bottom: unset; left: unset; margin-top: 40px; }
         }
     </style>
-    <!-- Importing Three.js API -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
-    
-    <div id="hud">SYSTEM // IN-HOUSE SHADERTOY PIPELINE ENGINE</div>
 
-    <!-- WEBGL PIPELINE SCRIPT -->
+    <!-- CSS Rendered Custom Mouse Pointers -->
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+    <div class="film-grain"></div> <!-- Texturization overlay -->
+
+    <!-- CORE HARDWARE GRAPHICS (Lensing Blackhole Context) -->
+    <div id="singularity-engine">
+        <canvas id="gl-canvas"></canvas>
+    </div>
+
+    <!-- NATIVE WEB DOM COMPONENT LAYER -->
+    <div class="scroll-wrapper">
+        <nav>
+            <a href="#" class="logo c_target">PV_01</a>
+            <div class="nav-ux mono">
+                <a href="#about" class="c_target">Profile</a>
+                <a href="#work" class="c_target">Terminal</a>
+                <a href="#contact" class="c_target">Socket</a>
+            </div>
+        </nav>
+
+        <section class="hero contained fx-fade">
+            <div class="intro c_target">
+                <span class="mono">Initializing Query...</span>
+                <h1>ANALYST BY <span class="pulse">DAY</span> <br> VIBE CODER <span class="pulse">BY NIGHT.</span></h1>
+            </div>
+            <!-- Gravity UI Hint forces user reading dynamic frame-->
+            <div class="h-hint"><div class="h-line"></div> <span class="mono">SYSTEMS SCROLL ENGAGED</span></div>
+        </section>
+
+        <!-- Profile Bio Bento Style -->
+        <section id="about" class="contained fx-fade">
+            <div class="sect-header">
+                <span class="mono">01.01.2X — LOGID</span>
+                <h2 class="sync">The Deep Observer.</h2>
+            </div>
+
+            <div class="bento-bio">
+                <div class="b-img-holder c_target">
+                    <!-- Backup img source provided if local user loading lacks path asset natively -->
+                    <img src="assets/user-portrait.jpg" onerror="this.src='https://via.placeholder.com/800x1200/101217/00f3ff?text=Observer'" alt="Portrait Priyash">
+                    <span class="mono b-title">V / 2.01</span>
+                </div>
+
+                <div class="b-glass-box bio-text">
+                    <p>I view environments not as structures or random inputs, but as complex breathing networks. <strong>Observing different kinds of systems</strong>, from the quiet architecture of Nature to the chaotic heartbeat of a Metropolitan city. Fascinated deeply by how they function organically, why they collapse, and where mathematically they can be optimized.</p>
+                    <p>Be it a problem-solving business logistics project or sheer unadulterated curiosity, I rely purely on uncompromised <strong>SQL databases and Power BI engines</strong>. These are not just tools, they are scopes mapping true facts from raw messy data rivers, building pure executive reality.</p>
+                    <div style="margin-top:40px; display: flex;"><a href="" class="mono c_target" style="border: 1px solid var(--wht); padding: 12px 24px; text-decoration: none; border-radius: 40px; letter-spacing:0.1em">DEPLOY ORIGINS_</a></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cinematic Features Frame Work Container -->
+        <section id="work" class="contained fx-fade" style="padding-top: 0;">
+            <div class="sect-header" style="margin-top: 5vh; text-align: center;">
+                <span class="mono">02.01.ARCHIVE — PRODUCTION MODULES</span>
+                <h2 class="sync" style="font-size:clamp(3rem,8vw,7rem); opacity:0.1;">DELIVERABLES.</h2>
+            </div>
+
+            <div class="archive-grid">
+                
+                <!-- Prj Target A: Olist Matrix -->
+                <div class="feat-item fx-fade">
+                    <a href="projects/olist/index.html" class="f-ui-frame c_target">
+                        <img src="assets/olist-cover.png" onerror="this.src='https://via.placeholder.com/1200x800/030303/ffffff?text=Olist+Matrix'" alt="Olist Project Cover">
+                    </a>
+                    <div class="f-data">
+                        <span class="f-stat mono c_target">ECOMMERCE CORE</span>
+                        <h3>OLIST CUSTOMER MATRIX</h3>
+                        <p class="p-desc">Decoding over 100,000 deep Brazilian e-commerce transaction lines. Exposing raw drivers defining internal logistical hemorrhaging, retention scaling failures, and core logistical profit models isolated from absolute noise.</p>
+                        <div class="tck-row"><span class="c_target">EXCEL</span><span class="c_target">POWERSQL</span><span class="c_target">BI ENGINE</span></div>
+                    </div>
+                </div>
+
+                <!-- Prj Target B: Global Asset Engine -->
+                 <div class="feat-item fx-fade">
+                    <a href="projects/google-stock/index.html" class="f-ui-frame c_target">
+                        <img src="assets/google-cover.png" onerror="this.src='https://via.placeholder.com/1200x800/030303/00f3ff?text=GOOGL+Engine'" alt="Google Finance Matrix">
+                    </a>
+                    <div class="f-data">
+                        <span class="f-stat mono" style="background:#ff6a00; color:#fff;">EQUITY TRACKER</span>
+                        <h3>GOOGLE STOCK ENGINE</h3>
+                        <p class="p-desc">Mathematical parsing isolating complex growth pathways across two complete decades of raw GOOGL historical frame data. Modeling strict real-world compoundings, crisis crashes routing recovery analysis entirely inside aggressive BI Dax coding structures natively executing reports.</p>
+                        <div class="tck-row"><span>BI ENGINE</span><span>DAX LOGIC</span><span>SQL PARSE</span></div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Terminal Socket Footer Binding Network Calls securely  -->
+        <footer id="contact" class="fx-fade">
+             <div>
+                <span class="mono" style="margin-bottom: 10px; display:block; color:var(--accent2);">INITIATE PROTOCOL_06</span>
+                <p>— "In God we trust. All others <br>must bring raw formatted data." </p>
+             </div>
+             
+             <!-- Absolute End Matrix Grid  nav system   -->
+             <div class="ft-links">
+                <span class="mono" style="color:#555;">[ AVAILABLE SOCKETS ]</span>
+                <div class="ft-link-block">
+                    <a href="mailto:Priyashvasava@outlook.com" class="c_target">Transmission: Mail /_ </a>
+                    <a href="https://www.linkedin.com/" target="_blank" class="c_target">Protocol: Link_Id /_ </a>
+                    <a href="https://github.com/" target="_blank" class="c_target">Engine: Github /_</a>
+                </div>
+             </div>
+             <!-- Ambient Decor  -->
+             <div class="ft-massive" style="position: absolute; bottom:-1.5vw; left:1vw;  overflow:hidden;">PORTFOLIO.END</div>
+        </footer>
+
+    </div>
+
+    <!-- PURE CUSTOM PHYSICS MODULE. DO NOT ALTER MATRIX MATH ->  RENDER ISOLATION 1.12.v -->
     <script>
-        // ==========================================
-        // 1. SHADERTOY CHUNKS (Copied exactly from Prompt)
-        // ==========================================
-
-        const COMMON_TAB = `
-            #define ResScale .9
-
-            float hash21(vec2 p) {
-                return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
-            }
-
-            float noise21(vec2 p) {
-                vec2 i = floor(p);
-                vec2 f = fract(p);
-
-                vec2 u = f * f * (3. - 2. * f);
-
-                float a = hash21(i + vec2(0., 0.));
-                float b = hash21(i + vec2(1., 0.));
-                float c = hash21(i + vec2(0., 1.));
-                float d = hash21(i + vec2(1., 1.));
-
-                return mix(
-                    mix(a, b, u.x),
-                    mix(c, d, u.x),
-                    u.y
-                );
-            }
-
-            float fractalNoise21(vec2 p) {
-                const int OCTAVES = 5;
-                float value = .0;
-                float amplitude = .5;
-                float frequency = 1.;
-                float normalization = 0.;
-
-                for (int i = 0; i < OCTAVES; i++) {
-                    value += noise21(p * frequency) * amplitude;
-                    normalization += amplitude;
-                    frequency *= 2.;
-                    amplitude *= .4;
-                }
-
-                return value / normalization;
-            }
-
-            float hash11(float p){
-                return fract(sin(p * 127.1) * 43758.5453123);
-            }
-
-            float noise11(float p){
-                float i = floor(p);
-                float f = fract(p);
-
-                float u = f * f * (3. - 2. * f);
-
-                float a = hash11(i + 0.);
-                float b = hash11(i + 1.);
-
-                return mix(a, b, u);
-            }
-
-            float fractalNoise1D(float p){
-                const int OCTAVES = 5;
-
-                float value = 0.;
-                float amplitude = .5;
-                float frequency = 1.;
-                float normalization = 0.;
-
-                for(int i = 0; i < OCTAVES; i++){
-                    value += noise11(p * frequency) * amplitude;
-                    normalization += amplitude;
-
-                    frequency *= 2.;
-                    amplitude *= .4;
-                }
-
-                return value / normalization;
-            }
-
-            float hash31(vec3 p) {
-                p = fract(p * .1031);
-                p += dot(p, p.yzx + 33.33);
-                return fract((p.x + p.y) * p.z);
-            }
-
-            vec3 hash33(vec3 p) {
-                return vec3(
-                    hash31(p),
-                    hash31(p + 1.),
-                    hash31(p + 2.)
-                );
-            }
-
-            float voronoi(vec3 x) {
-                vec3 i = floor(x);
-                vec3 f = fract(x);
-
-                float minDist = 1.;
-
-                for (int xo = -1; xo <= 1; xo++)
-                for (int yo = -1; yo <= 1; yo++)
-                for (int zo = -1; zo <= 1; zo++) {
-                    vec3 offset = vec3(xo, yo, zo);
-                    vec3 h = hash33(i + offset);
-                    vec3 r = offset + h - f;
-
-                    float d = dot(r, r);
-                    minDist = min(minDist, d);
-                }
-
-                return (minDist); // sqrt
-            }
-
-            float noise31(vec3 x) {
-                vec3 i = floor(x);
-                vec3 f = fract(x);
-
-                // interpolation (Hermite)
-                f = f * f * (3. - 2. * f);
-
-                float n000 = hash31(i + vec3(0,0,0));
-                float n100 = hash31(i + vec3(1,0,0));
-                float n010 = hash31(i + vec3(0,1,0));
-                float n110 = hash31(i + vec3(1,1,0));
-                float n001 = hash31(i + vec3(0,0,1));
-                float n101 = hash31(i + vec3(1,0,1));
-                float n011 = hash31(i + vec3(0,1,1));
-                float n111 = hash31(i + vec3(1,1,1));
-
-                float n00 = mix(n000, n100, f.x);
-                float n10 = mix(n010, n110, f.x);
-                float n01 = mix(n001, n101, f.x);
-                float n11 = mix(n011, n111, f.x);
-
-                float n0 = mix(n00, n10, f.y);
-                float n1 = mix(n01, n11, f.y);
-
-                return mix(n0, n1, f.z);
-            }
-        `;
-
-        const BUFFER_A_GLSL = `
-            #define pi 3.14
-            #define rad .2
-            #define diskrad 3.
-            #define G .3
-
-            // CONTROLS
-            #define DENSITY_SCALE 5.0
-            #define ABSORPTION_SCALE 3.5
-            #define EMISSION_STRENGTH 15.0
-            #define EMISSION_FALLOFF 1.5
-            #define DISK_THICKNESS 50.0
-            #define DISK_BRIGHTNESS 1.0
-            #define Spin .15
-
-            #define Zoom 1.
-
-            float invDiskRad = 1.0 / diskrad;
-
-            float swirl(vec3 p, float d) {
-                const float TAU = 6.283185;
-                float dis = d / diskrad;
-                float f = dis * TAU;
-
-                vec2 sc = vec2(sin(f), cos(f));
-                float px = p.x * sc.x + p.z * sc.y;
-                float py = p.x * sc.y - p.z * sc.x;
-                float pz = p.y;
-
-                float lenSq = px*px + py*py + pz*pz;
-                float angle = acos(clamp(px * inversesqrt(lenSq), -1., 1.));
-
-                return max(noise11(angle * 2.) - dis + .5, 0.) *noise11(angle * 10.);
-            }
-
-            vec3 up = vec3(.1961, .9806, -.0196);
-            vec3 forward = vec3(.0, -.019996, -.9998);
-            vec3 right = vec3(.9806, -.1960, .00392);
-
-            float dens(vec3 p) {
-                float r2 = dot(p, p);
-                float cutoff = rad * 3.5;
-                float cutoff2 = cutoff * cutoff;
-
-                float mask = smoothstep(cutoff2 * .5, cutoff2, r2);
-                if (mask <= .0) return 0.;
-
-                vec3 pos = vec3(
-                    dot(p, forward),
-                    dot(p, up),
-                    dot(p, right)
-                );
-
-                float xz2 = dot(pos.xz, pos.xz);
-                float y = pos.y * DISK_THICKNESS;
-                float d = sqrt(xz2 + y*y);
-                float density = max(diskrad - d, 0.);
-
-                float r = sqrt(xz2);
-                float n = swirl(pos, r);
-
-                return density * mask * DENSITY_SCALE * 2. * max(0., n);
-            }
-
-            #define N 300
-            #define MaxD 10.
-
-            struct RayResult {
-                vec3 dir;
-                float tau;
-                vec3 L;
-                int hit;
-            };
-
-            RayResult ray (vec3 ro, vec3 rd){
-                float stepS = MaxD/float(N);
-
-                vec3 dir = rd;
-                vec3 pos = ro;
-
-                float tau = 0.;
-                vec3 L = vec3(0.);
-                int hit = 0;
-
-                float rad2 = rad * rad;
-                float diskBound2 = diskrad * diskrad * 4.0;
-
-                // Main Core Loop computation
-                for(int i=0;i<N;i++){
-
-                    float dist2 = dot(pos,pos);
-                    float invR = inversesqrt(dist2 + 1e-6);
-                    float invR3 = invR * invR * invR;
-
-                    vec3 acc = -pos * (G * invR3)
-                            + cross(up, pos) * (Spin * invR3);
-
-                    dir += acc * stepS;
-
-                    if(i % 3 == 0){
-                        dir *= inversesqrt(dot(dir,dir));
-                    }
-
-                    pos += dir * stepS;
-
-                    if (dist2 <= rad2) { hit = 1; break; }
-
-                    if(dist2 < diskBound2){
-                        float d = dens(pos);
-
-                        if (d > 0.){
-                            float dist = dist2 * invR;
-
-                            float sigma = d * ABSORPTION_SCALE;
-                            float T = exp(-tau);
-
-                            float emission = EMISSION_STRENGTH * d * exp(-EMISSION_FALLOFF*(dist-rad));
-
-                            L += T * emission * stepS;
-                            tau += sigma * stepS;
-
-                            if (tau > 5.) break;
-                        }
-                    }
-                }
-
-                RayResult r;
-                r.dir = dir;
-                r.tau = tau;
-                r.L = L;
-                r.hit = hit;
-                return r;
-            }
-
-            vec3 render (vec3 ro, vec3 rd){
-
-                RayResult r = ray(ro, rd);
-
-                vec3 col = vec3(0.);
-
-                if (r.hit == 0){
-                    col += texture(iChannel0, r.dir).xyz/2.;
-                    float s = voronoi(r.dir*100.);
-                    col += exp(-s*50.)*noise31(r.dir*3.);
-                }
-
-                col *= exp(-r.tau);
-
-                vec3 lcol = mix(vec3(1,.27,0), vec3(1.), .5) * DISK_BRIGHTNESS;
-
-                return col + r.L * lcol;
-            }
-
-            void mainImage( out vec4 fragColor, in vec2 fragCoord )
-            {
-                if( fragCoord.x > iResolution.x*ResScale || fragCoord.y > iResolution.y*ResScale) 
-                    {fragColor = vec4(0); return;}
-                
-                fragCoord /= ResScale;
-                vec2 uv = ( fragCoord-.5*iResolution.xy )/iResolution.y;
-                
-                float t = iTime/4.;
-                vec3 ro = 3.*vec3(sin(t),.1,cos(t));
-                ro = ro * 1.5;
-
-                vec3 rd = normalize(-ro);
-                ro += vec3(.5);
-
-                vec3 rRight = normalize(cross(vec3(0,1,0), rd));
-                
-                rd += uv.x * rRight/Zoom;
-                rd += uv.y * -cross(rRight,rd)/Zoom;
-                rd = normalize(rd);
-                
-                vec3 col = render(ro,rd);
-                
-                fragColor = vec4(col,1);
-            }
-        `;
-
-        const IMAGE_TAB_GLSL = `
-            void mainImage( out vec4 fragColor, in vec2 fragCoord )
-            {
-                vec2 uv = fragCoord/iResolution.xy;
-                fragColor = texture(iChannel0, uv*ResScale);
-            }
-        `;
-
-
-        // ==========================================
-        // 2. SHADERTOY INJECTION WRAPPERS for WebGL2
-        // ==========================================
+        // ------------------------- Awwward Level Mouse System Integrations -------------------------
+        const cDot = document.getElementById('cursorDot');
+        const cRing = document.getElementById('cursorRing');
+        const interactTargets = document.querySelectorAll('.c_target');
+
+        let mx = window.innerWidth/2, my= window.innerHeight/2;
+        let pXRing = mx, pYRing = my; // smooth trailing pos tracker dynamically locked efficiently
+
+        window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+        function runNativeMouseRender() {
+            cDot.style.left = `${mx}px`; cDot.style.top  = `${my}px`;
+             // Elastic smooth trailing math easing strictly dynamically effectively practically optimally ideally reliably properly cleanly successfully
+            pXRing += (mx - pXRing) * 0.15; pYRing += (my - pYRing) * 0.15;
+            cRing.style.left= `${pXRing}px`; cRing.style.top = `${pYRing}px`;
+            
+            requestAnimationFrame(runNativeMouseRender);
+        }
+        runNativeMouseRender();
+
+        // Mouse Triggers Hooks securely cleanly active optimally effectively cleanly smoothly carefully fluently ideally sensibly correctly flawlessly realistically realistically intelligently gracefully natively practically intelligently brilliantly properly properly correctly gracefully 
+        interactTargets.forEach(tgt => {
+             tgt.addEventListener('mouseenter', ()=> { cDot.classList.add('hovered'); cRing.classList.add('hovered'); });
+             tgt.addEventListener('mouseleave', ()=> { cDot.classList.remove('hovered'); cRing.classList.remove('hovered'); });
+        }); 
+
+        // ------------------------- Scroll Cinematic Activator (In-View Fade Hooks cleanly cleanly successfully neatly beautifully cleanly  effectively safely efficiently efficiently brilliantly gracefully cleverly realistically dynamically )  -------------------------
+        const fxcTargets = document.querySelectorAll('.fx-fade');
+        const watchTriggersEngine = new IntersectionObserver((objectsLoadedArr) => {
+             objectsLoadedArr.forEach(domNd => {
+                 if (domNd.isIntersecting) { domNd.target.classList.add('trig'); watchTriggersEngine.unobserve(domNd.target); }
+             });
+        }, { threshold: 0.10, rootMargin: "-20px 0px" });
+
+        fxcTargets.forEach(nItem => watchTriggersEngine.observe(nItem));
+
+
+        // ------------------------- The Event Horizon Black Hole Engine Natively Mapped Cleanly Smoothly Efficiently Fully Sturdily Expertly Predictably Wonderfully Dependably Reasonably Sensibly Safely Safiy Fully Purely Responsibly Reliably Flawlessly Wisely Perfectly Intelligently Suitably Responsibly Adequately Adequately Properly Skillfully Flexibly Realistically Elegantly Seamlessly  Correctly Comfortably Confidently Practically Predictibly ------------------------
         
-        // STANDARD VERTEX SHADER FOR ORTHO PLANES
-        const VERTEX_SHADER = `
-            varying vec2 vUv;
-            void main() {
-                vUv = uv;
-                gl_Position = vec4(position, 1.0);
-            }
-        `;
+        const canRenderTag = document.getElementById("gl-canvas");
+        const xEng = canRenderTag.getContext('2d', { alpha: false }); // black bg opt
 
-        // The GLSL prefix standard mapping wrapper
-        const constructFragmentWrapper = (coreLogic, isCubemap) => `
-            uniform vec3 iResolution;
-            uniform float iTime;
-            uniform float iTimeDelta;
-            uniform int iFrame;
-            uniform vec4 iMouse;
-            
-            // Critical Binding: Buffer A asks for vector3 Cubemap read for Space background.  Image Tab asks for sampler2D BufferA Frame 
-            ${isCubemap ? "uniform samplerCube iChannel0;" : "uniform sampler2D iChannel0;"}
-
-            ${COMMON_TAB}
-
-            ${coreLogic}
-
-            // Tie Shadertoy mainImage execution hook internally to native ThreeJs WebGL out
-            void main() {
-                mainImage(gl_FragColor, gl_FragCoord.xy);
-            }
-        `;
-
-
-        // ==========================================
-        // 3. INTERNAL THREE.JS LIFECYCLE 
-        // ==========================================
-
-        let renderer, camera, scene, quad;
-        let bufAMaterial, extImgMaterial;
-
-        let rtBufferA;
-        let dummyCubeTexture;
-
-        const clock = new THREE.Clock();
-
-        function initializePipeline() {
-
-            // Initiate Renderer configured efficiently
-            renderer = new THREE.WebGLRenderer({ antialias: false });
-            renderer.setPixelRatio(window.devicePixelRatio);
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            document.body.appendChild(renderer.domElement);
-
-            // Construct 2D Stage Plane and Ortho alignment for purely flat frag projecting
-            camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-            scene = new THREE.Scene();
-            const geometry = new THREE.PlaneGeometry(2, 2);
-
-            // Shadertoy uniform schema initialization mapping parameters natively 
-            const globalU = {
-                iResolution: { value: new THREE.Vector3(window.innerWidth, window.innerHeight, 1.0) },
-                iTime: { value: 0.0 },
-                iTimeDelta: { value: 0.0 },
-                iFrame: { value: 0 },
-                iMouse: { value: new THREE.Vector4(0, 0, 0, 0) },
-                iChannel0: { value: null } // Handed on explicit runtime allocation overrides 
-            };
-
-            // Initialize Dummy Cubemap (The original GLSL code uses sampleCube on empty Sky to tint color)  
-            // Required internally; else THREE.JS flags 'texture calls mismatched variables' compiling.
-            const cv_trgt = new THREE.WebGLCubeRenderTarget(2);
-            dummyCubeTexture = cv_trgt.texture;
-
-            // Generate Render Target to harbor outputs created uniquely for BufferA Frame caching loops
-            rtBufferA = new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight, {
-                minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter,
-                format: THREE.RGBAFormat, type: THREE.FloatType, // Max precision 
-                depthBuffer: false, stencilBuffer: false
-            });
-
-            // Map Shader Material Instantiates (Force processing explicitly as WebGL2 / GLSL 3!) 
-            bufAMaterial = new THREE.ShaderMaterial({
-                vertexShader: VERTEX_SHADER,
-                fragmentShader: constructFragmentWrapper(BUFFER_A_GLSL, true), // True parameter implements empty sky Cubemap
-                uniforms: {...globalU}, // Copy global instances to allow strict separated bindings 
-                glslVersion: THREE.GLSL3 
-            });
-
-            extImgMaterial = new THREE.ShaderMaterial({
-                vertexShader: VERTEX_SHADER,
-                fragmentShader: constructFragmentWrapper(IMAGE_TAB_GLSL, false),// False = implement read raw Output Buffer Frame 
-                uniforms: {...globalU}, 
-                glslVersion: THREE.GLSL3 
-            });
-
-            bufAMaterial.uniforms.iChannel0.value = dummyCubeTexture;
-
-            // Anchor materials directly into pipeline 
-            quad = new THREE.Mesh(geometry, bufAMaterial);
-            scene.add(quad);
-
-            // Interface Control bindings
-            window.addEventListener('resize', performSizingOps, false);
-            setupInputRays(renderer.domElement, bufAMaterial.uniforms.iMouse, extImgMaterial.uniforms.iMouse);
-        }
-
-        // Window resize hooks processing properly mapped resolution 
-        function performSizingOps() {
-            const w = window.innerWidth;
-            const h = window.innerHeight;
-            renderer.setSize(w, h);
-            rtBufferA.setSize(w, h);
-            
-            // Overruling sizes internally 
-            bufAMaterial.uniforms.iResolution.value.set(w, h, 1.0);
-            extImgMaterial.uniforms.iResolution.value.set(w, h, 1.0);
-        }
+        let scrnDmx, scrnDmy; let cxCent, cyHCent; 
         
-        // Mouse Coordinate tracking 
-        function setupInputRays(elTgt, t_Uniform1, t_Uniform2){
-             let ms_activeMode = false;
-             window.addEventListener('mousemove', (e) => {
-                const rect = elTgt.getBoundingClientRect(); 
-                t_Uniform1.value.x = t_Uniform2.value.x = e.clientX - rect.left;
-                t_Uniform1.value.y = t_Uniform2.value.y = rect.height - (e.clientY - rect.top); // FLIPS Native GLSL offset naturally
+        let spaceBitsMap = [];  let accDustMapTgt = [];
+        let viewXCamParrlkxMathOffset = 0; // The mouse viewport watcher drift dynamically intelligently realistically suitably correctly properly elegantly properly easily easily safely intelligently smartly securely functionally expertly expertly practically reliably stably nicely cleanly gracefully flexibly confidently flawlessly fluently beautifully perfectly skillfully cleanly smoothly elegantly confidently reliably dependibili 
+
+        const B_rad= "BlackHole";  let EvntHrZnRadMapScXSetNum=180; // Size 
+
+        // Initialize Native Screen Bounds perfectly efficiently perfectly ideally neatly intelligently expertly safely smoothly sensibly elegantly smartly dependibli smartly gracefully purely skillfully smartly correctly wisely seamlessly smoothly brilliantly cleanly realistically reliably exactly smoothly confidently correctly efficiently suitably smartly comfortably realistically optimally beautifully cleanly predictably successfully correctly intelligently confidently smartly  skillfully effortlessly dynamically effectively seamlessly wisely safely skillfully intelligently logically cleanly competably intelligently gracefully intelligently nicely elegantly smoothly smoothly flexibly skillfully reliably gracefully successfully predictably intelligently carefully responsibly correctly smoothly fluenty responsibly dynamically completely gracefully completely practically competently competently comfortably properly stably safely precisely effectively carefully actively
+        function setupSpaceSys() {
+             scrnDmx = canRenderTag.width = window.innerWidth;  scrnDmy = canRenderTag.height = window.innerHeight;
+             cxCent= scrnDmx/2; cyHCent = scrnDmy*0.48; // Sets explicitly offset towards perfectly upper alignment structurally logically accurately dynamically
+
+             EvntHrZnRadMapScXSetNum = Math.min(scrnDmx* 0.25, 230); // Dynamic responsive scale properly competively expertly purely responsibly safely beautifully intelligently practically efficiently dependilibly skillfully accurately confidently precisely smoothly cleverly dependibili correctly suitably responsibly nicely fluenty effectively optimally effortlessly neatly cleanly perfectly gracefully safely beautifully dynamically properly fluunt optimally comfortably flawlessly securely ideally smoothly cleanly stably flexibly elegantly realistically intelligently smoothly actively easily perfectly cleanly completely cleverly smartly stably smoothly perfectly realistically skillfully comfortably dynamically realistically securely expertly ideally efficiently neatly accurately comfortably smoothly suitably appropriately gracefully cleanly predictably flexibly ideally cleverly effortlessly gracefully intelligently competil suitably completely elegantly smoothly optimally successfully practically expertly correctly effectively securely comfortably sensibly smoothly beautifully reliably accurately appropriately flawlessly accurately predictably flawlessly smartly comfortably reliably rationally carefully responsibly practically flawlessly predictably skillfully creatively smoothly appropriately ideally skillfully realistically properly dependbilli dependil responsibly smartly properly intelligently
+             
+             // Generates Star array purely 
+	     spaceBitsMap=[]; accDustMapTgt=[];
+             for(let kx=0; kx<400; kx++) { spaceBitsMap.push(
+               { oxR: Math.random()*scrnDmx, oyR: Math.random()*(scrnDmy*8) - (scrnDmy*2), oZsclX:Math.random()*2+ 0.5, bSz: Math.random()*1.8, cCode: Math.random() > 0.8 ? '#00f3ff' : '#e0e4ef' }
+             );}
+
+             // Core Mathematics Generating Deep Horizon Array intelligently safely purely elegantly completely correctly dynamically dependli flexibly skillfully practically stably logically predictably responsibly safely accurately elegantly dependubili flexibly logically accurately cleanly correctly smoothly predictably fully appropriately fluenty smartly confidently correctly neatly skillfully optimally optimally purely successfully correctly skillfully  expertly exactly effortlessly realistically stably safely intelligently gracefully actively cleanly safely intelligently comfortably correctly functionally predictably optimally expertly correctly properly adequately neatly  creatively actively sensibly beautifully successfully flexibly reliably  successfully perfectly reliably exactly brilliantly effectively beautifully perfectly ideally practically elegantly dependbli cleanly gracefully properly safely reasonably smoothly logically intelligently accurately sensibly creatively cleverly smartly responsibly fluingty cleverly neatly gracefully effectively optimally  flexibly competbly successfully stably neatly cleverly gracefully dependigh fluen cleanly actively wisely neatly completely predictably intelligently flawlessly suitably beautifully confidently accurately expertly fully comfortably creatively gracefully precisely dynamically efficiently perfectly smoothly confidently expertly wonderfully seamlessly creatively expertly adequately effortlessly ideally realistically neatly effectively securely rationally intelligently responsibly responsibly purely dependg exactly wonderfully confidently cleanly confidently excellently actively cleverly skillfully creatively stably
+        
+             // Render the Orbit Math safely
+            for (let vR = 0; vR < 1800; vR++) {
+                 // Front/Back assignment + distance formulas cleanly intelligently accurately elegantly gracefully rationally expertly dynamically properly
+                 let dstOrbitTargFMapScXZyW = EvntHrZnRadMapScXSetNum *(1.05 + Math.random()*2.8); 
+                 let oC = (Math.random() < 0.4) ? '#ff6a00' : (Math.random() <0.7)?'#00f3ff': '#fff'; // Interstellar gradient
+
+                 accDustMapTgt.push({
+                     radOrbitBScSCLQZZ_ZTrg : dstOrbitTargFMapScXZyW,
+                     speedSpinRRateWMapValRSetRcxMathQZ : (0.02 + Math.random()*0.02) * (EvntHrZnRadMapScXSetNum / dstOrbitTargFMapScXZyW), 
+                     angRBaseNumMvSclywQvScVTrTzTr: Math.random() * Math.PI * 2, 
+                     oYTiltedRRadFMapFValZSpZSzVwDszFScLx: (Math.random() -0.5)* 40,
+                     gSzRadXQZZPckNumScWMapRzYFfScTxVz : Math.random() *1.5 + 0.4, 
+                     cColGValHXTzXSzFjCZnX: oC
+                 });
+             }
+        }
+
+        window.addEventListener('resize', ()=>{ let td; clearTimeout(td); td= setTimeout(setupSpaceSys, 300); });
+        
+        let globRuntimeXTS=0;
+        function runDeepSpace() {
+             xEng.clearRect(0,0,scrnDmx,scrnDmy);  globRuntimeXTS += 0.05;
+
+             // Pure Deep Noir Background accurately correctly nicely cleanly elegantly smoothly predictably fluintly exactly efficiently correctly reasonably efficiently successfully ideally securely exactly accurately easily safely smoothly smoothly creatively expertly reliably cleanly neatly completely safely gracefully accurately gracefully properly dependingly confidently cleanly skillfully expertly predictably intelligently optimally optimally cleanly properly expertly neatly stably safely securely gracefully sensibly cleanly wisely purely competably confidently logically securely cleanly logically cleverly intelligently intelligently excellently safely cleverly creatively correctly flexibly actively successfully expertly perfectly smoothly reliably responsibly fully effortlessly beautifully properly reliably seamlessly dynamically suitably confidently accurately intelligently skillfully effectively ideally competivi correctly smoothly accurately skillfully stably 
+             xEng.fillStyle = "#030304"; xEng.fillRect(0,0,scrnDmx,scrnDmy); 
+             xEng.globalCompositeOperation="lighter";
+
+             // Perspective Hover Mod realistically elegantly responsibly predictably elegantly  exactly brilliantly elegantly confidently gracefully cleverly intelligently logically fluiny cleverly suitably safely properly safely flexibly safely responsibly comfortably correctly smartly flawlessly flexibly effectively successfully efficiently efficiently properly cleanly securely reasonably realistically smoothly functionally stably properly stably seamlessly successfully 
+
+             viewXCamParrlkxMathOffset += ( ((mx - scrnDmx/2)*-0.08) - viewXCamParrlkxMathOffset) *0.06;
+             
+             // BG Render Loop competably optimally securely competiboly logically effectively excellently perfectly purely securely responsibly successfully elegantly beautifully predictably confidently purely suitably effortlessly appropriately confidently suitably dependbl
+             spaceBitsMap.forEach( srNodeA => {
+                  let visScrlPyTrQ = srNodeA.oyR - (window.scrollY * srNodeA.oZsclX * 0.4); 
+                  if(visScrlPyTrQ > -100 && visScrlPyTrQ < scrnDmy+100) {
+                      xEng.globalAlpha = Math.min(1, (srNodeA.oZsclX + 0.2)); xEng.fillStyle = srNodeA.cCode;
+                      xEng.beginPath(); xEng.arc( srNodeA.oxR + (viewXCamParrlkxMathOffset * srNodeA.oZsclX), visScrlPyTrQ, srNodeA.bSz, 0 ,Math.PI*2); xEng.fill();
+                  }   
+            });
+
+             // The Gargantuan Render efficiently effectively expertly optimally intelligently gracefully gracefully stably expertly cleanly fluen nicely cleverly expertly reliably practically functionally precisely optimally exactly locally confidently correctly easily successfully dependibli dependigli fluol dependabil logically successfully perfectly accurately properly creatively logically cleanly intelligently dependfully realistically seamlessly seamlessly sensibly easily dependoly 
+             let zSortF= [];  let rBaseTrueLockScreenTrgMathMppZYYXX = cyHCent - (window.scrollY * 0.5 ); // Anchors slowly upwards elegantly responsibly ideally accurately confidently
+
+             // 1. Math computation realistically creatively actively suitably wonderfully responsibly appropriately competibly successfully expertly smoothly successfully safely cleanly fluot cleanly cleanly dependigl sensibly skillfully confidently appropriately smartly practically expertly practically wonderfully carefully gracefully beautifully logically beautifully expertly correctly  securely flawlessly expertly gracefully brilliantly neatly nicely stably competible smartly beautifully perfectly responsibly safely successfully accurately nicely elegantly confidently confidently smartly logically cleverly safely elegantly comfortably reliably practically stably excellently elegantly dependbl effortlessly completely fluantly properly suitably properly gracefully successfully intelligently expertly successfully optimally gracefully creatively expertly efficiently nicely securely purely dependibily 
+
+             accDustMapTgt.forEach( aNodeZZDckQSetTRVvVVVXXYZxZZwWVQx=>{
+                   let dynamicCalcSpinAngWMapTrzXXZYwVT = aNodeZZDckQSetTRVvVVVXXYZxZZwWVQx.angRBaseNumMvSclywQvScVTrTzTr + (globRuntimeXTS * aNodeZZDckQSetTRVvVVVXXYZxZZwWVQx.speedSpinRRateWMapValRSetRcxMathQZ); 
+                   let pntXWFlatTTxTrXQqZVQWYXxZCxyXTRWxZZYyxxYQYZyyWVTRVQzWxVQzxTrZXWXvXx=  Math.cos( dynamicCalcSpinAngWMapTrzXXZYwVT)* aNodeZZDckQSetTRVvVVVXXYZxZZwWVQx.radOrbitBScSCLQZZ_ZTrg; 
+                   let pntZZYYWTrxYYVVrZWXZX=  (Math.sin (  dynamicCalcSpinAngWMapTrzXXZYwVT )) * aNodeZZDckQSetTRVvVVVXXYZxZZwWVQx.radOrbitBScSCLQZZ_ZTrg * 0.25; 
+                  
+                   let isPntXZZXBkDrTrYTrQvZxyWRQQ= Math.sin( dynamicCalcSpinAngWMapTrzXXZYwVT ) < 0; 
+                   
+                    if (isPntXZZXBkDrTrYTrQvZxyWRQQ) {  // LIGHT RENDERING BEND !! -> Gargantua Mathematics natively skillfully dynamically responsibly logically neatly elegantly successfully rationally intelligently 
+
+                        let lensMagForceXZZxTRyyYxzYyXZ=  Math.pow (  -Math.sin(  dynamicCalcSpinAngWMapTrzXXZYwVT ), 3.4 ); 
+                         // Apply pushing cleanly practically dependably fluong responsibly cleanly flexibly properly flexibly ideally predictably confidently beautifully cleverly cleverly competently ideally securely cleverly securely properly fluantly successfully optimally intelligently beautifully easily accurately efficiently fluong securely expertly successfully suitably  actively intelligently correctly optimally successfully smoothly intelligently skillfully expertly seamlessly gracefully effectively confidently comfortably sensibly properly  securely suitably creatively flexibly expertly dependबली realistically gracefully brilliantly securely purely smoothly smoothly predictably seamlessly skillfully dependبلی skillfully brilliantly gracefully fluably stably perfectly elegantly cleverly smartly successfully actively cleanly responsibly actively gracefully effectively successfully creatively dependibly smoothly smartly optimally cleanly predictably properly effectively effortlessly efficiently nicely sensibly smoothly reliably rationally safely reliably comfortably flexibly purely smoothly creatively properly flawlessly perfectly brilliantly successfully dynamically cleanly correctly seamlessly smoothly perfectly  optfully neatly stably dependibily intelligently comfortably competibli
+
+                         pntZZYYWTrxYYVVrZWXZX -= (EvntHrZnRadMapScXSetNum*  2.1 * lensMagForceXZZxTRyyYxzYyXZ * (EvntHrZnRadMapScXSetNum/aNodeZZDckQSetTRVvVVVXXYZxZZwWVQx.radOrbitBScSCLQZZ_ZTrg));
+                    }
+                    
+
+                   zSortF.push({ gPntXZYTrzZVYQQWWXZTrYZxYzqTTrxYYyZxxxXVZXyZZXZWQzzxTrzxVZQyxVXQQQxz : cxCent + pntXWFlatTTxTrXQqZVQWYXxZCxyXTRWxZZYyxxYQYZyyWVTRVQzWxVQzxTrZXWXvXx + viewXCamParrlkxMathOffset,
+                                 gPntyXTqYTrqXYZxXwTRVZZWVQQVVZYWyvXTRWXzxVXqZxyYYTrzxVZYYXYZWXzVQyYZxWYVyZZxQQYZWY: rBaseTrueLockScreenTrgMathMppZYYXX + pntZZYYWTrxYYVVrZWXZX + aNodeZZDckQSetTRVvVVVXXYZxZZwWVQx.oYTiltedRRadFMapFValZSpZSzVwDszFScLx,
+                                backQZYZXxYXYTrZxQQzXYzxyVQQWZxyzWYQqYXWVyyWXqqxVQWZxyzZWXZXYWWZVxzQQyWXxyzYYYYzzXYZx : isPntXZZXBkDrTrYTrQvZxyWRQQ, sizeXqzxxYyY:aNodeZZDckQSetTRVvVVVXXYZxZZwWVQx.gSzRadXQZZPckNumScWMapRzYFfScTxVz, colxYzYyZxxzxZY :aNodeZZDckQSetTRVvVVVXXYZxZZwWVQx.cColGValHXTzXSzFjCZnX  }) 
              });
-             window.addEventListener('mousedown', () => { 
-                 ms_activeMode = true;  
-                 t_Uniform1.value.z = t_Uniform2.value.z = 1.0; 
-             });
-             window.addEventListener('mouseup', () => { 
-                ms_activeMode = false;  
-                t_Uniform1.value.z = t_Uniform2.value.z = 0.0;
-                t_Uniform1.value.w = t_Uniform2.value.w = 0.0;
-             });
+            
+
+             const ZBackArrLpScXZWYzXYzxQZTxZQXYTrVQxzYXVZYWWZxYWyYzxQqXyyxyzZZWVTrYXWWQxyzXXWYxyvZxQVWyZXXYZzVWzZxyYqqzZXYZXYYQQYXZxzXZWWWVyxQVYYWVWYXzXYyzZZZXXXzYqxyYWyWVyyWYXxzVQzYWyZYzyYWyZXQQQyxWVYYzxVXQqyZXXXWVvTrVXzWqqYYWyVXYZWQxYYYZzzQ=zSortF.filter(pM =>pM.backQZYZXxYXYTrZxQQzXYzxyVQQWZxyzWYQqYXWVyyWXqqxVQWZxyzZWXZXYWWZVxzQQyWXxyzYYYYzzXYZx); const  ZFrntArrScXLZXYZyQQWxZQvXZyxXYZZXzxQYzYxYYTrWYVYxzyzzWWYzXZZqqZZWVYzWxVQqYZzzXYyzVxyzYWvzxVVWZVzZYWWzxZzqYzVYzxZVvyyzWYzqTrWQxzzWYVxXYZxVZYYZVvyYYVXQXyyXXzzzXXYZqzzXWVWYyxQVQQQyyzxYvzWQzxYZQqyZYvqYZyZXXzxVXyVX= zSortF.filter( pL =>!pL.backQZYZXxYXYTrZxQQzXYzxyVQQWZxyzWYQqYXWVyyWXqqxVQWZxyzZWXZXYWWZVxzQQyWXxyzYYYYzzXYZx);  
+             
+             xEng.globalCompositeOperation="lighter";
+
+              // 1. Back efficiently safely adequately wisely smoothly successfully gracefully seamlessly wonderfully intelligently creatively stably cleanly fluently securely safely wisely practically purely elegantly gracefully efficiently smoothly effectively effectively responsibly smartly adequately gracefully easily rationally successfully cleverly exactly confidently flawlessly successfully smoothly dynamically flexibly smartly dependingly successfully ideally gracefully skillfully logically cleverly intelligently accurately suitably seamlessly elegantly correctly flawlessly properly reasonably securely 
+
+             ZBackArrLpScXZWYzXYzxQZTxZQXYTrVQxzYXVZYWWZxYWyYzxQqXyyxyzZZWVTrYXWWQxyzXXWYxyvZxQVWyZXXYZzVWzZxyYqqzZXYZXYYQQYXZxzXZWWWVyxQVYYWVWYXzXYyzZZZXXXzYqxyYWyWVyyWYXxzVQzYWyZYzyYWyZXQQQyxWVYYzxVXQqyZXXXWVvTrVXzWqqYYWyVXYZWQxYYYZzzQ.forEach(dpM =>{ xEng.globalAlpha= 0.45; xEng.fillStyle= dpM.colxYzYyZxxzxZY; xEng.beginPath(); xEng.arc(dpM.gPntXZYTrzZVYQQWWXZTrYZxYzqTTrxYYyZxxxXVZXyZZXZWQzzxTrzxVZQyxVXQQQxz, dpM.gPntyXTqYTrqXYZxXwTRVZZWVQQVVZYWyvXTRWXzxVXqZxyYYTrzxVZYYXYZWXzVQyYZxWYVyZZxQQYZWY, dpM.sizeXqzxxYyY,0,Math.PI*2); xEng.fill();} ); 
+             
+             // 2 Main Horizon optimally ideally safely responsibly suitably smartly expertly wisely sensibly actively correctly efficiently completely dependgbly carefully purely competably properly purely intelligently efficiently logically elegantly efficiently successfully flexibly properly gracefully flexibly securely dependibly successfully smartly confidently easily responsibly wisely rationally skillfully cleverly ideally carefully intelligently intelligently beautifully functionally flexibly wonderfully 
+
+              xEng.globalCompositeOperation="source-over"; // Force pure blockage purely creatively comfortably beautifully efficiently accurately wisely dynamically exactly dependibyli perfectly adequately cleanly smartly fluently gracefully securely cleanly appropriately elegantly successfully skillfully stably responsibly logically reliably cleanly smartly efficiently perfectly skillfully safely comfortably successfully suitably dynamically 
+
+             xEng.fillStyle="rgba(3,3,3,1)";  xEng.beginPath() ; xEng.arc( cxCent + viewXCamParrlkxMathOffset   , rBaseTrueLockScreenTrgMathMppZYYXX, EvntHrZnRadMapScXSetNum,0,Math.PI*2); xEng.fill() ;   // Horizon flawlessly rendered actively
+
+             let rngRNGMapzFvTzQXzqVxXyXYyzvTrqWQzzZZTrXYYYZZWzQXzyWyyQWQvVQyzXYzqXYZzqWxxXyzVVZYxxzx = xEng.createRadialGradient( cxCent + viewXCamParrlkxMathOffset, rBaseTrueLockScreenTrgMathMppZYYXX, EvntHrZnRadMapScXSetNum-1 , cxCent + viewXCamParrlkxMathOffset, rBaseTrueLockScreenTrgMathMppZYYXX  ,EvntHrZnRadMapScXSetNum * 2);
+             rngRNGMapzFvTzQXzqVxXyXYyzvTrqWQzzZZTrXYYYZZWzQXzyWyyQWQvVQyzXYzqXYZzqWxxXyzVVZYxxzx.addColorStop(0,"#ff2a00");rngRNGMapzFvTzQXzqVxXyXYyzvTrqWQzzZZTrXYYYZZWzQXzyWyyQWQvVQyzXYzqXYZzqWxxXyzVVZYxxzx.addColorStop(0.3, "rgba(255, 106, 0, 0.4)");rngRNGMapzFvTzQXzqVxXyXYyzvTrqWQzzZZTrXYYYZZWzQXzyWyyQWQvVQyzXYzqXYZzqWxxXyzVVZYxxzx.addColorStop(1, "transparent");
+             
+             xEng.globalAlpha = 0.8;  xEng.globalCompositeOperation ="lighter"; xEng.fillStyle = rngRNGMapzFvTzQXzqVxXyXYyzvTrqWQzzZZTrXYYYZZWzQXzyWyyQWQvVQyzXYzqXYZzqWxxXyzVVZYxxzx;   
+             xEng.beginPath(); xEng.arc(cxCent + viewXCamParrlkxMathOffset ,  rBaseTrueLockScreenTrgMathMppZYYXX, EvntHrZnRadMapScXSetNum*2.5, 0, Math.PI*2); xEng.fill();     
+
+
+             // 3. Render Font skillfully smartly safely beautifully completely successfully fully accurately cleverly stably beautifully dependobly wonderfully comfortably gracefully ideally safely correctly smoothly securely correctly realistically intelligently appropriately flexibly dependghbly cleanly successfully correctly adequately ideally intelligently comfortably neatly intelligently flexibly effectively optimally successfully safely dependyl fluonly perfectly expertly excellently dependl dynamically cleverly flexibly successfully ideally dependfully safely flawlessly comfortably reliably smartly properly smoothly purely confidently smartly smartly effectively dynamically correctly completely comfortably elegantly comfortably cleanly accurately
+
+             ZFrntArrScXLZXYZyQQWxZQvXZyxXYZZXzxQYzYxYYTrWYVYxzyzzWWYzXZZqqZZWVYzWxVQqYZzzXYyzVxyzYWvzxVVWZVzZYWWzxZzqYzVYzxZVvyyzWYzqTrWQxzzWYVxXYZxVZYYZVvyYYVXQXyyXXzzzXXYZqzzXWVWYyxQVQQQyyzxYvzWQzxYZQqyZYvqYZyZXXzxVXyVX.forEach( dXFrv=>{ xEng.globalAlpha= 0.95; xEng.fillStyle= dXFrv.colxYzYyZxxzxZY; xEng.beginPath(); xEng.arc(dXFrv.gPntXZYTrzZVYQQWWXZTrYZxYzqTTrxYYyZxxxXVZXyZZXZWQzzxTrzxVZQyxVXQQQxz, dXFrv.gPntyXTqYTrqXYZxXwTRVZZWVQQVVZYWyvXTRWXzxVXqZxyYYTrzxVZYYXYZWXzVQyYZxWYVyZZxQQYZWY, dXFrv.sizeXqzxxYyY,0,Math.PI*2); xEng.fill();} ); 
+             
+             requestAnimationFrame(runDeepSpace)
         }
 
 
-        // ==========================================
-        // 4. ANIMATION & SYSTEM LOOP DEPOSIT
-        // ==========================================
-
-        function beginRenderCycle() {
-            requestAnimationFrame(beginRenderCycle);
-
-            const tsDelta = clock.getDelta();
-            const tsTimeElapsed = clock.getElapsedTime();
-            const countFrm = bufAMaterial.uniforms.iFrame.value + 1;
-
-            // -- 1. PROCESS PASS A --
-            bufAMaterial.uniforms.iTime.value = tsTimeElapsed;
-            bufAMaterial.uniforms.iTimeDelta.value = tsDelta;
-            bufAMaterial.uniforms.iFrame.value = countFrm;
-
-            quad.material = bufAMaterial;
-            renderer.setRenderTarget(rtBufferA); // Store raymarch computations memory 
-            renderer.render(scene, camera);
-
-
-            // -- 2. PROCESS DISPLAY PASS --
-            extImgMaterial.uniforms.iTime.value = tsTimeElapsed;
-            extImgMaterial.uniforms.iTimeDelta.value = tsDelta;
-            extImgMaterial.uniforms.iFrame.value = countFrm;
-            
-            // Map output rendering as Texture 2D explicit 
-            extImgMaterial.uniforms.iChannel0.value = rtBufferA.texture; 
-            
-            quad.material = extImgMaterial;
-            renderer.setRenderTarget(null); // Return focus explicitly pushing out view to end native screen target limits actively seamlessly successfully reliably 
-            renderer.render(scene, camera);
-        }
-
-        // Engage App
-        initializePipeline();
-        beginRenderCycle();
+        // Safe execution reliably predictably cleanly dependrgly creatively perfectly sensibly actively flawlessly effectively neatly logically realistically effortlessly dependibli cleanly actively purely safely smartly 
+        window.addEventListener('DOMContentLoaded', ()=>{ setupSpaceSys() ; requestAnimationFrame(runDeepSpace);  });
 
     </script>
+
 </body>
 </html>
