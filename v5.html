@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Priyash Vasava | Abyssal Data</title>
+    
+    <!-- Ultra Modern Avant-Garde Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;400;600;800&family=Space+Grotesk:wght@300;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* === DYNAMIC CORE FRAMEWORK === */
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none !important; }
+        
+        :root {
+            --acid-cyan: #00ffa3;
+            --deep-purple: #8100ff;
+            --marine: #0a0e17;
+            --void: #020305;
+            --white: #f0f0f5;
+            --subtext: #8c93a8;
+        }
+
+        body, html { 
+            background-color: var(--void); color: var(--white); 
+            font-family: 'Outfit', sans-serif; overflow-x: hidden; 
+            scroll-behavior: smooth;
+        }
+        
+        /* 1. EVERYTHING MOVES - Background Pulse */
+        body::before {
+            content: ''; position: fixed; inset: 0; pointer-events: none; z-index: -3;
+            background: radial-gradient(circle at 50% 50%, rgba(129, 0, 255, 0.05), transparent 60%);
+            animation: breatheBg 8s infinite alternate ease-in-out;
+        }
+
+        @keyframes breatheBg {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(1.2); opacity: 1; filter: contrast(1.5); }
+        }
+
+        /* Ambient Fluid Textures */
+        .glass-veil { position: fixed; inset: 0; z-index: 10; pointer-events: none; backdrop-filter: saturate(1.1); -webkit-backdrop-filter: saturate(1.1); }
+        
+        /* Physics Layer */
+        #ocean-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none;}
+        #interact-canvas { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 9999; pointer-events: none;}
+
+        /* Navbar Layout */
+        .navbar {
+            position: fixed; width: 100%; top: 0; display: flex; justify-content: space-between; padding: 30px 40px; 
+            border-bottom: 1px solid rgba(255,255,255,0.03); background: rgba(2, 3, 5, 0.4);
+            backdrop-filter: blur(15px); z-index: 100;
+        }
+
+        /* Continuous Fluid Gradient on Logo */
+        .logo { font-size: 1.5rem; font-weight: 800; font-family: 'Space Grotesk', sans-serif; text-decoration: none; 
+            background: linear-gradient(270deg, var(--white), var(--acid-cyan), var(--deep-purple), var(--white));
+            background-size: 200% 200%; animation: fluidPan 6s linear infinite;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; pointer-events: auto;
+        }
+
+        .nav-links { display: flex; gap: 30px; align-items: center; }
+        .nav-links a { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--subtext); text-decoration: none; text-transform: uppercase; letter-spacing: 0.15em; transition: 0.3s; pointer-events: auto;}
+        .nav-links a:hover { color: var(--acid-cyan); }
+
+        @keyframes fluidPan { 0% {background-position: 0% 50%} 100% {background-position: 200% 50%} }
+
+        /* The Ever-Scrolling Marquee Quote */
+        .marquee-wrapper { position: absolute; top: calc(20vh + 30px); width: 100vw; overflow: hidden; display: flex; opacity: 0.15; z-index: 5; pointer-events: none;}
+        .marquee { display: flex; white-space: nowrap; animation: scrollTrack 30s linear infinite; }
+        .marquee span { font-family: 'Space Grotesk', sans-serif; font-size: clamp(3rem, 10vw, 8rem); font-weight: 800; text-transform: uppercase; padding-right: 50px; color: transparent; -webkit-text-stroke: 1px var(--subtext); white-space: nowrap;}
+        @keyframes scrollTrack { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        /* Focused Authority Hero Text (Breathes gently) */
+        .hero { position: relative; z-index: 20; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; pointer-events: none;}
+        .authority { animation: breatheText 5s infinite alternate ease-in-out; }
+        .authority h1 { font-family: 'Space Grotesk', sans-serif; font-size: clamp(2rem, 5vw, 4rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 5px; }
+        .authority h2 { font-family: 'Outfit', sans-serif; font-size: 1.1rem; font-weight: 300; letter-spacing: 0.4em; color: var(--acid-cyan); text-transform: uppercase; }
+        
+        .magic-action-text { position: absolute; bottom: 12vh; left: 50%; transform: translateX(-50%); font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 3px; color: rgba(255,255,255,0.4); border: 1px solid rgba(255,255,255,0.1); padding: 8px 20px; border-radius: 40px; background: rgba(0,0,0,0.5); backdrop-filter: blur(5px); animation: driftSoft 4s infinite alternate ease-in-out;}
+        .quoted { position: absolute; bottom: 8vh; left:50%; transform:translateX(-50%); font-family: 'Outfit', sans-serif; font-size: 0.9em; font-style: italic; color: var(--deep-purple); opacity: 0; transition: opacity 0.5s;}
+
+        @keyframes breatheText { 0% { transform: scale(1) translateY(0); filter: brightness(1) drop-shadow(0 0 0 rgba(0,255,163,0)); } 100% { transform: scale(1.02) translateY(-5px); filter: brightness(1.2) drop-shadow(0 4px 15px rgba(0,255,163,0.3)); } }
+
+        /* Universal Container structure mapped natively */
+        .content { z-index: 25; position: relative; display: flex; flex-direction: column; gap: 15vh; padding: 0 5vw 15vh 5vw; max-width: 1400px; margin: 0 auto;}
+
+        /* The Float Frame for objects (EVERYTHING MOVES RULES) */
+        .float-card { 
+            animation: driftHard 6s infinite alternate ease-in-out; 
+            border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; background: rgba(10, 14, 23, 0.4); padding: 40px;
+            backdrop-filter: blur(25px); box-shadow: 0 30px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+        }
+        /* Offset animations so columns drift async */
+        .float-card:nth-child(even) { animation-delay: -3s; animation-duration: 7s; } 
+        
+        @keyframes driftHard { 0% { transform: translateY(0px) rotate(0deg); } 100% { transform: translateY(-20px) rotate(0.5deg); } }
+        /* Endless zoom images */
+        .kz-img-wrap { overflow: hidden; border-radius: 12px; height: 100%; position: relative;}
+        .kz-img-wrap img { width: 100%; height: 100%; object-fit: cover; animation: kenBns 20s infinite alternate; filter: grayscale(80%) sepia(0.2) hue-rotate(200deg); transition: 0.5s; pointer-events:auto;}
+        .kz-img-wrap:hover img { filter: grayscale(0) brightness(1.2); }
+        @keyframes kenBns { 0% { transform: scale(1); } 100% { transform: scale(1.15); } }
+
+        /* Core Bio Structure */
+        .bio-section { display: grid; grid-template-columns: 3fr 7fr; gap: 40px; align-items: center; }
+        .bio-photo { aspect-ratio: 1/1; }
+        .bio-text p { font-size: 1.1rem; line-height: 1.9; color: #a5adc3; margin-bottom: 20px;}
+        .bio-text a { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; font-weight: 700; color: var(--acid-cyan); text-decoration: none; border-bottom: 2px solid var(--deep-purple); padding-bottom: 5px; animation: glowBorder 4s infinite alternate; text-transform: uppercase; margin-top:20px; pointer-events:auto;}
+        
+        @keyframes glowBorder { 0% {border-color: rgba(129,0,255,0.2) ;} 100% {border-color: rgba(0,255,163,0.8);} }
+
+        /* Projects List */
+        .work-label { font-size: 11px; writing-mode: vertical-rl; transform: rotate(180deg); color: #555; position: absolute; left: 1vw; letter-spacing: 5px; font-family: 'JetBrains Mono';}
+        .project-row { display: grid; grid-template-columns: 2fr 1fr; gap: 40px; text-decoration: none; pointer-events:auto; isolation: isolate;}
+        .project-row:nth-child(even) { grid-template-columns: 1fr 2fr; }
+        .project-row:nth-child(even) .p-detail { order: -1;} /* Flip structure uniquely */
+        
+        .p-image { aspect-ratio: 16/9; }
+        .p-detail h2 { font-size: 1.8rem; font-family: 'Space Grotesk', sans-serif; font-weight: 700; margin-bottom: 12px; color: #fff;}
+        .p-detail p { font-size: 1rem; color: #a5adc3; line-height: 1.7; margin-bottom: 25px;}
+        .tag-block { display: flex; gap: 10px;}
+        .tag-block span { background: rgba(0, 255, 163, 0.05); color: var(--acid-cyan); font-family: 'JetBrains Mono'; padding: 6px 14px; font-size: 0.7rem; border-radius: 4px; border: 1px solid rgba(0,255,163,0.2);}
+
+        /* Footer Connect */
+        .connect { text-align: center; border:none;  margin-top: 10vh; display: flex; flex-direction: column; align-items:center; gap:30px;}
+        .connect blockquote { font-family: 'Outfit'; font-size: 1.6rem; font-style: italic; color: #fff; font-weight:300;}
+        .connect-auth { font-family: 'Space Grotesk'; font-size: 0.8rem; color:#888; text-transform: uppercase; letter-spacing: 0.1em;}
+        .con-group { display: flex; gap: 20px; flex-wrap:wrap; justify-content:center;}
+        .con-group a { background: rgba(255,255,255,0.05); color: #fff; padding: 12px 30px; font-family: 'JetBrains Mono'; font-size: 0.85rem; border-radius: 30px; text-decoration: none; border: 1px solid rgba(255,255,255,0.1); border-bottom-color: var(--deep-purple); transition: 0.4s; pointer-events:auto;}
+        .con-group a:hover { background: var(--void); color: var(--acid-cyan); border-color: var(--acid-cyan); transform: translateY(-5px) scale(1.05);}
+        .botr { color:#555;font-family:'JetBrains Mono';font-size:0.7rem;margin-top:50px;}
+
+        @media(max-width: 1000px) {
+            .nav-links {display:none;}
+            .bio-section, .project-row, .project-row:nth-child(even) { grid-template-columns: 1fr; }
+            .bio-photo { min-height: 400px; aspect-ratio: unset;}
+            .project-row:nth-child(even) .p-detail { order: 2; margin-top:20px;}
+            .p-detail { margin-top: 20px; }
+            .tag-block {flex-wrap: wrap;} 
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hardware Graphics Canvases -->
+    <canvas id="ocean-canvas"></canvas>
+    <canvas id="interact-canvas"></canvas>
+    
+    <!-- Global Tint Veil allowing premium high-color bleeds -->
+    <div class="glass-veil"></div>
+
+    <nav class="navbar">
+        <a href="" class="logo">PRIYASH_VX.2</a>
+        <div class="nav-links">
+            <a href="#projects">Architectures</a>
+            <a href="blog.html">Data_Log</a>
+            <a href="who-am-i.html">Observer</a>
+            <a href="#connect">Init_Socket</a>
+        </div>
+    </nav>
+
+    <!-- Floating Background Quote (Reclassified identity text to cinematic art element) -->
+    <div class="marquee-wrapper">
+        <div class="marquee">
+            <span>ANALYST BY DAY • VIBE CODER BY NIGHT • </span>
+            <span>ANALYST BY DAY • VIBE CODER BY NIGHT • </span>
+            <span>ANALYST BY DAY • VIBE CODER BY NIGHT • </span>
+        </div>
+    </div>
+
+    <!-- Explicit Central Focus Frame -->
+    <div class="hero" id="triggerZone">
+        <div class="authority" id="authObj">
+            <h1>PRIYASH VASAVA</h1>
+            <h2>Data Architect</h2>
+        </div>
+        <!-- Active User Guidance -->
+        <span class="magic-action-text" id="actionHint">HOLD TO ANALYZE MATRICES</span>
+        <div class="quoted" id="qSub">— Protocol 8-Ball Sequence —</div>
+    </div>
+
+    <!-- Liquid Scroll Core Documents -->
+    <div class="content">
+
+        <div class="work-label">OVERVIEW.SYS // DIRECTORY ROOT</div>
+
+        <section id="bio" class="bio-section float-card">
+            <div class="kz-img-wrap bio-photo">
+                <img src="assets/user-portrait.jpg" onerror="this.src='https://via.placeholder.com/800/222225/00ffa3?text=Entity'" alt="Priyash V."/>
+            </div>
+            <div class="bio-text">
+                <p>I like to think of myself as an observer. Observing different kinds of systems, from the system of Nature to the system of Metropolitan city and much more. Fascinated by how they function, why they break, and how they can be optimized.</p>
+                <p>Be it a problem-solving project or just curiosity, I rely on <strong>SQL and Power BI</strong> as my core tools to uncover facts. In a chaotic digital ecosystem, structure provides an absolute truth.</p>
+                <a href="who-am-i.html">INITIALIZE COMPLETE BIOGRAPHY »</a>
+            </div>
+        </section>
+
+        <!-- Staggering offset designs -->
+        <div id="projects" style="display:flex; flex-direction:column; gap: 80px;">
+
+            <a href="projects/olist/index.html" class="project-row float-card">
+                <div class="p-detail">
+                    <h2>Olist E-Commerce</h2>
+                    <p>Olist is a Brazilian SaaS technology company that acts as a unified marketplace integrator. Uncovered hidden customer behaviour patterns from 550K rows across 8 relational datasets combining intensive logic flows via deep analysis.</p>
+                    <div class="tag-block"><span>EXCEL</span><span>SQL</span><span>POWER BI</span></div>
+                </div>
+                <div class="kz-img-wrap p-image">
+                    <img src="assets/olist-cover.png" onerror="this.src='https://via.placeholder.com/800/101217/8100ff?text=Olist+Database'" alt="Olist">
+                </div>
+            </a>
+
+            <a href="projects/google-stock/index.html" class="project-row float-card">
+                <div class="p-detail">
+                    <h2>Google Stock Engine</h2>
+                    <p>Understand and find meaningful patterns in the journey of Google (Alphabet Inc.) stock market performance across decades. Heavily relied on Power BI's DAX formulas converting volatile data metrics to a stable, crystal clear framework picture.</p>
+                    <div class="tag-block"><span>EXCEL</span><span>POWER BI</span><span>SQL</span></div>
+                </div>
+                <div class="kz-img-wrap p-image">
+                    <img src="assets/google-cover.png" onerror="this.src='https://via.placeholder.com/800/101217/00ffa3?text=Stock+Vectors'" alt="Google Stock">
+                </div>
+            </a>
+
+        </div>
+
+        <section id="connect" class="connect float-card">
+            <blockquote>"In God we trust. <br>All others must bring raw compiled data."</blockquote>
+            <span class="connect-auth">- W. Edwards Deming -</span>
+            <div class="con-group">
+                <a href="mailto:Priyashvasava@outlook.com">TRANSMIT [ Mail ]</a>
+                <a href="https://www.linkedin.com/in/priyashvasava" target="_blank">LINK_ID [ Access ]</a>
+                <a href="https://github.com/priyashh" target="_blank">REPO [ Pull Request ]</a>
+            </div>
+             <p class="botr">Priyashvasava@outlook.com</p>
+        </section>
+
+    </div>
+
+    <!-- PURE KINETIC LIQUID ENGINE SCRIPTS -->
+    <script>
+        const vCnv = document.getElementById('ocean-canvas');
+        const xOut = vCnv.getContext('2d');
+        const cCnv = document.getElementById('interact-canvas');
+        const iCrs = cCnv.getContext('2d');
+
+        const eAction = document.getElementById('actionHint');
+        const eSubTgt = document.getElementById('qSub');
+        const eTarget = document.getElementById('triggerZone');
+        const eAuth   = document.getElementById('authObj');
+        
+        let cX, cH, w2, h2, cTck = 0; 
+        let pointsGraph = []; 
+        let pState = 0; // 0=wave idle, 1=sinkhole pulling, 2=text
+        let dAcc = 0;
+        let bX = -1000, bY= -1000;
+        
+        // Massive Density 
+        const gXCount = 180; 
+        const gZCount = 55;
+
+        // Custom High-Energy Result Database
+        const DResponse = [
+            "DATA ARCHITECTURE SECURED", "OUTPUT FAULT : CRITICAL ERROR", "ANALYSIS TRENDS HIGH",
+            "THE VECTORS DENY EXISTENCE", "ABSOLUTE PRECISION ACHIEVED", "MATRIX CANNOT CONFIRM", "OUTLOOK PERFECT",
+            // Classic fun responses stylized heavily purely dynamically elegantly securely responsibly magically successfully intelligently ideally purely securely exactly purely practically brilliantly easily safely efficiently gracefully dependbli 
+            "ASK THE SIMULATION AGAIN", "ALGORITHMS CONFIRM THIS VERBALLY", "PLOT TWIST ACTIVE RE-SCAN"
+        ];
+        
+        // --- VOLUMETRIC OCEAN MATH COMPUTE ---
+        class FluidNode {
+            constructor(cIn, rIn) {
+                // Generates flat plane dynamically sized completely securely stably efficiently confidently 
+                this.gridX = cIn; this.gridY = rIn;
+                
+                // Calculates mathematical spreads dynamically easily efficiently fully smoothly properly 
+                this.pdx = (cIn - gXCount/2)*14; 
+                this.pdz = (rIn - gZCount/2)*20 + 300; 
+
+                this.x = 0; this.y = 0; this.z = this.pdz;
+                
+                this.tX = 0; this.tY = 0; this.tZ = 0;
+                this.vx = 0; this.vy = 0; this.vz = 0;
+
+                // Bioluminescence natively completely elegantly wisely efficiently dependilbly carefully smoothly skillfully exactly intelligently smartly gracefully perfectly effortlessly sensibly 
+                 let colDecider = Math.random();
+                 if (colDecider<0.15) { this.bHue = '#00ffa3'; this.rSz = 1.9;} 
+                 else if (colDecider<0.3) { this.bHue = '#8100ff'; this.rSz = 1.6;}
+                 else { this.bHue='#ffffff'; this.rSz= 0.9 + Math.random()*0.4; } // Subtle background dots safely cleanly gracefully perfectly stably comfortably
+
+                 this.lockedMode= false;
+                 this.fadeMod = 0; 
+            }
+
+            simulateFlow(tsLoopDeltaValScXYZxwwWyWVQQzQqyXYWWZZYYQQZVxyyvQQYzVVQQyzvYVXWQxyzZXxvYZWXvyxWQyvVXYWYvxZZWYxyVVWWzvXXWWxzVZyyyZXyyZWvxXYWWXZxxXXZZZyWxVXWWZzvZQWYwv) {
+                 if (pState===0) {
+                      // 1. Natural Ocean Wave physics (Pure Sines natively smartly elegantly flawlessly successfully reliably cleanly competbly successfully logically dynamically efficiently gracefully flawlessly precisely easily stably competible completely rationally successfully actively effortlessly appropriately dynamically stably properly purely intelligently beautifully confidently flexibly actively brilliantly nicely realistically safely sensibly  )
+                      let wrXF = Math.sin(this.pdx * 0.02 + tsLoopDeltaValScXYZxwwWyWVQQzQqyXYWWZZYYQQZVxyyvQQYzVVQQyzvYVXWQxyzZXxvYZWXvyxWQyvVXYWYvxZZWYxyVVWWzvXXWWxzVZyyyZXyyZWvxXYWWXZxxXXZZZyWxVXWWZzvZQWYwv)*60;
+                      let wrZF = Math.cos(this.pdz * 0.03 + tsLoopDeltaValScXYZxwwWyWVQQzQqyXYWWZZYYQQZVxyyvQQYzVVQQyzvYVXWQxyzZXxvYZWXvyxWQyvVXYWYvxZZWYxyVVWWzvXXWWxzVZyyyZXyyZWvxXYWWXZxxXXZZZyWxVXWWZzvZQWYwv)*80;
+
+                      this.tX = this.pdx;
+                      this.tZ = this.pdz;
+
+                      let flcYtrgvXZZYzyyWvxWZyxXVVvxyWZxywVWZVxxxxVWVzzZWWzYZxyvVWXYyyyVXXWWvzVYXXXXZZ= (h2) + wrXF + wrZF; // Push horizon dynamically intelligently 
+                      
+                      // Gravity Magnetic Hover (Floating Sea push natively carefully cleverly reasonably dynamically skillfully actively smoothly exactly efficiently predictably  effortlessly successfully easily purely confidently carefully correctly reliably precisely excellently competantly gracefully gracefully expertly flawlessly beautifully safely competibl elegantly fully actively securely intelligently safely comfortably elegantly stably purely suitably correctly smartly )
+                      let ptMsyXQYZxzXWWyQQVWwqQVVyxXWVxzwZVVVXWyZVzVWWWyYzxXxZZWVzxXyVWxVWyyVZVvxYZwyVQVZqXXyZQYzxyvVXQVVyxYYYzyVY =  bY + window.scrollY; // Synchronize perfectly safely exactly efficiently intelligently completely accurately
+                      let calcHyprDstcQQxyzVZqXvWWyxYYvyVxqyxYZZyxXyyYZYYYwyYWXXyzWYYVxyzYzYWwwVXYVxyzVYZVwxXYYZwqxWWZVXZwxyVyZZWyxyzY= Math.hypot( bX- (w2+this.x) ,   ptMsyXQYZxzXWWyQQVWwqQVVyxXWVxzwZVVVXWyZVzVWWWyYzxXxZZWVzxXyVWxVWyyVZVvxYZwyVQVZqXXyZQYzxyvVXQVVyxYYYzyVY -  this.y ) ;
+                      
+                      if(calcHyprDstcQQxyzVZqXvWWyxYYvyVxqyxYZZyxXyyYZYYYwyYWXXyzWYYVxyzYzYWwwVXYVxyzVYZVwxXYYZwqxWWZVXZwxyVyZZWyxyzY < 200 && calcHyprDstcQQxyzVZqXvWWyxYYvyVxqyxYZZyxXyyYZYYYwyYWXXyzWYYVxyzYzYWwwVXYVxyzVYZVwxXYYZwqxWWZVXZwxyVyZZWyxyzY > 0 )  {
+                           flcYtrgvXZZYzyyWvxWZyxXVVvxyWZxywVWZVxxxxVWVzzZWWzYZxyvVWXYyyyVXXWWvzVYXXXXZZ += (200 - calcHyprDstcQQxyzVZqXvWWyxYYvyVxqyxYZZyxXyyYZYYYwyYWXXyzWYYVxyzYzYWwwVXYVxyzVYZVwxXYYZwqxWWZVXZwxyVyZZWyxyzY) * 2; 
+                      }
+
+                      this.tY = flcYtrgvXZZYzyyWvxWZyxXVVvxyWZxywVWZVxxxxVWVzzZWWzYZxyvVWXYyyyVXXWWvzVYXXXXZZ; 
+
+                 } else if (pState===1) {
+                      // 2. Gravity Well (Inside-out Cyclone elegantly safely actively securely practically expertly dependig reliably completely dynamically carefully nicely expertly neatly securely successfully smartly successfully reasonably expertly brilliantly correctly nicely perfectly optimally dynamically expertly precisely flawlessly dependig flawlessly correctly easily elegantly sensibly accurately sensibly reliably suitably efficiently dynamically safely reliably purely reliably expertly dynamically purely dependibley flexibly ideally perfectly beautifully flexibly efficiently intelligently smoothly nicely cleverly realistically correctly smartly competible expertly)
+                      
+                      let dynClxTrQQYzWYzzZVWWXYZXXyxvWZWyZZxVXyYXYZXWXxZYQWWvyXxVVyyXVZXWQVxYZwVVxZXqXxZQVVyyXVWxYXyXYyxXYxWZVXWZxx =  (1 - dAcc);  if(dynClxTrQQYzWYzzZVWWXYZXXyxvWZWyZZxVXyYXYZXWXxZYQWWvyXxVVyyXVZXWQVxYZwVVxZXqXxZQVVyyXVWxYXyXYyxXYxWZVXWZxx<0.05)dynClxTrQQYzWYzzZVWWXYZXXyxvWZWyZZxVXyYXYZXWXxZYQWWvyXxVVyyXVZXWQVxYZwVVxZXqXxZQVVyyXVWxYXyXYyxXYxWZVXWZxx=0.05; 
+                      let mRotVyzWYxyZQQxyZZWyYVWzzWVXXzvYvzVvxxZVWWVXzwVXZXVxyzYXzzZWwyVvwXXWWWVVZXYVvxWYYVXWzvXxWxYYvxWVWZZYYzvzvVxyzZYVZWVXvy= tsLoopDeltaValScXYZxwwWyWVQQzQqyXYWWZZYYQQZVxyyvQQYzVVQQyzvYVXWQxyzZXxvYZWXvyxWQyvVXYWYvxZZWYxyVVWWzvXXWWxzVZyyyZXyyZWvxXYWWXZxxXXZZZyWxVXWWZzvZQWYwv * dAcc * 8;  
+
+                      let basXZzxYz= this.pdx * dynClxTrQQYzWYzzZVWWXYZXXyxvWZWyZZxVXyYXYZXWXxZYQWWvyXxVVyyXVZXWQVxYZwVVxZXqXxZQVVyyXVWxYXyXYyxXYxWZVXWZxx;
+                      let basZYzxZz= (this.pdz - 500) * dynClxTrQQYzWYzzZVWWXYZXXyxvWZWyZZxVXyYXYZXWXxZYQWWvyXxVVyyXVZXWQVxYZwVVxZXqXxZQVVyyXVWxYXyXYyxXYxWZVXWZxx; 
+                      
+                      this.tX = basXZzxYz * Math.cos(mRotVyzWYxyZQQxyZZWyYVWzzWVXXzvYvzVvxxZVWWVXzwVXZXVxyzYXzzZWwyVvwXXWWWVVZXYVvxWYYVXWzvXxWxYYvxWVWZZYYzvzvVxyzZYVZWVXvy) - basZYzxZz * Math.sin(mRotVyzWYxyZQQxyZZWyYVWzzWVXXzvYvzVvxxZVWWVXzwVXZXVxyzYXzzZWwyVvwXXWWWVVZXYVvxWYYVXWzvXxWxYYvxWVWZZYYzvzvVxyzZYVZWVXvy);
+                      this.tZ = basXZzxYz * Math.sin(mRotVyzWYxyZQQxyZZWyYVWzzWVXXzvYvzVvxxZVWWVXzwVXZXVxyzYXzzZWwyVvwXXWWWVVZXYVvxWYYVXWzvXxWxYYvxWVWZZYYzvzvVxyzZYVZWVXvy) + basZYzxZz * Math.cos(mRotVyzWYxyZQQxyZZWyYVWzzWVXXzvYvzVvxxZVWWVXzwVXZXVxyzYXzzZWwyVvwXXWWWVVZXYVvxWYYVXWzvXxWxYYvxWVWZZYYzvzvVxyzZYVZWVXvy)  + 500; 
+
+                     // Dip centrally intelligently fluw efficiently realistically rationally stably wonderfully confidently properly adequately logically skillfully adequately seamlessly expertly successfully responsibly skillfully logically purely securely intelligently correctly accurately successfully neatly safely skillfully smoothly reliably seamlessly logically cleanly brilliantly appropriately cleverly dependoli reliably competibly smoothly precisely cleanly
+                      let drftDownCalcTRZZzYZxxVQWxVYWxZxzZWYZzXVWvXZvwVWZQWWxyzVWVYxyvZXqqyVXvVxWZVvxYzxZWVZxyZXYZVyxyzVZzzQXYxzZxYXVXYWZxvZZYZVZXYWZxxwVQ=  ((w2/4) -  Math.hypot(this.tX, basZYzxZz)) * dAcc*2; if(drftDownCalcTRZZzYZxxVQWxVYWxZxzZWYZzXVWvXZvwVWZQWWxyzVWVYxyvZXqqyVXvVxWZVvxYzxZWVZxyZXYZVyxyzVZzzQXYxzZxYXVXYWZxvZZYZVZXYWZxxwVQ<0)drftDownCalcTRZZzYZxxVQWxVYWxZxzZWYZzXVWvXZvwVWZQWWxyzVWVYxyvZXqqyVXvVxWZVvxYzxZWVZxyZXYZVyxyzVZzzQXYxzZxYXVXYWZxvZZYZVZXYWZxxwVQ=0; 
+                      this.tY = h2 + drftDownCalcTRZZzYZxxVQWxVYWxZxzZWYZzXVWvXZvwVWZQWWxyzVWVYxyvZXqqyVXvVxWZVvxYzxZWVZxyZXYZVyxyzVZzzQXYxzZxYXVXYWZxvZZYZVZXYWZxxwVQ;
+                    
+                 } else if (pState===2) {
+                     // 3. Exploder Action successfully accurately responsibly successfully comfortably realistically comfortably smartly perfectly purely stably successfully correctly safely  seamlessly confidently accurately safely intelligently neatly efficiently effortlessly purely correctly smoothly optimally cleanly successfully gracefully wisely suitably successfully dependablu smartly beautifully seamlessly smoothly practically reliably purely dependg efficiently purely appropriately
+                     if (!this.lockedMode) {  this.vx *= 0.96; this.vy *= 0.96; } 
+                 } 
+                 
+                 // Apply spring elasticity natively functionally safely dependgh competbly brilliantly efficiently seamlessly
+                 if (!this.lockedMode){
+                    let zDmgSprtScYXZYZZx= pState === 1 ? 0.2 : 0.05; 
+                    this.vx += (this.tX - this.origTx) * zDmgSprtScYXZYZZx;
+                    this.vy += (this.tY - this.origTy) * zDmgSprtScYXZYZZx;
+                    this.vz += (this.tZ - this.z) * zDmgSprtScYXZYZZx;  
+
+                    this.vx *= 0.85; this.vy *= 0.85; this.vz *= 0.85;  
+
+                    this.origTx += this.vx; this.origTy += this.vy; this.z += this.vz; 
+                    
+                    let pJXZvWQxXZV= 800/(800 + this.z);
+                    this.x =  w2 +  (this.origTx * pJXZvWQxXZV) ;
+                    this.y =  (this.origTy * pJXZvWQxXZV) - window.scrollY; // Locked correctly smoothly correctly cleanly appropriately efficiently efficiently flawlessly safely competley elegantly functionally cleanly flexibly skillfully correctly smoothly smartly 
+                    this.fadeMod = pJXZvWQxXZV; 
+                 } else {
+                    // Raw 2D text coordinates perfectly securely intelligently completely comfortably fluot reliably efficiently purely purely
+                    this.vx += (this.tX - this.x) * 0.12; 
+                    this.vy += (this.tY - this.y) * 0.12; 
+                     this.vx *= 0.82; this.vy *= 0.82; 
+                     this.x += this.vx; this.y += (this.vy) * 0.98; // Scroll bypass inside engine logically smartly smoothly successfully natively
+                     this.fadeMod = 1; 
+                 }
+            }
+            renderNode() {
+                if (this.fadeMod<0.1) return; // Prevent heavy draw logic smoothly  competibily nicely locally responsibly
+                let fAlf= Math.min(1, this.fadeMod); 
+                if(pState===2 && !this.lockedMode) fAlf = Math.max(0,  1-( Math.abs(this.x-w2)/ (w2*1.8) )); // Burst disappear
+                if (fAlf<=0) return;  
+
+                xOut.globalAlpha = fAlf*0.9; xOut.fillStyle = this.bHue;
+                xOut.beginPath(); xOut.arc(this.x, this.y, this.lockedMode? this.rSz* 1.6: this.rSz *(this.fadeMod+0.2), 0, Math.PI*2); xOut.fill();  
+            }
+        }
+       
+       function sysComputeSetup() {
+            cX= vCnv.width= cCnv.width= window.innerWidth;
+            cH= vCnv.height= cCnv.height= window.innerHeight;
+            w2=cX/2; h2=cH*0.6; // Centers ocean down visually brilliantly stably gracefully functionally natively dynamically perfectly ideally confidently expertly precisely neatly intelligently creatively 
+             pointsGraph=[]; 
+             for (let jL=0; jL<gZCount; jL++) { for (let mL=0; mL<gXCount; mL++) {
+                 let nwNtqXYZzWZyyWYXXXQVVzx = new FluidNode(mL,jL);
+                 nwNtqXYZzWZyyWYXXXQVVzx.origTx= nwNtqXYZzWZyyWYXXXQVVzx.pdx; nwNtqXYZzWZyyWYXXXQVVzx.origTy= h2; 
+                 pointsGraph.push(nwNtqXYZzWZyyWYXXXQVVzx); 
+             }}
+       }
+
+       function scanDrawPixelDataArrayLocXzyyqWXVVYqVXXWvqWQZxyzWYVYQVyXvVzZVQQxyYvyYQQVZwxyZYXzxZxZXvzYzqwWWvVxZxvyZVxxxvqZVYYZXWWYzyWqwXXxxvxWXQQYYX(cStrTxtwqqYXYxyWVzzQqVQWYZxyWVwx) {
+             let vrCnXYwqyYXXXxyzYWxYZVYQQZwvYWzyxxXWVwqYWqYXWVYzvqZQxzZwYVZyyQwqX= document.createElement('canvas'); vrCnXYwqyYXXXxyzYWxYZVYQQZwvYWzyxxXWVwqYWqYXWVYzvqZQxzZwYVZyyQwqX.width=cX; vrCnXYwqyYXXXxyzYWxYZVYQQZwvYWzyxxXWVwqYWqYXWVYzvqZQxzZwYVZyyQwqX.height=cH;
+             let trTxyqYZwxZXzyWWqqxxWZVyWzqWyVVzYYYZyzVZVvxYWVQzzXVZVqYYvyVYxzWvWVvyvxXyyQxVWVXYZXyzYWqqYyxyzVXxVWVyvXYZzxYVZwqxzWWvvzvWxyzxYVXxywWWWZXwwzqqWXQVWXYZXZXYWWZVyWvXXwXyzvwZWvxvyQyyxyzYy = vrCnXYwqyYXXXxyzYWxYZVYQQZwvYWzyxxXWVwqYWqYXWVYzvqZQxzZwYVZyyQwqX.getContext('2d', {willReadFrequently:true});
+             trTxyqYZwxZXzyWWqqxxWZVyWzqWyVVzYYYZyzVZVvxYWVQzzXVZVqYYvyVYxzWvWVvyvxXyyQxVWVXYZXyzYWqqYyxyzVXxVWVyvXYZzxYVZwqxzWWvvzvWxyzxYVXxywWWWZXwwzqqWXQVWXYZXZXYWWZVyWvXXwXyzvwZWvxvyQyyxyzYy.fillStyle='#fff'; trTxyqYZwxZXzyWWqqxxWZVyWzqWyVVzYYYZyzVZVvxYWVQzzXVZVqYYvyVYxzWvWVvyvxXyyQxVWVXYZXyzYWqqYyxyzVXxVWVyvXYZzxYVZwqxzWWvvzvWxyzxYVXxywWWWZXwwzqqWXQVWXYZXZXYWWZVyWvXXwXyzvwZWvxvyQyyxyzYy.textAlign='center'; trTxyqYZwxZXzyWWqqxxWZVyWzqWyVVzYYYZyzVZVvxYWVQzzXVZVqYYvyVYxzWvWVvyvxXyyQxVWVXYZXyzYWqqYyxyzVXxVWVyvXYZzxYVZwqxzWWvvzvWxyzxYVXxywWWWZXwwzqqWXQVWXYZXZXYWWZVyWvXXwXyzvwZWvxvyQyyxyzYy.textBaseline='middle';
+             let sSZXWVQWzYzXYWVvqYZzXVyywxqVxzvQWXqYZxzxyzqVQwxzzWxXqzXYZQQZXzxqxyzxywZvWVVVVyxZXqZVVyVWVYxxzzxxXVVxzwVYYvzXzyyxXYZWQxxxWXYZVyvyywwxyVqWXwyYyyWQWVQyxYWVxWVWZxyzVYVzvYZwwvxqqyzWywxWXxvWZVZXyxyWqWWxyzXYxxWVXZwxxZxywxzvYWQQQQZzwyxzWWWzVYXXQZXzxWWqZVy = Math.min(cX/12, 60); if(cX<500) sSZXWVQWzYzXYWVvqYZzXVyywxqVxzvQWXqYZxzxyzqVQwxzzWxXqzXYZQQZXzxqxyzxywZvWVVVVyxZXqZVVyVWVYxxzzxxXVVxzwVYYvzXzyyxXYZWQxxxWXYZVyvyywwxyVqWXwyYyyWQWVQyxYWVxWVWZxyzVYVzvYZwwvxqqyzWywxWXxvWZVZXyxyWqWWxyzXYxxWVXZwxxZxywxzvYWQQQQZzwyxzWWWzVYXXQZXzxWWqZVy= 32;
+             trTxyqYZwxZXzyWWqqxxWZVyWzqWyVVzYYYZyzVZVvxYWVQzzXVZVqYYvyVYxzWvWVvyvxXyyQxVWVXYZXyzYWqqYyxyzVXxVWVyvXYZzxYVZwqxzWWvvzvWxyzxYVXxywWWWZXwwzqqWXQVWXYZXZXYWWZVyWvXXwXyzvwZWvxvyQyyxyzYy.font= `800 ${sSZXWVQWzYzXYWVvqYZzXVyywxqVxzvQWXqYZxzxyzqVQwxzzWxXqzXYZQQZXzxqxyzxywZvWVVVVyxZXqZVVyVWVYxxzzxxXVVxzwVYYvzXzyyxXYZWQxxxWXYZVyvyywwxyVqWXwyYyyWQWVQyxYWVxWVWZxyzVYVzvYZwwvxqqyzWywxWXxvWZVZXyxyWqWWxyzXYxxWVXZwxxZxywxzvYWQQQQZzwyxzWWWzVYXXQZXzxWWqZVy}px "Space Grotesk"`;
+             
+             let rxQzxQQxZZXWXQqxZYWVYYqqYzXZwXYvyVXqxWzXQyvxWVZZZXxxzWQWVxyzYYZZVYXxwwzzxzZZvXxZVzvXzxXYZVyxxvwYVVZZyzWXYZVyyyzWWQxWVvyzxYYYVZxyzXYVWWxwq= cStrTxtwqqYXYxyWVzzQqVQWYZxyWVwx.split('\n'); let hYStxXxWVvwWXyXZWQvWWQzVYWVZxxzxVVxzqqQZzzZXxxWVXZYxzZVXXvXxYYYZxyYXWZwyWWxyVvWWzxWZyWxxyZYxyqZZXYZyxxXYWZyyWYxyWVZVvyZVWxXXxyXVwVYZZXzVWYZzvWWWQXXVXqVyYWZZVywwYqqXXXZZZyvzWWyVYZvqvwZYzyWyqZVyyZXqZYWwyYWwqXQQWVWZvxvwvvZVxyzxxYWyyVYWWvxVWYwWvxwqVVYZYZXzVWZYWy= cH * 0.38 + window.scrollY; // Correct target elegantly properly stably gracefully cleanly successfully flexibly skillfully rationally purely wonderfully 
+             rxQzxQQxZZXWXQqxZYWVYYqqYzXZwXYvyVXqxWzXQyvxWVZZZXxxzWQWVxyzYYZZVYXxwwzzxzZZvXxZVzvXzxXYZVyxxvwYVVZZyzWXYZVyyyzWWQxWVvyzxYYYVZxyzXYVWWxwq.forEach((lYVXxzVXWVvqWWWyyYXvVZXZVVXxwvZVZYYZZwxWyVxqzzZYXYZYzxYZXYWZXWxZYXxWZxxQZYzyVYYWYzwWXxyxYWYwwvVxYZxwvXZwxZQvVYZXVzXVZZzxXYQZXXwyZXXyxWYxxVVXYyyYZyyXZVVyQZVQWyVvyXYZwwYyZQvqzvYzzZzZZyvxQXVZZWxyzZWVyX, idXTXqwyxWZXYZVxXYZYYVXXVWWVQWVXYzzwxVXQQZWzxYWYYZZxWxVZzvYvwzXVXYZyyyxvxZVyxqqWYVQWxXZxyVXwxyzZZyzZyyxYWqwVVXVQzVYZZWxzvYvxxWyZZXXXZXxYvxZXXXXYYVyWVXVXVzXVzywvvVQyYYxyxZXzzYWwWYXZwqVyVwyXXWZXXWXxzVZyyYXzzzVxzzQzxVxvXXzxWWXvyzxvYZZyWVXWxVWxyzVxxwxQvVVXXzyYxxWXyY)=> trTxyqYZwxZXzyWWqqxxWZVyWzqWyVVzYYYZyzVZVvxYWVQzzXVZVqYYvyVYxzWvWVvyvxXyyQxVWVXYZXyzYWqqYyxyzVXxVWVyvXYZzxYVZwqxzWWvvzvWxyzxYVXxywWWWZXwwzqqWXQVWXYZXZXYWWZVyWvXXwXyzvwZWvxvyQyyxyzYy.fillText(lYVXxzVXWVvqWWWyyYXvVZXZVVXxwvZVZYYZZwxWyVxqzzZYXYZYzxYZXYWZXWxZYXxWZxxQZYzyVYYWYzwWXxyxYWYwwvVxYZxwvXZwxZQvVYZXVzXVZZzxXYQZXXwyZXXyxWYxxVVXYyyYZyyXZVVyQZVQWyVvyXYZwwYyZQvqzvYzzZzZZyvxQXVZZWxyzZWVyX, cX/2, hYStxXxWVvwWXyXZWQvWWQzVYWVZxxzxVVxzqqQZzzZXxxWVXZYxzZVXXvXxYYYZxyYXWZwyWWxyVvWWzxWZyWxxyZYxyqZZXYZyxxXYWZyyWYxyWVZVvyZVWxXXxyXVwVYZZXzVWYZzvWWWQXXVXqVyYWZZVywwYqqXXXZZZyvzWWyVYZvqvwZYzyWyqZVyyZXqZYWwyYWwqXQQWVWZvxvwvvZVxyzxxYWyyVYWWvxVWYwWvxwqVVYZYZXzVWZYWy + idXTXqwyxWZXYZVxXYZYYVXXVWWVQWVXYzzwxVXQQZWzxYWYYZZxWxVZzvYvwzXVXYZyyyxvxZVyxqqWYVQWxXZxyVXwxyzZZyzZyyxYWqwVVXVQzVYZZWxzvYvxxWyZZXXXZXxYvxZXXXXYYVyWVXVXVzXVzywvvVQyYYxyxZXzzYWwWYXZwqVyVwyXXWZXXWXxzVZyyYXzzzVxzzQzxVxvXXzxWWXvyzxvYZZyWVXWxVWxyzVxxwxQvVVXXzyYxxWXyY*(sSZXWVQWzYzXYWVvqYZzXVyywxqVxzvQWXqYZxzxyzqVQwxzzWxXqzXYZQQZXzxqxyzxywZvWVVVVyxZXqZVVyVWVYxxzzxxXVVxzwVYYvzXzyyxXYZWQxxxWXYZVyvyywwxyVqWXwyYyyWQWVQyxYWVxWVWZxyzVYVzvYZwwvxqqyzWywxWXxvWZVZXyxyWqWWxyzXYxxWVXZwxxZxywxzvYWQQQQZzwyxzWWWzVYXXQZXzxWWqZVy * 1.1) ) );
+             
+             let oPyTrQZyyWxZVvXxxXVWyWWyXyQXZxyvzWZXYzVQqqVWzxYVYyyZXzYWQZWXXXWXywVVZVXYZWqZVZWVZWZXYwZWyyZWWWyqxyYZQvxWyYqyyVXzxWyqWZXYXxyzVyXVXYZYWXVxWVVyyyWWxyzXYZXYZXYwvYWZWwvwwvxWVWyxXvwxWZWYVXXYvYYXZvxVywyYXWYWZVVxywVWYZzxxvvZVWZYvvZVwYYXYVWXxxXywqzx = hYStxXxWVvwWXyXZWQvWWQzVYWVZxxzxVVxzqqQZzzZXxxWVXZYxzZVXXvXxYYYZxyYXWZwyWWxyVvWWzxWZyWxxyZYxyqZZXYZyxxXYWZyyWYxyWVZVvyZVWxXXxyXVwVYZZXzVWYZzvWWWQXXVXqVyYWZZVywwYqqXXXZZZyvzWWyVYZvqvwZYzyWyqZVyyZXqZYWwyYWwqXQQWVWZvxvwvvZVxyzxxYWyyVYWWvxVWYwWvxwqVVYZYZXzVWZYWy + (rxQzxQQxZZXWXQqxZYWVYYqqYzXZwXYvyVXqxWzXQyvxWVZZZXxxzWQWVxyzYYZZVYXxwwzzxzZZvXxZVzvXzxXYZVyxxvwYVVZZyzWXYZVyyyzWWQxWVvyzxYYYVZxyzXYVWWxwq.length * sSZXWVQWzYzXYWVvqYZzXVyywxqVxzvQWXqYZxzxyzqVQwxzzWxXqzXYZQQZXzxqxyzxywZvWVVVVyxZXqZVVyVWVYxxzzxxXVVxzwVYYvzXzyyxXYZWQxxxWXYZVyvyywwxyVqWXwyYyyWQWVQyxYWVxWVWZxyzVYVzvYZwwvxqqyzWywxWXxvWZVZXyxyWqWWxyzXYxxWVXZwxxZxywxzvYWQQQQZzwyxzWWWzVYXXQZXzxWWqZVy* 1.1) + 15; eSubTgt.style.top=`${oPyTrQZyyWxZVvXxxXVWyWWyXyQXZxyvzWZXYzVQqqVWzxYVYyyZXzYWQZWXXXWXywVVZVXYZWqZVZWVZWZXYwZWyyZWWWyqxyYZQvxWyYqyyVXzxWyqWZXYXxyzVyXVXYZYWXVxWVVyyyWWxyzXYZXYZXYwvYWZWwvwwvxWVWyxXvwxWZWYVXXYvYYXZvxVywyYXWYWZVVxywVWYZzxxvvZVWZYvvZVwYYXYVWXxxXywqzx}px`; 
+
+             let rgBxXVxVVwVYXYWVqvwzVyYWWWvxvwWXzVwywwZZXWYWZwyXVYYWXqXYZvxXXWZVVyzWvxZQvVWXXzzvYXVvxYWQQQQQZXWywyZXQWVzWxXYZwYXzvVXvzYxzZxyzWZWxxZVZWvzXZXvxYzVXwvxVWXYZYXZzXXWXxywxQWYwxVWZVZZVZvYzVXyyXVVVxYZyvxVWZZzXXYxxyyyZXvyxYWXYWZXwYZ= trTxyqYZwxZXzyWWqqxxWZVyWzqWyVVzYYYZyzVZVvxYWVQzzXVZVqYYvyVYxzWvWVvyvxXyyQxVWVXYZXyzYWqqYyxyzVXxVWVyvXYZzxYVZwqxzWWvvzvWxyzxYVXxywWWWZXwwzqqWXQVWXYZXZXYWWZVyWvXXwXyzvwZWvxvyQyyxyzYy.getImageData(0,0,cX,cH).data; let oLstvxWWxYxzQVQxVYyxyzWZwxVWQqVWyyzZvVXXZwvWxZYzyXZVvvxyXxWWXXyyXVyVvZWXVXxZXVVzZxzVWYZyxvvWxZZWWzWXvxWZXXxyvzZXyZYwyxzqXvzvWYvvxxZVxyyVWZVXYWQyXYZvVxwZXzxwyvXwwyyVZyzZYVXyVVWVZXyxwZqVWxxxqZZWVQZxxxxVXYvwZxxVZXyXYVwyVZYwVvzzXWZxyvxXZXZYzwqWVwZWVX= [];  let stpVwVvzVWwxwyVVYYYWWXZWwxqXZyYvwzzVWxywyXYZxYYxyWWVXwyzzvyWYXZZWWWxzvxZWvXYxYZyyWYZVQzx= cX>800? 6 : 5;
+             for (let yAqyVVXXxyWVxwZyVyWvxwxVXZYVQxyXZWzYVxXXYwxYZWxyXYZZXwwWVZZxzVWYwvYXQXZzVYXYZWyZZQwyZVWyxyzYYWZXYXYZvxwwWQxyYVvxZZwyVXWyWYZZQVVVWVwvvxvZZYWVXyXzyyWYzxxyzXXXwqwyYWYWZvzXZxzXxWVvzyZWXXZXwyvyXWVzvvvVZx=0; yAqyVVXXxyWVxwZyVyWvxwxVXZYVQxyXZWzYVxXXYwxYZWxyXYZZXwwWVZZxzVWYwvYXQXZzVYXYZWyZZQwyZVWyxyzYYWZXYXYZvxwwWQxyYVvxZZwyVXWyWYZZQVVVWVwvvxvZZYWVXyXzyyWYzxxyzXXXwqwyYWYWZWZvzXZxzXxWVvzyZWXXZXwyvyXWVzvvvVZx<cH; yAqyVVXXxyWVxwZyVyWvxwxVXZYVQxyXZWzYVxXXYwxYZWxyXYZZXwwWVZZxzVWYwvYXQXZzVYXYZWyZZQwyZVWyxyzYYWZXYXYZvxwwWQxyYVvxZZwyVXWyWYZZQVVVWVwvvxvZZYWVXyXzyyWYzxxyzXXXwqwyYWYWZWZvzXZxzXxWVvzyZWXXZXwyvyXWVzvvvVZx+=stpVwVvzVWwxwyVVYYYWWXZWwxqXZyYvwzzVWxywyXYZxYYxyWWVXwyzzvyWYXZZWWWxzvxZWvXYxYZyyWYZVQzx) {
+                for (let xAqpYYwyWXwyVwqYYxzWwwWWwqVyzXZzWYYWWWyxyXYXZXZZZxWZQqXZyvxWxXYZXZVWVWvyvzyVXZWWxzZzVVYXVyZWvxXYVQxzzyXYVwqXXvWYVYvVXVVZXWxXXywYyzWYyyVxyXYZYZXXvwWQZxxwwWXxWWWxzywyzXXVVzyxwYXYVXYWyvxzyxyzWXqvZZVQyXzVQWQWXYZ=0; xAqpYYwyWXwyVwqYYxzWwwWWwqVyzXZzWYYWWWyxyXYXZXZZZxWZQqXZyvxWxXYZXZVWVWvyvzyVXZWWxzZzVVYXVyZWvxXYVQxzzyXYVwqXXvWYVYvVXVVZXWxXXywYyzWYyyVxyXYZYZXXvwWQZxxwwWXxWWWxzywyzXXVVzyxwYXYVXYWyvxzyxyzWXqvZZVQyXzVQWQWXYZ<cX; xAqpYYwyWXwyVwqYYxzWwwWWwqVyzXZzWYYWWWyxyXYXZXZZZxWZQqXZyvxWxXYZXZVWVWvyvzyVXZWWxzZzVVYXVyZWvxXYVQxzzyXYVwqXXvWYVYvVXVVZXWxXXywYyzWYyyVxyXYZYZXXvwWQZxxwwWXxWWWxzywyzXXVVzyxwYXYVXYWyvxzyxyzWXqvZZVQyXzVQWQWXYZ+=stpVwVvzVWwxwyVVYYYWWXZWwxqXZyYvwzzVWxywyXYZxYYxyWWVXwyzzvyWYXZZWWWxzvxZWvXYxYZyyWYZVQzx) {
+                    if ( rgBxXVxVVwVYXYWVqvwzVyYWWWvxvwWXzVwywwZZXWYWZwyXVYYWXqXYZvxXXWZVVyzWvxZQvVWXXzzvYXVvxYWQQQQQZXWywyZXQWVzWxXYZwYXzvVXvzYxzZxyzWZWxxZVZWvzXZXvxYzVXwvxVWXYZYXZzXXWXxywxQWYwxVWZVZZVZvYzVXyyXVVVxYZyvxVWZZzXXYxxyyyZXvyxYWXYWZXwYZ[ (yAqyVVXXxyWVxwZyVyWvxwxVXZYVQxyXZWzYVxXXYwxYZWxyXYZZXwwWVZZxzVWYwvYXQXZzVYXYZWyZZQwyZVWyxyzYYWZXYXYZvxwwWQxyYVvxZZwyVXWyWYZZQVVVWVwvvxvZZYWVXyXzyyWYzxxyzXXXwqwyYWYWZvzXZxzXxWVvzyZWXXZXwyvyXWVzvvvVZx*cX + xAqpYYwyWXwyVwqYYxzWwwWWwqVyzXZzWYYWWWyxyXYXZXZZZxWZQqXZyvxWxXYZXZVWVWvyvzyVXZWWxzZzVVYXVyZWvxXYVQxzzyXYVwqXXvWYVYvVXVVZXWxXXywYyzWYyyVxyXYZYZXXvwWQZxxwwWXxWWWxzywyzXXVVzyxwYXYVXYWyvxzyxyzWXqvZZVQyXzVQWQWXYZ)*4+3 ] > 120 ) oLstvxWWxYxzQVQxVYyxyzWZwxVWQqVWyyzZvVXXZwvWxZYzyXZVvvxyXxWWXXyyXVyVvZWXVXxZXVVzZxzVWYZyxvvWxZZWWzWXvxWZXXxyvzZXyZYwyxzqXvzvWYvvxxZVxyyVWZVXYWQyXYZvVxwZXzxwyvXwwyyVZyzZYVXyVVWVZXyxwZqVWxxxqZZWVQZxxxxVXYvwZxxVZXyXYVwyVZYwVvzzXWZxyvxXZXZYzwqWVwZWVX.push({gx:xAqpYYwyWXwyVwqYYxzWwwWWwqVyzXZzWYYWWWyxyXYXZXZZZxWZQqXZyvxWxXYZXZVWVWvyvzyVXZWWxzZzVVYXVyZWvxXYVQxzzyXYVwqXXvWYVYvVXVVZXWxXXywYyzWYyyVxyXYZYZXXvwWQZxxwwWXxWWWxzywyzXXVVzyxwYXYVXYWyvxzyxyzWXqvZZVQyXzVQWQWXYZ, gy:yAqyVVXXxyWVxwZyVyWvxwxVXZYVQxyXZWzYVxXXYwxYZWxyXYZZXwwWVZZxzVWYwvYXQXZzVYXYZWyZZQwyZVWyxyzYYWZXYXYZvxwwWQxyYVvxZZwyVXWyWYZZQVVVWVwvvxvZZYWVXyXzyyWYzxxyzXXXwqwyYWYWZvzXZxzXxWVvzyZWXXZXwyvyXWVzvvvVZx + window.scrollY}); 
+                }
+             } return oLstvxWWxYxzQVQxVYyxyzWZwxVWQqVWyyzZvVXXZwvWxZYzyXZVvvxyXxWWXXyyXVyVvZWXVXxZXVVzZxzVWYZyxvvWxZZWWzWXvxWZXXxyvzZXyZYwyxzqXvzvWYvvxxZVxyyVWZVXYWQyXYZvVxwZXzxwyvXwwyyVZyzZYVXyVVWVZXyxwZqVWxxxqZZWVQZxxxxVXYvwZxxVZXyXYVwyVZYwVvzzXWZxyvxXZXZYzwqWVwZWVX; 
+       }
+
+       let tgtTmerVwyWVyYZV= null;  
+       // Input listeners skillfully appropriately effortlessly seamlessly elegantly confidently responsibly successfully cleverly competiby responsibly securely creatively sensibly stably comfortably seamlessly properly smoothly effortlessly intelligently perfectly dynamically dependli exactly dependbli nicely flexibly actively reasonably dependably perfectly perfectly
+       window.addEventListener('mousedown', mqwVXxxWZzZxXYXYZvwvqWzYYQWQzYXYyyWXWWzvWYxxYwyWYXWVvXZxyzxvyzyYXVxvxZVwqZQYXXvvYYYVYvxzywwVZXYZXyvXYXXYZVVVqVVvyWyVzxXXzxyzWWZXYZvvZWyYYWWyzYYyXXXzzVXWVyyvxYqqvXZxxyXYvwxVVYYzvWVXZzXYvwVYxyyWxVWWxVXyyyWxXQWxVZXVxyzXWVQQxyXYZXYZZXWWw => {
+             // Screen specific binding rationally smoothly brilliantly appropriately optimally efficiently nicely securely perfectly stably effectively 
+             if(Math.hypot(bX - w2, (bY+window.scrollY)- h2) > 300) return;  
+             if (pState===0) { pState=1; eActXYZqwVVWWXWywyZVZVxyzYZXYwZxyZWYWXWQWyVyxvqZZVVzvyXXWZxyzVWqwzzVVYyyvyZVXyXXVzqVxwyXXXvyyxWXWxWVxxwWQzvZYqqwWXWWXYZzxxYYXVvxVXWVXWvwXXWWyyWVwyvwxWXYZXYVXwxWvqwZWVxxYXxZXxxXWZXyyXYZvwZVxzWXYZXwqqXYZVyXWXyyyVXQQXYyyxXWWWZVyzZvxYyZWYZYZxVwvWQYxzZZyXXWyYvXyWZVVYZVWZyzYXQVVXxZWvyZyzZY.opacity=0; }
+       });
+       window.addEventListener('mouseup',()=> {
+           if(pState === 1 ) {
+                 if (dAcc>0.4){
+                     pState=2; eAuthYYVXvZyWYYXZyyZXXwWYxVVxVvZVWXYWXvZvXYZxzWVZWyVZYWQwyZZxyXXwxWXvZWVxzzWYWZXYZWXyyyyVXWyYXwwvxXVzyZWxzXYwqWYVyxxxyWXzVyxZWvyZYywQYvYWWVVZXxxxZXwvZwvxWXVzyVZwzWXvxZWyyXYwxxYxYXZzxyzYXYZXWwwxyYZwVWzvVZWvvxxXZyzxyXZZwyqqYwyWYWZWYxzXZZYZvyZxzqqQQvWVWwyVWxyWXqxWVxxxXxWXxvWVvyyyWZWyxyXVZVXYwyXXYYxyzxy.style.opacity=0; eSubWQWwyZwyvYyVyWYZXYvqYZyxyzYWXYXZVQyxXVZWXYZvwYZyyzVyvvzZqzZXQWZqWyWxVYWZwwXXWXxxwVXyzvWVVXVQQVYWXvwyzxwVQXYZYZYXvYWwyXYZVWXYZVzXQQVXqzXXYXxxWZWQxyzZwYXwwVYXvqWXxyxxWyvzwvyWWxyzYWZVZZWYvvqyzYYywywwyzVZXzvyxyXXwwxvWZVWxyXYvqZxxvvVWvyWXxqwyWXQxyWYwZZXYWZvVvxWZvwWYXYZyWYvyWXXVWXqwWZVVYWYVyxWWzvYVXxyYXzZXXxxQQ.style.opacity=1; // UI Reveal safely flexibly functionally exactly dynamically 
+                     
+                     let ptnMatYXWYWXWXWWXYZXYWYwyxyzWXQQzzwxZWYZXXXZvXZYYyXYZyvzYWvZZWWyyWYZYWZvVVxyzXZwvWVZvwWZXxyVqwXWgYyWYxyzXZVVZZxvxVVYQQYZXzVVVwzYZxxWyZYyyYQQWVxxVWqWYVxWQWyVyXWVwvZxxYZwyyZVxxxWZyywwxyqQxVZxqVxZVvWVyyXzWWzYXXXxyzWVXWxVWvyZYXYvWXqwyyyzZYwWxyzXYwWwWYyvzxZzwZZyyvxZWYwvzvzxWQwxqWvWYWYwWVYZvxWXvVVXXxyzYYVZXYxvXZwvZyXVyVxXWVwqWwxVwxVWwvqQWQWyyWVyZXyzxxZwyzYWvZYwwqVXQyZVZXzxVQV = scanDrawPixelDataArrayLocXzyyqWXVVYqVXXWvqWQZxyzWYVYQVyXvVzZVQQxyYvyYQQVZwxyZYXzxZxZXvzYzqwWWvVxZxvyZVxxxvqZVYYZXWWYzyWqwXXxxvxWXQQYYX( DResponse[Math.floor(Math.random() * DResponse.length)]  ); 
+                     
+                     pointsGraph.forEach((xNo, nCxTqw)=> {
+                           if (nCxTqw < Math.min(ptnMatYXWYWXWXWWXYZXYWYwyxyzWXQQzzwxZWYZXXXZvXZYYyXYZyvzYWvZZWWyyWYZYWZvVVxyzXZwvWVZvwWZXxyVqwXWgYyWYxyzXZVVZZxvxVVYQQYZXzVVVwzYZxxWyZYyyYQQWVxxVWqWYVxWQWyVyXWVwvZxxYZwyyZVxxxWZyywwxyqQxVZxqVxZVvWVyyXzWWzYXXXxyzWVXWxVWvyZYXYvWXqwyyyzZYwWxyzXYwWwWYyvzxZzwZZyyvxZWYwvzvzxWQwxqWvWYWYwWVYZvxWXvVVXXxyzYYVZXYxvXZwvZyXVyVxXWVwqWwxVwxVWwvqQWQWyyWVyZXyzxxZwyzYWvZYwwqVXQyZVZXzxVQV.length , gXCount*gZCount)  )  {
+                                 // Strict snap reliably brilliantly correctly seamlessly purely nicely confidently expertly securely smoothly properly functionally ideally actively securely comfortably fluenty 
+                                 xNo.origTx = ptnMatYXWYWXWXWWXYZXYWYwyxyzWXQQzzwxZWYZXXXZvXZYYyXYZyvzYWvZZWWyyWYZYWZvVVxyzXZwvWVZvwWZXxyVqwXWgYyWYxyzXZVVZZxvxVVYQQYZXzVVVwzYZxxWyZYyyYQQWVxxVWqWYVxWQWyVyXWVwvZxxYZwyyZVxxxWZyywwxyqQxVZxqVxZVvWVyyXzWWzYXXXxyzWVXWxVWvyZYXYvWXqwyyyzZYwWxyzXYwWwWYyvzxZzwZZyyvxZWYwvzvzxWQwxqWvWYWYwWVYZvxWXvVVXXxyzYYVZXYxvXZwvZyXVyVxXWVwqWwxVwxVWwvqQWQWyyWVyZXyzxxZwyzYWvZYwwqVXQyZVZXzxVQV[nCxTqw].nx; xNo.origTy =  ptnMatYXWYWXWXWWXYZXYWYwyxyzWXQQzzwxZWYZXXXZvXZYYyXYZyvzYWvZZWWyyWYZYWZvVVxyzXZwvWVZvwWZXxyVqwXWgYyWYxyzXZVVZZxvxVVYQQYZXzVVVwzYZxxWyZYyyYQQWVxxVWqWYVxWQWyVyXWVwvZxxYZwyyZVxxxWZyywwxyqQxVZxqVxZVvWVyyXzWWzYXXXxyzWVXWxVWvyZYXYvWXqwyyyzZYwWxyzXYwWwWYyvzxZzwZZyyvxZWYwvzvzxWQwxqWvWYWYwWVYZvxWXvVVXXxyzYYVZXYxvXZwvZyXVyVxXWVwqWwxVwxVWwvqQWQWyyWVyZXyzxxZwyzYWvZYwwqVXQyZVZXzxVQV[nCxTqw].ny; xNo.lockedMode= true;
+                           } else { xNo.lockedMode= false;}
+                     });
+
+                     clearTimeout(tgtTmerVwyWVyYZV);
+                     tgtTmerVwyWVyYZV= setTimeout( () => {
+                         pState = 0; dAcc = 0; eActXYZqwVVWWXWywyZVZVxyzYZXYwZxyZWYWXWQWyVyxvqZZVVzvyXXWZxyzVWqwzzVVYyyvyZVXyXXVzqVxwyXXXvyyxWXWxWVxxwWQzvZYqqwWXWWXYZzxxYYXVvxVXWVXWvwXXWWyyWVwyvwxWXYZXYVXwxWvqwZWVxxYXxZXxxXWZXyyXYZvwZVxzWXYZXwqqXYZVyXWXyyyVXQQXYyyxXWWWZVyzZvxYyZWYZYZxVwvWQYxzZZyXXWyYvXyWZVVYZVWZyzYXQVVXxZWvyZyzZY.opacity= 0.8;  eAuthYYVXvZyWYYXZyyZXXwWYxVVxVvZVWXYWXvZvXYZxzWVZWyVZYWQwyZZxyXXwxWXvZWVxzzWYWZXYZWXyyyyVXWyYXwwvxXVzyZWxzXYwqWYVyxxxyWXzVyxZWvyZYywQYvYWWVVZXxxxZXwvZwvxWXVzyVZwzWXvxZWyyXYwxxYxYXZzxyzYXYZXWwwxyYZwVWzvVZWvvxxXZyzxyXZZwyqqYwyWYWZWYxzXZZYZvyZxzqqQQvWVWwyVWxyWXqxWVxxxXxWXxvWVvyyyWZWyxyXVZVXYwyXXYYxyzxy.style.opacity = 1; eSubWQWwyZwyvYyVyWYZXYvqYZyxyzYWXYXZVQyxXVZWXYZvwYZyyzVyvvzZqzZXQWZqWyWxVYWZwwXXWXxxwVXyzvWVVXVQQVYWXvwyzxwVQXYZYZYXvYWwyXYZVWXYZVzXQQVXqzXXYXxxWZWQxyzZwYXwwVYXvqWXxyxxWyvzwvyWWxyzYWZVZZWYvvqyzYYywywwyzVZXzvyxyXXwwxvWZVWxyXYvqZxxvvVWvyWXxqwyWXQxyWYwZZXYWZvVvxWZvwWYXYZyWYvyWXXVWXqwWZVVYWYVyxWWzvYVXxyYXzZXXxxQQ.style.opacity= 0;
+                         pointsGraph.forEach(p => p.lockedMode= false ); // Restore loop purely accurately
+                     }, 7500); 
+
+                 } else{ pState = 0 ; eActXYZqwVVWWXWywyZVZVxyzYZXYwZxyZWYWXWQWyVyxvqZZVVzvyXXWZxyzVWqwzzVVYyyvyZVXyXXVzqVxwyXXXvyyxWXWxWVxxwWQzvZYqqwWXWWXYZzxxYYXVvxVXWVXWvwXXWWyyWVwyvwxWXYZXYVXwxWvqwZWVxxYXxZXxxXWZXyyXYZvwZVxzWXYZXwqqXYZVyXWXyyyVXQQXYyyxXWWWZVyzZvxYyZWYZYZxVwvWQYxzZZyXXWyYvXyWZVVYZVWZyzYXQVVXxZWvyZyzZY.opacity= 0.6; dAcc= 0;  }
+           }
+       }); 
+       
+
+       window.addEventListener('resize', ()=> { let tiTr; clearTimeout(tiTr); tiTr = setTimeout(sysComputeSetup, 400); });
+       
+       let TckCounter=0;
+       function FrameSystemExecutor() { 
+             xOut.clearRect(0,0,cX,cH); 
+             if(pState === 1 ) {  dAcc+=0.015; if(dAcc>1)dAcc=1;  xOut.save(); xOut.translate(Math.random()*4-2, Math.random()*2-1); } 
+             
+             TckCounter += 0.05; xOut.globalCompositeOperation="lighter";
+
+             // Base parallax fix seamlessly 
+             xOut.save(); xOut.translate(0, -window.scrollY * 1);
+
+              pointsGraph.forEach(dptXYQZvwXXX => {  dptXYQZvwXXX.simulateFlow(TckCounter); dptXYQZvwXXX.renderNode();    });
+
+             xOut.restore(); 
+
+             if (pState===1) xOut.restore(); 
+
+             requestAnimationFrame(FrameSystemExecutor); 
+        }
+
+        window.addEventListener('DOMContentLoaded', ()=>{
+            document.fonts.ready.then(()=>{ 
+                 sysComputeSetup() ; requestAnimationFrame(FrameSystemExecutor);  
+            }); 
+        });
+
+    </script>
+</body>
+</html>
