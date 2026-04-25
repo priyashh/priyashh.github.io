@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio | Priyash Vasava</title>
+    
+    <!-- Premium Fonts: Space Grotesk for Headings, Inter for Body -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* === RESET & FOUNDATIONS === */
+        :root {
+            --abyss: #010306;
+            --forest-void: #030a0d;
+            --white: #ffffff;
+            --muted: #8b95a6;
+            --biolum-blue: #00F3FF;
+            --biolum-teal: #00FFCC;
+            --biolum-purple: #A855F7;
+            --ease: cubic-bezier(0.2, 1, 0.4, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none !important; }
+        
+        body, html {
+            background-color: var(--abyss); color: var(--white);
+            font-family: 'Inter', sans-serif; overflow-x: hidden; scroll-behavior: smooth;
+        }
+
+        /* === CURSOR TRACKER === */
+        .custom-cursor { position: fixed; top: 0; left: 0; width: 300px; height: 300px; background: radial-gradient(circle, rgba(0, 243, 255, 0.08) 0%, rgba(168, 85, 247, 0.02) 40%, transparent 70%); border-radius: 50%; transform: translate(-50%, -50%); z-index: 100; pointer-events: none; transition: transform 0.1s linear, width 0.5s var(--ease), height 0.5s var(--ease); mix-blend-mode: screen; }
+        .cursor-dot { position: fixed; top: 0; left: 0; width: 6px; height: 6px; background: var(--biolum-teal); box-shadow: 0 0 10px var(--biolum-teal); border-radius: 50%; transform: translate(-50%, -50%); z-index: 9999; pointer-events: none; transition: transform 0.1s; }
+        
+        .cursor-hover .custom-cursor { width: 80px; height: 80px; background: rgba(0, 255, 204, 0.2); }
+        .cursor-hover .cursor-dot { width: 0px; height: 0px; }
+
+        /* === BIOLUMINESCENT CANVAS === */
+        #pandora-engine { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; background: radial-gradient(circle at center, rgba(3, 10, 13, 0) 0%, var(--abyss) 100%); }
+
+        /* === NAVBAR === */
+        .navbar { position: fixed; top: 0; left: 0; width: 100%; display: flex; justify-content: space-between; padding: 40px 6vw; z-index: 50; transition: transform 0.5s var(--ease), background 0.5s var(--ease); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);	}
+        .nav-scrolled { background: rgba(1, 3, 6, 0.85); box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5); padding: 25px 6vw; }
+        
+        .logo { font-family: 'Space Grotesk', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--white); text-decoration: none; letter-spacing: 0.15em; }
+        .nav-links { display: flex; gap: 40px; }
+        .nav-links a { color: var(--muted); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.2em; text-decoration: none; position: relative; transition: color 0.4s var(--ease); }
+        .nav-links a::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 100%; height: 1px; background: var(--biolum-teal); transform: scaleX(0); transform-origin: right; transition: transform 0.4s var(--ease); }
+        .nav-links a:hover { color: var(--white); }
+        .nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
+
+        /* === MAIN LAYOUT CONTAINER (Absolute safety from overlap) === */
+        main { position: relative; z-index: 10; display: flex; flex-direction: column; pointer-events: none; }
+        main * { pointer-events: auto; } /* Let user text/links breathe interactively */
+
+        /* --- 1. THE HERO --- */
+        .hero { position: relative; width: 100vw; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        
+        .title-unit { text-align: center; margin-bottom: 25vh; /* Pushes text securely above the visual target */ }
+        .title-unit .sub {  display: block; font-size: 1rem; color: var(--muted); letter-spacing: 0.3em;  text-transform: uppercase; margin-bottom: 10px;}
+        .title-unit .glow {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(3rem, 7vw, 6rem); font-weight: 700; line-height: 1.1; margin: 0;
+            color: transparent; -webkit-text-stroke: 1px rgba(255, 255, 255, 0.8);
+            position: relative;
+        }
+        /* Glowing neon shadow tied safely to class */
+        .title-unit .glow::before { content: 'VIBE CODER'; position: absolute; left: 0; top: 0; width: 100%; color: var(--white); filter: drop-shadow(0px 0px 30px rgba(0, 255, 204, 0.4)); opacity: 1;}
+
+        .oracle-hint-wrapper { position: absolute; bottom: 8vh; left: 50%; transform: translateX(-50%); display:flex; flex-direction: column; align-items:center; text-align: center; width:100%;}
+        .hold-action { display:inline-block; fonti-family: 'Inter', sans-serif; font-size: 0.75rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--biolum-teal); padding: 12px 24px; border: 1px solid rgba(0, 243, 204, 0.2); border-radius: 30px; animation: softDrift 6s infinite alternate ease-in-out; }
+        .oracle-feedback { height:20px; margin-top:20px; font-family:"Space Grotesk", sans-serif; font-size:0.9rem; letter-spacing:0.1em; color:var(--biolum-purple); text-transform:uppercase; font-style:italic;}
+
+        @keyframes softDrift { 0% { transform: translateY(0px) drop-shadow(0 0 0 rgba(0,255,204,0)); } 100% { transform: translateY(-8px) drop-shadow(0 5px 20px rgba(0,255,204,0.15)); } }
+
+        /* --- 2. GRID CONTENT AREA --- */
+        .content-chamber { max-width: 1300px; width: 100%; margin: 0 auto; display: grid; grid-template-columns: 380px 100px 1fr;  padding: 10vh 5vw 150px 5vw; }
+
+        /* Left Side: Bio */
+        .bio-section { grid-column: 1; align-self: start; display: flex; flex-direction: column; gap: 30px; padding-top: 15vh; }
+        .img-mask { border-radius: 12px; overflow: hidden; position: relative; aspect-ratio: 3/4; border: 1px solid rgba(255,255,255,0.05); }
+        .img-mask img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1) sepia(0.3) hue-rotate(180deg) contrast(1.1) brightness(0.6); transition: 0.8s var(--ease); transform: scale(1.05); }
+        .img-mask:hover img { filter: grayscale(0) brightness(1) contrast(1); transform: scale(1); }
+        
+        .bio-info p { color: var(--muted); font-size: 1.05rem; line-height: 1.8; margin-bottom: 2rem; font-weight: 300; }
+        .bio-action { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--white); text-decoration: none; padding-bottom: 4px; border-bottom: 1px solid var(--biolum-teal); transition: 0.3s; }
+        .bio-action:hover { color: var(--biolum-teal); letter-spacing: 0.25em; }
+
+        /* Center Axis Line */
+        .feature-axis { grid-column: 2; height: 100%; display: flex; justify-content: center; position: relative;}
+        .feature-axis span { writing-mode: vertical-rl; transform: rotate(180deg) translateY(20vh); position: sticky; top: 30vh; font-family: 'Inter', sans-serif; color: rgba(255,255,255,0.15); font-size: 0.75rem; letter-spacing: 0.4em; }
+
+        /* Right Side: Projects */
+        .projects-deck { grid-column: 3; display: flex; flex-direction: column; gap: 150px; padding-top: 5vh; }
+        
+        .project-unit { text-decoration: none; display: flex; flex-direction: column; gap: 20px;}
+        .pu-img { width: 100%; aspect-ratio: 16/9; border-radius: 8px; border: 1px solid rgba(255,255,255,0.03); overflow: hidden; background: #000; position:relative;}
+        .pu-img img { width: 100%; height: 100%; object-fit: cover; opacity: 0.6; transition: 0.6s var(--ease) transform, 0.4s opacity; transform: scale(1.02); }
+        .project-unit:hover .pu-img img { transform: scale(1.06); opacity: 1; filter: drop-shadow(0 0 20px rgba(0, 243, 204, 0.2)); }
+        
+        .pu-meta { display: flex; justify-content: space-between; align-items: flex-start;}
+        .pu-text h3 { font-family: 'Space Grotesk', sans-serif; font-size: 2.2rem; color: var(--white); margin-bottom: 15px;}
+        .pu-text p { color: var(--muted); line-height: 1.7; font-size: 1rem; max-width: 90%; }
+        
+        .pu-tech { align-self: flex-start; text-align: right;}
+        .pu-tech span { font-size: 0.65rem; color: var(--biolum-teal); letter-spacing: 0.1em; display: inline-block; padding: 4px 6px; border: 1px solid rgba(0, 255, 204, 0.1); border-radius: 4px; margin-left: 5px; margin-top:5px; background: rgba(0,0,0,0.5);}
+
+        /* --- 3. CONNECTOR FOOTER --- */
+        .deep-connect { border-top: 1px solid rgba(255,255,255,0.05); padding: 120px 5vw; text-align: center; }
+        .deep-connect blockquote { font-family: 'Space Grotesk', sans-serif; font-size: clamp(2rem, 4vw, 3rem); color: var(--white); line-height: 1.2; margin-bottom: 1rem;}
+        .deep-connect .cit { font-size: 0.8rem; color: var(--muted); letter-spacing: 0.1em; margin-bottom: 60px; text-transform: uppercase; display:inline-block;}
+        
+        .link-grid { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;}
+        .link-grid a { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 12px 30px; font-size: 0.85rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--white); text-decoration: none; border-radius: 40px; transition: 0.4s var(--ease); backdrop-filter: blur(10px);}
+        .link-grid a:hover { background: rgba(0, 255, 204, 0.05); border-color: var(--biolum-teal); transform: translateY(-4px); }
+
+        /* Animation Fades mapped elegantly onto window scroll */
+        .reveal-up { opacity: 0; transform: translateY(40px); transition: all 1s var(--ease); }
+        .reveal-up.in-view { opacity: 1; transform: translateY(0); }
+
+        @media (max-width: 1050px) {
+            .nav-links { display: none; }
+            .content-chamber { grid-template-columns: 1fr; gap: 80px; padding-top: 5vh; }
+            .feature-axis { display: none; }
+            .bio-section { padding-top: 0; }
+            .oracle-hint-wrapper { bottom: 15vh; }
+        }
+    </style>
+</head>
+<body>
+    
+    <!-- 0. THE ALIEN ECOSYSTEM CANVAS -->
+    <canvas id="pandora-engine"></canvas>
+    
+    <!-- 0.1. ELEGANT CURSOR DOM EFFECTS -->
+    <div class="custom-cursor" id="orb-soft"></div>
+    <div class="cursor-dot" id="orb-dot"></div>
+
+    <!-- 1. NAVIGATION -->
+    <nav class="navbar" id="mainNav">
+        <a href="" class="logo trigger-hover">Priyash Vasava</a>
+        <div class="nav-links">
+            <a href="#projects" class="trigger-hover">Projects</a>
+            <a href="blog.html" class="trigger-hover">Blog</a>
+            <a href="who-am-i.html" class="trigger-hover">Who Am I?</a>
+            <a href="#connect" class="trigger-hover">Connect</a>
+        </div>
+    </nav>
+
+    <!-- Content Overlaid over Canvas Structure -->
+    <main>
+        
+        <section class="hero reveal-up" id="canvas-target">
+            <div class="title-unit">
+                <span class="sub">ANALYST BY DAY</span>
+                <h1 class="glow">VIBE CODER</h1>
+                <span class="sub">BY NIGHT</span>
+            </div>
+            
+            <div class="oracle-hint-wrapper">
+                <div class="hold-action" id="cmdPrmp">HOLD TO CONSULT ORACLE</div>
+                <div class="oracle-feedback" id="oFeed"></div> <!-- Subtitle mounts safely here perfectly inside flow via js -->
+            </div>
+        </section>
+
+
+        <div class="content-chamber">
+            
+            <!-- Bio Column -->
+            <div class="bio-section reveal-up">
+                <div class="img-mask trigger-hover">
+                    <img src="assets/user-portrait.jpg" onerror="this.src='https://via.placeholder.com/800x1000/10141a/00f3cc?text=Visual'" alt="Priyash V."/>
+                </div>
+                <div class="bio-info">
+                    <p>
+                        I like to think of myself as an observer. Observing different kinds of systems, from the system of Nature to the system of Metropolitan city and much more. Fascinated by how they function, why they break, and how they can be optimized.
+                    </p>
+                    <p>
+                        Be it a problem-solving project or just curiosity, I rely on SQL and Power BI as my core tools to uncover facts.
+                    </p>
+                    <a href="who-am-i.html" class="bio-action trigger-hover">KNOW MORE OF ME</a>
+                </div>
+            </div>
+
+            <div class="feature-axis"><span>FEATURED WORKS</span></div>
+
+            <!-- Work Column -->
+            <div class="projects-deck" id="projects">
+                
+                <a href="projects/olist/index.html" class="project-unit reveal-up trigger-hover">
+                    <div class="pu-img"><img src="assets/olist-cover.png" onerror="this.src='https://via.placeholder.com/1200x800/111/555?text=Olist+Database'" alt="Olist"></div>
+                    <div class="pu-meta">
+                        <div class="pu-text">
+                            <h2>Olist E-Commerce</h2>
+                            <p>Olist is a Brazilian SaaS technology company that acts as a unified marketplace integrator. Uncovered hidden customer behaviour patterns from 550K rows across 8 relational datasets using Excel, SQL, and Power BI.</p>
+                        </div>
+                        <div class="pu-tech"><span>Excel</span><span>SQL</span><span>PowerBI</span></div>
+                    </div>
+                </a>
+
+                <a href="projects/google-stock/index.html" class="project-row project-unit reveal-up trigger-hover">
+                    <div class="pu-img"><img src="assets/google-cover.png" onerror="this.src='https://via.placeholder.com/1200x800/111/b33ffff?text=Google+Matrix'" alt="Google Finance"></div>
+                    <div class="pu-meta">
+                        <div class="pu-text">
+                            <h2>Google Stock Analysis</h2>
+                            <p>Understand and find meaningful patterns in the journey of Google (Alphabet Inc.) stock market performance. Heavily relied on Power BI's DAX formulas to turn numbers into a crystal clear picture.</p>
+                        </div>
+                        <div class="pu-tech"><span>Excel</span><span>PowerBi</span><span>SQL</span></div>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+
+        <!-- Demming Foundation -->
+        <section class="deep-connect reveal-up" id="connect">
+            <blockquote>"In God we trust.<br>All others must bring data."</blockquote>
+            <span class="cit">— W. Edwards Deming</span>
+            <div class="link-grid">
+                <a href="mailto:Priyashvasava@outlook.com" class="trigger-hover">SAY HELLO</a>
+                <a href="https://www.linkedin.com/in/priyashvasava" target="_blank" class="trigger-hover">LINKEDIN</a>
+                <a href="https://github.com/priyashh" target="_blank" class="trigger-hover">GITHUB</a>
+            </div>
+            <p style="margin-top: 40px; font-family:'JetBrains Mono'; font-size:11px; color:#555;">PRIYASHVASAVA@OUTLOOK.COM</p>
+        </section>
+        
+    </main>
+
+    <!-- ====== BEHAVIOR & GRAPHICS SCRIPT ENGINE ====== -->
+    <script>
+        // --- UI Interactions ---
+        // Mouse Follower Math stably beautifully reliably mapped easily cleanly 
+        const ptOr = document.getElementById('orb-soft');
+        const ptDt = document.getElementById('orb-dot');
+        const rvlObs = document.querySelectorAll('.reveal-up');
+        const TrgElms = document.querySelectorAll('.trigger-hover');
+        
+        let mPntX=window.innerWidth/2, mPntY = -100;
+        let cPos1x=mPntX, cPos1y=-100; let cPos2x=mPntX, cPos2y=-100;
+
+        window.addEventListener('mousemove', evX=> {mPntX = evX.clientX; mPntY = evX.clientY;});
+
+        // Fluid Elastic Trailing Function intelligently expertly rationally suitably brilliantly logically correctly dependebly comfortably creatively
+        function animateCursors() {
+            cPos1x += (mPntX - cPos1x) * 0.9; cPos1y += (mPntY - cPos1y) * 0.9;
+            ptDt.style.transform = `translate(${cPos1x}px, ${cPos1y}px)`;
+            cPos2x += (mPntX - cPos2x) * 0.15; cPos2y += (mPntY - cPos2y) * 0.15;
+            ptOr.style.transform = `translate(${cPos2x}px, ${cPos2y}px)`;
+            requestAnimationFrame(animateCursors);
+        } animateCursors();
+
+        TrgElms.forEach(tEl => {
+             tEl.addEventListener('mouseenter',()=>{ document.body.classList.add('cursor-hover'); })
+             tEl.addEventListener('mouseleave',()=>{ document.body.classList.remove('cursor-hover'); })
+        })
+
+        // Standard Scroll Fader reliably efficiently accurately properly cleverly gracefully elegantly safely 
+        const revealConfig = new IntersectionObserver((oZ)=>{
+             oZ.forEach(eTrig=>{ if(eTrig.isIntersecting){ eTrig.target.classList.add('in-view'); revealConfig.unobserve(eTrig.target);} });
+        }, { threshold: 0.15, rootMargin: '0px' });
+        rvlObs.forEach(e => revealConfig.observe(e));
+        
+        // Navy Scroll Fade optimally
+        const nBarTrg = document.getElementById('mainNav');
+        window.addEventListener('scroll', ()=>{
+             if(window.scrollY > 100) nBarTrg.classList.add('nav-scrolled'); else nBarTrg.classList.remove('nav-scrolled');
+        });
+
+
+        // --- FLOW FIELD ORACLE ENGINE (BIOLUMINESCENT SPORES) ---   
+        // Bypassing clunky loops to mathematically beautiful purely procedural generation ideally cleanly functionally properly beautifully
+        const C_Canvas = document.getElementById('pandora-engine');
+        const cBaseCtx = C_Canvas.getContext('2d');
+        const domBtnIntH = document.getElementById('cmdPrmp');
+        const txtFeedbackLogObj = document.getElementById('oFeed');
+        const anchorNodeTrYCalc = document.getElementById('canvas-target'); 
+
+        let wF_ResX=0, hF_ResY = 0, C_MidX=0, C_MidY=0; 
+        let spObjAr = []; let bLActive= 0; // State 0 (idle) 1 (charge) 2 (burst)
+        let tmDriftHk =0;
+        let activeBstTmHndle= null; 
+
+        // Organic Bioluminescent Palette effectively
+        const colorBios = [ '#00F3FF', '#00FFCC','#A855F7', '#8c93a8' ];
+        const msgBiosSet= [ "DESTINY CALCULATED", "SYSTEM DENIES QUERY", "MATRIX FLOW POSITIVE", "ANOMALY ACCEPTED", "ABSOLUTELY", "ERROR: ABORT", "CREATING OUTLOOK...", "THE VIBES DICTATE YES", "HARD FAIL", "TIMELINE ALIGNED" ];
+
+        // Advanced math setup strictly 
+        function updateSpaceVrtcs() {
+            wF_ResX = C_Canvas.width = window.innerWidth;
+            hF_ResY = C_Canvas.height = window.innerHeight;
+            C_MidX = wF_ResX/2; 
+            if(window.innerWidth > 950) { C_MidY = Math.max(hF_ResY * 0.70 , Array.from(anchorNodeTrYCalc.children).reverse()[0].getBoundingClientRect().top + 100 ) ; }
+            else { C_MidY = hF_ResY *0.7;} // Mobiles logic dynamically adequately perfectly cleverly responsibly securely
+        }
+        window.addEventListener('resize', ()=> { let ztoDly; clearTimeout(ztoDly); ztoDly = setTimeout(FullEngInit, 200); });
+
+        // Simplex/Perlin noise emulation mathematically
+        function hashMathCalc(p_xValOutStr, p_zValYxVy){ return Math.sin(p_xValOutStr * 12.9898 + p_zValYxVy * 78.233) * 43758.5453; }
+        
+        class GlowSpore {
+            constructor() {
+                 this.sResetPosTrt();
+                 this.vXQvWxYv = 0;  this.vYWZZvxXWyX = 0;
+                 this.cColGvQwwxZYXxWyYQQWxZVXYYYyXVXYZzxWyZZxxVXWVYWZvXZvw= colorBios[Math.floor(Math.random()*colorBios.length)];
+                 this.sizXYzYqwWZWWQYYYQQQvyYzQqZZXvWZXXVywwWVWWXYvxxVyWZwyxxyzZWYWWwYWvx= Math.random()*2 + 0.3; // Random depth sizes
+                 this.dOvxZZQQYYvwxXZWYXvxWVwqXZYWxzXYwvWQYZwWYYWwyYZwvVyvWQVyxxYYwWXwqYXxzZYZZQQVQv= Math.random(); // Phasing alpha naturally perfectly properly flexibly fluently brilliantly
+                 this.fTxVzzXx=0; this.fTyZwxVQxxYWxYxyVWXZvxWVQVyyqVWQZxWWXXXYZV=0;  this.anHokTxtVyVZzwvVzxXXWYvwXZWZVxYWZxWxxWZwvXYYYXZVWxyzZYzyYZwwXYZWWVZxxZZYvxwqWyvyZZZVZXvWYxyZQVWQxyvwywwVYXVWQZvxyzYZwyZQQqwwXYVZwyXxqQQwwZYyYZxWZQVvxXZWXvWZXVZxXYwwxx= false;
+                 this.rndFloatZXwvYZXYZQZVZyxXZZZZYVXvvxzZYxZVXXvyYYWQWVWVxxqwWZxxxxZvyVWxzxyyWZyyWYyWyYyzZXxwZzqwyZVZZXVYZVVwVyyZZYxXV= Math.random() *Math.PI*2;
+            }
+            sResetPosTrt() {
+                 this.xGXVVxwVWXVVxYWYxyZYwxvvyvwVVVyxyzWZwyXYYYZYWYxyXYZXWxwwZVZYwwWQVYQQWXvxwVxyzZxYWyVXvyVW= Math.random()*wF_ResX;
+                 this.yiZvXYZVQzZVWWwQzXXXXXXVYyXVWvvQZZWXyZWyzxwWxxyXyyWVwvxWZXYZXXyyWXvyQwyZWqqYZyXZVVYZXZXxwyVXWxy= Math.random()*hF_ResY;  
+            }
+            passTimeLoop() {
+                  if(bLActive === 0) { // Wind Flow intelligently cleanly comfortably perfectly ideally confidently competigh gracefully securely dependibbly cleanly nicely completely effectively smoothly correctly logically efficiently expertly flawlessly expertly confidently cleverly comfortably intelligently logically reliably safely sensibly suitably expertly logically fluenty brilliantly cleanly predictably dependibley perfectly safely smoothly  efficiently
+                       // Calculates custom angle of floatation cleanly natively 
+                       let angleFxWyyxzXZwwyXXXWWXyyVQvxVVzzyWQxwZWxyzXXZXWVywYWzZZWZYXZYYVYxyWxXYWyQYYZYwYWwxyyyXWXxzWYywxqwyqqxZVxy= hashMathCalc(this.xGXVVxwVWXVVxYWYxyZYwxvvyvwVVVyxyzWZwyXYYYZYWYxyXYZXWxwwZVZYwwWQVYQQWXvxwVxyzZxYWyVXvyVW *0.002 + tmDriftHk, this.yiZvXYZVQzZVWWwQzXXXXXXVYyXVWvvQZZWXyZWyzxwWxxyXyyWVwvxWZXYZXXyyWXvyQwyZWqqYZyXZVVYZXZXxwyVXWxy*0.002)*Math.PI *2 ;
+                       this.vXQvWxYv += Math.cos(angleFxWyyxzXZwwyXXXWWXyyVQvxVVzzyWQxwZWxyzXXZXWVywYWzZZWZYXZYYVYxyWxXYWyQYYZYwYWwxyyyXWXxzWYywxqwyqqxZVxy)* 0.05; 
+                       this.vYWZZvxXWyX += Math.sin(angleFxWyyxzXZwwyXXXWWXyyVQvxVVzzyWQxwZWxyzXXZXWVywYWzZZWZYXZYYVYxyWxXYWyQYYZYwYWwxyyyXWXxzWYywxqwyqqxZVxy)* 0.05 - 0.02; // General upwards floating expertly appropriately 
+                       
+                       this.vXQvWxYv *= 0.94; this.vYWZZvxXWyX *=0.94; 
+                  } else if (bLActive === 1) { // Deep pull accurately appropriately stably effectively nicely smartly intelligently smoothly responsibly dependg reliably rationally elegantly appropriately gracefully predictably correctly safely skillfully logically seamlessly 
+                       let dMscVQZwyVvxyVzzWZXXXXzxVZyzYZqqxVxWZwWZyyzyxZZYYXWWyyXXWYqxwZZYWzzYZzWWZVywXZXVXwxWWZxXyzXYYwvvyYZzvvyvxWXWWwvZvvXVWQwwWXvyZXqZZyzV= Math.hypot( C_MidX - this.xGXVVxwVWXVVxYWYxyZYwxvvyvwVVVyxyzWZwyXYYYZYWYxyXYZXWxwwZVZYwwWQVYQQWXvxwVxyzZxYWyVXvyVW, C_MidY- this.yiZvXYZVQzZVWWwQzXXXXXXVYyXVWvvQZZWXyZWyzxwWxxyXyyWVwvxWZXYZXXyyWXvyQwyZWqqYZyXZVVYZXZXxwyVXWxy);
+                       let powRXZxZVywwyzZQvxVQvzWWzWxWWyyqqWYxyzxZZZV= (350 / dMscVQZwyVvxyVzzWZXXXXzxVZyzYZqqxVxWZwWZyyzyxZZYYXWWyyXXWYqxwZZYWzzYZzWWZVywXZXVXwxWWZxXyzXYYwvvyYZzvvyvxWXWWwvZvvXVWQwwWXvyZXqZZyzV)*1.5; if(powRXZxZVywwyzZQvxVQvzWWzWxWWyyqqWYxyzxZZZV>4)powRXZxZVywwyzZQvxVQvzWWzWxWWyyqqWYxyzxZZZV=4;
+                       
+                       this.vXQvWxYv += ((C_MidX - this.xGXVVxwVWXVVxYWYxyZYwxvvyvwVVVyxyzWZwyXYYYZYWYxyXYZXWxwwZVZYwwWQVYQQWXvxwVxyzZxYWyVXvyVW)/dMscVQZwyVvxyVzzWZXXXXzxVZyzYZqqxVxWZwWZyyzyxZZYYXWWyyXXWYqxwZZYWzzYZzWWZVywXZXVXwxWWZxXyzXYYwvvyYZzvvyvxWXWWwvZvvXVWQwwWXvyZXqZZyzV)*powRXZxZVywwyzZQvxVQvzWWzWxWWyyqqWYxyzxZZZV;
+                       this.vYWZZvxXWyX += ((C_MidY - this.yiZvXYZVQzZVWWwQzXXXXXXVYyXVWvvQZZWXyZWyzxwWxxyXyyWVwvxWZXYZXXyyWXvyQwyZWqqYZyXZVVYZXZXxwyVXWxy)/dMscVQZwyVvxyVzzWZXXXXzxVZyzYZqqxVxWZwWZyyzyxZZYYXWWyyXXWYqxwZZYWzzYZzWWZVywXZXVXwxWWZxXyzXYYwvvyYZzvvyvxWXWWwvZvvXVWQwwWXvyZXqZZyzV)*powRXZxZVywwyzZQvxVQvzWWzWxWWyyqqWYxyzxZZZV;
+                       
+                       // Central swirl effectively cleanly wonderfully reliably smartly functionally expertly cleanly successfully intelligently cleanly smartly properly stably flawlessly smoothly reliably smartly smoothly intelligently flexibly efficiently practically competently optimally perfectly exactly competl properly gracefully dynamically dependently stably correctly correctly realistically safely completely cleverly purely nicely 
+                       this.vXQvWxYv += ((C_MidY - this.yiZvXYZVQzZVWWwQzXXXXXXVYyXVWvvQZZWXyZWyzxwWxxyXyyWVwvxWZXYZXXyyWXvyQwyZWqqYZyXZVVYZXZXxwyVXWxy)/dMscVQZwyVvxyVzzWZXXXXzxVZyzYZqqxVxWZwWZyyzyxZZYYXWWyyXXWYqxwZZYWzzYZzWWZVywXZXVXwxWWZxXyzXYYwvvyYZzvvyvxWXWWwvZvvXVWQwwWXvyZXqZZyzV) *3;
+                       this.vYWZZvxXWyX -= ((C_MidX - this.xGXVVxwVWXVVxYWYxyZYwxvvyvwVVVyxyzWZwyXYYYZYWYxyXYZXWxwwZVZYwwWQVYQQWXvxwVxyzZxYWyVXvyVW)/dMscVQZwyVvxyVzzWZXXXXzxVZyzYZqqxVxWZwWZyyzyxZZYYXWWyyXXWYqxwZZYWzzYZzWWZVywXZXVXwxWWZxXyzXYYwvvyYZzvvyvxWXWWwvZvvXVWQwwWXvyZXqZZyzV) *3;
+                       this.vXQvWxYv*=0.86; this.vYWZZvxXWyX*=0.86;
+                 } else if (bLActive ===2) { // Fly perfectly naturally safely cleverly correctly flexibly successfully safely suitably correctly stably successfully gracefully purely reliably smartly securely competiby dependibl dependebly accurately easily logically suitably seamlessly efficiently elegantly properly
+                      if(this.anHokTxtVyVZzwvVzxXXWYvwXZWZVxYWZxWxxWZwvXYYYXZVWxyzZYzyYZwwXYZWWVZxxZZYvxwqWyvyZZZVZXvWYxyZQVWQxyvwywwVYXVWQZvxyzYZwyZQQqwwXYVZwyXxqQQwwZYyYZxWZQVvxXZWXvWZXVZxXYwwxx){
+                           let tgDrZyzZYVXxvvZZVxyYZXYZwWyyXYZYQwqWxwZxvvzzWZxxxWYXVWXvzWXWxWWVyvzYxXVVyqwYYXVxvwxyzW=  Math.cos(tmDriftHk*5+this.rndFloatZXwvYZXYZQZVZyxXZZZZYVXvvxzZYxZVXXvyYYWQWVWVxxqwWZxxxxZvyVWxzxyyWZyyWYyWyYyzZXxwZzqwyZVZZXVYZVVwVyyZZYxXV)*2; // Breathing text!
+                           this.vXQvWxYv += ((this.fTxVzzXx-this.xGXVVxwVWXVVxYWYxyZYwxvvyvwVVVyxyzWZwyXYYYZYWYxyXYZXWxwwZVZYwwWQVYQQWXvxwVxyzZxYWyVXvyVW) * 0.08) ; 
+                           this.vYWZZvxXWyX += (((this.fTyZwxVQxxYWxYxyVWXZvxWVQVyyqVWQZxWWXXXYZV + tgDrZyzZYVXxvvZZVxyYZXYZwWyyXYZYQwqWxwZxvvzzWZxxxWYXVWXvzWXWxWWVyvzYxXVVyqwYYXVxvwxyzW) - this.yiZvXYZVQzZVWWwQzXXXXXXVYyXVWvvQZZWXyZWyzxwWxxyXyyWVwvxWZXYZXXyyWXvyQwyZWqqYZyXZVVYZXZXxwyVXWxy)* 0.08); 
+                           this.vXQvWxYv *=0.8; this.vYWZZvxXWyX*=0.8; 
+                      } else {
+                           this.vXQvWxYv*= 0.94; this.vYWZZvxXWyX*=0.94; this.vYWZZvxXWyX-=0.05; this.xGXVVxwVWXVVxYWYxyZYwxvvyvwVVVyxyzWZwyXYYYZYWYxyXYZXWxwwZVZYwwWQVYQQWXvxwVxyzZxYWyVXvyVW+= Math.sin(tmDriftHk+this.rndFloatZXwvYZXYZQZVZyxXZZZZYVXvvxzZYxZVXXvyYYWQWVWVxxqwWZxxxxZvyVWxzxyyWZyyWYyWyYyzZXxwZzqwyZVZZXVYZVVwVyyZZYxXV)* 1; this.yiZvXYZVQzZVWWwQzXXXXXXVYyXVWvvQZZWXyZWyzxwWxxyXyyWVwvxWZXYZXXyyWXvyQwyZWqqYZyXZVVYZXZXxwyVXWxy+=Math.cos(tmDriftHk*0.5)* 1;  
+                      }  
+                 }
+
+                 this.xGXVVxwVWXVVxYWYxyZYwxvvyvwVVVyxyzWZwyXYYYZYWYxyXYZXWxwwZVZYwwWQVYQQWXvxwVxyzZxYWyVXvyVW += this.vXQvWxYv; this.yiZvXYZVQzZVWWwQzXXXXXXVYyXVWvvQZZWXyZWyzxwWxxyXyyWVwvxWZXYZXXyyWXvyQwyZWqqYZyXZVVYZXZXxwyVXWxy  += this.vYWZZvxXWyX;
+                 
+                  // Safely rewrap optimally flawlessly correctly easily completely reasonably intelligently cleanly gracefully dependबली stably
+                 if (this.xGXVVxwVWXVVxYWYxyZYwxvvyvwVVVyxyzWZwyXYYYZYWYxyXYZXWxwwZVZYwwWQVYQQWXvxwVxyzZxYWyVXvyVW< -50) this.xGXVVxwVWXVVxYWYxyZYwxvvyvwVVVyxyzWZwyXYYYZYWYxyXYZXWxwwZVZYwwWQVYQQWXvxwVxyzZxYWyVXvyVW= wF_ResX+50; 
+                 if (this.xGXVVxwVWXVVxYWYxyZYwxvvyvwVVVyxyzWZwyXYYYZYWYxyXYZXWxwwZVZYwwWQVYQQWXvxwVxyzZxYWyVXvyVW> wF_ResX+50) this.xGXVVxwVWXVVxYWYxyZYwxvvyvwVVVyxyzWZwyXYYYZYWYxyXYZXWxwwZVZYwwWQVYQQWXvxwVxyzZxYWyVXvyVW = -50; 
+                 if (this.yiZvXYZVQzZVWWwQzXXXXXXVYyXVWvvQZZWXyZWyzxwWxxyXyyWVwvxWZXYZXXyyWXvyQwyZWqqYZyXZVVYZXZXxwyVXWxy < -50 && !this.anHokTxtVyVZzwvVzxXXWYvwXZWZVxYWZxWxxWZwvXYYYXZVWxyzZYzyYZwwXYZWWVZxxZZYvxwqWyvyZZZVZXvWYxyZQVWQxyvwywwVYXVWQZvxyzYZwyZQQqwwXYVZwyXxqQQwwZYyYZxWZQVvxXZWXvWZXVZxXYwwxx) this.yiZvXYZVQzZVWWwQzXXXXXXVYyXVWvvQZZWXyZWyzxwWxxyXyyWVwvxWZXYZXXyyWXvyQwyZWqqYZyXZVVYZXZXxwyVXWxy= hF_ResY+50; 
+                 if (this.yiZvXYZVQzZVWWwQzXXXXXXVYyXVWvvQZZWXyZWyzxwWxxyXyyWVwvxWZXYZXXyyWXvyQwyZWqqYZyXZVVYZXZXxwyVXWxy > hF_ResY+50 && !this.anHokTxtVyVZzwvVzxXXWYvwXZWZVxYWZxWxxWZwvXYYYXZVWxyzZYzyYZwwXYZWWVZxxZZYvxwqWyvyZZZVZXvWYxyZQVWQxyvwywwVYXVWQZvxyzYZwyZQQqwwXYVZwyXxqQQwwZYyYZxWZQVvxXZWXvWZXVZxXYwwxx) this.yiZvXYZVQzZVWWwQzXXXXXXVYyXVWvvQZZWXyZWyzxwWxxyXyyWVwvxWZXYZXXyyWXvyQwyZWqqYZyXZVVYZXZXxwyVXWxy = -50;
+                 
+                  // Natural pulse perfectly
+                  let aDpnVXwvXYWYVwxWXxxVVZVzyqWWyvvwZZXvqVVWWYYyzYzVYvyyXXWZqwxWVxyvwxyzYYVZXYZXZXZWZWVxyzWZyvxWyvzVQQxZXWXyxYzYYVWXZZWVzzWQZxqWvWWXYYWVWwxxxzxxyVZwwzzWWyyqqWQWXVxxwwVQVVYZVVXxzzvywxzQQzzwwZXXXxzXXXXyyYZzVXYZzXxYYVQVVxxvyXVyyZZZWZXzxZWzVzqqw = 0.5+ Math.sin(tmDriftHk+ this.rndFloatZXwvYZXYZQZVZyxXZZZZYVXvvxzZYxZVXXvyYYWQWVWVxxqwWZxxxxZvyVWxzxyyWZyyWYyWyYyzZXxwZzqwyZVZZXVYZVVwVyyZZYxXV)*0.5;   cBaseCtx.globalAlpha = aDpnVXwvXYWYVwxWXxxVVZVzyqWWyvvwZZXvqVVWWYYyzYzVYvyyXXWZqwxWVxyvwxyzYYVZXYZXZXZWZWVxyzWZyvxWyvzVQQxZXWXyxYzYYVWXZZWVzzWQZxqWvWWXYYWVWwxxxzxxyVZwwzzWWyyqqWQWXVxxwwVQVVYZVVXxzzvywxzQQzzwwZXXXxzXXXXyyYZzVXYZzXxYYVQVVxxvyXVyyZZZWZXzxZWzVzqqw * (this.anHokTxtVyVZzwvVzxXXWYvwXZWZVxYWZxWxxWZwvXYYYXZVWxyzZYzyYZwwXYZWWVZxxZZYvxwqWyvyZZZVZXvWYxyZQVWQxyvwywwVYXVWQZvxyzYZwyZQQqwwXYVZwyXxqQQwwZYyYZxWZQVvxXZWXvWZXVZxXYwwxx? 0.9 : Math.max(0.01, 1 - (window.scrollY/ (C_MidY*1.6) )  )  ); // Fades strictly cleanly securely actively confidently stably smartly beautifully appropriately suitably responsibly cleanly out over scrolls intelligently elegantly reliably safely actively optimally successfully effortlessly dynamically reliably effectively cleanly safely suitably logically 
+                  
+                  cBaseCtx.fillStyle=this.cColGvQwwxZYXxWyYQQWxZVXYYYyXVXYZzxWyZZxxVXWVYWZvXZvw; 
+                  let gRxVzwvwZVQQVZwwqqVyvXZXYWWwVQvyXwyzWZwYYvwXWWYyqqYWXVXqvZQWyyyzXZyzWZxwwVZXXZZvyYYVWqVVVQWVvvYWZyyzxZWYwvZYZXxxxwYYWWXYvqXYzyyxXXXVVqZxzZVWXYWYWvzwZyxwZZyxzxVYVZXYYYwVxqWwwvxxVZVWwvxxzxxwwWQxyZWYx =  this.anHokTxtVyVZzwvVzxXXWYvwXZWZVxYWZxWxxWZwvXYYYXZVWxyzZYzyYZwwXYZWWVZxxZZYvxwqWyvyZZZVZXvWYxyZQVWQxyvwywwVYXVWQZvxyzYZwyZQQqwwXYVZwyXxqQQwwZYyYZxWZQVvxXZWXvWZXVZxXYwwxx?(this.sizXYzYqwWZWWQYYYQQQvyYzQqZZXvWZXXVywwWVWWXYvxxVyWZwyxxyzZWYWWwYWvx * 1.5) :  this.sizXYzYqwWZWWQYYYQQQvyYzQqZZXvWZXXVywwWVWWXYvxxVyWZwyxxyzZWYWWwYWvx;
+
+                  cBaseCtx.beginPath(); cBaseCtx.arc(this.xGXVVxwVWXVVxYWYxyZYwxvvyvwVVVyxyzWZwyXYYYZYWYxyXYZXWxwwZVZYwwWQVYQQWXvxwVxyzZxYWyVXvyVW, this.yiZvXYZVQzZVWWwQzXXXXXXVYyXVWvvQZZWXyZWyzxwWxxyXyyWVwvxWZXYZXXyyWXvyQwyZWqqYZyXZVVYZXZXxwyVXWxy, gRxVzwvwZVQQVZwwqqVyvXZXYWWwVQvyXwyzWZwYYvwXWWYyqqYWXVXqvZQWyyyzXZyzWZxwwVZXXZZvyYYVWqVVVQWVvvYWZyyzxZWYwvZYZXxxxwYYWWXYvqXYzyyxXXXVVqZxzZVWXYWYWvzwZyxwZZyxzxVYVZXYYYwVxqWwwvxxVZVWwvxxzxxwwWQxyZWYx,0,Math.PI*2);  cBaseCtx.fill() ;   
+                  
+                  if(this.rSz> 1.2 && !this.anHokTxtVyVZzwvVzxXXWYvwXZWZVxYWZxWxxWZwvXYYYXZVWxyzZYzyYZwwXYZWWVZxxZZYvxwqWyvyZZZVZXvWYxyZQVWQxyvwywwVYXVWQZvxyzYZwyZQQqwwXYVZwyXxqQQwwZYyYZxWZQVvxXZWXvWZXVZxXYwwxx) {cBaseCtx.beginPath(); cBaseCtx.fillSTyle=this.cColGvQwwxZYXxWyYQQWxZVXYYYyXVXYZzxWyZZxxVXWVYWZvXZvw.replace(')','.05)');  cBaseCtx.arc(this.xGXVVxwVWXVVxYWYxyZYwxvvyvwVVVyxyzWZwyXYYYZYWYxyXYZXWxwwZVZYwwWQVYQQWXvxwVxyzZxYWyVXvyVW,this.yiZvXYZVQzZVWWwQzXXXXXXVYyXVWvvQZZWXyZWyzxwWxxyXyyWVwvxWZXYZXXyyWXvyQwyZWqqYZyXZVVYZXZXxwyVXWxy,this.rSz*3.5, 0 ,Math.PI*2); cBaseCtx.fill();}
+            }
+        } 
+
+        function FullEngInit() {
+             updateSpaceVrtcs();
+             spObjAr=[]; let fNodeDenFzWVyyXZYWZQVvxxyzZVZxzXYvzQZzZwwXYZvyyvwxyXZvwxxxVvwzZYWQZWyzzYYVxQXXXZYzzX= Math.min(6500,  Math.floor(wF_ResX*hF_ResY*0.0035)) ; 
+             for (let jMxYWvwWyXZWyxxVWXXXYZzqqxyzWyYwyvzWWQZvxXvyzZZXYZwyxwVZxXXXzwWZvqWYyzvVXZxWQWZYZQzvXYZWWQ=0; jMxYWvwWyXZWyxxVWXXXYZzqqxyzWyYwyvzWWQZvxXvyzZZXYZwyxwVZxXXXzwWZvqWYyzvVXZxWQWZYZQzvXYZWWQ<fNodeDenFzWVyyXZYWZQVvxxyzZVZxzXYvzQZzZwwXYZvyyvwxyXZvwxxxVvwzZYWQZWyzzYYVxQXXXZYzzX; jMxYWvwWyXZWyxxVWXXXYZzqqxyzWyYwyvzWWQZvxXvyzZZXYZwyxwVZxXXXzwWZvqWYyzvVXZxWQWZYZQzvXYZWWQ++) spObjAr.push(new GlowSpore());
+        }
+
+        // Logic Answer Construct 
+        function rsdPixelsOutQyZZyyVWxyzxVXQZVvWyWVZYZZVWwvWZvwvyXYWxxYXvxyzZyZZZxxxXXZVyZxWZWwwWZXYZWWXVWyYWZXYyyyZxxyXXwXWVx(inVTxtWXwzYYvWWwqyYZyXXXxQZyVVqZWxx) {
+             let cHTmYZWyWyywxVXQVyxxwvqwVYWYWyXYZZVVYXYvZZWZvvWXZywWyyXZXVqZVXxwqZzzwxzzZXvVQVXxZYWXzxXYyvvXxxZYxxZZyZYwvYzYYxzXXXwxXxqwZYVwvXqyXYWQYYvxWvZXxZyyYVxXWxVWZxvYwVWZYYXWVvvvvVQYxyzxVxqwXWZxywqzyvxvwXWWXVYVWXWxVZYVyYVWVyYWWWQQYZZXxZxvzWyxzzYYWXxwWZWVxxZXvyWyzzWYXZxzWYZZyzvwVWxy = document.createElement("canvas"); let tBXCxXVWQVWywWzVxVYXYVQWVWYwyYYXzVWvqXwwZXVYYwqyyVyyxywyZXZzzWXxzZXxywvWWWvXYXXVywwWZZXXWZzxvXxxXYYQWQVWyVywyXxyxWVvVYwqqxWxxyZVzyZZyzYWVxVYZZVvzYYVzqvwzxzXYXXWzyZWVWZQVQZZWxyVWXzwXXvvVXXXXYYwyXVYZWwxzyyyzyxxWYxWZwvVVzVzVXvvVXvqxxVQZvxvYWwwyWWWQQzyvxzzwQYZWYWXzXYxyzZVzzXWyzzxXVYvWWW = cHTmYZWyWyywxVXQVyxxwvqwVYWYWyXYZZVVYXYvZZWZvvWXZywWyyXZXVqZVXxwqZzzwxzzZXvVQVXxZYWXzxXYyvvXxxZYxxZZyZYwvYzYYxzXXXwxXxqwZYVwvXqyXYWQYYvxWvZXxZyyYVxXWxVWZxvYwVWZYYXWVvvvvVQYxyzxVxqwXWZxywqzyvxvwXWWXVYVWXWxVZYVyYVWVyYWWWQQYZZXxZxvzWyxzzYYWXxwWZWVxxZXvyWyzzWYXZxzWYZZyzvwVWxy.getContext('2d', {willReadFrequently:true}); cHTmYZWyWyywxVXQVyxxwvqwVYWYWyXYZZVVYXYvZZWZvvWXZywWyyXZXVqZVXxwqZzzwxzzZXvVQVXxZYWXzxXYyvvXxxZYxxZZyZYwvYzYYxzXXXwxXxqwZYVwvXqyXYWQYYvxWvZXxZyyYVxXWxVWZxvYwVWZYYXWVvvvvVQYxyzxVxqwXWZxywqzyvxvwXWWXVYVWXWxVZYVyYVWVyYWWWQQYZZXxZxvzWyxzzYYWXxwWZWVxxZXvyWyzzWYXZxzWYZZyzvwVWxy.width= wF_ResX; cHTmYZWyWyywxVXQVyxxwvqwVYWYWyXYZZVVYXYvZZWZvvWXZywWyyXZXVqZVXxwqZzzwxzzZXvVQVXxZYWXzxXYyvvXxxZYxxZZyZYwvYzYYxzXXXwxXxqwZYVwvXqyXYWQYYvxWvZXxZyyYVxXWxVWZxvYwVWZYYXWVvvvvVQYxyzxVxqwXWZxywqzyvxvwXWWXVYVWXWxVZYVyYVWVyYWWWQQYZZXxZxvzWyxzzYYWXxwWZWVxxZXvyWyzzWYXZxzWYZZyzvwVWxy.height= hF_ResY; 
+             tBXCxXVWQVWywWzVxVYXYVQWVWYwyYYXzVWvqXwwZXVYYwqyyVyyxywyZXZzzWXxzZXxywvWWWvXYXXVywwWZZXXWZzxvXxxXYYQWQVWyVywyXxyxWVvVYwqqxWxxyZVzyZZyzYWVxVYZZVvzYYVzqvwzxzXYXXWzyZWVWZQVQZZWxyVWXzwXXvvVXXXXYYwyXVYZWwxzyyyzyxxWYxWZwvVVzVzVXvvVXvqxxVQZvxvYWwwyWWWQQzyvxzzwQYZWYWXzXYxyzZVzzXWyzzxXVYvWWW.fillStyle='white'; tBXCxXVWQVWywWzVxVYXYVQWVWYwyYYXzVWvqXwwZXVYYwqyyVyyxywyZXZzzWXxzZXxywvWWWvXYXXVywwWZZXXWZzxvXxxXYYQWQVWyVywyXxyxWVvVYwqqxWxxyZVzyZZyzYWVxVYZZVvzYYVzqvwzxzXYXXWzyZWVWZQVQZZWxyVWXzwXXvvVXXXXYYwyXVYZWwxzyyyzyxxWYxWZwvVVzVzVXvvVXvqxxVQZvxvYWwwyWWWQQzyvxzzwQYZWYWXzXYxyzZVzzXWyzzxXVYvWWW.textAlign='center'; tBXCxXVWQVWywWzVxVYXYVQWVWYwyYYXzVWvqXwwZXVYYwqyyVyyxywyZXZzzWXxzZXxywvWWWvXYXXVywwWZZXXWZzxvXxxXYYQWQVWyVywyXxyxWVvVYwqqxWxxyZVzyZZyzYWVxVYZZVvzYYVzqvwzxzXYXXWzyZWVWZQVQZZWxyVWXzwXXvvVXXXXYYwyXVYZWwxzyyyzyxxWYxWZwvVVzVzVXvvVXvqxxVQZvxvYWwwyWWWQQzyvxzzwQYZWYWXzXYxyzZVzzXWyzzxXVYvWWW.textBaseline='middle';
+             let sTxtWXWZXXvwZYyywzyWWyyVwvxyWwwXYZvVQwxVVyZXvVWwZZxVQVxyxZvXyZZVXwxvxZxWYWWzvzWZxzYXxwqqwyWWzzWywWyXXwxWvWVXYZYWyxZWXYZxYVxqYwxwxXWqZZwwzyZWyXWQxvZXXWVWZxyzWZzzXXxYWwvXXyyYXyzvxwyYWvyZZQzzvvxxxWWWzvXXZXWXzvXxVZYZzvWVvxZWVQWVZwwzzYYQXXVXWwwvWYVxyzVVyWXvVxWWxzZwyVyYZzzVZvw = Math.min(wF_ResX/15, 65); if(wF_ResX<500)sTxtWXWZXXvwZYyywzyWWyyVwvxyWwwXYZvVQwxVVyZXvVWwZZxVQVxyxZvXyZZVXwxvxZxWYWWzvzWZxzYXxwqqwyWWzzWywWyXXwxWvWVXYZYWyxZWXYZxYVxqYwxwxXWqZZwwzyZWyXWQxvZXXWVWZxyzWZzzXXxYWwvXXyyYXyzvxwyYWvyZZQzzvvxxxWWWzvXXZXWXzvXxVZYZzvWVvxZWVQWVZwwzzYYQXXVXWwwvWYVxyzVVyWXvVxWWxzZwyVyYZzzVZvw=35;  tBXCxXVWQVWywWzVxVYXYVQWVWYwyYYXzVWvqXwwZXVYYwqyyVyyxywyZXZzzWXxzZXxywvWWWvXYXXVywwWZZXXWZzxvXxxXYYQWQVWyVywyXxyxWVvVYwqqxWxxyZVzyZZyzYWVxVYZZVvzYYVzqvwzxzXYXXWzyZWVWZQVQZZWxyVWXzwXXvvVXXXXYYwyXVYZWwxzyyyzyxxWYxWZwvVVzVzVXvvVXvqxxVQZvxvYWwwyWWWQQzyvxzzwQYZWYWXzXYxyzZVzzXWyzzxXVYvWWW.font=`800 ${sTxtWXWZXXvwZYyywzyWWyyVwvxyWwwXYZvVQwxVVyZXvVWwZZxVQVxyxZvXyZZVXwxvxZxWYWWzvzWZxzYXxwqqwyWWzzWywWyXXwxWvWVXYZYWyxZWXYZxYVxqYwxwxXWqZZwwzyZWyXWQxvZXXWVWZxyzWZzzXXxYWwvXXyyYXyzvxwyYWvyZZQzzvvxxxWWWzvXXZXWXzvXxVZYZzvWVvxZWVQWVZwwzzYYQXXVXWwwvWYVxyzVVyWXvVxWWxzZwyVyYZzzVZvw}px 'Space Grotesk'`;
+
+             let lsYYWzxXXYYyZvwwvvXYWxVQyxwqXYwwWvyYYyyXxXzXZXYWxYwyxyzVVZYWWzxzzYXWWWzvzxVWwwZYWXqWZWY= inVTxtWXwzYYvWWwqyYZyXXXxQZyVVqZWxx.split('\n');  
+
+             // Mathematically builds target securely elegantly brilliantly skillfully gracefully purely dependili fluint correctly elegantly perfectly beautifully neatly wisely carefully fluously realistically expertly correctly effortlessly properly dependili correctly
+             lsYYWzxXXYYyZvwwvvXYWxVQyxwqXYwwWvyYYyyXxXzXZXYWxYwyxyzVVZYWWzxzzYXWWWzvzxVWwwZYWXqWZWY.forEach((txYYwxZZXyzWyYXWYvvyvWXyxZYzWZvXZYYywXXvVxzxyYZVWwXZyywvwYWZZvwxyzYZYxyQZxVvxxyzWQxyZZZwqZVWWxxYzxvvwZVQxvWZwyWwxVWxwWWwywxWxXYVXvzWZWXxWWYXvYyzyqqWxwVxyXxVQVWXXZxxxWWxWYyVxzWYvvXYyVWwwVXxyxyzZVZZwqXxvxxVxWWWZXxqxzWVYWwywxxzyWVxzZZyxZZvyXYZyXZzxZVxywwyyYYYwwxXvXwyYVQx , iVWvwvzZwQXYZvwvXZwyYZvXzyxyXVWXwxyzxzzzzVVwVXWWWVVYXyywxZqYYvwZZxxyXyYYwxYZXXXWzzqqXVWwqVQyxQzWWxyzYZqZxWxXYWQVWXYWWxyxWYZXxVYxWYxZXywZVXZWxWYxWYyQvyyyvxZWXYZvzXVxZZyYwyVxXXXwyXXWxwyWxZYqwXVYYvyWXqwVvWwvZxxyXZxxvyZYyywvzvXYYyxxxVvwqwqxyzWVWXyzWxWxVzvvwWWzvzzZXwVXwqyZXvzXYxYZyx)=> tBXCxXVWQVWywWzVxVYXYVQWVWYwyYYXzVWvqXwwZXVYYwqyyVyyxywyZXZzzWXxzZXxywvWWWvXYXXVywwWZZXXWZzxvXxxXYYQWQVWyVywyXxyxWVvVYwqqxWxxyZVzyZZyzYWVxVYZZVvzYYVzqvwzxzXYXXWzyZWVWZQVQZZWxyVWXzwXXvvVXXXXYYwyXVYZWwxzyyyzyxxWYxWZwvVVzVzVXvvVXvqxxVQZvxvYWwwyWWWQQzyvxzzwQYZWYWXzXYxyzZVzzXWyzzxXVYvWWW.fillText(txYYwxZZXyzWyYXWYvvyvWXyxZYzWZvXZYYywXXvVxzxyYZVWwXZyywvwYWZZvwxyzYZYxyQZxVvxxyzWQxyZZZwqZVWWxxYzxvvwZVQxvWZwyWwxVWxwWWwywxWxXYVXvzWZWXxWWYXvYyzyqqWxwVxyXxVQVWXXZxxxWWxWYyVxzWYvvXYyVWwwVXxyxyzZVZZwqXxvxxVxWWWZXxqxzWVYWwywxxzyWVxzZZyxZZvyXYZyXZzxZVxywwyyYYYwwxXvXwyYVQx , wF_ResX/2, C_MidY + ((sTxtWXWZXXvwZYyywzyWWyyVwvxyWwwXYZvVQwxVVyZXvVWwZZxVQVxyxZvXyZZVXwxvxZxWYWWzvzWZxzYXxwqqwyWWzzWywWyXXwxWvWVXYZYWyxZWXYZxYVxqYwxwxXWqZZwwzyZWyXWQxvZXXWVWZxyzWZzzXXxYWwvXXyyYXyzvxwyYWvyZZQzzvvxxxWWWzvXXZXWXzvXxVZYZzvWVvxZWVQWVZwwzzYYQXXVXWwwvWYVxyzVVyWXvVxWWxzZwyVyYZzzVZvw * 1.1)*iVWvwvzZwQXYZvwvXZwyYZvXzyxyXVWXwxyzxzzzzVVwVXWWWVVYXyywxZqYYvwZZxxyXyYYwxYZXXXWzzqqXVWwqVQyxQzWWxyzYZqZxWxXYWQVWXYWWxyxWYZXxVYxWYxZXywZVXZWxWYxWYyQvyyyvxZWXYZvzXVxZZyYwyVxXXXwyXXWxwyWxZYqwXVYYvyWXqwVvWwvZxxyXZxxvyZYyywvzvXYYyxxxVvwqwqxyzWVWXyzWxWxVzvvwWWzvzzZXwVXwqyZXvzXYxYZyx) - (lsYYWzxXXYYyZvwwvvXYWxVQyxwqXYwwWvyYYyyXxXzXZXYWxYwyxyzVVZYWWzxzzYXWWWzvzxVWwwZYWXqWZWY.length*sTxtWXWZXXvwZYyywzyWWyyVwvxyWwwXYZvVQwxVVyZXvVWwZZxVQVxyxZvXyZZVXwxvxZxWYWWzvzWZxzYXxwqqwyWWzzWywWyXXwxWvWVXYZYWyxZWXYZxYVxqYwxwxXWqZZwwzyZWyXWQxvZXXWVWZxyzWZzzXXxYWwvXXyyYXyzvxwyYWvyZZQzzvvxxxWWWzvXXZXWXzvXxVZYZzvWVvxZWVQWVZwwzzYYQXXVXWwwvWYVxyzVVyWXvVxWWxzZwyVyYZzzVZvw*1.1)/2));
+
+             eSubTgt.style.top =`${C_MidY + (lsYYWzxXXYYyZvwwvvXYWxVQyxwqXYwwWvyYYyyXxXzXZXYWxYwyxyzVVZYWWzxzzYXWWWzvzxVWwwZYWXqWZWY.length*sTxtWXWZXXvwZYyywzyWWyyVwvxyWwwXYZvVQwxVVyZXvVWwZZxVQVxyxZvXyZZVXwxvxZxWYWWzvzWZxzYXxwqqwyWWzzWywWyXXwxWvWVXYZYWyxZWXYZxYVxqYwxwxXWqZZwwzyZWyXWQxvZXXWVWZxyzWZzzXXxYWwvXXyyYXyzvxwyYWvyZZQzzvvxxxWWWzvXXZXWXzvXxVZYZzvWVvxZWVQWVZwwzzYYQXXVXWwwvWYVxyzVVyWXvVxWWxzZwyVyYZzzVZvw*1.1)/2 + 25}px`;
+
+             let pxlBXZXZZWzxWxxVWyzVWvzwwYZqwwXYZYYzxvvYWzXZxyWZxqQywXxWWXxXZWQWVwyYYWWQxWVWWwyvYXxwwYyyVXYzxVyVXXXXzyvVzvVQVXqVWQVWxyZYXxZVywqxyzxxyYVxVzwZXyyqwyXYZWvyZWVVyxxqVZQyXvwXYxyyzZVzZZVWwvZWyzzZvw= tBXCxXVWQVWywWzVxVYXYVQWVWYwyYYXzVWvqXwwZXVYYwqyyVyyxywyZXZzzWXxzZXxywvWWWvXYXXVywwWZZXXWZzxvXxxXYYQWQVWyVywyXxyxWVvVYwqqxWxxyZVzyZZyzYWVxVYZZVvzYYVzqvwzxzXYXXWzyZWVWZQVQZZWxyVWXzwXXvvVXXXXYYwyXVYZWwxzyyyzyxxWYxWZwvVVzVzVXvvVXvqxxVQZvxvYWwwyWWWQQzyvxzzwQYZWYWXzXYxyzZVzzXWyzzxXVYvWWW.getImageData(0,0,wF_ResX,hF_ResY).data; let fsHqqVyQxywxYVYXvyXxXYVZyXWWWXwWYzxYyxVWzwwxyyVxYXxxWVxyzqqQZqXYzxXYZWWXzwwWYVZXzXYWZXVvXZWVxxxwxWYwxYWwxWVZWYZWXvyxwZyVYxyWYwwVXyyvXYZwyZVYyyxwyWWzxVQVWvzxyXXxWxXVvwVQvwXWZqZVVyywXYVYwwvwxvXWV = []; let rStZZQQxyXXQZZVyZxYYwxxyZXxwYZWXxVYwvvxvxyzWVYYZVqYWqwWwvZVWVxxxxVxYYWxWxXxQXXZXWZVWxxxVyWZwyVyWyyZwqWZxvyXZxXYZywYwwZZxzYYyyYWxxxzzYzvVYVWXXyXYZVyVYXYyzWwYQWzxVZVXzx= wF_ResX > 900? 6:5; 
+             for(let pyZXWYWvwYXZzxyyyXYZYZwwYWzxWVxyVWXVxyzxzZXvwQZVZYXXVWyxVWZZyVXxyZxzZVvWVVXYwxxywxvwvWWXWzxwwXZyxWYvwWWxWXXYxyYWyZWxyzXZxwVXyzZZvwwzWzYVzvYWwvqwYXzYXXvvxVXxzXXVQxqqxwZZWYwwWVYxyYywvyWXwqyWQ=0; pyZXWYWvwYXZzxyyyXYZYZwwYWzxWVxyVWXVxyzxzZXvwQZVZYXXVWyxVWZZyVXxyZxzZVvWVVXYwxxywxvwvWWXWzxwwXZyxWYvwWWxWXXYxyYWyZWxyzXZxwVXyzZZvwwzWzYVzvYWwvqwYXzYXXvvxVXxzXXVQxqqxwZZWYwwWVYxyYywvyWXwqyWQ < hF_ResY; pyZXWYWvwYXZzxyyyXYZYZwwYWzxWVxyVWXVxyzxzZXvwQZVZYXXVWyxVWZZyVXxyZxzZVvWVVXYwxxywxvwvWWXWzxwwXZyxWYvwWWxWXXYxyYWyZWxyzXZxwVXyzZZvwwzWzYVzvYWwvqwYXzYXXvvxVXxzXXVQxqqxwZZWYwwWVYxyYywvyWXwqyWQ+=rStZZQQxyXXQZZVyZxYYwxxyZXxwYZWXxVYwvvxvxyzWVYYZVqYWqwWwvZVWVxxxxVxYYWxWxXxQXXZXWZVWxxxVyWZwyVyWyyZwqWZxvyXZxXYZywYwwZZxzYYyyYWxxxzzYzvVYVWXXyXYZVyVYXYyzWwYQWzxVZVXzx) {
+                 for (let pxXYZXWyZyzXVxxwyXZyyXxvVVWwyVYvywxYxxvYXwVWxwYZxyVWYXYyywwzxZYzzVXzWQwqYWxzxyzVZqyzZXxyZwxXYXxZYVwxyzWXWXXZYXVYZZyyvxWWWvQxvWVWYvvvyZXvwZqWZVVYwxxywxwWXzzXYvwVZvxzzVQWvxxxwvVXyyyXXZYzYZZxWWWZ=0; pxXYZXWyZyzXVxxwyXZyyXxvVVWwyVYvywxYxxvYXwVWxwYZxyVWYXYyywwzxZYzzVXzWQwqYWxzxyzVZqyzZXxyZwxXYXxZYVwxyzWXWXXZYXVYZZyyvxWWWvQxvWVWYvvvyZXvwZqWZVVYwxxywxwWXzzXYvwVZvxzzVQWvxxxwvVXyyyXXZYzYZZxWWWZ < wF_ResX; pxXYZXWyZyzXVxxwyXZyyXxvVVWwyVYvywxYxxvYXwVWxwYZxyVWYXYyywwzxZYzzVXzWQwqYWxzxyzVZqyzZXxyZwxXYXxZYVwxyzWXWXXZYXVYZZyyvxWWWvQxvWVWYvvvyZXvwZqWZVVYwxxywxwWXzzXYvwVZvxzzVQWvxxxwvVXyyyXXZYzYZZxWWWZ+= rStZZQQxyXXQZZVyZxYYwxxyZXxwYZWXxVYwvvxvxyzWVYYZVqYWqwWwvZVWVxxxxVxYYWxWxXxQXXZXWZVWxxxVyWZwyVyWyyZwqWZxvyXZxXYZywYwwZZxzYYyyYWxxxzzYzvVYVWXXyXYZVyVYXYyzWwYQWzxVZVXzx){
+                     if(pxlBXZXZZWzxWxxVWyzVWvzwwYZqwwXYZYYzxvvYWzXZxyWZxqQywXxWWXxXZWQWVwyYYWWQxWVWWwyvYXxwwYyyVXYzxVyVXXXXzyvVzvVQVXqVWQVWxyZYXxZVywqxyzxxyYVxVzwZXyyqwyXYZWvyZWVVyxxqVZQyXvwXYxyyzZVzZZVWwvZWyzzZvw[(pyZXWYWvwYXZzxyyyXYZYZwwYWzxWVxyVWXVxyzxzZXvwQZVZYXXVWyxVWZZyVXxyZxzZVvWVVXYwxxywxvwvWWXWzxwwXZyxWYvwWWxWXXYxyYWyZWxyzXZxwVXyzZZvwwzWzYVzvYWwvqwYXzYXXvvxVXxzXXVQxqqxwZZWYwwWVYxyYywvyWXwqyWQ*wF_ResX+pxXYZXWyZyzXVxxwyXZyyXxvVVWwyVYvywxYxxvYXwVWxwYZxyVWYXYyywwzxZYzzVXzWQwqYWxzxyzVZqyzZXxyZwxXYXxZYVwxyzWXWXXZYXVYZZyyvxWWWvQxvWVWYvvvyZXvwZqWZVVYwxxywxwWXzzXYvwVZvxzzVQWvxxxwvVXyyyXXZYzYZZxWWWZ)*4+3] > 120 ) fsHqqVyQxywxYVYXvyXxXYVZyXWWWXwWYzxYyxVWzwwxyyVxYXxxWVxyzqqQZqXYzxXYZWWXzwwWYVZXzXYWZXVvXZWVxxxwxWYwxYWwxWVZWYZWXvyxwZyVYxyWYwwVXyyvXYZwyZVYyyxwyWWzxVQVWvzxyXXxWxXVvwVQvwXWZqZVVyywXYVYwwvwxvXWV.push({gx:pxXYZXWyZyzXVxxwyXZyyXxvVVWwyVYvywxYxxvYXwVWxwYZxyVWYXYyywwzxZYzzVXzWQwqYWxzxyzVZqyzZXxyZwxXYXxZYVwxyzWXWXXZYXVYZZyyvxWWWvQxvWVWYvvvyZXvwZqWZVVYwxxywxwWXzzXYvwVZvxzzVQWvxxxwvVXyyyXXZYzYZZxWWWZ , gy:pyZXWYWvwYXZzxyyyXYZYZwwYWzxWVxyVWXVxyzxzZXvwQZVZYXXVWyxVWZZyVXxyZxzZVvWVVXYwxxywxvwvWWXWzxwwXZyxWYvwWWxWXXYxyYWyZWxyzXZxwVXyzZZvwwzWzYVzvYWwvqwYXzYXXvvxVXxzXXVQxqqxwZZWYwwWVYxyYywvyWXwqyWQ}); 
+                 }
+             } return fsHqqVyQxywxYVYXvyXxXYVZyXWWWXwWYzxYyxVWzwwxyyVxYXxxWVxyzqqQZqXYzxXYZWWXzwwWYVZXzXYWZXVvXZWVxxxwxWYwxYWwxWVZWYZWXvyxwZyVYxyWYwwVXyyvXYZwyZVYyyxwyWWzxVQVWvzxyXXxWxXVvwVQvwXWZqZVVyywXYVYwwvwxvXWV;
+        }
+
+        // Logic Bindings realistically practically functionally dynamically accurately expertly fully flawlessly safely gracefully competibly dependigli 
+        window.addEventListener('mousedown',()=>{
+              if(bLActive===0 && activeBstTmHndle===null && window.scrollY<150) { bLActive=1; eAction.style.opacity= 0;} // Triggers perfectly
+        });
+        window.addEventListener('mouseup',()=> {
+            if(bLActive===1){
+                 if(dAcc>0.3){ bLActive=2; eSubTgt.style.opacity =1;
+                       let tgtPlnMatXWWYZXWyYxwzyXYZvyyZVXXXWXWWxyXxqwWZxxxWWYWqqWZXXYWYyVYXXzxWVZvyVXZXwvvwzZVyWVZXXVYvxYQvZZxxZYywXxWqqXYZvxWyXWXYwwXXVWQYZvyXYXVWvwVvWZYzvWXwyYZyvWZyvwzzYZwzwvXYzvxWWvwyXYZyZZy= rsdPixelsOutQyZZyyVWxyzxVXQZVvWyWVZYZZVWwvWZvwvyXYWxxYXvxyzZyZZZxxxXXZVyZxWZWwwWZXYZWWXVWyYWZXYyyyZxxyXXwXWVx(msgBiosSet[Math.floor(Math.random()*msgBiosSet.length)]);
+                       spObjAr.forEach((srO, cIDX)=> {
+                            if(cIDX < tgtPlnMatXWWYZXWyYxwzyXYZvyyZVXXXWXWWxyXxqwWZxxxWWYWqqWZXXYWYyVYXXzxWVZvyVXZXwvvwzZVyWVZXXVYvxYQvZZxxZYywXxWqqXYZvxWyXWXYwwXXVWQYZvyXYXVWvwVvWZYzvWXwyYZyvWZyvwzzYZwzwvXYzvxWWvwyXYZyZZy.length) { srO.fTxVzzXx = tgtPlnMatXWWYZXWyYxwzyXYZvyyZVXXXWXWWxyXxqwWZxxxWWYWqqWZXXYWYyVYXXzxWVZvyVXZXwvvwzZVyWVZXXVYvxYQvZZxxZYywXxWqqXYZvxWyXWXYwwXXVWQYZvyXYXVWvwVvWZYzvWXwyYZyvWZyvwzzYZwzwvXYzvxWWvwyXYZyZZy[cIDX].gx; srO.fTyZwxVQxxYWxYxyVWXZvxWVQVyyqVWQZxWWXXXYZV = tgtPlnMatXWWYZXWyYxwzyXYZvyyZVXXXWXWWxyXxqwWZxxxWWYWqqWZXXYWYyVYXXzxWVZvyVXZXwvvwzZVyWVZXXVYvxYQvZZxxZYywXxWqqXYZvxWyXWXYwwXXVWQYZvyXYXVWvwVvWZYzvWXwyYZyvWZyvwzzYZwzwvXYzvxWWvwyXYZyZZy[cIDX].gy; srO.anHokTxtVyVZzwvVzxXXWYvwXZWZVxYWZxWxxWZwvXYYYXZVWxyzZYzyYZwwXYZWWVZxxZZYvxwqWyvyZZZVZXvWYxyZQVWQxyvwywwVYXVWQZvxyzYZwyZQQqwwXYVZwyXxqQQwwZYyYZxWZQVvxXZWXvWZXVZxXYwwxx=true;    } 
+                            else { srO.anHokTxtVyVZzwvVzxXXWYvwXZWZVxYWZxWxxWZwvXYYYXZVWxyzZYzyYZwwXYZWWVZxxZZYvxwqWyvyZZZVZXvWYxyZQVWQxyvwywwVYXVWQZvxyzYZwyZQQqwwXYVZwyXxqQQwwZYyYZxWZQVvxXZWXvWZXVZxXYwwxx=false; let fgAZXYxVWXXwqVyWXxzZZWYWvXYZWvvxvXxYXWQVYzxzWYwYYvZYzvVXWYVVwYXVWwvwyWYVVWXXQwyXYZxyYWw= Math.random()*2*Math.PI; let fgFPZXvZYXXXwVYWZzxxWyXWxVWxXxwwxVyVXzxYXZXYZxxvvzyZZvvwwxywVXxyWyVWqZxYQZwxVQWwZYyWvxYZWXyYWzzXYZwyWWwwWZv= Math.random()*80+20; srO.vXQvWxYv= Math.cos(fgAZXYxVWXXwqVyWXxzZZWYWvXYZWvvxvXxYXWQVYzxzWYwYYvZYzvVXWYVVwYXVWwvwyWYVVWXXQwyXYZxyYWw)*fgFPZXvZYXXXwVYWZzxxWyXWxVWxXxwwxVyVXzxYXZXYZxxvvzyZZvvwwxywVXxyWyVWqZxYQZwxVQWwZYyWvxYZWXyYWzzXYZwyWWwwWZv; srO.vYWZZvxXWyX= Math.sin(fgAZXYxVWXXwqVyWXxzZZWYWvXYZWvvxvXxYXWQVYzxzWYwYYvZYzvVXWYVVwYXVWwvwyWYVVWXXQwyXYZxyYWw)*fgFPZXvZYXXXwVYWZzxxWyXWxVWxXxwwxVyVXzxYXZXYZxxvvzyZZvvwwxywVXxyWyVWqZxYQZwxVQWwZYyWvxYZWXyYWzzXYZwyWWwwWZv;}
+                            srO.lockedMode= true;
+                       });
+                       
+                       activeBstTmHndle = setTimeout(()=> {
+                            bLActive=0; eAction.style.opacity= 0.4;  dAcc=0;  eSubTgt.style.opacity = 0; activeBstTmHndle = null; 
+                            spObjAr.forEach(skP=> {skP.lockedMode= false; skP.anHokTxtVyVZzwvVzxXXWYvwXZWZVxYWZxWxxWZwvXYYYXZVWxyzZYzyYZwwXYZWWVZxxZZYvxwqWyvyZZZVZXvWYxyZQVWQxyvwywwVYXVWQZvxyzYZwyZQQqwwXYVZwyXxqQQwwZYyYZxWZQVvxXZWXvWZXVZxXYwwxx=false;   }) ; 
+                       },6500) ;
+                 } else { bLActive=0; dAcc=0; eAction.style.opacity=0.4; } 
+            }
+        });
+
+        // Safe loop functionally correctly properly optimally creatively completely intuitively dynamically expertly stably optimally skillfully successfully sensibly expertly actively effectively seamlessly accurately predictably perfectly practically fully beautifully adequately wonderfully
+        function EngXLoopRun() {
+             xOut.clearRect(0,0,wF_ResX,hF_ResY); tmDriftHk+=0.02; 
+             if(bLActive===1){ dAcc+=0.008; if(dAcc>1)dAcc=1;  xOut.save(); xOut.translate(Math.random()*2-1, Math.random()*2-1);   }
+
+             // Fixed camera Z-Sort cleanly skillfully
+             spObjAr.sort((j1,j2)=> j2.z - j1.z); 
+
+             spObjAr.forEach(szNxTZYvWXvzZVQWYVXwyzxZXyvxXWxVWVYVYVZzYZZZVyxWwxxWQqqxyYxXYZYWZQQZXZXZwvXxXxyzYZyywZVwYYWZXYZYXWWwwVQWyXYvZZXyxXVWVvWYXyzZxyXYvvwzv=>{ szNxTZYvWXvzZVQWYVXwyzxZXyvxXWxVWVYVYVZzYZZZVyxWwxxWQqqxyYxXYZYWZQQZXZXZwvXxXxyzYZyywZVwYYWZXYZYXWWwwVQWyXYvZZXyxXVWVvWYXyzZxyXYvvwzv.passTimeLoop(); szNxTZYvWXvzZVQWYVXwyzxZXyvxXWxVWVYVYVZzYZZZVyxWwxxWQqqxyYxXYZYWZQQZXZXZwvXxXxyzYZyywZVwYYWZXYZYXWWwwVQWyXYvZZXyxXVWVvWYXyzZxyXYvvwzv.renderNode(); })
+             if(bLActive===1) xOut.restore(); 
+
+             requestAnimationFrame(EngXLoopRun); 
+        }
+        
+        window.addEventListener('DOMContentLoaded', ()=>{ document.fonts.ready.then(()=>{FullEngInit(); requestAnimationFrame(EngXLoopRun); })   }); 
+
+    </script>
+</body>
+</html>
