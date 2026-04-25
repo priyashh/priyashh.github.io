@@ -21,18 +21,14 @@
             overflow-x: hidden;
         }
 
-        /* --- BACKGROUND STARS CANVAS --- */
         #bg-canvas {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            z-index: 1; /* Moved to z-index 1 so it draws OVER the Oracle's black fade layer */
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 1;
             pointer-events: none;
         }
 
-        /* --- NAVBAR --- */
         .navbar {
             position: relative; z-index: 20; display: flex; justify-content: space-between;
             align-items: center; padding: 30px 5vw; background: transparent;
@@ -49,24 +45,20 @@
         }
         .navbar .nav-links a:hover { opacity: 1; color: #fff; text-shadow: 0 0 15px rgba(255, 255, 255, 0.8); }
 
-        /* --- HERO AREA LAYOUT --- */
         .hero-wrapper {
             position: relative;
             width: 100%;
             height: 100vh;
             overflow: hidden;
-            cursor: none; 
+            cursor: none;
         }
 
-        /* Oracle canvas */
         #oracle-canvas {
             display: block;
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 0; /* Moved behind the background stars */
+            top: 0; left: 0;
+            z-index: 0;
         }
 
         .scanlines {
@@ -88,20 +80,19 @@
             background: radial-gradient(circle at center, transparent 40%, rgba(3,3,5,0.8) 100%);
         }
 
-        /* --- ANIMATED HERO TEXT (Left Aligned) --- */
         #hero-text-overlay {
             position: absolute;
-            top: 15vh; 
-            left: 10vw; 
+            /* FIX 1: moved up from 15vh to sit clearly above the orb (orb center is at 60vh) */
+            top: 12vh;
+            left: 10vw;
             transform: scale(1);
-            transform-origin: left center; 
+            transform-origin: left center;
             text-align: left;
             z-index: 4;
             pointer-events: none;
             transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s;
         }
 
-        /* Target position when Oracle Explodes */
         #hero-text-overlay.exploded {
             transform: translate(55vw, 5vh) scale(0.65);
         }
@@ -117,11 +108,10 @@
         }
         #hero-text-overlay .muted { color: #888; font-weight: 400; }
 
-        /* HINT TEXT */
         #hint-text {
-            position: absolute; 
-            top: 80vh; 
-            left: 25vw; 
+            position: absolute;
+            top: 80vh;
+            left: 25vw;
             transform: translateX(-50%);
             font-family: 'Courier Prime', monospace; color: #00f3ff; font-size: 12px; letter-spacing: 3px;
             opacity: 0.8; transition: opacity 0.5s; z-index: 4; pointer-events: none;
@@ -134,7 +124,6 @@
             50% { opacity: 1; text-shadow: 0 0 15px rgba(0, 243, 255, 0.8); }
         }
 
-        /* --- BIO + PROJECTS --- */
         .layout-container {
             position: relative; z-index: 5; max-width: 1400px; margin: 0 auto;
             display: flex; justify-content: flex-end; padding: 40px 5vw 0 5vw;
@@ -142,8 +131,9 @@
 
         .right-column {
             width: 340px;
-            margin-top: 25vh; 
-            margin-right: 4vw; 
+            /* FIX 2: was margin-top: 25vh — removed the large blank gap */
+            margin-top: 0;
+            margin-right: 4vw;
             display: flex;
             flex-direction: column;
             gap: 15px;
@@ -158,7 +148,9 @@
                           text-decoration: underline; text-underline-offset: 4px; letter-spacing: 0.05em; text-transform: uppercase; }
 
         .bottom-section {
-            position: relative; z-index: 5; max-width: 1100px; margin: 20vh auto 0 auto;
+            position: relative; z-index: 5; max-width: 1100px;
+            /* FIX 3: was margin: 20vh auto — removed the large blank gap */
+            margin: 40px auto 0 auto;
             border-top: 1px solid rgba(255,255,255,0.05); padding-top: 80px; padding-bottom: 80px; pointer-events: auto;
         }
 
@@ -173,7 +165,6 @@
                      text-transform: uppercase; border-radius: 4px; color: #fff; }
         .project-row:hover { opacity: 0.7; }
 
-        /* --- CONNECT SECTION --- */
         .connect-section {
             position: relative; z-index: 5; max-width: 1100px; margin: 0 auto;
             text-align: center; padding: 60px 5vw 100px 5vw;
@@ -187,11 +178,8 @@
             letter-spacing: 0.1em; color: #888; border: 1px solid #333; padding: 8px 16px;
             border-radius: 4px; transition: 0.3s; text-decoration: none;
         }
-        .connect-links a:hover {
-            color: #fff; border-color: #888;
-        }
+        .connect-links a:hover { color: #fff; border-color: #888; }
 
-        /* --- MOBILE RESPONSIVENESS --- */
         @media (max-width: 950px) {
             #hero-text-overlay {
                 left: 50%;
@@ -201,17 +189,11 @@
                 transform-origin: center center;
             }
             #hero-text-overlay.exploded {
-                transform: translate(-50%, 0) scale(0.65); 
+                transform: translate(-50%, 0) scale(0.65);
                 left: 50%;
             }
-            #hint-text {
-                left: 50%;
-                top: 75vh;
-            }
-            .project-row {
-                grid-template-columns: 1fr;
-                gap: 16px;
-            }
+            #hint-text { left: 50%; top: 75vh; }
+            .project-row { grid-template-columns: 1fr; gap: 16px; }
             .right-column {
                 width: 100%;
                 margin-top: 5vh;
@@ -227,7 +209,6 @@
 </head>
 <body>
 
-    <!-- Background Stars -->
     <canvas id="bg-canvas"></canvas>
 
     <nav class="navbar">
@@ -241,7 +222,6 @@
     </nav>
 
     <div class="hero-wrapper">
-        <!-- Oracle & Interactions -->
         <canvas id="oracle-canvas"></canvas>
         <div class="scanlines"></div>
         <div id="hud"></div>
@@ -302,7 +282,6 @@
     </div>
 
     <script>
-        // Setup Dual Canvases
         const bgCanvas = document.getElementById('bg-canvas');
         const bgCtx = bgCanvas.getContext('2d');
         const canvas = document.getElementById('oracle-canvas');
@@ -314,7 +293,6 @@
         let W, H, cx, cy;
         const N = 2500;
         let particles = [];
-        
         let bgStars = [];
         let cursorTrails = [];
 
@@ -323,7 +301,6 @@
         let rotationX = 0;
         let rotationY = 0;
 
-        // Sequence States
         let state = 'idle'; 
         let chargeLevel = 0;
         let sequenceTimer = 0;
@@ -338,61 +315,37 @@
 
         const colors = ['#00f3ff', '#b026ff', '#ffffff'];
 
-        // --- NEW UPGRADED BACKGROUND STAR CLASS ---
         class BgStar {
             constructor() {
                 this.x = Math.random() * W;
                 this.y = Math.random() * H;
                 this.speed = (Math.random() * 1.5 + 0.2) / 1.5; 
-                this.baseSize = Math.random() * 2 + 0.5; // Varying sizes
-                
-                // Assign colors for glowing effect
+                this.baseSize = Math.random() * 2 + 0.5;
                 const randColor = Math.random();
-                if (randColor > 0.95) {
-                    this.color = '255, 100, 120'; // Soft Red
-                } else if (randColor > 0.85) {
-                    this.color = '100, 200, 255'; // Soft Blue
-                } else {
-                    this.color = '220, 230, 255'; // Cool White
-                }
-                
-                // Twinkle / Fade mechanics
+                if (randColor > 0.95) { this.color = '255, 100, 120'; }
+                else if (randColor > 0.85) { this.color = '100, 200, 255'; }
+                else { this.color = '220, 230, 255'; }
                 this.alpha = Math.random();
                 this.fadeSpeed = (Math.random() * 0.01) + 0.002;
                 this.fadeDir = Math.random() > 0.5 ? 1 : -1;
             }
-            
             update() {
                 this.x -= this.speed;
-                
-                // Fade logic
                 this.alpha += this.fadeSpeed * this.fadeDir;
-                if (this.alpha > 1) {
-                    this.alpha = 1;
-                    this.fadeDir = -1;
-                } else if (this.alpha < 0) {
-                    this.alpha = 0;
-                    this.fadeDir = 1;
-                    // Respawn when invisible
+                if (this.alpha > 1) { this.alpha = 1; this.fadeDir = -1; }
+                else if (this.alpha < 0) {
+                    this.alpha = 0; this.fadeDir = 1;
                     this.x = Math.random() * W + (W * 0.1); 
                     this.y = Math.random() * H;
                 }
-
-                if (this.x < -10) {
-                    this.x = W + 10;
-                    this.y = Math.random() * H;
-                }
+                if (this.x < -10) { this.x = W + 10; this.y = Math.random() * H; }
             }
-            
             draw() {
-                // Draw inner core
                 bgCtx.globalAlpha = this.alpha;
                 bgCtx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
                 bgCtx.beginPath();
                 bgCtx.arc(this.x, this.y, this.baseSize * 0.6, 0, Math.PI*2);
                 bgCtx.fill();
-                
-                // Draw colored glow
                 bgCtx.globalAlpha = this.alpha * 0.4;
                 bgCtx.fillStyle = `rgba(${this.color}, ${this.alpha})`;
                 bgCtx.beginPath();
@@ -402,128 +355,77 @@
         }
 
         function resize() {
-            W = window.innerWidth;
-            H = window.innerHeight;
-            
-            bgCanvas.width = W;
-            bgCanvas.height = H;
-            canvas.width = W;
-            canvas.height = H;
-            
-            if (W > 950) {
-                cx = W * 0.25; 
-                cy = H * 0.60;
-            } else {
-                cx = W / 2;
-                cy = H / 2;
-            }
-            
+            W = window.innerWidth; H = window.innerHeight;
+            bgCanvas.width = W; bgCanvas.height = H;
+            canvas.width = W; canvas.height = H;
+            if (W > 950) { cx = W * 0.25; cy = H * 0.60; }
+            else { cx = W / 2; cy = H / 2; }
             bgStars = [];
-            for(let i=0; i<350; i++) {
-                bgStars.push(new BgStar());
-            }
+            for(let i=0; i<350; i++) bgStars.push(new BgStar());
         }
         window.addEventListener('resize', resize);
         resize();
 
         function randomSpherePoint() {
-            const u = Math.random();
-            const v = Math.random();
+            const u = Math.random(), v = Math.random();
             const theta = 2 * Math.PI * u;
             const phi = Math.acos(2 * v - 1);
-            return {
-                x: Math.sin(phi) * Math.cos(theta),
-                y: Math.sin(phi) * Math.sin(theta),
-                z: Math.cos(phi)
-            };
+            return { x: Math.sin(phi)*Math.cos(theta), y: Math.sin(phi)*Math.sin(theta), z: Math.cos(phi) };
         }
 
         class Particle {
             constructor() {
                 const pt = randomSpherePoint();
-                this.ox = pt.x;
-                this.oy = pt.y;
-                this.oz = pt.z;
-
-                this.x = Math.random() * W; 
-                this.y = Math.random() * H; 
-                this.z = 0;
+                this.ox = pt.x; this.oy = pt.y; this.oz = pt.z;
+                this.x = Math.random() * W; this.y = Math.random() * H; this.z = 0;
                 this.tx = 0; this.ty = 0;
-
                 this.originalColor = colors[Math.floor(Math.random() * colors.length)];
                 this.color = this.originalColor;
                 this.size = Math.random() * 1.5 + 0.5;
-
                 this.vx = 0; this.vy = 0;
             }
-
             update(time) {
                 if (state === 'idle' || state === 'charging' || state === 'collecting') {
                     let currentRadius = sphereRadius + (Math.sin(time * 0.001 + this.ox * 10) * 10);
-
-                    let sx = this.ox * currentRadius;
-                    let sy = this.oy * currentRadius;
-                    let sz = this.oz * currentRadius;
-
+                    let sx = this.ox * currentRadius, sy = this.oy * currentRadius, sz = this.oz * currentRadius;
                     let cosY = Math.cos(rotationY), sinY = Math.sin(rotationY);
-                    let rx = sx * cosY - sz * sinY;
-                    let rz = sx * sinY + sz * cosY;
-
+                    let rx = sx * cosY - sz * sinY, rz = sx * sinY + sz * cosY;
                     let cosX = Math.cos(rotationX), sinX = Math.sin(rotationX);
-                    let ry = sy * cosX - rz * sinX;
-                    let finalZ = sy * sinX + rz * cosX;
-
+                    let ry = sy * cosX - rz * sinX, finalZ = sy * sinX + rz * cosX;
                     const perspective = 800 / (800 - finalZ);
                     this.tx = cx + rx * perspective;
                     this.ty = cy + ry * perspective;
                     this.z = finalZ;
                 }
-
                 if (state === 'sweeping') {
-                    this.x += this.vx;
-                    this.y += this.vy;
+                    this.x += this.vx; this.y += this.vy;
                 } else {
-                    let spring = state === 'answering' ? 0.05 : 0.05;
+                    let spring = 0.05;
                     if (state === 'charging') spring = 0.3;
-                    if (state === 'collecting') spring = 0.015; 
-
-                    let dx = this.tx - this.x;
-                    let dy = this.ty - this.y;
-
-                    this.vx += dx * spring;
-                    this.vy += dy * spring;
-
+                    if (state === 'collecting') spring = 0.015;
+                    let dx = this.tx - this.x, dy = this.ty - this.y;
+                    this.vx += dx * spring; this.vy += dy * spring;
                     let friction = state === 'answering' ? 0.85 : 0.9;
                     if (state === 'collecting') friction = 0.92;
-                    this.vx *= friction;
-                    this.vy *= friction;
-
+                    this.vx *= friction; this.vy *= friction;
                     if (state === 'idle') {
-                        let mx = mouse.x - this.x;
-                        let my = mouse.y - this.y;
+                        let mx = mouse.x - this.x, my = mouse.y - this.y;
                         let dist = Math.sqrt(mx*mx + my*my);
-                        
                         if (dist < 100 && window.scrollY < 100) {
                             let force = (100 - dist) / 100;
                             this.vx -= (mx / dist) * force * 5;
                             this.vy -= (my / dist) * force * 5;
                         }
                     }
-
-                    this.x += this.vx;
-                    this.y += this.vy;
+                    this.x += this.vx; this.y += this.vy;
                 }
             }
-
             draw() {
                 let alpha = (state === 'answering' || state === 'sweeping') ? 1 : Math.max(0.1, (this.z + baseRadius) / (baseRadius * 2));
                 if (alpha < 0) alpha = 0;
-
                 ctx.globalAlpha = alpha;
                 ctx.fillStyle = this.color;
-
                 let renderSize = (state === 'answering' || state === 'sweeping') ? this.size * 1.5 : this.size * (alpha + 0.5);
-
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, renderSize, 0, Math.PI * 2);
                 ctx.fill();
@@ -536,12 +438,10 @@
             const tCanvas = document.createElement('canvas');
             const tCtx = tCanvas.getContext('2d', { willReadFrequently: true });
             tCanvas.width = W; tCanvas.height = H;
-
             tCtx.fillStyle = 'white';
             tCtx.textAlign = 'center';
             tCtx.textBaseline = 'middle';
             tCtx.font = `bold ${Math.min(W/8, 120)}px "Courier New", monospace`;
-
             let words = text.split(" ");
             if (words.length > 2 && text.length > 10) {
                 tCtx.fillText(words.slice(0, Math.ceil(words.length/2)).join(" "), W/2, H/2 - 40);
@@ -549,32 +449,24 @@
             } else {
                 tCtx.fillText(text, W/2, H/2);
             }
-
             const imgData = tCtx.getImageData(0, 0, W, H).data;
             const points = [];
             const step = Math.min(W, H) > 800 ? 5 : 4;
-
-            for (let y = 0; y < H; y += step) {
-                for (let x = 0; x < W; x += step) {
-                    if (imgData[(y * W + x) * 4 + 3] > 128) {
+            for (let y = 0; y < H; y += step)
+                for (let x = 0; x < W; x += step)
+                    if (imgData[(y * W + x) * 4 + 3] > 128)
                         points.push({ x: x - W/2, y: y - H/2 });
-                    }
-                }
-            }
             return points;
         }
 
         function triggerAnswer() {
             state = 'answering';
-            hintText.style.opacity = 0; 
-
+            hintText.style.opacity = 0;
             const answer = answers[Math.floor(Math.random() * answers.length)];
             const pts = getTextPoints(answer);
-
             particles.forEach((p, i) => {
                 if (i < pts.length) {
-                    p.tx = cx + pts[i].x;
-                    p.ty = cy + pts[i].y;
+                    p.tx = cx + pts[i].x; p.ty = cy + pts[i].y;
                     p.color = Math.random() > 0.8 ? '#ffffff' : '#00f3ff';
                 } else {
                     p.tx = cx + (Math.random() - 0.5) * W * 2;
@@ -582,77 +474,47 @@
                     p.color = '#b026ff';
                 }
             });
-
             heroText.classList.add('exploded');
-
             clearTimeout(sequenceTimer);
             sequenceTimer = setTimeout(() => triggerSweep(), 3500);
         }
 
         function triggerSweep() {
             state = 'sweeping';
-            particles.forEach(p => {
-                p.vx = -(Math.random() * 15 + 10); 
-                p.vy = (Math.random() - 0.5) * 8;
-            });
+            particles.forEach(p => { p.vx = -(Math.random() * 15 + 10); p.vy = (Math.random() - 0.5) * 8; });
             sequenceTimer = setTimeout(() => triggerCollect(), 1200);
         }
 
         function triggerCollect() {
             state = 'collecting';
-            
             particles.forEach(p => {
                 p.color = p.originalColor;
-                p.x = Math.random() * W;
-                p.y = Math.random() * H;
-                p.vx = (Math.random() - 0.5) * 2; 
-                p.vy = (Math.random() - 0.5) * 2;
+                p.x = Math.random() * W; p.y = Math.random() * H;
+                p.vx = (Math.random() - 0.5) * 2; p.vy = (Math.random() - 0.5) * 2;
             });
-            
             heroText.classList.remove('exploded');
-
-            sequenceTimer = setTimeout(() => {
-                state = 'idle';
-                hintText.style.opacity = 0.8; 
-            }, 3000);
+            sequenceTimer = setTimeout(() => { state = 'idle'; hintText.style.opacity = 0.8; }, 3000);
         }
 
         window.addEventListener('mousemove', e => {
-            mouse.x = e.clientX;
-            mouse.y = e.clientY + window.scrollY; 
-            
-            if (window.scrollY < window.innerHeight) {
-                cursorTrails.push({x: e.clientX, y: e.clientY, age: 0});
-            }
+            mouse.x = e.clientX; mouse.y = e.clientY + window.scrollY;
+            if (window.scrollY < window.innerHeight) cursorTrails.push({x: e.clientX, y: e.clientY, age: 0});
         });
-
         window.addEventListener('mousedown', () => {
             if (state !== 'idle' || window.scrollY > 100) return;
-            mouse.isDown = true;
-            state = 'charging'; 
-            hintText.style.opacity = 0;
+            mouse.isDown = true; state = 'charging'; hintText.style.opacity = 0;
         });
-
         window.addEventListener('mouseup', () => {
             if (state !== 'charging') return;
             mouse.isDown = false;
-
-            if (chargeLevel > 0.5) {
-                triggerAnswer();
-            } else {
-                state = 'idle'; 
-                hintText.style.opacity = 0.8;
-            }
+            if (chargeLevel > 0.5) triggerAnswer();
+            else { state = 'idle'; hintText.style.opacity = 0.8; }
             chargeLevel = 0;
         });
-
         window.addEventListener('touchstart', e => {
             if (state !== 'idle' || window.scrollY > 100) return;
-            mouse.x = e.touches[0].clientX; 
-            mouse.y = e.touches[0].clientY;
-            mouse.isDown = true; 
-            state = 'charging'; 
-            hintText.style.opacity = 0;
+            mouse.x = e.touches[0].clientX; mouse.y = e.touches[0].clientY;
+            mouse.isDown = true; state = 'charging'; hintText.style.opacity = 0;
         });
         window.addEventListener('touchend', () => {
             if (state !== 'charging') return;
@@ -663,30 +525,22 @@
         });
 
         function loop(time) {
-            // --- DRAW BACKGROUND STARS FIRST (CLEAR FULLY) ---
             bgCtx.clearRect(0, 0, W, H);
-            bgStars.forEach(star => {
-                star.update();
-                star.draw();
-            });
+            bgStars.forEach(star => { star.update(); star.draw(); });
 
-            // --- DRAW ORACLE ---
             ctx.globalCompositeOperation = 'source-over';
             ctx.fillStyle = 'rgba(3, 3, 5, 0.3)';
             ctx.fillRect(0, 0, W, H);
-
             ctx.globalCompositeOperation = 'lighter';
 
             if (state === 'idle' || state === 'collecting') {
-                rotationY += 0.0015;
-                rotationX += 0.001;
+                rotationY += 0.0015; rotationX += 0.001;
                 sphereRadius += (baseRadius - sphereRadius) * 0.1;
             } else if (state === 'charging') {
                 chargeLevel += 0.015;
                 rotationY += 0.02 + (chargeLevel * 0.05);
                 rotationX += 0.02 + (chargeLevel * 0.05);
                 sphereRadius = baseRadius - (chargeLevel * 150);
-
                 ctx.save();
                 ctx.translate(Math.random() * 4 - 2, Math.random() * 4 - 2);
             }
@@ -709,20 +563,13 @@
                 }
             }
 
-            particles.forEach(p => {
-                p.update(time);
-                p.draw();
-            });
+            particles.forEach(p => { p.update(time); p.draw(); });
+            if (state === 'charging') ctx.restore();
 
-            if (state === 'charging') {
-                ctx.restore();
-            }
-
-            // --- CURSOR TRAILS ON BACKGROUND LAYER ---
             bgCtx.globalAlpha = 1;
-            cursorTrails.forEach((trail) => {
-                trail.age += 0.05; 
-                let radius = Math.max(0, 3 * (1 - trail.age)); 
+            cursorTrails.forEach(trail => {
+                trail.age += 0.05;
+                let radius = Math.max(0, 3 * (1 - trail.age));
                 bgCtx.fillStyle = `rgba(255, 255, 255, ${1 - trail.age})`;
                 bgCtx.beginPath();
                 bgCtx.arc(trail.x, trail.y, radius, 0, Math.PI*2);
@@ -730,7 +577,7 @@
             });
             cursorTrails = cursorTrails.filter(t => t.age < 1);
 
-            if(mouse.x > -1000 && window.scrollY < 100) {
+            if (mouse.x > -1000 && window.scrollY < 100) {
                 bgCtx.fillStyle = 'white';
                 bgCtx.beginPath();
                 bgCtx.arc(mouse.x, mouse.y - window.scrollY, 4, 0, Math.PI*2);
