@@ -1,19 +1,18 @@
 # Olist E‑commerce Operations Analysis
 
 This project looks at 100k+ orders from the Brazilian e‑commerce platform Olist.  
-I wanted to see where the money comes from, how bad delivery delays really are, and what the data says about customers, sellers and reviews.
+I wanted to see where the money really comes from, how bad delivery delays are, and what the data says about customers, sellers and reviews.
 
 The raw money values are in BRL.  
-In my charts I convert them to USD with a rough rate of 1 BRL ≈ 0.20 USD.  
-This is just to make the numbers easier to read, not an official rate from Olist.
+In the report I convert them to USD with a rough rate of 1 BRL ≈ 0.20 USD just to make the numbers easier to read. This is a project assumption, not an official Olist rate.
 
 ---
 
-## What I looked at
+## What I focused on
 
-- Which categories, states and customers bring in most of the revenue.  
-- How often orders arrive late and by how many days.  
-- How review scores change when delivery is early/on‑time/late.  
+- Which categories, states and customers drive most of the revenue.  
+- How often orders are late and by how many days.  
+- How review scores change when delivery is early / on time / late.  
 - How many customers buy only once vs come back again.  
 - How many sellers are active and who the top sellers are.
 
@@ -30,17 +29,20 @@ This is just to make the numbers easier to read, not an official rate from Olist
 
 ## Main tables / views
 
-- `orders`, plus a cleaned `vw_order_master` view with delivery days and delay.  
+- `orders` + a cleaned view `vw_order_master` with delivery days and delay.  
 - `order_items`, `order_payments`.  
 - `customers`, `sellers`.  
-- `products`, `category_translation` for category‑level analysis.
+- `products`, `category_translation` for category analysis.
 
 ---
 
 ## SQL – core queries with explanations
 
-Most of the analysis lives in `projects/olist/project file/main_analysis.sql`.  
-Below are the main queries I used and what they do.
+Most of the analysis SQL is in:
+
+`projects/olist/project file/main_analysis.sql`.[page:86]
+
+Here are the main queries I use and what they do (simplified):
 
 ### 1. Monthly revenue and orders
 
@@ -58,7 +60,7 @@ GROUP BY to_char(o.order_purchase_timestamp, 'YYYY-MM')
 ORDER BY year_month;
 ```
 
-This groups delivered orders by month, so I can see how order volume, revenue and average order value move over time.
+Groups delivered orders by month so I can see how volume, revenue and average order value move over time.[page:86]
 
 ---
 
@@ -84,7 +86,7 @@ ORDER BY total_revenue_brl DESC
 LIMIT 20;
 ```
 
-This is used for the “top categories” view: which categories bring most revenue, how expensive items are, and how high the freight is.
+Used for the “top categories” view: which categories bring the most revenue, and what their average item and freight costs look like.[page:86]
 
 ---
 
@@ -114,8 +116,7 @@ GROUP BY c.customer_state
 ORDER BY total_revenue_brl DESC;
 ```
 
-This gives me, per state: orders, unique customers, revenue and average delay.  
-It feeds the state‑level map and tables.
+Per state: orders, unique customers, revenue and average delay. This feeds the state‑level map and tables.[page:86]
 
 ---
 
@@ -151,7 +152,7 @@ GROUP BY delivery_bucket
 ORDER BY avg_review_score DESC;
 ```
 
-
+Buckets orders by how early/late they were and compares average review scores for each bucket (logistics vs satisfaction).[page:86]
 
 ---
 
@@ -169,7 +170,7 @@ GROUP BY payment_type
 ORDER BY total_revenue_brl DESC;
 ```
 
-This shows how much volume goes through each payment method and how many installments people usually use.
+Shows how much volume each payment method handles and the typical number of installments.[page:86]
 
 ---
 
@@ -196,11 +197,11 @@ ORDER BY total_revenue_brl DESC
 LIMIT 30;
 ```
 
-This is used to rank sellers by revenue and see their average reviews and freight costs.
+Ranks sellers by revenue and shows their average freight cost and review score.[page:86]
 
 ---
 
-### 7. Basic RFM‑style customer summary
+### 7. RFM‑style customer summary
 
 ```sql
 SELECT
@@ -221,90 +222,225 @@ WHERE o.order_status = 'delivered'
 GROUP BY c.customer_unique_id;
 ```
 
-This gives me recency, frequency and monetary value per customer, which I use to talk about one‑time vs repeat customers.
+Basic RFM metrics (recency, frequency, monetary) per customer, used to support the one‑time vs repeat customer story.[page:86]
 
 ---
 
-## DAX measures with explanations
+## DAX measures – with formulas and short notes
 
 On top of this SQL, I created a small set of DAX measures in Power BI.  
-Here are the important ones and what they do.
+These are the ones that actually show up in the final report.
 
 ### Revenue and volume
 
-- `Total Payment BRL`  
-  Sum of `order_payments[payment_value]` for delivered orders.
+```DAX
+Total Payment BRL =
+SUM ( 'public order_payments'[payment_value] )
+```
 
-- `Total Revenue USD`  
-  `Total Payment BRL * 0.20` to convert BRL to USD.
+Sum of payment value for delivered orders (in BRL).
 
-- `Total Orders`  
-  Distinct count of `orders[order_id]`.
+```DAX
+Total Revenue USD =
+[Total Payment BRL] * 0.20
+```
 
-- `Total Unique Customers`  
-  Distinct count of `customers[customer_unique_id]`.
+Total payment converted from BRL to USD using the 0.20 rate.
 
-- `Total Active Sellers`  
-  Distinct count of `sellers[seller_id]`.
+```DAX
+Total Orders =
+DISTINCTCOUNT ( 'public orders'[order_id] )
+```
 
-- `Avg Order Value (USD)`  
-  `Total Revenue USD / Total Orders`.
+Distinct orders.
 
-### Delivery / operations
+```DAX
+Total Unique Customers =
+DISTINCTCOUNT ( 'public customers'[customer_unique_id] )
+```
 
-- `Avg Delivery Days`  
-  Average of `vw_order_master[total_delivery_days]`.
+Distinct customers.
 
-- `On‑Time Rate %`  
-  Percentage of orders where delivery delay is 0 or less (delivered on or before estimate).
+```DAX
+Total Active Sellers =
+DISTINCTCOUNT ( 'public sellers'[seller_id] )
+```
 
-- `Late Orders`  
-  Count of orders where delivery delay is greater than 0.
+Distinct sellers.
 
-### Reviews
+```DAX
+Avg Order Value (USD) =
+DIVIDE ( [Total Revenue USD], [Total Orders] )
+```
 
-- `Avg Review Score`  
-  Average of `order_reviews[review_score]`.
+Average revenue per order in USD.
 
-- `5‑Star Share %`  
-  Percentage of orders with `review_score = 5`.
+```DAX
+Revenue by State USD =
+SUM ( 'public vw_order_master'[total_payment] ) * 0.20
+```
 
-- `Seller Avg Review Score`  
-  Average review score per seller, using a relationship between items and reviews.
+Revenue per state in USD.
+
+---
+
+### Delivery and operations
+
+```DAX
+Avg Delivery Days =
+AVERAGE ( 'public vw_order_master'[total_delivery_days] )
+```
+
+Average days from purchase to delivery.
+
+```DAX
+On-Time Rate % =
+DIVIDE (
+    COUNTROWS (
+        FILTER (
+            'public vw_order_master',
+            'public vw_order_master'[delivery_delay_days] <= 0
+        )
+    ),
+    COUNTROWS ( 'public vw_order_master' )
+)
+```
+
+Percentage of orders delivered on or before the estimated date.
+
+```DAX
+Late Orders =
+COUNTROWS (
+    FILTER (
+        'public vw_order_master',
+        'public vw_order_master'[delivery_delay_days] > 0
+    )
+)
+```
+
+Number of late orders.
+
+---
+
+### Reviews and satisfaction
+
+```DAX
+Avg Review Score =
+AVERAGE ( 'public order_reviews'[review_score] )
+```
+
+Average review score (1–5).
+
+```DAX
+5-Star Share % =
+DIVIDE (
+    COUNTROWS (
+        FILTER (
+            'public order_reviews',
+            'public order_reviews'[review_score] = 5
+        )
+    ),
+    COUNTROWS ( 'public order_reviews' )
+)
+```
+
+Share of orders with a 5‑star review.
+
+```DAX
+Seller Avg Review Score =
+CALCULATE (
+    AVERAGE ( 'public order_reviews'[review_score] ),
+    TREATAS (
+        VALUES ( 'public order_items'[order_id] ),
+        'public order_reviews'[order_id]
+    )
+)
+```
+
+Average review score per seller.
+
+---
 
 ### Categories and states
 
-- `Category Revenue USD`  
-  Sum of category revenue in BRL, converted to USD.
+```DAX
+Category Revenue USD =
+SUM ( 'public vw_category_revenue'[price] ) * 0.20
+```
 
-- `Category Orders`  
-  Distinct count of orders per category.
+Revenue per product category in USD.
 
-- `Category Revenue Share %`  
-  Category revenue divided by total category revenue.
+```DAX
+Category Orders =
+DISTINCTCOUNT ( 'public vw_category_revenue'[order_id] )
+```
 
-- `Revenue by State (USD)`  
-  Revenue in USD grouped by `customer_state`.
+Orders per category.
+
+```DAX
+Total Revenue All Categories =
+CALCULATE (
+    [Category Revenue USD],
+    ALL ( 'public vw_category_revenue'[category] )
+)
+```
+
+Total revenue across all categories.
+
+```DAX
+Category Revenue Share % =
+DIVIDE ( [Category Revenue USD], [Total Revenue All Categories] )
+```
+
+Share of total revenue for each category.
+
+---
 
 ### Customer behaviour
 
-- `Customer Order Count`  
-  Number of orders per `customer_unique_id`.
+```DAX
+Customer Order Count =
+CALCULATE (
+    DISTINCTCOUNT ( 'public orders'[order_id] ),
+    ALLEXCEPT ( 'public customers', 'public customers'[customer_unique_id] )
+)
+```
 
-- `One‑time Customers`  
-  Count of customers where `Customer Order Count = 1`.
+Orders per unique customer.
 
-- `Repeat Customers`  
-  Count of customers where `Customer Order Count > 1`.
+```DAX
+One-time Customers =
+CALCULATE (
+    DISTINCTCOUNT ( 'public customers'[customer_unique_id] ),
+    FILTER (
+        VALUES ( 'public customers'[customer_unique_id] ),
+        CALCULATE ( DISTINCTCOUNT ( 'public orders'[order_id] ) ) = 1
+    )
+)
+```
+
+Customers with exactly one order.
+
+```DAX
+Repeat Customers =
+CALCULATE (
+    DISTINCTCOUNT ( 'public customers'[customer_unique_id] ),
+    FILTER (
+        VALUES ( 'public customers'[customer_unique_id] ),
+        CALCULATE ( DISTINCTCOUNT ( 'public orders'[order_id] ) ) > 1
+    )
+)
+```
+
+Customers with more than one order.
 
 ---
 
 ## Report flow
 
-The Power BI report (and the portfolio page) follow this rough flow:
+The Power BI report (and the portfolio page) roughly follow this flow:
 
-- Summary: revenue (USD), orders, customers, sellers, average order value, top categories and states.  
-- Delivery: average delivery days, on‑time rate, late orders, breakdown by state.  
-- Reviews: score distribution, 5‑star share, seller review comparison, effect of delay.  
-- Customers: one‑time vs repeat customers, plus a simple RFM‑style view.
-
+- Summary: revenue (USD), orders, customers, sellers, average order value, top categories and states.[page:69]  
+- Delivery: average delivery days, on‑time rate, late orders, breakdown by state.[page:69]  
+- Reviews: score distribution, 5‑star share, seller review comparison, impact of delay.[page:69]  
+- Customers: one‑time vs repeat customers plus a simple RFM‑style view.[page:69]
