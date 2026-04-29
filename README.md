@@ -46,20 +46,3 @@ You can view the live portfolio here:
 👉 [https://priyashh.github.io](https://priyashh.github.io)
 
 
-## How to View or Edit Locally
-
-
-1.  Clone the repository:  
-    `git clone https://github.com/priyashh/priyashh.github.io.git`
-2.  Open the folder in your code editor.
-3.  Open `index.html` in your browser to view the site.
-4.  Edit the HTML/CSS/JS files to update text, add new projects, or change the design.
-
-
-## Contact
-
-
-- Email: Priyashvasava@outlook.com
-- LinkedIn: www.linkedin.com/in/priyashvasava
-- GitHub: [https://github.com/priyashh](https://github.com/priyashh)
-
